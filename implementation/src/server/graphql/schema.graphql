@@ -1,0 +1,5 @@
+scalar Upload
+
+type Query {
+    helloWorld: String
+}

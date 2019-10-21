@@ -1,0 +1,17 @@
+{
+  "serverConfig": {
+    "hostname": "localhost",
+    "port": "4000",
+    "ssl": false,
+    "sslKeypath": "./ssl/key.pem",
+    "sslCertpath": "./ssl/cert.pem"
+  },
+  "postgresConfig": {
+    "user": "postgres",
+    "host": "localhost",
+    "database": "postgres",
+    "password": "",
+    "port": 5432
+  },
+  "passwordSaltRounds": 10
+}

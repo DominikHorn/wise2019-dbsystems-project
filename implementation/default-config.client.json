@@ -1,0 +1,7 @@
+{
+  "graphqlServer": {
+    "protocol": "https",
+    "host": "localhost",
+    "port": 4000
+  }
+}

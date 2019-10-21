@@ -1,0 +1,10 @@
+.ssl
+.directory
+.DS_Store
+node_modules
+.idea
+dist/
+build/*
+yarn-error.log
+config.server.json
+config.client.json
