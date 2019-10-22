@@ -8,3 +8,4 @@ build/*
 yarn-error.log
 config.server.json
 config.client.json
+~$
