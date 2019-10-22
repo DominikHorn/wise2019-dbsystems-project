@@ -2,7 +2,7 @@
   "name": "WahlDB-Websystem",
   "version": "0.0.0",
   "description": "An online voting tool for Bayern",
-  "author": "Dominik Horn <dominik.horn@tum.de>",
+  "author": "Dominik Horn <dominik.horn@tum.de>, Lena Gregor <lena.gregor@tum.de>",
   "license": "MIT",
   "private": true,
   "scripts": {
