@@ -7036,23 +7036,6 @@
 										},
 										{
 											"_type": "UMLOperationView",
-											"_id": "AAAAAAFuDLCuUtHXFJE=",
-											"_parent": {
-												"$ref": "AAAAAAFuDKjxLh5h5K8="
-											},
-											"model": {
-												"$ref": "AAAAAAFuDLCuItGkESY="
-											},
-											"font": "Arial;13;0",
-											"left": 917,
-											"top": 203,
-											"width": 233.0478515625,
-											"height": 13,
-											"text": "+berechneFarbeAufUebersichtskarte()",
-											"horizontalAlignment": 0
-										},
-										{
-											"_type": "UMLOperationView",
 											"_id": "AAAAAAFuDOCMMYQ6rXg=",
 											"_parent": {
 												"$ref": "AAAAAAFuDKjxLh5h5K8="
@@ -7062,7 +7045,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 917,
-											"top": 218,
+											"top": 203,
 											"width": 233.0478515625,
 											"height": 13,
 											"text": "+berechneGeschlechtsStatistik()",
@@ -7079,7 +7062,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 917,
-											"top": 233,
+											"top": 218,
 											"width": 233.0478515625,
 											"height": 13,
 											"text": "+berechneAltersStatistik()",
@@ -7090,7 +7073,7 @@
 									"left": 912,
 									"top": 168,
 									"width": 243.0478515625,
-									"height": 83
+									"height": 68
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -7130,7 +7113,7 @@
 							"left": 912,
 							"top": 120,
 							"width": 243.0478515625,
-							"height": 131,
+							"height": 116,
 							"nameCompartment": {
 								"$ref": "AAAAAAFuDKjxLh5bLCU="
 							},
@@ -7168,8 +7151,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1173,
-									"top": 415,
+									"left": 1171,
+									"top": 407,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -7189,8 +7172,8 @@
 									},
 									"visible": null,
 									"font": "Arial;13;0",
-									"left": 1161,
-									"top": 423,
+									"left": 1158,
+									"top": 415,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -7210,8 +7193,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 1198,
-									"top": 398,
+									"left": 1196,
+									"top": 390,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -7229,7 +7212,7 @@
 								"$ref": "AAAAAAFt87Z38mLUaO0="
 							},
 							"lineStyle": 1,
-							"points": "1296:575;1077:251",
+							"points": "1297:575;1072:236",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAFuDKlw8iSpcgk="
@@ -7491,8 +7474,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 953,
-									"top": 257,
+									"left": 956,
+									"top": 249,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -7512,8 +7495,8 @@
 									},
 									"visible": null,
 									"font": "Arial;13;0",
-									"left": 941,
-									"top": 248,
+									"left": 944,
+									"top": 240,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -7533,8 +7516,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 976,
-									"top": 276,
+									"left": 979,
+									"top": 268,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -7552,7 +7535,7 @@
 								"$ref": "AAAAAAFuDKuL8D4Cz8Y="
 							},
 							"lineStyle": 1,
-							"points": "949:295;982:251",
+							"points": "947:295;990:236",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAFuDKuMcj8cK3U="
@@ -9355,7 +9338,8 @@
 									"_parent": {
 										"$ref": "AAAAAAFuDPgYEZmb/hw="
 									},
-									"name": "gesamtwahlergebnis"
+									"name": "gesamtwahlergebnis",
+									"type": ""
 								}
 							]
 						}
@@ -10379,14 +10363,6 @@
 									"type": ""
 								}
 							]
-						},
-						{
-							"_type": "UMLOperation",
-							"_id": "AAAAAAFuDLCuItGkESY=",
-							"_parent": {
-								"$ref": "AAAAAAFuDKjxLB5Y3fw="
-							},
-							"name": "berechneFarbeAufUebersichtskarte"
 						},
 						{
 							"_type": "UMLOperation",
