@@ -1,4 +1,7 @@
 \documentclass[a4paper,12pt]{article}
+%spellchecker
+% !TeX spellcheck = de
+
 \usepackage{amssymb} % needed for math
 \usepackage{amsmath} % needed for math
 \usepackage[utf8]{inputenc} % this is needed for german umlauts
@@ -29,7 +32,7 @@
 % Variablen                                 						 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newcommand{\authorName}{Lena Gregor, Dominik Horn}
-\newcommand{\auftraggeber}{Lehrstuhl für Datenbanksystem}
+\newcommand{\auftraggeber}{Lehrstuhl für Datenbanksysteme}
 \newcommand{\auftragnehmer}{Database Systems Studenten Team}
 \newcommand{\projektName}{Wahlinformationssystem}
 \newcommand{\tags}{\authorName, Lastenheft, TUM, Universität Augsburg, LMU}
@@ -88,7 +91,7 @@ für Landtagswahlen aufbauen.
 Das System soll dabei nicht nur die Ergebnisse für die Landtagswahlen 2013 und 2018 analysierbar machen (Sitzverteilung im
 Landtag, Vergleiche zwischen Wahlen, Zusammensetzung des Landtags) sondern auch als sicheres Backendsystem für die
 elektronische Stimmabgabe im Wahllokal dienen. Es müssen die gesetzlichen Regelungen und Normen und Datenschutzaspekte
-berücksichtigt werden. Als gesetzliche Basis dienen die Regelungen zur Landtagswahl 2013.
+berücksichtigt werden. Als gesetzliche Basis dienen die Regelungen zur Landtagswahl 2018.
 
 \section{Produkteinsatz}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -99,23 +102,28 @@ Zielgruppe ist im Wesentlichen der Übungsleiter der Database Systems Vorlesung
 werden soll die Anwendung jedoch zur Verwendung durch Wahlhelfer zur 
 Stimmeneintragung für Bayrische Landtagswahlen, zur Stimmabgabe durch Wahlberechtigte
 (ggf. nach externer Personalverifikation durch Wahlhelfer) und zur (statistischen)-Auswertung
-von Wahlergebnissen durch den oder die WahlleiterIn sowie u.u interessierten BürgerInnen.
+von Wahlergebnissen durch den oder die WahlleiterIn sowie u.U. interessierten BürgerInnen.
 
 \section{Benutzerschnittstellen}
 Die Informationsabfrage und (statistische) Auswertung von Wahlergebnissen erfolgt
 in einer frei zugänglichen Weboberfläche. Hierbei soll auch der Vergleich zwischen verschiedenen
-Wahlen möglich sein.
-%
+Wahlen möglich sein. Dafür muss es möglich sein, alte Wahlergebnisse in Form einer csv-Datei in das System einzulesen.  
+
 Das Eintragen von einer oder mehreren Stimmabgaben ist als backend Aufruf (Serverless Function)
-für authentifizierte Nutzer zugänglich. Diese funktion machen sich Wahlhelfer oder Wahlleiter zunutze,
+für authentifizierte Nutzer zugänglich. Diese Funktion machen sich Wahlhelfer oder Wahlleiter zunutze,
 z.B. zum Übermitteln von Wahlergebnissen aus der jeweiligen Region.
-%
-Zur Einzelstimmabgabe im Wahllokal wird ebenfalls eine Weboberfläche zugänglich gemacht,
-die erst nach Freigabe durch eine(n) WahlhelferIn zur Abgabe von maximal einer Erststimme
-und einer Zweitstimme im jeweiligen Stimmkreis berechnet. Die vorangegangene Prüfung
-durch den Wahlhelfer stellt sicher, dass die Person wahlberechtigt ist und nicht bereits
-gewählt hat. Das System kann erweitert werden um den oder die WahlhelferIn beim
-Verifizierungsschritt zu unterstützen.
+
+Sämtliche Daten zu den Wahlen sollen in einem Datenbanksystem gespeichert werden.
+
+Außerdem soll es möglich sein das System später als Backend für die elektronische Stimmabgabe im Wahllokal zu nutzen. Wie genau diese Schnittstelle aussehen soll, also ob die Stimmabgabe über eine Webseite oder ein lokales Programm erfolgen soll, wurde nicht vorgegeben.
+ 
+%[<deckt sich so glaube ich nicht mit den Anforderungen auf dem Übungsblatt>
+%Zur Einzelstimmabgabe im Wahllokal wird ebenfalls eine Weboberfläche zugänglich gemacht,
+%die erst nach Freigabe durch eine(n) WahlhelferIn zur Abgabe von maximal einer Erststimme
+%und einer Zweitstimme im jeweiligen Stimmkreis berechnet. Die vorangegangene Prüfung
+%durch den Wahlhelfer stellt sicher, dass die Person wahlberechtigt ist und nicht bereits
+%gewählt hat. Das System kann erweitert werden um den oder die WahlhelferIn beim
+%Verifizierungsschritt zu unterstützen.]
 
 \subsection{Auswertung von Wahlergebnissen}
 \begin{center}
@@ -138,21 +146,25 @@ Verifizierungsschritt zu unterstützen.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{usecase}
   \addheading{Nummer}{Beschreibung} 
-  \addrow{FA01}{Wahldaten von Landtagswahlen ab (inklusive) 2013 müssen fehlerfrei importierbar und im System abbildbar sein}
-  \addrow{FA02}{Einzelstimmen von Wahlberechtigen müssen über eine graphische Schnittstelle im Wahllokal eintragbar sein (E-Voting). 
-                Hierbei muss gewährleistet sein, dass jede wahlberechtigte Person maximal eine Erst- und eine Zweitstimme abgeben darf.}
+  \addrow{FA01}{Wahldaten von Landtagswahlen ab (inklusive) 2013 müssen fehlerfrei aus einer csv-Datei importierbar und im System abbildbar sein}
+  \addrow{FA02}{Das System muss in der Lage sein, als Backend für die Eingabe von Einzelstimmen durch Wahlberechtigte im Wahllokal zu fungieren (E-Voting). Die Verifizierung des Wahlberechtigten wird dabei durch die Wahlhelfer im Wahllokal vorgenommen. Das System muss also nicht über eine Verifizierungsmöglichkeit verfügen.}
+  %{Einzelstimmen von Wahlberechtigen müssen über eine graphische Schnittstelle im Wahllokal eintragbar sein (E-Voting). 
+              %  Hierbei muss gewährleistet sein, dass jede wahlberechtigte Person maximal eine Erst- und eine Zweitstimme abgeben darf.}
   \addrow{FA03}{Wahldaten müssen über eine graphische Schnittstelle (statistisch) auswertbar sein. Hierbei ist insbesondere das Bestimmen von
                 Wahlergebnissen, d.h. gewonnenen Mandaten, wichtig.}
   \addrow{FA04}{Wahldaten unterschiedlicher Wahlvorgänge können verglichen werden.}
+  \addrow{FA05}{Das System soll Einzelstimmen abspeichern können. Erst- und Zweitstimmen sollen getrennt voneinander abgespeichert werden.}
+  \addrow{FA06}{Das System soll es erlauben, pro Stimmkreis die Einzelstimmen zu Stimmkreisergebnissen vorzuaggregieren.}
+  \addrow{FA07}{Juristische Ausnahmefälle, die bei den Wahlen 2013 und 2018 nicht relevant waren und über Sperrklausel, Überhangsmandate, Ausgleichsmandate hinausgehen, müssen im System nicht verarbeitet/ berechnet werden können.}
+  
 \end{usecase}
 
 \section{Nichtfunktionale Anforderungen}
 \begin{usecase}
   \addheading{Nummer}{Beschreibung} 
-  \addrow{NF01}{Das System muss alle rechtlichen Vorgaben zur Landtagswahl im Freistaat Bayern einhalten,
-                insbesondere im Bezug auf Datenschutz und Wahlgeheimniss}
+  \addrow{NF01}{Das System muss alle rechtlichen Vorgaben zur Landtagswahl im Freistaat Bayern einhalten, insbesondere im Bezug auf Datenschutz und Wahlgeheimnis}
   \addrow{NF02}{Ein wirkungsvoller Schutz vor unbefugten Zugriffen muss ein fester Bestandteil sein}
-  \addrow{NF03}{Die (statistische) Auswertung von Wahldaten kann nach unterschiedlichen Kriterien in unterschiedlichen Regionen intuitiv erfolgen}
+  \addrow{NF03}{Die (statistische) Auswertung von Wahldaten kann nach unterschiedlichen Kriterien in unterschiedlichen Regionen intuitiv erfolgen.}
 \end{usecase}
 
 \section{Produktdaten}
@@ -163,12 +175,12 @@ Verwaltete Produktdaten ergeben sich aus dem UML-Datenmodell auf der nächsten S
 Das System erlaubt nach importieren von realen Stimmdaten deren (statistische) Auswertung, d.h. 
 insbesondere die Bestimmung der gewonnenen Mandate im bayrischen Landtag. Dabei müssen gesetzliche
 Vorgaben akkurat abgebildet sein sowie Daten sicher, Datenschutzrechtlich korrekt und integer gehalten
-werden. Des weiteren sollte eine graphisch Ansprechende Darstellung der (statistischen) Auswertung
+werden. Des weiteren sollte eine graphisch ansprechende Darstellung der (statistischen) Auswertung
 einsehbar sein. 
-Minimale Anforderung für den Einsatz im Wahllokal ist die Bereitstellung einer graphischen Schnittstelle zur Abgabe
-von einzelnen Erst- und Zweitstimmen, welche unter Zurhilfenahme eines Wahlhelfers ausschließen können muss,
-dass die Wahlgesetzgebung verletzt wird. Diese Anforderung ist insbesondere im gesetzlichen Rahmen zur
-Stimmabgabe für bayrische Landtagswahlen zu verstehen.
+%[Minimale Anforderung für den Einsatz im Wahllokal ist die Bereitstellung einer graphischen Schnittstelle zur Abgabe. von einzelnen Erst- und Zweitstimmen, welche unter Zuhilfenahme eines Wahlhelfers ausschließen können muss, dass die Wahlgesetzgebung verletzt wird. Diese Anforderung ist insbesondere im gesetzlichen Rahmen zur Stimmabgabe für bayrische Landtagswahlen zu verstehen.]
+
+Für den Einsatz im Wahllokal ist die Bereitstellung einer Schnittstelle zum Systembackend notwendig. Die Schnittstelle soll später durch ein Frontend ergänzt werden können. Wichtig ist dafür, dass für jede Einzelstimme die Erst- und Zweitstimme getrennt gespeichert werden. 
+
 
 % \clearpage
 % \input{Glossar} 
