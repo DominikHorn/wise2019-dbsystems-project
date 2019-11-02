@@ -1,0 +1,5 @@
+build-lastenheft:
+  script: "cd specification/Lastenheft; make"
+  artifacts:
+    paths:
+    - specification/Lastenheft/Lastenheft.pdf
