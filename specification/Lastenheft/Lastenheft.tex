@@ -23,7 +23,7 @@
 \DeclareGraphicsRule{*}{mps}{*}{}
 \fi
 
-\makeglossary 
+\makeglossaries
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Variablen                                 						 %
@@ -65,8 +65,7 @@
 \newenvironment{usecase}{\tabularhead}
 {\hline\end{tabular}}
 
-
-
+\usepackage{pdfpages}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % THE DOCUMENT BEGINS             	                              	 %
@@ -144,15 +143,16 @@ Verifizierungsschritt zu unterstützen.
   \addrow{/FA30/}{adasdfasdf asdf asdfas}
 \end{usecase}
 
-\section{Produktdaten}
-Verwaltete Produktdaten ergeben sich aus dem UML-Datenmodell.
-
 \section{Nichtfunktionale Anforderungen}
 \begin{usecase}
   \addheading{Nummer}{Beschreibung} 
   \addrow{/NF10/}{asdf asdf asdf asdf asdf asdf }
   \addrow{/NF20/}{ asdf asdf asdftergfgasdgewr asdfh}
 \end{usecase}
+
+\section{Produktdaten}
+Verwaltete Produktdaten ergeben sich aus dem UML-Datenmodell auf der nächsten Seite:
+\includepdf[page={1}]{../model}
 
 \section{Abnahmekriterien}
 Das System erlaubt nach importieren von realen Stimmdaten deren (statistische) Auswertung, d.h. 
