@@ -89,7 +89,7 @@ für Landtagswahlen aufbauen.
 Das System soll dabei nicht nur die Ergebnisse für die Landtagswahlen 2013 und 2018 analysierbar machen (Sitzverteilung im
 Landtag, Vergleiche zwischen Wahlen, Zusammensetzung des Landtags) sondern auch als sicheres Backendsystem für die
 elektronische Stimmabgabe im Wahllokal dienen. Es müssen die gesetzlichen Regelungen und Normen und Datenschutzaspekte
-berücksichtigt werden.
+berücksichtigt werden. Als gesetzliche Basis dienen die Regelungen zur Landtagswahl 2013.
 
 \section{Produkteinsatz}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -104,13 +104,15 @@ von Wahlergebnissen durch den oder die WahlleiterIn sowie u.u interessierten Bü
 
 \section{Benutzerschnittstellen}
 Die Informationsabfrage und (statistische) Auswertung von Wahlergebnissen erfolgt
-in einer frei zugänglichen Weboberfläche.
+in einer frei zugänglichen Weboberfläche. Hierbei soll auch der Vergleich zwischen verschiedenen
+Wahlen möglich sein.
 %
 Das Eintragen von einer oder mehreren Stimmabgaben ist als backend Aufruf (Serverless Function)
-für authentifizierte Nutzer zugänglich.
+für authentifizierte Nutzer zugänglich. Diese funktion machen sich Wahlhelfer oder Wahlleiter zunutze,
+z.B. zum Übermitteln von Wahlergebnissen aus der jeweiligen Region.
 %
 Zur Einzelstimmabgabe im Wahllokal wird ebenfalls eine Weboberfläche zugänglich gemacht,
-die erst nach Freigabe durch eine(n) WahlhelferIn zur Abgabe von maixmal einer Erststimme
+die erst nach Freigabe durch eine(n) WahlhelferIn zur Abgabe von maximal einer Erststimme
 und einer Zweitstimme im jeweiligen Stimmkreis berechnet. Die vorangegangene Prüfung
 durch den Wahlhelfer stellt sicher, dass die Person wahlberechtigt ist und nicht bereits
 gewählt hat. Das System kann erweitert werden um den oder die WahlhelferIn beim
@@ -153,6 +155,15 @@ Verwaltete Produktdaten ergeben sich aus dem UML-Datenmodell.
 \end{usecase}
 
 \section{Abnahmekriterien}
+Das System erlaubt nach importieren von realen Stimmdaten deren (statistische) Auswertung, d.h. 
+insbesondere die Bestimmung der gewonnenen Mandate im bayrischen Landtag. Dabei müssen gesetzliche
+Vorgaben akkurat abgebildet sein sowie Daten sicher, Datenschutzrechtlich korrekt und integer gehalten
+werden. Des weiteren sollte eine graphisch Ansprechende Darstellung der (statistischen) Auswertung
+einsehbar sein. 
+Minimale Anforderung für den Einsatz im Wahllokal ist die Bereitstellung einer graphischen Schnittstelle zur Abgabe
+von einzelnen Erst- und Zweitstimmen, welche unter Zurhilfenahme eines Wahlhelfers ausschließen können muss,
+dass die Wahlgesetzgebung verletzt wird. Diese Anforderung ist insbesondere im gesetzlichen Rahmen zur
+Stimmabgabe für bayrische Landtagswahlen zu verstehen.
 
 \clearpage
 \input{Glossar} 
