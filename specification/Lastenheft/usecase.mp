@@ -1,17 +1,35 @@
 input metauml;
 beginfig(1);
-	Actor.admin("Administrator");
-	Actor.leiter("Ubungsleiter");
-	Actor.tutor("Tutor");
-	Actor.tutant("Tutant");
+	Actor.human("InteressentIn");
 
-	Usecase.U("asdf asdf s", "unten");
+	Usecase.UOne("statistische", "Auswertung");
 
-	leftToRight(50)(admin, leiter, tutor, tutant);
-	topToBottom(30)(admin, U);
-	drawObjects(U, admin, leiter, tutor, tutant);
+	leftToRight(50)(human, UOne);
+	drawObjects(human, UOne);
 
-	link(inheritance)(pathStepX(admin.s, U.n, 0));
+	link(association)(pathStepX(human.e, UOne.w, 0));
+endfig;
+beginfig(2);
+	Actor.leiter("WahlleiterIn");
+	Actor.helfer("WahlhelferIn");
 
+	Usecase.UTwo("Stimmen", "eintragen");
+
+	leftToRight(50)(leiter, UTwo, helfer);
+	drawObjects(leiter, helfer, UTwo);
+
+	link(association)(pathStepX(leiter.e, UTwo.w, 0));
+	link(association)(pathStepX(UTwo.e, helfer.w, 0));
+endfig;
+beginfig(3);
+	Actor.waehler("WaehlerIn");
+
+	Usecase.UThree("Stimme", "abgeben");
+
+	leftToRight(50)(waehler, UThree, helfer);
+	drawObjects(waehler, helfer, UThree);
+
+	link(association)(pathStepX(waehler.e, UThree.w, 0));
+	link(association)(pathStepX(UThree.e, helfer.w, 0));
 endfig;
 end

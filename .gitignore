@@ -11,3 +11,5 @@ config.client.json
 ~$
 specification/Lastenheft/*.pdf
 specification/Lastenheft/build
+usecase.*
+!usecase.mp
