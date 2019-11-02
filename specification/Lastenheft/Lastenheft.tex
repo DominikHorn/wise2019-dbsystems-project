@@ -100,10 +100,21 @@ Zielgruppe ist im Wesentlichen der Übungsleiter der Database Systems Vorlesung
 werden soll die Anwendung jedoch zur Verwendung durch Wahlhelfer zur 
 Stimmeneintragung für Bayrische Landtagswahlen, zur Stimmabgabe durch Wahlberechtigte
 (ggf. nach externer Personalverifikation durch Wahlhelfer) und zur (statistischen)-Auswertung
-von Wahlergebnissen durch den oder die Wahlleiter*In sowie u.u interessierten Bürger*Innen.
-
+von Wahlergebnissen durch den oder die WahlleiterIn sowie u.u interessierten BürgerInnen.
 
 \section{Benutzerschnittstellen}
+Die Informationsabfrage und (statistische) Auswertung von Wahlergebnissen erfolgt
+in einer frei zugänglichen Weboberfläche.
+Das Eintragen von einer oder mehreren Stimmabgaben ist als GraphQL Mutation Aufruf
+und damit als Backend Service für authentifizierte Nutzer zugänglich.
+Zur Einzelstimmabgabe im Wahllokal wird ebenfalls eine Weboberfläche zugänglich gemacht,
+die erst nach Freigabe durch eine(n) WahlhelferIn zur Abgabe von maixmal einer Erststimme
+und einer Zweitstimme im jeweiligen Stimmkreis berechnet. Die vorangegangene Prüfung
+durch den Wahlhelfer stellt sicher, dass die Person wahlberechtigt ist und nicht bereits
+gewählt hat. Das System kann erweitert werden um den oder die WahlhelferIn beim
+Verifizierungsschritt zu unterstützen.
+
+\subsection{Eintragen von Wahlergebnissen durch Wahlhelfer}
 \includegraphics{usecase.1}
 
 \section{Funktionale Anforderungen}
@@ -118,15 +129,7 @@ von Wahlergebnissen durch den oder die Wahlleiter*In sowie u.u interessierten B�
 \end{usecase}
 
 \section{Produktdaten}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Auf welchen Daten arbeitet das Produkt?                            %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{usecase}
-  \addheading{Nummer}{Beschreibung} 
-  \addrow{/PD10/}{asdfasdf asdf asdf }
-  \addrow{/PD20/}{asdf asdf asfas asdfas asdf}
-  \addrow{/PD30/}{asdf asdf asdfa a}
-\end{usecase}
+Verwaltete Produktdaten ergeben sich aus dem UML-Datenmodell.
 
 \section{Nichtfunktionale Anforderungen}
 \begin{usecase}
