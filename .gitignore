@@ -9,3 +9,5 @@ yarn-error.log
 config.server.json
 config.client.json
 ~$
+specifiation/Lastenheft/*.pdf
+specifiation/Lastenheft/build

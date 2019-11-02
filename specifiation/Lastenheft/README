@@ -1,0 +1,12 @@
+Bearbeitet werden sollten nur folgende Dateien:
+ * Lastenheft.tex: 
+	Fasst alle Dateien zusammen, allgemeine Variablen werden hier
+	gesetzt.
+ * Deckblatt.tex
+ * Glossar.tex
+ * usecase.mp: Ein Use-Case-Diagramm in MetaUML
+
+######################################################################
+Diese Vorlage stammt von http://martin-thoma.com/vorlage-fur-ein-lastenheft/
+Wenn du einen Verbesserungsvorschlag für die Vorlage hast, hinterlasse 
+mir bitte einen Kommentar.
