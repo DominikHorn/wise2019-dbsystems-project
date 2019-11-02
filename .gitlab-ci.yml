@@ -1,6 +1,5 @@
 build-lastenheft:
-  image: ruby:2.1
-  script: "cd specification/Lastenheft && make"
+  script: "export DEBIAN_FRONTEND=noninteractive; apt-get update -y && apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-metapost texlive-lang-german texlive-latex-extra && cd specification/Lastenheft && make"
   artifacts:
     paths:
     - specification/Lastenheft/Lastenheft.pdf
