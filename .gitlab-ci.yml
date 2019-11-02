@@ -1,5 +1,6 @@
 build-lastenheft:
-  script: "uname -a; apt-get update -y && apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-metapost texlive-lang-german && tlmgr install glossaries && cd specification/Lastenheft && make"
+  image: ruby:2.1
+  script: "cd specification/Lastenheft && make"
   artifacts:
     paths:
     - specification/Lastenheft/Lastenheft.pdf
