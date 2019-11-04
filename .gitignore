@@ -9,7 +9,7 @@ yarn-error.log
 config.server.json
 config.client.json
 ~$
-specification/Lastenheft/*.pdf
-specification/Lastenheft/build
+specification/**/*.pdf
+specification/**/build
 usecase.*
 !usecase.mp
