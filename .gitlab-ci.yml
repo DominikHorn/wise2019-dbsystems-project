@@ -1,13 +1,27 @@
 build-specification-pdfs:
-  script: 
+  only:
+  - master
+  script:
+# Prevent interactive installations, i.e., force all apt-get installs into headless mode
   - export DEBIAN_FRONTEND=noninteractive
+# Remove all currently installed nodejs versions
   - apt-get update -y
-  - apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-metapost texlive-lang-german texlive-latex-extra nodejs build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
-  - npm install canvas 
-  - npm install -g mdgen
-  - cd specification/
-  - mdgen pdf -m model.mdj -o model.pdf
-  - cd Lastenheft
+  - apt autoremove -y nodejs
+# Install n to upgrade to latest nodejs version
+  - git clone https://github.com/tj/n.git; cd n; make install; cd ..; rm -rf n;
+  - n 8
+  - node --version
+  - npm --version
+# Dependencies of Canvas tool required to run mdgen
+  - apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+  - npm install canvas
+# Install mdgen and generate pdf model output
+  - npm install mdgen
+  - node node_modules/mdgen/bin/mdgen.js pdf -m specification/model.mdj -o specification/model.pdf
+# Install all required latex tools and dependencies
+  - apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-metapost texlive-lang-german texlive-latex-extra
+# generate Lastenheft pdf
+  - cd specification/Lastenheft
   - make
   artifacts:
     paths:
