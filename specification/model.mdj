@@ -6762,94 +6762,6 @@
 							"text": "IDs wurden nicht extra eingetragen (implizit bei UML)"
 						},
 						{
-							"_type": "UMLNoteView",
-							"_id": "AAAAAAFt/a8zrdZbVhc=",
-							"_parent": {
-								"$ref": "AAAAAAFF+qBtyKM79qY="
-							},
-							"font": "Arial;13;0",
-							"left": 312,
-							"top": 680,
-							"width": 169,
-							"height": 79,
-							"text": "KandidatIn kann partei wechseln/austreten\n=> Mit Gültigkeitszeitraum speichern für Historie"
-						},
-						{
-							"_type": "UMLNoteLinkView",
-							"_id": "AAAAAAFt/a8z4ta+nRA=",
-							"_parent": {
-								"$ref": "AAAAAAFF+qBtyKM79qY="
-							},
-							"font": "Arial;13;0",
-							"head": {
-								"$ref": "AAAAAAFt/a8zrdZbVhc="
-							},
-							"tail": {
-								"$ref": "AAAAAAFt89fYH6B6HH0="
-							},
-							"lineStyle": 1,
-							"points": "784:721;481:719"
-						},
-						{
-							"_type": "UMLNoteView",
-							"_id": "AAAAAAFt/bvf6WMPvVY=",
-							"_parent": {
-								"$ref": "AAAAAAFF+qBtyKM79qY="
-							},
-							"font": "Arial;13;0",
-							"left": 552,
-							"top": 1064,
-							"width": 116,
-							"height": 72,
-							"text": "KandatIn kann Mandat verlieren oder abgeben"
-						},
-						{
-							"_type": "UMLNoteLinkView",
-							"_id": "AAAAAAFt/bvgD2Nyru4=",
-							"_parent": {
-								"$ref": "AAAAAAFF+qBtyKM79qY="
-							},
-							"font": "Arial;13;0",
-							"head": {
-								"$ref": "AAAAAAFt/bvf6WMPvVY="
-							},
-							"tail": {
-								"$ref": "AAAAAAFt8+Sk5Qgvo7E="
-							},
-							"lineStyle": 1,
-							"points": "841:998;668:1073"
-						},
-						{
-							"_type": "UMLNoteView",
-							"_id": "AAAAAAFt/cIJMIQE2aA=",
-							"_parent": {
-								"$ref": "AAAAAAFF+qBtyKM79qY="
-							},
-							"fillColor": "#d8f2ff",
-							"font": "Arial;13;0",
-							"left": 448,
-							"top": 800,
-							"width": 153,
-							"height": 116,
-							"text": "(Optional) Speichere Zeitraum -> Historisierung wann welcher Kandidat das Mandat inne hat (Rücktritt)"
-						},
-						{
-							"_type": "UMLNoteLinkView",
-							"_id": "AAAAAAFt/cIJUIRnUOs=",
-							"_parent": {
-								"$ref": "AAAAAAFF+qBtyKM79qY="
-							},
-							"font": "Arial;13;0",
-							"head": {
-								"$ref": "AAAAAAFt/cIJMIQE2aA="
-							},
-							"tail": {
-								"$ref": "AAAAAAFt8+bjEykL9yw="
-							},
-							"lineStyle": 1,
-							"points": "688:804;601:832"
-						},
-						{
 							"_type": "UMLClassView",
 							"_id": "AAAAAAFuDKjxLh5aoks=",
 							"_parent": {
@@ -9443,9 +9355,9 @@
 										"$ref": "AAAAAAFuLJMTp5fJkCo="
 									},
 									"font": "Arial;13;0",
-									"left": 401,
+									"left": 400,
 									"top": 628,
-									"width": 19.5126953125,
+									"width": 20,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 25,
