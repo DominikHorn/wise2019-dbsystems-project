@@ -1,11 +1,16 @@
-build-specification-pdfs:
+stages:
+- build-level0
+- build-level1
+
+build-uml-pdf:
+  stage: build-level0
   only:
   - master
   script:
-# Prevent interactive installations, i.e., force all apt-get installs into headless mode
+# Prevent interactive installations, i.e., force all apt-get installs into headless mode and update apt
   - export DEBIAN_FRONTEND=noninteractive
-# Remove all currently installed nodejs versions
   - apt-get update -y
+# Remove all currently installed nodejs versions
   - apt autoremove -y nodejs
 # Install n to upgrade to latest nodejs version
   - git clone https://github.com/tj/n.git; cd n; make install; cd ..; rm -rf n;
@@ -18,6 +23,20 @@ build-specification-pdfs:
 # Install mdgen and generate pdf model output
   - npm install mdgen
   - node node_modules/mdgen/bin/mdgen.js pdf -m specification/model.mdj -o specification/model.pdf
+  artifacts:
+    paths:
+    - specification/model.pdf
+
+build-lastenheft-pdf:
+  stage: build-level1
+  dependencies:
+    - build-uml-pdf
+  only:
+  - master
+  script:
+# Prevent interactive installations, i.e., force all apt-get installs into headless mode
+  - export DEBIAN_FRONTEND=noninteractive
+  - apt-get update -y
 # Install all required latex tools and dependencies
   - apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-metapost texlive-lang-german texlive-latex-extra
 # generate Lastenheft pdf
@@ -26,4 +45,3 @@ build-specification-pdfs:
   artifacts:
     paths:
     - specification/Lastenheft/Lastenheft.pdf
-    - specification/model.pdf
