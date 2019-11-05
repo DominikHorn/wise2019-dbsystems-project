@@ -8,7 +8,8 @@ build/*
 yarn-error.log
 config.server.json
 config.client.json
-~$
+package-lock.json
+~$*
 specification/**/*.pdf
 specification/**/build
 usecase.*
