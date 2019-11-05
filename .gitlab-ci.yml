@@ -42,15 +42,25 @@ build-lastenheft-pdf:
     paths:
     - specification/Lastenheft/Lastenheft.pdf
 
-# TODO: gitlab release api usage
-deploy-artifacts:
+deploy-artifacts-to-wiki:
   stage: deploy
-#  only:
-#  - tags
   dependencies:
   - build-uml-pdf
   - build-lastenheft-pdf
   script:
-  - SPECIFICATION_UPLOAD_FILE=specification_$CI_COMMIT_SHA.tar.gz
+# Configure global vars + install jq for parsing curl json responses
+  - "NOW=$(date +\"%d_%m_%Y\")"
+  - export DEBIAN_FRONTEND=noninteractive
+  - apt-get update -y
+  - apt-get install -y jqa
+# Exit when any command fails
+  - set -e
+# Create specification file that bundles built artifacts
+  - SPECIFICATION_UPLOAD_FILE=specification_$NOW_$CI_COMMIT_SHA.tar.gz
   - tar -czvf $SPECIFICATION_UPLOAD_FILE specification/Lastenheft/Lastenheft.pdf specification/model.pdf
-  - "curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$SPECIFICATION_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments"
+# Upload specification bundle + obtain uploaded files response
+  - "JSON_UPLOAD_RESULT=curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$SPECIFICATION_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments"
+  - "SPECIFICATION_UPLOAD_URL=echo $JSON_UPLOAD_RESULT | jq \".url\""
+  - "JSON_BUILDSWIKI_RESULT=curl --header \"PRIVATE-TOKEN $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/Builds"
+  - "BUILDS_WIKI_CONTENT=echo $JSON_BUILDSWIKI_RESULT | jq \".content\""
+  - "curl --request PUT --data \"content=$BUILDS_WIKI_CONTENT\n* [$SPECIFICATION_UPLOAD_FILE](SPECIFICATION_UPLOAD_URL)\" --header \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/Builds"
