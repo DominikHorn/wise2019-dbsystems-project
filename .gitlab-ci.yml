@@ -44,6 +44,8 @@ build-lastenheft-pdf:
 
 deploy-artifacts-to-wiki:
   stage: deploy
+  only:
+  - master
   dependencies:
   - build-uml-pdf
   - build-lastenheft-pdf
@@ -52,7 +54,7 @@ deploy-artifacts-to-wiki:
   - "NOW=$(date +\"%d_%m_%Y\")"
   - export DEBIAN_FRONTEND=noninteractive
   - apt-get update -y
-  - apt-get install -y jqa
+  - apt-get install -y jq
 # Exit when any command fails
   - set -e
 # Create specification file that bundles built artifacts
