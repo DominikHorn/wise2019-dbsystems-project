@@ -1,11 +1,12 @@
 stages:
 - build-level0
 - build-level1
+- deploy
 
 build-uml-pdf:
   stage: build-level0
   only:
-  - master
+  - tags
   script:
 # Prevent interactive installations, i.e., force all apt-get installs into headless mode and update apt
   - export DEBIAN_FRONTEND=noninteractive
@@ -28,10 +29,10 @@ build-uml-pdf:
 
 build-lastenheft-pdf:
   stage: build-level1
-  dependencies:
-    - build-uml-pdf
   only:
-  - master
+  - tags
+  dependencies:
+  - build-uml-pdf
   script:
 # Prevent interactive installations, i.e., force all apt-get installs into headless mode
   - export DEBIAN_FRONTEND=noninteractive
@@ -44,3 +45,18 @@ build-lastenheft-pdf:
   artifacts:
     paths:
     - specification/Lastenheft/Lastenheft.pdf
+
+deploy-artifacts:
+  stage: deploy
+  only:
+  - master
+#  dependencies:
+#  - build-uml-pdf
+#  - build-lastenheft-pdf
+  script:
+  - echo $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments
+  - SPECIFICATION_UPLOAD_FILE=test.txt
+  - echo "LOL" > $SPECIFICATION_UPLOAD_FILE
+#  - SPECIFICATION_UPLOAD_FILE=specification_$CI_COMMIT_SHA.tar.gz
+#  - tar -czvf $SPECIFICATION_UPLOAD_FILE specification/Lastenheft/Lastenheft.pdf specification/model.pdf
+  - "curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$SPECIFICATION_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments"
