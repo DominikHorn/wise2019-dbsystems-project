@@ -3,6 +3,12 @@ stages:
 - build-level1
 - deploy
 
+variables:
+# When editing also change build artifact paths 
+  UML_MODEL_FILE: "specification/model.pdf"
+# When editing also change build artifact paths 
+  LASTENHEFT_FILE: "specification/Lastenheft/Lastenheft.pdf"
+
 build-uml-pdf:
   stage: build-level0
   script:
@@ -23,6 +29,7 @@ build-uml-pdf:
   - node node_modules/mdgen/bin/mdgen.js pdf -m specification/model.mdj -o specification/model.pdf
   artifacts:
     paths:
+# When editing also change variables
     - specification/model.pdf
 
 build-lastenheft-pdf:
@@ -40,6 +47,7 @@ build-lastenheft-pdf:
   - make
   artifacts:
     paths:
+# When editing also change variables
     - specification/Lastenheft/Lastenheft.pdf
 
 deploy-artifacts-to-wiki:
@@ -58,11 +66,15 @@ deploy-artifacts-to-wiki:
 # Exit when any command fails
   - set -e
 # Create specification file that bundles built artifacts
-  - SPECIFICATION_UPLOAD_FILE=specification_$NOW_$CI_COMMIT_SHA.tar.gz
-  - tar -czvf $SPECIFICATION_UPLOAD_FILE specification/Lastenheft/Lastenheft.pdf specification/model.pdf
+  - LASTENHEFT_UPLOAD_FILE=Lastenheft_$NOW_$CI_COMMIT_SHA.pdf
+  - MODEL_UPLOAD_FILE=UML_Model_$NOW_$CI_COMMIT_SHA.pdf
+  - cp $LASTENHEFT_FILE $LASTENHEFT_UPLOAD_FILE
+  - cp $UML_MODEL_FILE $MODEL_UPLOAD_FILE
 # Upload specification bundle + obtain uploaded files response
-  - "JSON_UPLOAD_RESULT=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$SPECIFICATION_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments)"
-  - "SPECIFICATION_UPLOAD_URL=$(echo \"$JSON_UPLOAD_RESULT\" | jq \".link.url\")"
+  - "JSON_UPLOAD_RESULT=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$LASTENHEFT_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments)"
+  - "LASTENHEFT_UPLOAD_URL=$(echo \"$JSON_UPLOAD_RESULT\" | jq -r \".link.url\")"
+  - "JSON_UPLOAD_RESULT=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$MODEL_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments)"
+  - "MODEL_UPLOAD_URL=$(echo \"$JSON_UPLOAD_RESULT\" | jq -r \".link.url\")"
   - "JSON_BUILDSWIKI_RESULT=$(curl --header \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/Builds)"
   - "BUILDS_WIKI_CONTENT=$(echo $JSON_BUILDSWIKI_RESULT | jq -r \".content\")"
-  - "curl --request PUT --data \"content=$(sed -e 's/^\"//' -e 's/\"$//' <<<\"$BUILDS_WIKI_CONTENT\")\r\n| $NOW | $CI_COMMIT_SHA | [$SPECIFICATION_UPLOAD_FILE]($SPECIFICATION_UPLOAD_URL) |\" --header \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/Builds"
+  - "curl --request PUT --data \"content=$(sed -e 's/^\"//' -e 's/\"$//' <<<\"$BUILDS_WIKI_CONTENT\")\r\n| $NOW | $CI_COMMIT_SHA | [$LASTENHEFT_UPLOAD_FILE]($LASTENHEFT_UPLOAD_URL) | [$MODEL_UPLOAD_FILE]($MODEL_UPLOAD_URL) |\" --header \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/Builds"
