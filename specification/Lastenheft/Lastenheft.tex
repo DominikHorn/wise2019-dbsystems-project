@@ -13,10 +13,6 @@
 % this is needed for forms and links within the text
 \usepackage{hyperref}  
 
-% glossar, see http://en.wikibooks.org/wiki/LaTeX/Glossary
-% has to be loaded AFTER hyperref so that entries are clickable
-\usepackage[nonumberlist]{glossaries} 
-
 % The following is needed in order to make the code compatible
 % with both latex/dvips and pdflatex.
 \ifx\pdftexversion\undefined
@@ -26,8 +22,6 @@
 \DeclareGraphicsRule{*}{mps}{*}{}
 \fi
 
-\makeglossaries
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Variablen                                 						 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -36,7 +30,6 @@
 \newcommand{\auftragnehmer}{\authorName}
 \newcommand{\projektName}{Wahl und Informationssystem für bayrische Landtagswahlen}
 \newcommand{\tags}{\authorName, Lastenheft, TUM, Universität Augsburg, LMU}
-\newcommand{\glossarName}{Glossar}
 \newcommand{\subtitle}{Technische Universität München, Datenbanksysteme WS19/20}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -213,8 +206,4 @@ einsehbar sein.
 %[Minimale Anforderung für den Einsatz im Wahllokal ist die Bereitstellung einer graphischen Schnittstelle zur Abgabe. von einzelnen Erst- und Zweitstimmen, welche unter Zuhilfenahme eines Wahlhelfers ausschließen können muss, dass die Wahlgesetzgebung verletzt wird. Diese Anforderung ist insbesondere im gesetzlichen Rahmen zur Stimmabgabe für bayrische Landtagswahlen zu verstehen.]
 
 Für den Einsatz im Wahllokal ist die Bereitstellung einer Schnittstelle zum Systembackend notwendig. Die Schnittstelle soll später durch ein Frontend ergänzt werden können. Wichtig ist dafür, dass für jede Einzelstimme die Erst- und Zweitstimme getrennt gespeichert werden. 
-
-
-% \clearpage
-% \input{Glossar} 
 \end{document}

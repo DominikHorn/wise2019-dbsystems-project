@@ -29,5 +29,6 @@ specification/**/*.ist
 specification/**/*.log
 specification/**/*.out
 specification/**/*.toc
+specification/**/*.glsdefs
 usecase.*
 !usecase.mp
