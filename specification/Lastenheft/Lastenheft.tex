@@ -40,14 +40,23 @@
   pdfkeywords = {\tags},
   pdftitle    = {\projektName~(Lastenheft)}
 } 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Custom setup                                                       % 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{pdfpages}
+\usepackage{xcolor,colortbl} 
+\definecolor{Blue}{rgb}{0.1,0.2,0.7}
+\newcolumntype{a}{>{\columncolor{Blue}}c}
+\renewcommand{\arraystretch}{1.5}
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Create a shorter version for tables. DO NOT CHANGE               	 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand\addrow[2]{#1 &#2\\ }
+\newcommand\addrow[2]{\textcolor{white}{#1} &#2\\ \hline}
 
-\newcommand\addheading[2]{#1 &#2\\ \hline}
-\newcommand\tabularhead{\begin{tabular}{lp{13cm}}
+\newcommand\addheading[2]{\rowcolor{Blue}\textcolor{white}{#1} & \textcolor{white}{#2}\\ \hline}
+\newcommand\tabularhead{\begin{tabular}{|a|p{13cm}|}
 \hline
 }
 
@@ -58,15 +67,6 @@
 
 \newenvironment{usecase}{\tabularhead}
 {\hline\end{tabular}}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Custom setup                                                       % 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage{pdfpages}
-\usepackage{xcolor,colortbl} 
-\definecolor{Blue}{rgb}{0.1,0.2,0.7}
-\newcolumntype{a}{>{\columncolor{Blue}}c}
-\renewcommand{\arraystretch}{1.5}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % THE DOCUMENT BEGINS             	                              	 %
@@ -160,26 +160,31 @@ Dieser Absatz beschäftigt sich mit der Definition von Benutzerschnittstellen un
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{usecase}
   \addheading{Nummer}{Beschreibung} 
-  \addrow{FA01}{Wahldaten von Landtagswahlen ab (inklusive) 2013 müssen fehlerfrei aus einer csv-Datei importierbar und im System abbildbar sein}
-  \addrow{FA02}{Das System muss in der Lage sein, als Backend für die Eingabe von Einzelstimmen durch Wahlberechtigte im Wahllokal zu fungieren (E-Voting). Die Verifizierung des Wahlberechtigten wird dabei durch die Wahlhelfer im Wahllokal vorgenommen. Das System muss also nicht über eine Verifizierungsmöglichkeit verfügen.}
-  %{Einzelstimmen von Wahlberechtigen müssen über eine graphische Schnittstelle im Wahllokal eintragbar sein (E-Voting). 
-              %  Hierbei muss gewährleistet sein, dass jede wahlberechtigte Person maximal eine Erst- und eine Zweitstimme abgeben darf.}
-  \addrow{FA03}{Wahldaten müssen über eine graphische Schnittstelle (statistisch) auswertbar sein. Hierbei ist insbesondere das Bestimmen von
-                Wahlergebnissen, d.h. gewonnenen Mandaten, wichtig.}
-  \addrow{FA04}{Wahldaten unterschiedlicher Wahlvorgänge können verglichen werden.}
-  \addrow{FA05}{Das System soll Einzelstimmen abspeichern können. Erst- und Zweitstimmen sollen getrennt voneinander abgespeichert werden.}
-  \addrow{FA06}{Das System soll es erlauben, pro Stimmkreis die Einzelstimmen zu Stimmkreisergebnissen vorzuaggregieren.}
-  \addrow{FA07}{Juristische Ausnahmefälle, die bei den Wahlen 2013 und 2018 nicht relevant waren und über Sperrklausel, Überhangsmandate, Ausgleichsmandate hinausgehen, müssen im System nicht verarbeitet/ berechnet werden können.}
-  \addrow{FA09}{Das System muss in der Lage sein das Wahlergebnis einer Wahl zu berechnen und die statistische Auswertung laut Gesetzgebung (oder künftiger Spezifikation) bereit zu stellen.}
-  
+  \addrow{FR01}{Wahldaten müssen über eine graphische Schnittstelle (statistisch) auswertbar sein. Hierbei ist insbesondere das Bestimmen von
+                Wahlergebnissen, d.h. gewonnenen Mandaten, wichtig. Wahldaten unterschiedlicher Wahlvorgänge können dabei verglichen werden}
+  \addrow{FR02}{Einzelstimmen sollen durch Wahlberechtigte im Wahllokal abgegeben werden können (E-Voting). Die notwendige Authentifizierung
+                erfolgt dabei zum Beispiel durch eine(n) WahlhelferIn}
+  \addrow{FR03}{Die Einzelstimmabgabe muss vor Benutzung durch eine wahlberechtigte Person je freigegeben werden. 
+                Dies kann zum Beispiel durch eine(n) WahlhelferIn geschehen nach analoger Verifikation von Reisepass oder Personalausweis}
+  \addrow{FR04}{WahlhelferInnen müssen in der Lage sein mehrerer Stimmen auf einmal (batch) in das System einzutragen. Dies ist zum Beispiel
+                dienlich um analoge Stimmabgaben in das System zu übertragen}
+  \addrow{FR05}{Wahldaten von Landtagswahlen ab (inklusive) 2013 müssen fehlerfrei aus einer CSV-Datei importierbar und im System abbildbar sein.}
+  \addrow{FR06}{WahlleiterInnen haben die Möglichkeit Stimmen zu korrigieren, zum Beispiel falls die Gültigkeit von Stimmen nachträglich annuliert 
+                werden muss oder es im Rahmen von Neuauszählungen zu Änderungen kommt.}
+  \addrow{FR07}{Pro Stimmkreis werden die Einzelstimmen zu Stimmkreisergebnissen voraggregiert.}
 \end{usecase}
 
 \section{Nichtfunktionale Anforderungen}
 \begin{usecase}
   \addheading{Nummer}{Beschreibung} 
-  \addrow{NF01}{Das System muss alle rechtlichen Vorgaben zur Landtagswahl im Freistaat Bayern einhalten, insbesondere im Bezug auf Datenschutz und Wahlgeheimnis.}
-  \addrow{NF02}{Ein wirkungsvoller Schutz vor unbefugten Zugriffen muss ein fester Bestandteil sein.}
-  \addrow{NF03}{Die graphische Oberfläche soll mächtig, jedoch intuitiv sein.}
+  \addrow{NF01}{Das System muss alle rechtlichen Vorgaben zur Landtagswahl im Freistaat Bayern einhalten, insbesondere im Bezug auf Datenschutz und Wahlgeheimnis.
+                Für letzteres ist beispielsweise das getrennte abspeichern von Erst- und Zweitstimmen fundamental.
+                Juristische Ausnahmefälle, die bei den Wahlen 2013 und 2018 nicht relevant waren und über 
+                Sperrklausel, Überhangsmandate, Ausgleichsmandate hinausgehen, müssen im System nicht verarbeitet/ berechnet werden können.}
+  \addrow{NF02}{Zu Peak-Lastzeiten, i.e., wenn tausende WählerInnen gleichzeitig abstimmen, muss das System reibungslos einsatzfähig bleiben.}
+  \addrow{NF03}{Ein wirkungsvoller Schutz vor unbefugten Zugriffen muss ein fester Bestandteil sein um die Integrität der Wahlergebnisse nicht zu gefährden.}
+  \addrow{NF04}{Die (statistische-)Auswertung von Wahlergebnissen muss schnell und korrekt sein.}
+  \addrow{NF05}{Die graphische Oberfläche soll mächtig, jedoch intuitiv sein.}
 \end{usecase}
 
 \section{Produktdaten}
