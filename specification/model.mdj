@@ -2691,17 +2691,17 @@
 										"$ref": "AAAAAAFt89i1sKZ1VvI="
 									},
 									"font": "Arial;13;0",
-									"left": 798,
-									"top": 552,
-									"width": 88.53076171875,
+									"left": 792,
+									"top": 544,
+									"width": 99.37255859375,
 									"height": 13,
-									"alpha": -3.624508825969291,
-									"distance": 58.077534382926416,
+									"alpha": -3.76218122529374,
+									"distance": 58.215118311311535,
 									"hostEdge": {
 										"$ref": "AAAAAAFt89i1sKZ55C4="
 									},
 									"edgePosition": 1,
-									"text": "+direktkandidat"
+									"text": "+direktkandidatIn"
 								},
 								{
 									"_type": "EdgeLabelView",
@@ -7639,7 +7639,7 @@
 							},
 							"fillColor": "#ffd8d8",
 							"font": "Arial;13;0",
-							"left": 504,
+							"left": 336,
 							"top": 256,
 							"width": 185,
 							"height": 107,
@@ -7659,7 +7659,7 @@
 								"$ref": "AAAAAAFt89yLjclEzmM="
 							},
 							"lineStyle": 1,
-							"points": "476:422;539:363"
+							"points": "430:422;429:363"
 						},
 						{
 							"_type": "UMLGeneralizationView",
@@ -9172,36 +9172,6 @@
 							"points": "1098:852;1143:879"
 						},
 						{
-							"_type": "UMLNoteView",
-							"_id": "AAAAAAFuEkkVXQUyI6I=",
-							"_parent": {
-								"$ref": "AAAAAAFF+qBtyKM79qY="
-							},
-							"fillColor": "#ffd8d8",
-							"font": "Arial;13;0",
-							"left": 336,
-							"top": 264,
-							"width": 100,
-							"height": 77,
-							"text": "Jeder Wähler darf nur eine Stimme abgeben -> Sicherstellen!"
-						},
-						{
-							"_type": "UMLNoteLinkView",
-							"_id": "AAAAAAFuEkkVlwWhz9A=",
-							"_parent": {
-								"$ref": "AAAAAAFF+qBtyKM79qY="
-							},
-							"font": "Arial;13;0",
-							"head": {
-								"$ref": "AAAAAAFuEkkVXQUyI6I="
-							},
-							"tail": {
-								"$ref": "AAAAAAFt89yLjclEzmM="
-							},
-							"lineStyle": 1,
-							"points": "419:422;396:341"
-						},
-						{
 							"_type": "UMLAssociationView",
 							"_id": "AAAAAAFuLJMTp5fMd3M=",
 							"_parent": {
@@ -10095,7 +10065,7 @@
 							"_parent": {
 								"$ref": "AAAAAAFt88Afn3r0O1M="
 							},
-							"name": "direktkandidat",
+							"name": "direktkandidatIn",
 							"end1": {
 								"_type": "UMLAssociationEnd",
 								"_id": "AAAAAAFt89i1sKZ2Vvg=",
