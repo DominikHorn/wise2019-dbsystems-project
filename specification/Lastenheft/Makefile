@@ -1,9 +1,8 @@
 make:
-	mpost usecase.mp
+#	mpost usecase.mp
 	pdflatex Lastenheft.tex -output-format=pdf
-	makeglossaries Lastenheft
+#	makeglossaries Lastenheft
 	pdflatex Lastenheft.tex -output-format=pdf
-	pdflatex durchfuhrbarkeit.tex -output-format=pdf
 	make clean
 
 clean:
