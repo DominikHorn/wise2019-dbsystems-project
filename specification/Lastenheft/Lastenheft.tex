@@ -221,12 +221,23 @@ identifizierten Entitäten:
 \end{center}
 
 \section{Abnahmekriterien}
-Das System erlaubt nach importieren von realen Stimmdaten deren (statistische) Auswertung, d.h. 
-insbesondere die Bestimmung der gewonnenen Mandate im bayrischen Landtag. Dabei müssen gesetzliche
-Vorgaben akkurat abgebildet sein sowie Daten sicher, Datenschutzrechtlich korrekt und integer gehalten
-werden. Des weiteren sollte eine graphisch ansprechende Darstellung der (statistischen) Auswertung
-einsehbar sein. 
-%[Minimale Anforderung für den Einsatz im Wahllokal ist die Bereitstellung einer graphischen Schnittstelle zur Abgabe. von einzelnen Erst- und Zweitstimmen, welche unter Zuhilfenahme eines Wahlhelfers ausschließen können muss, dass die Wahlgesetzgebung verletzt wird. Diese Anforderung ist insbesondere im gesetzlichen Rahmen zur Stimmabgabe für bayrische Landtagswahlen zu verstehen.]
+Dieser Abschnitt definiert die wichtigsten Kriterien welche zwischen dem Erzeugnis und der Abnahme stehen.
+Sie leiten sich hauptsächlich aus den in diesem Dokument spezifizierten Anforderungen ab.
 
-Für den Einsatz im Wahllokal ist die Bereitstellung einer Schnittstelle zum Systembackend notwendig. Die Schnittstelle soll später durch ein Frontend ergänzt werden können. Wichtig ist dafür, dass für jede Einzelstimme die Erst- und Zweitstimme getrennt gespeichert werden. 
+\begin{enumerate}
+  \item Die Softwareplatform ist über eine graphisch ansprechende Weboberfläche benutzbar.
+  \item Das System erlaubt die (statistische) Auswertung von realen Stimmdaten zu bayrischen Landtagswahlen, d.h. 
+        insbesondere die Bestimmung der gewonnenen Mandate im bayrischen Landtag. Dabei müssen gesetzliche
+        Vorgaben genauestens eingehalten sein sowie Daten sicher, Datenschutzrechtlich korrekt und integer gehalten
+        werden.
+  \item WählerInnen haben durch eine bereitgestellte Oberfläche die Möglichkeit ihre Erst- und Zweitstimme abzugeben.
+        Dabei muss gewährleistet sein, dass jede Wahlberechtigte Person nur maximal einmal abstimmen kann, 
+        Datenschutzrechtliche sowie gesetzliche Vorgaben wie das Stimmgeheimnis eingehalten werden und das System 
+        insbesondere vor unbefugtem Zugriff geschützt ist.
+  \item WahlhelferInnen können schnell Stimmen, e.g. analog abgegebene, in einer minimalen Anzahl von Schritten in das
+        System übernehmen.
+  \item Reale Stimmdaten vergangener Wahlen können von berechtigten Nutzern, e.g., WahlleiterInnen, importiert und
+        (statistisch) Ausgewertet werden. Hierbei ist insbesondere auch der vergleich mit den Ergebnissen anderer
+        Wahlvorgänge wichtig.
+\end{enumerate}
 \end{document}
