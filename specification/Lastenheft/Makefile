@@ -1,5 +1,5 @@
 make:
-	mpost usecase.mp
+#	mpost usecase.mp
 	pdflatex Lastenheft.tex -output-format=pdf
 #	makeglossaries Lastenheft
 	pdflatex Lastenheft.tex -output-format=pdf
