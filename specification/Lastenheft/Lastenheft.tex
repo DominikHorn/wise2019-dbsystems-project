@@ -40,7 +40,7 @@
 \newcommand{\subtitle}{Technische Universität München, Datenbanksysteme WS19/20}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% PDF Meta information                                 				 %
+% PDF Meta information                                 				       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \hypersetup{
   pdfauthor   = {\authorName},
@@ -66,7 +66,13 @@
 \newenvironment{usecase}{\tabularhead}
 {\hline\end{tabular}}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Custom setup                                                       % 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{pdfpages}
+\usepackage{xcolor,colortbl} 
+\definecolor{Blue}{rgb}{0.1,0.2,0.7}
+\newcolumntype{a}{>{\columncolor{Blue}}c}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % THE DOCUMENT BEGINS             	                              	 %
@@ -83,13 +89,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Warum wird das Projekt gemacht?           						 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Der Freistaat Bayern möchte in Kooperation mit dem Lehrstuhl für Datenbanksysteme an der Technischen Universität München
-eine digitales Wahlinformations- und Stimmabgabesystem von Studierenden des Elite Software Engineering Masterstudiengangs 
-für Landtagswahlen aufbauen.
-Das System soll dabei nicht nur die Ergebnisse für die Landtagswahlen 2013 und 2018 analysierbar machen (Sitzverteilung im
-Landtag, Vergleiche zwischen Wahlen, Zusammensetzung des Landtags) sondern auch als sicheres Backendsystem für die
-elektronische Stimmabgabe im Wahllokal dienen. Es müssen die gesetzlichen Regelungen und Normen und Datenschutzaspekte
-berücksichtigt werden. Als gesetzliche Basis dienen die Regelungen zur Landtagswahl 2018.
+Der Freistaat Bayern möchte in Kooperation mit dem Lehrstuhl für 
+Datenbanksysteme an der Technischen Universität München eine digitales 
+Wahlinformations- und Stimmabgabesystem für Landtagswahlen mithilfe von 
+Studierenden des Elite Software Engineering Masterstudiengangs aufbauen.
+%
+Das System soll dabei nicht nur die Ergebnisse für die Landtagswahlen 
+2013 und 2018 analysier- und vergleichbar machen, e.g., die Sitzverteilung 
+im Landtag, statistische Auswertung von Ergebnissen, Berechnung gewonnener
+Mandate, sondern auch als sicheres Backendsystem für die elektronische 
+Stimmabgabe im Wahllokal dienen. 
+%
+Es müssen die gesetzlichen Regelungen, Normen und Datenschutzaspekte
+berücksichtigt werden. Als Basis gelten die Regelungen zur
+Landtagswahl 2018
 
 \section{Produkteinsatz}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
