@@ -1,6 +1,7 @@
 stages:
-- build-level0
-- build-level1
+- pre-build
+- build
+#- post-build
 - deploy
 
 variables:
@@ -8,10 +9,12 @@ variables:
   UML_MODEL_FILE: "specification/model.pdf"
   USECASES_FILE: "specification/usecases.pdf"
   LASTENHEFT_FILE: "specification/Lastenheft/Lastenheft.pdf"
+  PFLICHTENHEFT_FILE: "specification/Pflichtenheft/Pflichtenheft.pdf"
+  GLOSSAR_FILE: "specification/Glossar/Glossar.pdf"
   BUILDS_WIKI_SLUG: "Home"
 
 build-mdj-pdfs:
-  stage: build-level0
+  stage: pre-build
   script:
   # Prevent interactive installations, i.e., force all apt-get installs into headless mode and update apt
   - export DEBIAN_FRONTEND=noninteractive
@@ -36,7 +39,7 @@ build-mdj-pdfs:
     - specification/usecases.pdf
 
 build-lastenheft-pdf:
-  stage: build-level1
+  stage: build
   dependencies:
   - build-mdj-pdfs
   script:
@@ -52,6 +55,38 @@ build-lastenheft-pdf:
     paths:
     # When editing also change variables
     - specification/Lastenheft/Lastenheft.pdf
+    
+build-pflichtenheft-pdf:
+    stage: build
+    script:
+    # Prevent interactive installations, i.e., force all apt-get installs into headless mode
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update -y
+    # Install all required latex tools and dependencies
+    - apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-metapost texlive-lang-german texlive-latex-extra
+    # generate Pflichtenheft pdf
+    - cd specification/Pflichtenheft
+    - make
+    artifacts:
+      paths:
+      # When editing also change variables
+      - specification/Pflichtenheft/Pflichtenheft.pdf
+
+build-glossar-pdf:
+    stage: build
+    script:
+    # Prevent interactive installations, i.e., force all apt-get installs into headless mode
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update -y
+    # Install all required latex tools and dependencies
+    - apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-metapost texlive-lang-german texlive-latex-extra
+    # generate Pflichtenheft pdf
+    - cd specification/Glossar
+    - make
+    artifacts:
+      paths:
+      # When editing also change variables
+      - specification/Glossar/Glossar.pdf
 
 deploy-artifacts-to-wiki:
   stage: deploy
@@ -60,6 +95,8 @@ deploy-artifacts-to-wiki:
   dependencies:
   - build-mdj-pdfs
   - build-lastenheft-pdf
+  - build-pflichtenheft-pdf
+  - build-glossar-pdf
   script:
   # Configure global vars + install jq for parsing curl json responses
   - "NOW=$(date +\"%d_%m_%Y\")"
@@ -68,19 +105,26 @@ deploy-artifacts-to-wiki:
   - apt-get install -y jq
   # Exit when any command fails
   - set -e
-  # Create specification file that bundles built artifacts
+  # Prepare all files for uploading to wiki/uploads
   - UPLOAD_FILE_ENDING=$(echo $NOW)_$(echo $CI_COMMIT_SHA)
   - LASTENHEFT_UPLOAD_FILE=Lastenheft_$UPLOAD_FILE_ENDING.pdf
+  - PFLICHTENHEFT_UPLOAD_FILE=Pflichtenheft_$UPLOAD_FILE_ENDING.pdf
+  - GLOSSAR_UPLOAD_FILE=Glossar_$UPLOAD_FILE_ENDING.pdf
   - MODEL_UPLOAD_FILE=UML_Model_$UPLOAD_FILE_ENDING.pdf
   - USECASES_UPLOAD_FILE=Usecases_$UPLOAD_FILE_ENDING.pdf
   - cp $LASTENHEFT_FILE $LASTENHEFT_UPLOAD_FILE
+  - cp $PFLICHTENHEFT_FILE $PFLICHTENHEFT_UPLOAD_FILE
+  - cp $GLOSSAR_FILE $GLOSSAR_UPLOAD_FILE
   - cp $UML_MODEL_FILE $MODEL_UPLOAD_FILE
   - cp $USECASES_FILE $USECASES_UPLOAD_FILE
   # Upload specification files + fetch uploads/... url from response
   - "LASTENHEFT_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$LASTENHEFT_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
+  - "PFLICHTENHEFT_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$PFLICHTENHEFT_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
+  - "GLOSSAR_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$GLOSSAR_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
   - "MODEL_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$MODEL_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
   - "USECASES_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$USECASES_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
   # Get contents of builds wiki page, append new table row and push to server
-  - "JSON_BUILDSWIKI_RESULT=$(curl --header \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/$BUILDS_WIKI_SLUG)"
-  - "BUILDS_WIKI_CONTENT=$(echo $JSON_BUILDSWIKI_RESULT | jq -r \".content\")"
-  - "curl --request PUT --data \"content=$(sed -e 's/^\"//' -e 's/\"$//' <<<\"$BUILDS_WIKI_CONTENT\")\r\n| $NOW | $CI_COMMIT_SHA | [Lastenheft.pdf]($LASTENHEFT_UPLOAD_URL) | [UML-Model.pdf]($MODEL_UPLOAD_URL) | [Usecases.pdf]($USECASES_UPLOAD_URL)|\" --header \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/Builds"
+  - echo $BUILDS_WIKI_SLUG
+  - "BUILDS_WIKI_CONTENT=$(curl --header \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/$BUILDS_WIKI_SLUG | jq -r \".content\")"
+  - echo $BUILDS_WIKI_CONTENT
+  - "curl --request PUT --data \"content=$(sed -e 's/^\"//' -e 's/\"$//' <<<\"$BUILDS_WIKI_CONTENT\")\r\n| $NOW | $CI_COMMIT_SHA | [Lastenheft.pdf]($LASTENHEFT_UPLOAD_URL) | [Pflichtenheft.pdf]($PFLICHTENHEFT_UPLOAD_URL) | [Glossar.pdf]($GLOSSAR_UPLOAD_URL) | [UML-Model.pdf]($MODEL_UPLOAD_URL) | [Usecases.pdf]($USECASES_UPLOAD_URL)|\" --header \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/Builds"
