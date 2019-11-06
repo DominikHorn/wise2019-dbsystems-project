@@ -127,29 +127,30 @@ interessierten BürgerInnen.
 
 
 \section{Benutzerschnittstellen}
-Die Informationsabfrage und (statistische) Auswertung von Wahlergebnissen erfolgt
-in einer frei zugänglichen Weboberfläche. Hierbei soll auch der Vergleich zwischen verschiedenen
-Wahlen möglich sein. Dafür muss es möglich sein, alte Wahlergebnisse in Form einer csv-Datei in das System einzulesen.  
-
-Das Eintragen von einer oder mehreren Stimmabgaben ist als backend Aufruf (Serverless Function)
-für authentifizierte Nutzer zugänglich. Diese Funktion machen sich Wahlhelfer oder Wahlleiter zunutze,
-z.B. zum Übermitteln von Wahlergebnissen aus der jeweiligen Region.
-
-Sämtliche Daten zu den Wahlen sollen in einem Datenbanksystem gespeichert werden.
-
-Außerdem soll es möglich sein das System später als Backend für die elektronische Stimmabgabe im Wahllokal zu nutzen. Wie genau diese Schnittstelle aussehen soll, also ob die Stimmabgabe über eine Webseite oder ein lokales Programm erfolgen soll, wurde nicht vorgegeben.
- 
-%[<deckt sich so glaube ich nicht mit den Anforderungen auf dem Übungsblatt>
-%Zur Einzelstimmabgabe im Wahllokal wird ebenfalls eine Weboberfläche zugänglich gemacht,
-%die erst nach Freigabe durch eine(n) WahlhelferIn zur Abgabe von maximal einer Erststimme
-%und einer Zweitstimme im jeweiligen Stimmkreis berechnet. Die vorangegangene Prüfung
-%durch den Wahlhelfer stellt sicher, dass die Person wahlberechtigt ist und nicht bereits
-%gewählt hat. Das System kann erweitert werden um den oder die WahlhelferIn beim
-%Verifizierungsschritt zu unterstützen.]
+Dieser Absatz beschäftigt sich mit der Definition von Benutzerschnittstellen und fundamentalen Usecases:
 
 \begin{center}
 	\includegraphics[width=\textwidth]{../usecases.pdf}
 \end{center}
+
+\begin{enumerate}
+  \item Die Informationsabfrage und (statistische-)Auswertung von Wahlergebnissen erfolgt
+        in einer frei zugänglichen Weboberfläche. Hierbei soll auch der Vergleich zwischen 
+        verschiedenen Wahlen möglich sein. 
+  \item Das System soll geeignet sein für die elektronische Stimmabgabe im Wahllokal durch
+        wahlberechtigte Personen
+  \item Um zu gewährleisten, dass jeweils nur eine Stimme pro wahlberechtigter Person abgegeben
+        werden kann, muss die Stimmabgabe erst freigegeben werden. Dies geschieht entweder nach
+        Authentifizierung durch eine(n) WahlhelferIn oder durch den oder die WählerIn selbst 
+        (Unique one-time-use password, Vorlage von Personalausweis/Reisepass).
+  \item WahlhelferInnen müssen in der Lage sein ein oder mehrere Stimmen auf einmal ins System
+        eintragen zu können, zum Beispiel um analoge Stimmen ins System zu übernehmen. 
+  \item Insbesondere zum Vergleich von (statistischen-)Auswertungen verschiedener Wahlen können
+        alte Wahldaten und Ergebnisse von der oder dem WahlleiterIn ins System aus CSV-Dateien 
+        importiert werden.
+  \item Der oder die WahlleiterIn muss imstande sein Stimmen im System zu korrigieren, zum Beispiel
+        nach einer Neuauszählung von Stimmen
+\end{enumerate}
 
 \section{Funktionale Anforderungen}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
