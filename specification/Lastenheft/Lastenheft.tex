@@ -48,14 +48,21 @@
 \usepackage{xcolor,colortbl} 
 \definecolor{Blue}{rgb}{0.1,0.2,0.7}
 \definecolor{TUMBlue}{HTML}{0065BD}
+\definecolor{TUMAccentLightBlue}{HTML}{98C6EA}
+\definecolor{TUMLightGray}{HTML}{CCCCC6}
+\definecolor{TUMAccentGray}{HTML}{DAD7CB}
+\definecolor{lightBlue}{RGB}{157,195,230}
 
-\newcolumntype{a}{>{\columncolor{Blue}}c}
+
+\newcolumntype{b}{>{\columncolor{TUMBlue}}c}
+\newcolumntype{a}{>{\columncolor{lightBlue}}c}
+
 \renewcommand{\arraystretch}{1.5}
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Create a shorter version for tables. DO NOT CHANGE               	 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand\addrow[2]{\textcolor{white}{#1} &#2\\ \hline}
+\newcommand\addrow[2]{\textcolor{black}{#1} &#2\\ \hline}
 
 \newcommand\addheading[2]{\rowcolor{TUMBlue}\textcolor{white}{#1} & \textcolor{white}{#2}\\ \hline}
 \newcommand\tabularhead{\begin{tabular}{|a|p{13cm}|}

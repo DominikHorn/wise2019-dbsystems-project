@@ -59,17 +59,21 @@
 \definecolor{TUMSecondaryBlue2}{HTML}{003359}
 \definecolor{TUMAccentBlue}{HTML}{64A0C8}
 \definecolor{TUMAccentLightBlue}{HTML}{98C6EA}
+\definecolor{lightBlue}{RGB}{157,195,230}
+
 
 \newcolumntype{a}{>{\columncolor{TUMBlue}}c}
+\newcolumntype{b}{>{\columncolor{lightBlue}}c}
+
 \renewcommand{\arraystretch}{1.5}
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Create a shorter version for tables. DO NOT CHANGE               	 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand\addrow[2]{\textcolor{white}{#1} &#2\\ \hline}
+\newcommand\addrow[2]{\textcolor{black}{#1} &#2\\ \hline}
 
 \newcommand\addheading[2]{\rowcolor{TUMBlue}\textcolor{white}{#1} & \textcolor{white}{#2}\\ \hline}
-\newcommand\tabularhead{\begin{tabular}{|a|p{13cm}|}
+\newcommand\tabularhead{\begin{tabular}{|b|p{13cm}|}
 \hline
 }
 
@@ -115,9 +119,41 @@ Landtagswahl 2018
 
 \subsection{Musskriterien}
 % Requirements
+\begin{usecase}
+	\addheading{Nummer}{Die Anwendung ermöglicht es...} 
+	\addrow{M1}{...dem Wähler Einzelstimmen abzugeben nachdem die Stimmabgabe durch den Wahlhelfer freigegeben wurde.}
+	\addrow{M2}{...dem Wahlhelfer Stimmen aggregiert einzugeben.}
+	\addrow{M3}{...Daten von vergangenen Wahlen mit Hilfe einer CSV-Datei fehlerfrei in das System einzuspeisen und statistisch auszuwerten.}
+	\addrow{M4}{...bei der statistischen Auswertung die Verteilung der Sitze, die Auswertung für die Direkt- und Listenmandate, Anzahl Stimmen pro Partei einzusehen}
+	\addrow{M5}{...pro Stimmkreis die Einzelstimmen zu Stimmkreisergebnissen vorzuaggregieren.}
+	\addrow{M6}{...dass 10 Personen in einem Wahllokal gleichzeitig auf das System zugreifen und ihre Stimme eintragen.}
+	\addrow{M7}{...Stimmabgaben als gültig und ungültig auszuwerten.}
+	\addrow{M8}{Die Anwendung gibt Daten erst nach Abschluss einer Wahl statistischen Auswertung frei.}
+	\addrow{M9}{...Wahlleitern, schon eingegebene Stimmen noch einmal zu korrigieren}
+	\addrow{M10}{Die Anwendung speichert Erst- und Zweitstimmen getrennt voneinander.}
+	\addrow{M11}{Die Oberfläche zur statistischen Auswertung ist frei zugänglich, die zur Stimmabgabe (durch Wähler oder Wahlhelfer/ -leiter) nur für Berechtigte.}
+	
+\end{usecase}
+
 \subsection{Sollkriterien}
+\begin{usecase}
+	\addheading{Nummer}{Beschreibung} 
+	\addrow{S1}{Die Anwendung ermöglicht es dem Anwender die Ergebnisse von unterschiedlichen Wahlen zu vergleichen.}
+\end{usecase}
 \subsection{Kannkriterien}
+\begin{usecase}
+	\addheading{Nummer}{Beschreibung} 
+	\addrow{K1}{Die Anwendung kann bei der statistischen Auswertung die Ergebnisse auf der Landkarte visualisieren}
+\end{usecase}
+
 \subsection{Abgrenzungskriterien}
+\begin{usecase}
+	\addheading{Nummer}{Beschreibung} 
+	\addrow{A1}{Die Anwendung ermöglicht nicht die Authentifizierung von Wahlberechtigten.}
+	\addrow{M2}{Die Anwendung verarbeitet/ berechnet keine juristischen Ausnahmefälle, die bei den Wahlen 2013 und 2018 nicht relevant waren.}
+	
+\end{usecase}
+
 
 \section{Technische Umsetzung}
 Dieser Abschnitt widmet sich der geplanten technischen Realisierung
