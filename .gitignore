@@ -30,5 +30,6 @@ specification/**/*.log
 specification/**/*.out
 specification/**/*.toc
 specification/**/*.glsdefs
+specification/**/*.synctex*
 usecase.*
 !usecase.mp
