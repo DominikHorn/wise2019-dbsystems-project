@@ -13,6 +13,10 @@
 % this is needed for forms and links within the text
 \usepackage{hyperref}  
 
+% Generate the glossary
+\usepackage[nonumberlist]{glossaries}
+\makeglossary
+
 % The following is needed in order to make the code compatible
 % with both latex/dvips and pdflatex.
 \ifx\pdftexversion\undefined
@@ -31,6 +35,7 @@
 \newcommand{\projektName}{Wahl und Informationssystem für bayrische Landtagswahlen}
 \newcommand{\tags}{\authorName, Pflichtenheft, TUM, Universität Augsburg, LMU}
 \newcommand{\subtitle}{Technische Universität München, Datenbanksysteme WS19/20}
+\newcommand{\glossarName}{Glossar}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PDF Meta information                                 				       %
@@ -245,4 +250,7 @@ Sie leiten sich hauptsächlich aus den in diesem Dokument spezifizierten Anforde
         (statistisch) Ausgewertet werden. Hierbei ist insbesondere auch der vergleich mit den Ergebnissen anderer
         Wahlvorgänge wichtig.
 \end{enumerate}
+
+\clearpage
+\input{Glossar}
 \end{document}

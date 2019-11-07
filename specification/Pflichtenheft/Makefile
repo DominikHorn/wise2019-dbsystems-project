@@ -1,5 +1,6 @@
 make:
 	pdflatex Pflichtenheft.tex -output-format=pdf
+	makeglossaries Pflichtenheft
 	pdflatex Pflichtenheft.tex -output-format=pdf
 	make clean
 

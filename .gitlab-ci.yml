@@ -72,22 +72,6 @@ build-pflichtenheft-pdf:
       # When editing also change variables
       - specification/Pflichtenheft/Pflichtenheft.pdf
 
-build-glossar-pdf:
-    stage: build
-    script:
-    # Prevent interactive installations, i.e., force all apt-get installs into headless mode
-    - export DEBIAN_FRONTEND=noninteractive
-    - apt-get update -y
-    # Install all required latex tools and dependencies
-    - apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-lang-german texlive-latex-extra
-    # generate Pflichtenheft pdf
-    - cd specification/Glossar
-    - make
-    artifacts:
-      paths:
-      # When editing also change variables
-      - specification/Glossar/Glossar.pdf
-
 deploy-artifacts-to-wiki:
   stage: deploy
   only:
@@ -96,7 +80,6 @@ deploy-artifacts-to-wiki:
   - build-mdj-pdfs
   - build-lastenheft-pdf
   - build-pflichtenheft-pdf
-  - build-glossar-pdf
   script:
   # Configure global vars + install jq for parsing curl json responses
   - "NOW=$(date +\"%d_%m_%Y\")"
@@ -109,12 +92,10 @@ deploy-artifacts-to-wiki:
   - UPLOAD_FILE_ENDING=$(echo $NOW)_$(echo $CI_COMMIT_SHA)
   - LASTENHEFT_UPLOAD_FILE=Lastenheft_$UPLOAD_FILE_ENDING.pdf
   - PFLICHTENHEFT_UPLOAD_FILE=Pflichtenheft_$UPLOAD_FILE_ENDING.pdf
-  - GLOSSAR_UPLOAD_FILE=Glossar_$UPLOAD_FILE_ENDING.pdf
   - MODEL_UPLOAD_FILE=UML_Model_$UPLOAD_FILE_ENDING.pdf
   - USECASES_UPLOAD_FILE=Usecases_$UPLOAD_FILE_ENDING.pdf
   - cp $LASTENHEFT_FILE $LASTENHEFT_UPLOAD_FILE
   - cp $PFLICHTENHEFT_FILE $PFLICHTENHEFT_UPLOAD_FILE
-  - cp $GLOSSAR_FILE $GLOSSAR_UPLOAD_FILE
   - cp $UML_MODEL_FILE $MODEL_UPLOAD_FILE
   - cp $USECASES_FILE $USECASES_UPLOAD_FILE
   # Upload specification files + fetch uploads/... url from response
