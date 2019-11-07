@@ -80,10 +80,6 @@
  \pagenumbering{roman}
  \input{Deckblatt}         % Deckblatt.tex laden und einfügen
  \setcounter{page}{2}
- 
- % TODO: TEMPORARY
- THIS DOCUMENT IS A COPY OF LASTENHEFT AND NEEDS ACTUAL CONTENT FILLED IN
- \clearpage
 
  \tableofcontents          % Inhaltsverzeichnis ausgeben
  \clearpage
@@ -108,148 +104,23 @@ Es müssen die gesetzlichen Regelungen, Normen und Datenschutzaspekte
 berücksichtigt werden. Als Basis gelten die Regelungen zur
 Landtagswahl 2018
 
-\section{Produkteinsatz}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Wer ist die Zielgruppe?                   						 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Zielgruppe ist im Wesentlichen der Übungsleiter der Database Systems 
-Vorlesung (Christian Winter) und die Studierenden/Entwickler. 
-%
-Konzipiert und Entwickelt werden soll die Anwendung jedoch zur Verwendung 
-durch Wahlhelfer zur Stimmeneintragung für Bayrische Landtagswahlen, 
-zur Stimmabgabe durch Wahlberechtigte und zur (statistischen)-Auswertung
-von Wahlergebnissen durch den oder die WahlleiterIn sowie u.U. 
-interessierten BürgerInnen.
+\subsection{Musskriterien}
+% Requirements
+\subsection{Sollkriterien}
+\subsection{Kannkriterien}
+\subsection{Abgrenzungskriterien}
 
-\begin{center}
-\begin{tabular}{|m{5cm}|m{10cm}|}
-	\hline
-  \rowcolor{Blue} \textcolor{white}{\textbf{Einsatzgebiet}} & \textcolor{white}{\textbf{Prozesse}} \\
-  \hline
-  Wahllokal & Abgabe von Einzelstimmen durch WählerInnen und batch Stimmeintragung durch WahlhelferInnen \\
-	\hline
-  Bürgerlicher Gebrauch & (statistische-)Analyse von Wahlergebnissen \\
-  \hline
-  Staatlicher Gebrauch & (statistische-)Analyse von Wahlergebnissen, Import von alten Wahlergebnissen \\
-	\hline
-\end{tabular}
-\end{center}
+\section{Technische Umsetzung}
+\subsection{Produkteinsatz und Umgebung}
+\subsection{Entwicklungsumgebung}
 
+\section{GUI Mockups}
 
-\section{Benutzerschnittstellen}
-Dieser Absatz beschäftigt sich mit der Definition von Benutzerschnittstellen und fundamentalen Usecases:
+\section{Datenmodell}
 
-\begin{enumerate}
-  \item Die Informationsabfrage und (statistische-)Auswertung von Wahlergebnissen erfolgt
-        in einer frei zugänglichen Weboberfläche. Hierbei soll auch der Vergleich zwischen 
-        verschiedenen Wahlen möglich sein. 
-  \item Das System soll geeignet sein für die elektronische Stimmabgabe im Wahllokal durch
-        wahlberechtigte Personen
-  \item Um zu gewährleisten, dass jeweils nur eine Stimme pro wahlberechtigter Person abgegeben
-        werden kann, muss die Stimmabgabe erst freigegeben werden. Dies geschieht entweder nach
-        Authentifizierung durch eine(n) WahlhelferIn oder durch den oder die WählerIn selbst 
-        (Unique one-time-use password, Vorlage von Personalausweis/Reisepass).
-  \item WahlhelferInnen müssen in der Lage sein ein oder mehrere Stimmen auf einmal ins System
-        eintragen zu können, zum Beispiel um analoge Stimmen ins System zu übernehmen. 
-  \item Insbesondere zum Vergleich von (statistischen-)Auswertungen verschiedener Wahlen können
-        alte Wahldaten und Ergebnisse von der oder dem WahlleiterIn ins System aus CSV-Dateien 
-        importiert werden.
-  \item Der oder die WahlleiterIn muss imstande sein Stimmen im System zu korrigieren, zum Beispiel
-        nach einer Neuauszählung von Stimmen
-\end{enumerate}
-
-\begin{center}
-	\includegraphics[width=\textwidth]{../usecases.pdf}
-\end{center}
-
-
-
-\section{Funktionale Anforderungen}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Was muss das Programm können?                   					 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{usecase}
-  \addheading{Nummer}{Beschreibung} 
-  \addrow{FR01}{Wahldaten müssen über eine graphische Schnittstelle (statistisch) auswertbar sein. Hierbei ist insbesondere das Bestimmen von
-                Wahlergebnissen, d.h. gewonnenen Mandaten, wichtig. Wahldaten unterschiedlicher Wahlvorgänge können dabei verglichen werden}
-  \addrow{FR02}{Einzelstimmen sollen durch Wahlberechtigte im Wahllokal abgegeben werden können (E-Voting). Die notwendige Authentifizierung
-                erfolgt dabei zum Beispiel durch eine(n) WahlhelferIn}
-  \addrow{FR03}{Die Einzelstimmabgabe muss vor Benutzung durch eine wahlberechtigte Person je freigegeben werden. 
-                Dies kann zum Beispiel durch eine(n) WahlhelferIn geschehen nach analoger Verifikation von Reisepass oder Personalausweis}
-  \addrow{FR04}{WahlhelferInnen müssen in der Lage sein mehrerer Stimmen auf einmal (batch) in das System einzutragen. Dies ist zum Beispiel
-                dienlich um analoge Stimmabgaben in das System zu übertragen}
-  \addrow{FR05}{Wahldaten von Landtagswahlen ab (inklusive) 2013 müssen fehlerfrei aus einer CSV-Datei importierbar und im System abbildbar sein.}
-  \addrow{FR06}{WahlleiterInnen haben die Möglichkeit Stimmen zu korrigieren, zum Beispiel falls die Gültigkeit von Stimmen nachträglich annuliert 
-                werden muss oder es im Rahmen von Neuauszählungen zu Änderungen kommt.}
-  \addrow{FR07}{Pro Stimmkreis werden die Einzelstimmen zu Stimmkreisergebnissen voraggregiert.}
-\end{usecase}
-
-\section{Nichtfunktionale Anforderungen}
-\begin{usecase}
-  \addheading{Nummer}{Beschreibung} 
-  \addrow{NF01}{Das System muss alle rechtlichen Vorgaben zur Landtagswahl im Freistaat Bayern einhalten, insbesondere im Bezug auf Datenschutz und Wahlgeheimnis.
-                Für letzteres ist beispielsweise das getrennte abspeichern von Erst- und Zweitstimmen fundamental.
-                Juristische Ausnahmefälle, die bei den Wahlen 2013 und 2018 nicht relevant waren und über 
-                Sperrklausel, Überhangsmandate, Ausgleichsmandate hinausgehen, müssen im System nicht verarbeitet/ berechnet werden können.}
-  \addrow{NF02}{Zu Peak-Lastzeiten, i.e., wenn tausende WählerInnen gleichzeitig abstimmen, muss das System reibungslos einsatzfähig bleiben.}
-  \addrow{NF03}{Ein wirkungsvoller Schutz vor unbefugten Zugriffen muss ein fester Bestandteil sein um die Integrität der Wahlergebnisse nicht zu gefährden.}
-  \addrow{NF04}{Die (statistische-)Auswertung von Wahlergebnissen muss schnell und korrekt sein.}
-  \addrow{NF05}{Die graphische Oberfläche soll mächtig, jedoch intuitiv sein.}
-\end{usecase}
-
-\section{Produktdaten}
-Die grundlegenden zu verwaltenden Produktdaten ergeben sich aus der folgenden Liste von
-identifizierten Entitäten:
-\begin{itemize}
-  \item \textbf{Wahl} - Repräsentation einer einzelnen Wahl an einem festen Datum. 
-        Durch letzteres Merkmal ist es möglich mehrere Wahlen in einem Jahr festzuhalten.
-  \item \textbf{Stimme} - Jede(r) WählerIn besitzt je eine Erst- und Zweitstimme, welche er oder sie in Ihrem
-        Stimmbezirk für KandidatInnen abgeben können. Mit der Erststimme wählt eine wahlberechtigte Person
-        primär den oder die von ihr bevorzugten DirektkandidatIn ihres Stimmkreises. Über die Zweitstimme wählt 
-        jede wahlberechtigte Person genau einen Kandidaten einer Liste aus ihrem Regierungsbezirk. Das prozentuale
-        Gesamtabschneiden einer Partei aus kombinierten Erst- und Zweitstimmen ist jedoch ebenso für das 
-        Wahlergebnis relevant.
-  \item \textbf{Regierungsbezirk} - Bayern ist in sieben Regierungsbezirke unterteilt: Oberbayern,
-        Niederbayern, Schwaben, Ober-, Unter-, Mittelfranken und Oberpfalz. Jeder Regierungsbezirk
-        hat eine unterschiedliche Anzahl zu vergebender Direkt- und Listenmandate
-  \item \textbf{Stimmkreis} - Regierungsbezirke sind gemäß Bevölkerungszahlen in Stimmkreise aufgeteilt.
-        Jeder Stimmkreis ist widerum in ein oder mehrere Stimmbezirke unterteilt. Pro Stimmkreis wird ein(e)
-        DirektkandidatIn gewählt
-  \item \textbf{Stimmbezirk} - Die Stimmabgabe erfolgt in Stimmbezirken
-  \item \textbf{KandidatIn} - Eine sich zur Wahl stellende Person mit notwendigen persönlichen Angaben. 
-        Insbesondere kann ein(e) KandidatIn als DirektkandidatIn für einen Stimmkreis aufgestellt sein.
-  \item \textbf{Mandat} - Mandate für den Bayrischen Landtag können von KandidatInnen im Rahmen einer Landtagswahl
-        errungen werden. Hierbei wird zwischen Direktmandaten, Listenmandaten und Ausgleichsmandaten unterschieden.
-  \item \textbf{Partei} - KandidatInnen können Mitglied einer Partei sein und sich von dieser für einen Listenplatz
-        aufstellen lassen
-  \item \textbf{Liste} - Jede Partei kann pro Regierungsbezirk eine Liste mit KandidatInnen, welche Mitglieder der 
-        Partei sind, aufstellen.
-\end{itemize}
-
-\begin{center}
-	\includegraphics[width=\textwidth]{../model.pdf}
-\end{center}
-
-\section{Abnahmekriterien}
-Dieser Abschnitt definiert die wichtigsten Kriterien welche zwischen dem Erzeugnis und der Abnahme stehen.
-Sie leiten sich hauptsächlich aus den in diesem Dokument spezifizierten Anforderungen ab.
-
-\begin{enumerate}
-  \item Die Softwareplatform ist über eine graphisch ansprechende Weboberfläche benutzbar.
-  \item Das System erlaubt die (statistische) Auswertung von realen Stimmdaten zu bayrischen Landtagswahlen, d.h. 
-        insbesondere die Bestimmung der gewonnenen Mandate im bayrischen Landtag. Dabei müssen gesetzliche
-        Vorgaben genauestens eingehalten sein sowie Daten sicher, Datenschutzrechtlich korrekt und integer gehalten
-        werden.
-  \item WählerInnen haben durch eine bereitgestellte Oberfläche die Möglichkeit ihre Erst- und Zweitstimme abzugeben.
-        Dabei muss gewährleistet sein, dass jede Wahlberechtigte Person nur maximal einmal abstimmen kann, 
-        Datenschutzrechtliche sowie gesetzliche Vorgaben wie das Stimmgeheimnis eingehalten werden und das System 
-        insbesondere vor unbefugtem Zugriff geschützt ist.
-  \item WahlhelferInnen können schnell Stimmen, e.g. analog abgegebene, in einer minimalen Anzahl von Schritten in das
-        System übernehmen.
-  \item Reale Stimmdaten vergangener Wahlen können von berechtigten Nutzern, e.g., WahlleiterInnen, importiert und
-        (statistisch) Ausgewertet werden. Hierbei ist insbesondere auch der vergleich mit den Ergebnissen anderer
-        Wahlvorgänge wichtig.
-\end{enumerate}
+\section{Globale Testfälle und Szenarien}
+% 10 Leute gleichzeitig in Wahllokal greifen zu
+% Auswertung realer wahlergebnisse geht flott
 
 \clearpage
 \input{Glossar}
