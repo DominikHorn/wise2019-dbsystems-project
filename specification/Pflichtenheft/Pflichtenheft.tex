@@ -120,8 +120,88 @@ Landtagswahl 2018
 \subsection{Abgrenzungskriterien}
 
 \section{Technische Umsetzung}
+Dieser Abschnitt widmet sich der geplanten technischen Realisierung
+aller Systemaspekte.
+
 \subsection{Produkteinsatz und Umgebung}
+Die Anwendung ist konzipiert und entwickelt um die Stimmabgabe 
+zu bayrischen Landtagswahlen (Erst-, Zweitstimme) durch wahlberechtigte
+Personen, sowie die (statistische-) Auswertung von Wahlergebnissen zu ermöglichen. 
+%
+Das System wird in verschiedenen Gebieten eingesetzt:
+
+\begin{center}
+\begin{tabular}{|m{5cm}|m{10cm}|}
+	\hline
+  \rowcolor{TUMBlue} \textcolor{white}{\textbf{Einsatzgebiet}} & \textcolor{white}{\textbf{Prozesse}} \\
+  \hline
+  Wahllokal & Abgabe von Einzelstimmen durch WählerInnen und batch Stimmeintragung durch WahlhelferInnen \\
+	\hline
+  Bürgerlicher Gebrauch & (statistische-)Analyse von Wahlergebnissen \\
+  \hline
+  Staatlicher Gebrauch & (statistische-)Analyse von Wahlergebnissen, Import von alten Wahlergebnissen \\
+	\hline
+\end{tabular}
+\end{center}
+
+Die (statistische-) Analyse und Auswertung von Wahlergebnissen erfolgt in einer frei zugänglichen
+Weboberfläche, welche auf ein Serversystem zur Datenbeschaffung zugreift. 
+Während eines Wahlvorgangs sind Daten zum aktuellen Vorgang nicht (statistisch-) Auswertbar.
+%
+Das Wahlinterface sowie die von WahlhelferInnen und WahlleiterInnen zu benutzenden Oberflächen sind 
+ebenfalls mit Webtechnologien implementiert, jedoch Zugriffbeschränkt und nicht übers Internet aufrufbar.
+%
+Webtechnologien für alle Interfaces zu verwenden senkt den Projektaufwand, da Entwickler sich nur in 
+einem Technologiestack bewegen müssen. Weiterhin sind insbesondere Webtechnologien dafür geeignet
+Geräte und bildschirmgrößen-unabhängige Software zu erzeugen.
+%
+Jede Personengruppe kann zu jeder Zeit immer nur auf die für sie relevanten Interfaces zugreifen.
+Dies steigert primär die intuitive Benutzbarkeit und verhindert Benutzern zu verwirren. 
+%
+Als Backendsystem wird ein zugriffsgesichertes DBMS eingesetzt. Dieses implementiert mehrere 
+essentielle Projektbestandteile out-of-the-box:
+
+\begin{itemize}
+      \item Parallele OLAP Abfragen, i.e., mehrere Benutzer können gleichzeitig ungehindert voneinander 
+            die Wahlergebnisse statistisch auswerten.
+      \item Mehrbenutzer OLTP, i.e., mehrere WählerInnen und WahlhelferInnen können parallel Stimmen
+            eintragen.
+      \item Hohe Ausfallsicherheit, i.e., das System läuft stabil über längere Zeiträume
+      \item Recovery Funktionalität, i.e., falls ein Unglück geschieht (Brand im Datencenter, Stromausfall) 
+            oder das DBMS abstürzt gehen keine Daten verloren, solange die entsprechenden DBMS features 
+            genutzt werden
+      \item Datenzugriffschnittstelle ist standartisiert und flexibel (SQL)
+      \item Integritätsbedingungen werden über das Datenbankschema automatisch realisiert
+\end{itemize}
+
+\subsection{Eingesetzte Technologien}
+Nachfolgend wird für jedes Einsatzgebiet die eingesetzte Technologie zusammen mit einer kurzen Erläuterung
+für Ihren Einsatz aufgelistet.
+
+\begin{center}
+      \begin{tabular}{|m{4cm}|m{5cm}|m{10cm}|}
+            \hline
+        \rowcolor{TUMBlue} \textcolor{white}{\textbf{Gebiet}} & \textcolor{white}{\textbf{Eingesetzte Technologie}} & \textcolor{white}{\textbf{Erläuterung}} \\
+        \hline
+        Programmiersprache & TypeScript & TypeScript ist eine von Microsoft entwickelte Programmiersprache, welche JavaScript hauptsächlich um statische Typisierungsfähigkeiten ergänzt. Sie ist die Implementierungssprache für alle Softwarebereiche dieses Projekts \\
+        \hline
+        Backend - DBMS & PostgreSQL & PostgreSQL ist ein von der Industrie großflächig eingesetztes kostenfreies DBMS mit sehr guter Reputation und erprobtem Produktiveinsatz in großen Anwendungen \\
+        \hline
+        Backend - Server & NodeJS & NodeJS ermöglicht es Plattformunabhängig JavaScript code auszuführen. Hier dient es dazu die Serversoftware auszuführen \\
+        \hline
+        Backend - Server & Apollo Server & Apollo Server implementiert die notwendige serverseitige Funktionalität um auf GraphQL Anfragen zu antworten. Jeder request wird auf einen resolver-Funktion gemapped, welche sich darum kümmert die angeforderte funktion (Daten lesen, Daten schreiben) auszuführen. \\
+        \hline
+        Frontend - Server Schnittstelle & Apollo Client & Apollo Client implementiert die notwendige clientseitige Funktionalität um GraphQL Anfragen an einen Server zu schicken und die Antworten zu empfangen \\
+        \hline
+        Frontend - UI & React & React ist ein von Facebook entwickeltes UI-Framework und wird zur Darstellung sämmtlicher Inhalte verwendet \\
+        \hline
+        Frontend - UI & Ant Design & Ant Design ist eine React Component Library, welche viele nützliche GUI-Elemente vorgefertigt bereitstellt \\
+        \hline
+      \end{tabular}
+\end{center}
+
 \subsection{Entwicklungsumgebung}
+
 
 \section{GUI Mockups}
 
