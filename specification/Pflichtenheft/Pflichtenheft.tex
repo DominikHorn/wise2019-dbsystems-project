@@ -240,10 +240,11 @@ Der vorherige Abschnitt identifiziert zur Umsetzung des Systems folgende Softwar
       \item Server software zur Annahme und Bearbeitung von Clientanfragen, insbesondere auch zur Ansteuerung des Datenbanksystems
       \item Client software, je eines für die Stimmabgabe, für Wahlhelfer, Wahlleiter und zur (statistischen-) Auswertung von Wahlergebnissen 
 \end{itemize}
-Im folgenden werden die Haupttechnologien zur Umsetzung dieser Systemkomponenten tabelarisch aufgelistet:
+Im folgenden werden die Haupttechnologien zur Umsetzung dieser Systemkomponenten tabelarisch aufgelistet. Abbildung \ref{fig:architecture} zeigt
+deren Interaktion und Aufbau graphisch.
 
 \begin{center}
-      \begin{tabular}{|m{3.5cm}|m{3cm}|m{9cm}|}
+      \begin{tabular}{|m{4cm}|m{2.5cm}|m{8.5cm}|}
             \hline
         \rowcolor{TUMBlue} \textcolor{white}{\textbf{Funktion/Gebiet}} & \textcolor{white}{\textbf{Eingesetzte Technologie}} & \textcolor{white}{\textbf{Erläuterung}} \\
         \hline
@@ -263,6 +264,15 @@ Im folgenden werden die Haupttechnologien zur Umsetzung dieser Systemkomponenten
         \hline
       \end{tabular}
 \end{center}
+
+\begin{figure}[h!]
+      \centering
+      \includegraphics[width=\textwidth]{architecture.pdf}
+      \caption{Illustrierung der Architektur und Interaktion von Systemkomponenten}
+      \label{fig:architecture}
+\end{figure}
+
+\clearpage
 
 \subsection{Erreichen der Zielsetzung}
 % TODO
