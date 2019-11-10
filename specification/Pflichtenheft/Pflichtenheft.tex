@@ -121,39 +121,39 @@ Landtagswahl 2018
 % Requirements
 \begin{usecase}
 	\addheading{Nummer}{Die Anwendung ermöglicht es...} 
-	\addrow{M1}{...dem Wähler Einzelstimmen abzugeben nachdem die Stimmabgabe durch den Wahlhelfer freigegeben wurde.}
-	\addrow{M2}{...dem Wahlhelfer Stimmen aggregiert einzugeben.}
-	\addrow{M3}{...Daten von vergangenen Wahlen mit Hilfe einer CSV-Datei fehlerfrei in das System einzuspeisen und statistisch auszuwerten.}
-	\addrow{M4}{...bei der statistischen Auswertung die Verteilung der Sitze, die Auswertung für die Direkt- und Listenmandate, Anzahl Stimmen pro Partei einzusehen}
-	\addrow{M5}{...pro Stimmkreis die Einzelstimmen zu Stimmkreisergebnissen vorzuaggregieren.}
-	\addrow{M6}{...dass 10 Personen in einem Wahllokal gleichzeitig auf das System zugreifen und ihre Stimme eintragen.}
-	\addrow{M7}{...Stimmabgaben als gültig und ungültig auszuwerten.}
-	\addrow{M8}{...erst nach Abschluss einer Wahl diese statistisch Auswzuwerten, um Wahlbeeinflussung zu verhindern.}
-	\addrow{M9}{...Wahlleitern, schon eingegebene Stimmen noch einmal zu korrigieren, beispielsweise nach einer Neuauszählung}
-	\addrow{M10}{Die Anwendung speichert Erst- und Zweitstimmen getrennt voneinander.}
-	\addrow{M11}{Die Oberfläche zur statistischen Auswertung ist frei zugänglich, die zur Stimmabgabe (durch Wähler oder Wahlhelfer/ -leiter) je nur für Berechtigte.}
-	
+      \addrow{M01}{...WählerInnen Einzelstimmen abzugeben nach vorangestellter Freigabe durch eine(n) WahlhelferIn.}
+      \addrow{M02}{...Im Echtbetrieb, das mehrere Stimmen gleichzeitig abgegeben werden}
+	\addrow{M03}{...dem oder der WahlhelferIn Stimmen in aggregierter Form einzugeben.}
+	\addrow{M04}{...Daten von vergangenen Wahlen mit Hilfe einer CSV-Datei fehlerfrei in das System einzuspeisen und statistisch auszuwerten.}
+	\addrow{M05}{...bei der statistischen Auswertung die Verteilung der Sitze, die Auswertung für die Direkt- und Listenmandate und die Anzahl der Stimmen pro Partei einzusehen.}
+	\addrow{M06}{...pro Stimmkreis die Einzelstimmen zu Stimmkreisergebnissen vorzuaggregieren.}
+	\addrow{M07}{...erst nach Abschluss einer Wahl diese statistisch Auszuwerten, e.g., um Wahlbeeinflussung oder timed-attacks auf das Wahlgeheimniss zu verhindern.}
+	\addrow{M08}{Die Anwendung speichert Erst- und Zweitstimmen getrennt voneinander um das Wahlgeheimnis und Datenschutzaspekte zu respektieren.}
+      \addrow{M09}{Das System beachtet alle relveanten gesetzlichen Vorgaben für bayrische Landtagswahlen}
 \end{usecase}
 
 \subsection{Sollkriterien}
 \begin{usecase}
 	\addheading{Nummer}{Beschreibung} 
-	\addrow{S1}{Die Anwendung ermöglicht es dem Anwender die Ergebnisse von unterschiedlichen Wahlen zu vergleichen.}
+	\addrow{S01}{Die Anwendung ermöglicht es dem Anwender die Ergebnisse von unterschiedlichen Wahlen zu vergleichen.}
+      \addrow{S02}{Die Oberfläche zur statistischen Auswertung ist frei zugänglich, die zur Stimmabgabe (durch Wähler oder Wahlhelfer/ -leiter) je nur für Berechtigte.}
+      \addrow{S03}{Das System ist hinreichend gegen unbefugte Zugriffe abgesichert, sodass es akzeptabel wäre im Realbetrieb}
 \end{usecase}
 \subsection{Kannkriterien}
 \begin{usecase}
 	\addheading{Nummer}{Beschreibung} 
-	\addrow{K1}{Die Anwendung kann bei der statistischen Auswertung die Ergebnisse auf der Landkarte visualisieren}
+	\addrow{K01}{Die Anwendung kann bei der statistischen Auswertung die Ergebnisse auf der Landkarte visualisieren}
+      \addrow{K02}{Stimmabgaben können als gültig und ungültig ausgewertet werden.}
+	\addrow{K03}{WahlleiterInnen können bereits eingegebene Stimmen korrigieren, beispielsweise nach einer Neuauszählung}
 \end{usecase}
 
 \subsection{Abgrenzungskriterien}
 \begin{usecase}
-	\addheading{Nummer}{Beschreibung} 
-	\addrow{A1}{Die Anwendung ermöglicht nicht die Authentifizierung von Wahlberechtigten.}
-	\addrow{M2}{Die Anwendung verarbeitet/ berechnet keine juristischen Ausnahmefälle, die bei den Wahlen 2013 und 2018 nicht relevant waren.}
-	
+      \addheading{Nummer}{Das System...} 
+      \addrow{A01}{...Dient nicht als E-Voting Plattform sondern ist lediglich imstande Stimmen von WählerInnen in Wahlkabinen entgegen zu nehmen}
+	\addrow{A02}{...kann nicht die Berechtigung von WählerInnen überprüfen.}
+	\addrow{A03}{...verarbeitet und berechnet keine juristischen Ausnahmefälle, die bei den Wahlen 2013 und 2018 nicht relevant waren.}
 \end{usecase}
-
 
 \section{Technische Umsetzung}
 Dieser Abschnitt widmet sich der geplanten technischen Realisierung
@@ -265,7 +265,8 @@ Im folgenden werden die Haupttechnologien zur Umsetzung dieser Systemkomponenten
 \end{center}
 
 \subsection{Erreichen der Zielsetzung}
-
+% TODO
+<Beschreibung wie Ziele durch die genannten Technologien erreicht werden, dazu Musskriterien ansehen>
 
 \section{GUI Mockups}
 
@@ -305,6 +306,27 @@ identifizierten Entitäten:
 \section{Globale Testfälle und Szenarien}
 % 10 Leute gleichzeitig in Wahllokal greifen zu
 % Auswertung realer wahlergebnisse geht flott
+\begin{center}
+      \begin{tabular}{|m{3.5cm}|m{3cm}|m{9cm}|}
+            \hline
+        \rowcolor{TUMBlue} \textcolor{white}{\textbf{Funktion/Gebiet}} & \textcolor{white}{\textbf{Eingesetzte Technologie}} & \textcolor{white}{\textbf{Erläuterung}} \\
+        \hline
+        Programmiersprache & TypeScript & TypeScript ist eine von Microsoft entwickelte Programmiersprache, welche JavaScript hauptsächlich um statische Typisierungsfähigkeiten ergänzt. Sie ist die Implementierungssprache für alle Softwarebereiche dieses Projekts \\
+        \hline
+        Datenbanksystem & PostgreSQL & PostgreSQL ist ein von der Industrie großflächig eingesetztes kostenfreies DBMS mit sehr guter Reputation und erprobtem Produktiveinsatz in großen Anwendungen \\
+        \hline
+        Server & NodeJS & NodeJS ermöglicht es Plattformunabhängig JavaScript code auszuführen. Hier dient es dazu die Serversoftware auszuführen \\
+        \hline
+        Serverschnittstelle & Apollo Server & Apollo Server implementiert die notwendige serverseitige Funktionalität um auf GraphQL Anfragen zu antworten. Jeder request wird auf einen resolver-Funktion gemapped, welche sich darum kümmert die angeforderte funktion (Daten lesen, Daten schreiben) auszuführen. \\
+        \hline
+        Ansprechen Serverschnittstelle & Apollo Client & Apollo Client implementiert die notwendige clientseitige Funktionalität um GraphQL Anfragen an einen Server zu schicken und die Antworten zu empfangen \\
+        \hline
+        Frontend UI & React & React ist ein von Facebook entwickeltes UI-Framework und wird zur Darstellung sämmtlicher Inhalte verwendet \\
+        \hline
+        Frontend UI & Ant Design & Ant Design ist eine React Component Library, welche viele nützliche GUI-Elemente vorgefertigt bereitstellt \\
+        \hline
+      \end{tabular}
+\end{center}
 
 \clearpage
 \input{Glossar}
