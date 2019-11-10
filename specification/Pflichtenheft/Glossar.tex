@@ -1,0 +1,50 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Begriffslexikon zur Beschreibung des Produkts						 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\newglossaryentry{sortierschluessel}
+%{
+%  name=Sortierschlüssel,
+%  description={ein Schlüssel, anhand dessen diese Einträge sortiert werden}
+%}
+\newglossaryentry{Technologiestack}
+{
+  name=Technologiestack,
+  description={Sammlung aller verwendeten Technologien im Projekt. Gegebenenfalls hierarchisch sortiert wenn aufeinander aufbauend}
+}
+\newglossaryentry{Client}
+{
+  name=Client,
+  description={Programm, dass die Dienste eines Servers in Anspruch nimmt}
+}
+\newglossaryentry{Server}
+{
+  name=Server,
+  description={Rechner, der für andere in einem Netzwerk mit ihm verbundene Systeme bestimmte Aufgaben übernimmt und von dem diese ganz oder teilweise abhängig sind}
+}
+\newglossaryentry{Datenbanksystem}
+{
+  name=Datenbanksystem,
+  description={Ein Datenbanksystem (DBS) ist eine systematisch strukturierte, langfristig verfügbare Sammlung von Daten einschließlich der zur Verwaltung notwendigen Software}
+}
+\newglossaryentry{OLAP}
+{
+  name=OLAP,
+  description={Online Analytical Processing}
+}
+\newglossaryentry{OLTP}
+{
+  name=OLTP,
+  description={Online Transaction Processing}
+}
+
+
+% Setze den richtigen Namen für das Glossar
+\renewcommand*{\glossaryname}{\section{\glossarName}}
+
+% Drucke das gesamte Glossar
+\glsaddall
+\printglossaries
+
+% Trage das Glossar in das Inhaltsverzeichnis ein
+\stepcounter{section}
+\addcontentsline{toc}{section}{\numberline {\thesection} \glossarName}

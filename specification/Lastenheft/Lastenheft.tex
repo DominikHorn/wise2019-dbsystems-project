@@ -47,15 +47,24 @@
 \usepackage{pdfpages}
 \usepackage{xcolor,colortbl} 
 \definecolor{Blue}{rgb}{0.1,0.2,0.7}
-\newcolumntype{a}{>{\columncolor{Blue}}c}
+\definecolor{TUMBlue}{HTML}{0065BD}
+\definecolor{TUMAccentLightBlue}{HTML}{98C6EA}
+\definecolor{TUMLightGray}{HTML}{CCCCC6}
+\definecolor{TUMAccentGray}{HTML}{DAD7CB}
+\definecolor{lightBlue}{RGB}{157,195,230}
+
+
+\newcolumntype{b}{>{\columncolor{TUMBlue}}c}
+\newcolumntype{a}{>{\columncolor{lightBlue}}c}
+
 \renewcommand{\arraystretch}{1.5}
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Create a shorter version for tables. DO NOT CHANGE               	 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand\addrow[2]{\textcolor{white}{#1} &#2\\ \hline}
+\newcommand\addrow[2]{\textcolor{black}{#1} &#2\\ \hline}
 
-\newcommand\addheading[2]{\rowcolor{Blue}\textcolor{white}{#1} & \textcolor{white}{#2}\\ \hline}
+\newcommand\addheading[2]{\rowcolor{TUMBlue}\textcolor{white}{#1} & \textcolor{white}{#2}\\ \hline}
 \newcommand\tabularhead{\begin{tabular}{|a|p{13cm}|}
 \hline
 }
@@ -114,7 +123,7 @@ interessierten BürgerInnen.
 \begin{center}
 \begin{tabular}{|m{5cm}|m{10cm}|}
 	\hline
-  \rowcolor{Blue} \textcolor{white}{\textbf{Einsatzgebiet}} & \textcolor{white}{\textbf{Prozesse}} \\
+  \rowcolor{TUMBlue} \textcolor{white}{\textbf{Einsatzgebiet}} & \textcolor{white}{\textbf{Prozesse}} \\
   \hline
   Wahllokal & Abgabe von Einzelstimmen durch WählerInnen und batch Stimmeintragung durch WahlhelferInnen \\
 	\hline
@@ -152,15 +161,13 @@ Dieser Absatz beschäftigt sich mit der Definition von Benutzerschnittstellen un
 	\includegraphics[width=\textwidth]{../usecases.pdf}
 \end{center}
 
-
-
 \section{Funktionale Anforderungen}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Was muss das Programm können?                   					 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{usecase}
   \addheading{Nummer}{Beschreibung} 
-  \addrow{FR01}{Wahldaten müssen über eine graphische Schnittstelle (statistisch) auswertbar sein. Hierbei ist insbesondere das Bestimmen von
+  \addrow{FR01}{Wahldaten müssen über eine graphische Weboberfläche (statistisch) auswertbar sein. Hierbei ist insbesondere das Bestimmen von
                 Wahlergebnissen, d.h. gewonnenen Mandaten, wichtig. Wahldaten unterschiedlicher Wahlvorgänge können dabei verglichen werden}
   \addrow{FR02}{Einzelstimmen sollen durch Wahlberechtigte im Wahllokal abgegeben werden können (E-Voting). Die notwendige Authentifizierung
                 erfolgt dabei zum Beispiel durch eine(n) WahlhelferIn}
@@ -172,6 +179,8 @@ Dieser Absatz beschäftigt sich mit der Definition von Benutzerschnittstellen un
   \addrow{FR06}{WahlleiterInnen haben die Möglichkeit Stimmen zu korrigieren, zum Beispiel falls die Gültigkeit von Stimmen nachträglich annuliert 
                 werden muss oder es im Rahmen von Neuauszählungen zu Änderungen kommt.}
   \addrow{FR07}{Pro Stimmkreis werden die Einzelstimmen zu Stimmkreisergebnissen voraggregiert.}
+  \addrow{FR08}{Daten zur aktuellen Wahl sind erst nach Abschluss des Wahlvorgangs, i.e., Schließung aller Wahllokale, auswertbar. 
+                Dies dient insbesondere zur Wahrung des Wahlgeheimnisses und verhindert eine Beeinflussung von Wählern während des Wahlvorgangs}
 \end{usecase}
 
 \section{Nichtfunktionale Anforderungen}

@@ -10,8 +10,14 @@
 \usepackage[margin=2.5cm]{geometry} %layout
 \usepackage{booktabs}
 
+
+
 % this is needed for forms and links within the text
 \usepackage{hyperref}  
+
+% Generate the glossary
+\usepackage[nonumberlist]{glossaries}
+\makeglossary
 
 % The following is needed in order to make the code compatible
 % with both latex/dvips and pdflatex.
@@ -31,6 +37,7 @@
 \newcommand{\projektName}{Wahl und Informationssystem für bayrische Landtagswahlen}
 \newcommand{\tags}{\authorName, Pflichtenheft, TUM, Universität Augsburg, LMU}
 \newcommand{\subtitle}{Technische Universität München, Datenbanksysteme WS19/20}
+\newcommand{\glossarName}{Glossar}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % PDF Meta information                                 				       %
@@ -47,16 +54,26 @@
 \usepackage{pdfpages}
 \usepackage{xcolor,colortbl} 
 \definecolor{Blue}{rgb}{0.1,0.2,0.7}
-\newcolumntype{a}{>{\columncolor{Blue}}c}
+\definecolor{TUMBlue}{HTML}{0065BD}
+\definecolor{TUMSecondaryBlue}{HTML}{005293}
+\definecolor{TUMSecondaryBlue2}{HTML}{003359}
+\definecolor{TUMAccentBlue}{HTML}{64A0C8}
+\definecolor{TUMAccentLightBlue}{HTML}{98C6EA}
+\definecolor{lightBlue}{RGB}{157,195,230}
+
+
+\newcolumntype{a}{>{\columncolor{TUMBlue}}c}
+\newcolumntype{b}{>{\columncolor{lightBlue}}c}
+
 \renewcommand{\arraystretch}{1.5}
  
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Create a shorter version for tables. DO NOT CHANGE               	 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\newcommand\addrow[2]{\textcolor{white}{#1} &#2\\ \hline}
+\newcommand\addrow[2]{\textcolor{black}{#1} &#2\\ \hline}
 
-\newcommand\addheading[2]{\rowcolor{Blue}\textcolor{white}{#1} & \textcolor{white}{#2}\\ \hline}
-\newcommand\tabularhead{\begin{tabular}{|a|p{13cm}|}
+\newcommand\addheading[2]{\rowcolor{TUMBlue}\textcolor{white}{#1} & \textcolor{white}{#2}\\ \hline}
+\newcommand\tabularhead{\begin{tabular}{|b|p{13cm}|}
 \hline
 }
 
@@ -75,10 +92,6 @@
  \pagenumbering{roman}
  \input{Deckblatt}         % Deckblatt.tex laden und einfügen
  \setcounter{page}{2}
- 
- % TODO: TEMPORARY
- THIS DOCUMENT IS A COPY OF LASTENHEFT AND NEEDS ACTUAL CONTENT FILLED IN
- \clearpage
 
  \tableofcontents          % Inhaltsverzeichnis ausgeben
  \clearpage
@@ -103,23 +116,64 @@ Es müssen die gesetzlichen Regelungen, Normen und Datenschutzaspekte
 berücksichtigt werden. Als Basis gelten die Regelungen zur
 Landtagswahl 2018
 
-\section{Produkteinsatz}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Wer ist die Zielgruppe?                   						 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Zielgruppe ist im Wesentlichen der Übungsleiter der Database Systems 
-Vorlesung (Christian Winter) und die Studierenden/Entwickler. 
+
+\subsection{Musskriterien}
+% Requirements
+\begin{usecase}
+	\addheading{Nummer}{Die Anwendung ermöglicht es...} 
+      \addrow{M01}{...WählerInnen Einzelstimmen abzugeben nach vorangestellter Freigabe durch eine(n) WahlhelferIn.}
+      \addrow{M02}{...Im Echtbetrieb, das mehrere Stimmen gleichzeitig abgegeben werden}
+      \addrow{M03}{...selbst im Katastrophenfall persistierte Wahldaten zu recovern}
+	\addrow{M04}{...dem oder der WahlhelferIn Stimmen in aggregierter Form einzugeben.}
+	\addrow{M05}{...Daten von vergangenen Wahlen mit Hilfe einer CSV-Datei fehlerfrei in das System einzuspeisen und statistisch auszuwerten.}
+	\addrow{M06}{...bei der statistischen Auswertung die Verteilung der Sitze, die Auswertung für die Direkt- und Listenmandate und die Anzahl der Stimmen pro Partei einzusehen.}
+	\addrow{M07}{...pro Stimmkreis die Einzelstimmen zu Stimmkreisergebnissen vorzuaggregieren.}
+	\addrow{M08}{...erst nach Abschluss einer Wahl diese statistisch Auszuwerten, e.g., um Wahlbeeinflussung oder timed-attacks auf das Wahlgeheimnis zu verhindern.}
+	\addrow{M09}{Die Anwendung speichert Erst- und Zweitstimmen getrennt voneinander um das Wahlgeheimnis und Datenschutzaspekte zu respektieren.}
+      \addrow{M10}{Das System beachtet alle relevanten gesetzlichen Vorgaben für bayrische Landtagswahlen}
+\end{usecase}
+
+\subsection{Sollkriterien}
+\begin{usecase}
+	\addheading{Nummer}{Beschreibung} 
+	\addrow{S01}{Die Anwendung ermöglicht es dem Anwender die Ergebnisse von unterschiedlichen Wahlen in einer Ansicht zu vergleichen.}
+      \addrow{S02}{Die Oberfläche zur statistischen Auswertung ist frei zugänglich, die zur Stimmabgabe (durch Wähler oder Wahlhelfer/ -leiter) je nur für Berechtigte.}
+      \addrow{S03}{Das System ist hinreichend gegen unbefugte Zugriffe abgesichert, sodass es akzeptabel wäre im Realbetrieb}
+\end{usecase}
+\subsection{Kannkriterien}
+\begin{usecase}
+	\addheading{Nummer}{Beschreibung} 
+	\addrow{K01}{Die Anwendung kann bei der statistischen Auswertung die Ergebnisse auf der Landkarte visualisieren}
+      \addrow{K02}{Stimmabgaben können als gültig und ungültig ausgewertet werden.}
+	\addrow{K03}{WahlleiterInnen können bereits eingegebene Stimmen korrigieren, beispielsweise nach einer Neuauszählung}
+\end{usecase}
+
+\subsection{Abgrenzungskriterien}
+\begin{usecase}
+      \addheading{Nummer}{Das System...} 
+      \addrow{A01}{...Dient nicht als E-Voting Plattform sondern ist lediglich imstande Stimmen von WählerInnen in Wahlkabinen entgegen zu nehmen}
+	\addrow{A02}{...kann nicht die Berechtigung von WählerInnen überprüfen.}
+	\addrow{A03}{...verarbeitet und berechnet keine juristischen Ausnahmefälle, die bei den Wahlen 2013 und 2018 nicht relevant waren.}
+\end{usecase}
+
+\section{Technische Umsetzung}
+Dieser Abschnitt widmet sich der geplanten technischen Realisierung
+des Systems. Zunächst werden dazu anhand der Einsatzszenarien die Implementierungsidee
+grob vorgestellt. Im darauf folgenden Abschnitt findet sich eine tabellarische 
+Auflistung aller eingesetzten Technologien. Abschließend
+wird der jeweilige Implementierungsansatz für alle Musskriterien beschrieben.
+
+\subsection{Produkteinsatz und Umgebung}
+Die Anwendung ist konzipiert und entwickelt um die Stimmabgabe 
+zu bayrischen Landtagswahlen (Erst-, Zweitstimme) durch wahlberechtigte
+Personen, sowie die (statistische-) Auswertung von Wahlergebnissen zu ermöglichen. 
 %
-Konzipiert und Entwickelt werden soll die Anwendung jedoch zur Verwendung 
-durch Wahlhelfer zur Stimmeneintragung für Bayrische Landtagswahlen, 
-zur Stimmabgabe durch Wahlberechtigte und zur (statistischen)-Auswertung
-von Wahlergebnissen durch den oder die WahlleiterIn sowie u.U. 
-interessierten BürgerInnen.
+Das System wird in verschiedenen Gebieten eingesetzt:
 
 \begin{center}
 \begin{tabular}{|m{5cm}|m{10cm}|}
 	\hline
-  \rowcolor{Blue} \textcolor{white}{\textbf{Einsatzgebiet}} & \textcolor{white}{\textbf{Prozesse}} \\
+  \rowcolor{TUMBlue} \textcolor{white}{\textbf{Einsatzgebiet}} & \textcolor{white}{\textbf{Prozesse}} \\
   \hline
   Wahllokal & Abgabe von Einzelstimmen durch WählerInnen und batch Stimmeintragung durch WahlhelferInnen \\
 	\hline
@@ -130,69 +184,117 @@ interessierten BürgerInnen.
 \end{tabular}
 \end{center}
 
+Die (statistische-) Analyse und Auswertung von Wahlergebnissen erfolgt in einer frei zugänglichen
+Weboberfläche, welche auf ein Backendsystem zur Datenbeschaffung zugreift. 
+Während eines Wahlvorgangs sind Daten zum aktuellen Vorgang nicht (statistisch-) Auswertbar,
+unter anderem um eine Beeinflussung oder Verfälschung des Wahlausgangs zu vermeiden.
+Ebenso stellt das System sicher, dass keine Rückschlüsse auf einzelne durch das Auswertungstool
+möglich sind.
+%
+Das Interface zur Stimmabgabe sowie die von WahlhelferInnen und WahlleiterInnen zu benutzenden Oberflächen sind 
+ebenfalls mit Webtechnologien implementiert, jedoch zugriffsbeschränkt und nicht über das Internet aufrufbar. Sie greifen
+auf das selbe Backendsystem wie die (statistische-) Analyse Oberfläche zu.
+%
+Der durchgängige Einsatz von Webtechnologien senkt unter anderem den Projektaufwand, da Entwickler sich nur in 
+einem einzigen Technologiestack für das gesamte System bewegen müssen. Weiterhin sind insbesondere 
+Webtechnologien dafür geeignet Geräte- und Bildschirmgrößen-unabhängige Software zu erstellen. Dies ist wichtig
+da es unpraktikabel ist sich vorab bei Wahlautomaten und (statistischen-)Auswertungsgeräten festzulegen.
+%
+Die Implementierung des Backendsystems erfolgt als minimale Softwareschicht auf einem externen 
+Rechner, fortan \textit{server} genannt. Jede Benutzeroberfläche schickt alle Anfragen, egal ob lesend oder schreibend, 
+an den Server. Dieser führt die jeweilige Operation aus und liefert gegebenenfalls hervorgebrachte
+Anfrageergebnisse wieder zurück an den Rechner auf welchem die Benutzeroberfläche angezeigt wird, fortan \textit{client}.
 
-\section{Benutzerschnittstellen}
-Dieser Absatz beschäftigt sich mit der Definition von Benutzerschnittstellen und fundamentalen Usecases:
+Jede Personengruppe kann zu jeder Zeit immer nur auf die für sie relevanten Interfaces zugreifen.
+Dies steigert primär die Intuitivität der Benutzeroberfläche und minimiert potentielle Verwirrung
+bei Benutzern. Die Absicherung des Systems beruht hingegen explizit nicht auf den getrennten 
+Oberflächen. Vielmehr wird das Backendsystem durch Nutzerauthentifizierung der WahlleiterInnen und 
+WahlhelferInnen, sowie Authentifizierung der einzelnen Wahllokale gesichert. Hierzu erhält jede(r)
+WahlhelferIn und WahlleiterIn und jedes Wahllokal vor jeder Landtagswahl einen sich je unterscheidenden 
+Zugriffscode auf einem staatlich gesicherten, externen Kommunikationskanal zugesandt. Dieser
+ist jeweils nur für genau die vorgesehene Tätigkeit am vorgesehenen Ort verwendbar.
 
-\begin{enumerate}
-  \item Die Informationsabfrage und (statistische-)Auswertung von Wahlergebnissen erfolgt
-        in einer frei zugänglichen Weboberfläche. Hierbei soll auch der Vergleich zwischen 
-        verschiedenen Wahlen möglich sein. 
-  \item Das System soll geeignet sein für die elektronische Stimmabgabe im Wahllokal durch
-        wahlberechtigte Personen
-  \item Um zu gewährleisten, dass jeweils nur eine Stimme pro wahlberechtigter Person abgegeben
-        werden kann, muss die Stimmabgabe erst freigegeben werden. Dies geschieht entweder nach
-        Authentifizierung durch eine(n) WahlhelferIn oder durch den oder die WählerIn selbst 
-        (Unique one-time-use password, Vorlage von Personalausweis/Reisepass).
-  \item WahlhelferInnen müssen in der Lage sein ein oder mehrere Stimmen auf einmal ins System
-        eintragen zu können, zum Beispiel um analoge Stimmen ins System zu übernehmen. 
-  \item Insbesondere zum Vergleich von (statistischen-)Auswertungen verschiedener Wahlen können
-        alte Wahldaten und Ergebnisse von der oder dem WahlleiterIn ins System aus CSV-Dateien 
-        importiert werden.
-  \item Der oder die WahlleiterIn muss imstande sein Stimmen im System zu korrigieren, zum Beispiel
-        nach einer Neuauszählung von Stimmen
-\end{enumerate}
+Zur Persistierung von Daten durch das Backendsystem wird ein zugriffsgesichertes Datenbanksystem eingesetzt. Dieses
+wird exklusiv von der durch das Projektteam implementierten Softwareschicht auf dem Server angesprochen.
+Das heißt, dass die Backendsoftware lediglich als Proxy zwischen BenutzerIn und Datenbanksystem agiert. Sämtliche 
+Datenzugriffe erfolgen stets authentifiziert, gefiltert und werden protokolliert. 
+%
+Der Einsatz eines DBMS wird durch mehrere inhärente Vorteile begünstigt:
+
+\begin{itemize}
+      \item Parallele OLAP Abfragen ohne Zusatzaufwand möglich, i.e., mehrere BenutzerInnen können 
+            gleichzeitig ungehindert voneinander `die Wahlergebnisse statistisch auswerten.
+      \item Mehrbenutzer OLTP out-of-the-box, i.e., mehrere WählerInnen und WahlhelferInnen können parallel Stimmen
+            eintragen.
+      \item Hohe Ausfallsicherheit, i.e., das System läuft stabil über längere Zeiträume
+      \item Recovery Funktionalität, i.e., falls ein Unglück geschieht (Brand im Datencenter, Stromausfall) 
+            oder der Server abstürzt gehen keine Daten verloren, solange die entsprechenden DBMS features 
+            (logging, backup) genutzt werden
+      \item Die Datenzugriffschnittstelle ist standardisiert und flexibel (SQL)
+      \item Integritätsbedingungen werden über das Datenbankschema automatisch realisiert
+\end{itemize}
+
+\subsection{Eingesetzte Technologien}
+Der vorherige Abschnitt identifiziert zur Umsetzung des Systems folgende Softwarekomponenten:
+\begin{itemize}
+      \item Datenbanksystem zur Persistierung von Anwendungsdaten, d.h., Wahldaten zur bayrischen Landtagswahl
+      \item Server Software zur Annahme und Bearbeitung von Client-Anfragen, insbesondere auch zur Ansteuerung des Datenbanksystems
+      \item Client Software, je eines für die Stimmabgabe, für Wahlhelfer, Wahlleiter und zur (statistischen-) Auswertung von Wahlergebnissen 
+\end{itemize}
+Im folgenden werden die Haupttechnologien zur Umsetzung dieser Systemkomponenten tabellarisch aufgelistet. Abbildung \ref{fig:architecture} zeigt
+deren Interaktion und Aufbau graphisch.
 
 \begin{center}
-	\includegraphics[width=\textwidth]{../usecases.pdf}
+      \begin{tabular}{|m{4cm}|m{2.5cm}|m{8.5cm}|}
+            \hline
+        \rowcolor{TUMBlue} \textcolor{white}{\textbf{Funktion/Gebiet}} & \textcolor{white}{\textbf{Eingesetzte Technologie}} & \textcolor{white}{\textbf{Erläuterung}} \\
+        \hline
+        Programmiersprache & TypeScript & TypeScript ist eine von Microsoft entwickelte Programmiersprache, welche JavaScript hauptsächlich um statische Typisierungsfähigkeiten ergänzt. Sie ist die Implementierungssprache für alle Softwarebereiche dieses Projekts \\
+        \hline
+        Datenbanksystem & PostgreSQL & PostgreSQL ist ein von der Industrie großflächig eingesetztes kostenfreies DBMS mit sehr guter Reputation und erprobtem Produktiveinsatz in großen Anwendungen \\
+        \hline
+        Server & NodeJS & NodeJS ermöglicht es Plattformunabhängig JavaScript Code auszuführen. Hier dient es dazu die Serversoftware auszuführen \\
+        \hline
+        Serverschnittstelle & Apollo Server & Apollo Server implementiert die notwendige serverseitige Funktionalität um auf GraphQL Anfragen zu antworten. Jeder request wird auf einen resolver-Funktion gemapped, welche sich darum kümmert die angeforderte Funktion (Daten lesen, Daten schreiben) auszuführen. \\
+        \hline
+        Ansprechen Serverschnittstelle & Apollo Client & Apollo Client implementiert die notwendige clientseitige Funktionalität um GraphQL Anfragen an einen Server zu schicken und die Antworten zu empfangen \\
+        \hline
+        Frontend UI & React & React ist ein von Facebook entwickeltes UI-Framework und wird zur Darstellung sämtlicher Inhalte verwendet \\
+        \hline
+        Frontend UI & Ant Design & Ant Design ist eine React Component Library, welche viele nützliche GUI-Elemente vorgefertigt bereitstellt \\
+        \hline
+      \end{tabular}
 \end{center}
 
+\begin{figure}[h!]
+      \centering
+      \includegraphics[width=\textwidth]{architecture.pdf}
+      \caption{Illustrierung der Architektur und Interaktion von Systemkomponenten}
+      \label{fig:architecture}
+\end{figure}
 
+\clearpage
 
-\section{Funktionale Anforderungen}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Was muss das Programm können?                   					 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Erreichen der Zielsetzung}
+Die definierten Kriterien und Systemeigenschaften werden durch die eingesetzten Technologien 
+offensichtlich erreicht, sofern dieser Abschnitt sie nicht gesondert nennt.
+
 \begin{usecase}
-  \addheading{Nummer}{Beschreibung} 
-  \addrow{FR01}{Wahldaten müssen über eine graphische Schnittstelle (statistisch) auswertbar sein. Hierbei ist insbesondere das Bestimmen von
-                Wahlergebnissen, d.h. gewonnenen Mandaten, wichtig. Wahldaten unterschiedlicher Wahlvorgänge können dabei verglichen werden}
-  \addrow{FR02}{Einzelstimmen sollen durch Wahlberechtigte im Wahllokal abgegeben werden können (E-Voting). Die notwendige Authentifizierung
-                erfolgt dabei zum Beispiel durch eine(n) WahlhelferIn}
-  \addrow{FR03}{Die Einzelstimmabgabe muss vor Benutzung durch eine wahlberechtigte Person je freigegeben werden. 
-                Dies kann zum Beispiel durch eine(n) WahlhelferIn geschehen nach analoger Verifikation von Reisepass oder Personalausweis}
-  \addrow{FR04}{WahlhelferInnen müssen in der Lage sein mehrerer Stimmen auf einmal (batch) in das System einzutragen. Dies ist zum Beispiel
-                dienlich um analoge Stimmabgaben in das System zu übertragen}
-  \addrow{FR05}{Wahldaten von Landtagswahlen ab (inklusive) 2013 müssen fehlerfrei aus einer CSV-Datei importierbar und im System abbildbar sein.}
-  \addrow{FR06}{WahlleiterInnen haben die Möglichkeit Stimmen zu korrigieren, zum Beispiel falls die Gültigkeit von Stimmen nachträglich annuliert 
-                werden muss oder es im Rahmen von Neuauszählungen zu Änderungen kommt.}
-  \addrow{FR07}{Pro Stimmkreis werden die Einzelstimmen zu Stimmkreisergebnissen voraggregiert.}
+	\addheading{Nummer}{Zielsetzung wird erreicht, weil:} 
+      \addrow{M01}{Der oder die WahlhelferIn in einer separaten Oberfläche die individuelle Freigabe für jede Instanz der Stimmabgabeoberfläche im Wahllokal erteilt. Danach kann der oder die WählerIn genau eine Erst- und Zweitstimme- über die Stimmabgabeoberfläche in der Wahlkabine abgeben.}
+      \addrow{M02}{Das eingesetzte DBS PostgreSQL ist performant genug um ein Mehrbenutzer-OLTP Szenario plausibel zu ermöglichen.}
+      \addrow{M03}{Das eingesetzte DBS verfügt über ausreichen Backup und Recovery Funktionalität.}
+	\addrow{M07}{Dies wird über materialized Views im DBS erreicht.}
+	\addrow{M08}{Der lesende Datenzugriff kann für die Wahldauer untersagt werden, beispielsweise auf DBS-Level.}
+      \addrow{M10}{Datenschutz, Wahlgeheimnis u.ä. sind durch das Datenmodel und die Absicherung des Systems gewährleistet. Die restlichen Vorgaben werden von der Implementierung und dem Datenmodel umgesetzt.}
+      \addrow{S02}{Getrennte Oberflächen welche sich ggf. hinter einer für Webanwendungen üblichen Zugriffskontrolle befinden.}
+      \addrow{S03}{Sichere Webanwendungen können diese Garantien genauso sehr treffen wie andere vergleichbare Implementierungsansätze, wie an Ihrem breiten Produktiveinsatz durch viele Spitzenunternehmen ersichtlich ist.}
 \end{usecase}
 
-\section{Nichtfunktionale Anforderungen}
-\begin{usecase}
-  \addheading{Nummer}{Beschreibung} 
-  \addrow{NF01}{Das System muss alle rechtlichen Vorgaben zur Landtagswahl im Freistaat Bayern einhalten, insbesondere im Bezug auf Datenschutz und Wahlgeheimnis.
-                Für letzteres ist beispielsweise das getrennte abspeichern von Erst- und Zweitstimmen fundamental.
-                Juristische Ausnahmefälle, die bei den Wahlen 2013 und 2018 nicht relevant waren und über 
-                Sperrklausel, Überhangsmandate, Ausgleichsmandate hinausgehen, müssen im System nicht verarbeitet/ berechnet werden können.}
-  \addrow{NF02}{Zu Peak-Lastzeiten, i.e., wenn tausende WählerInnen gleichzeitig abstimmen, muss das System reibungslos einsatzfähig bleiben.}
-  \addrow{NF03}{Ein wirkungsvoller Schutz vor unbefugten Zugriffen muss ein fester Bestandteil sein um die Integrität der Wahlergebnisse nicht zu gefährden.}
-  \addrow{NF04}{Die (statistische-)Auswertung von Wahlergebnissen muss schnell und korrekt sein.}
-  \addrow{NF05}{Die graphische Oberfläche soll mächtig, jedoch intuitiv sein.}
-\end{usecase}
+\section{GUI Mockups}
+\includepdf[nup=1x2, pages=-,templatesize={\textwidth}{10cm}]{../Mock.pdf}
 
-\section{Produktdaten}
+\section{Datenmodell}
 Die grundlegenden zu verwaltenden Produktdaten ergeben sich aus der folgenden Liste von
 identifizierten Entitäten:
 \begin{itemize}
@@ -208,7 +310,7 @@ identifizierten Entitäten:
         Niederbayern, Schwaben, Ober-, Unter-, Mittelfranken und Oberpfalz. Jeder Regierungsbezirk
         hat eine unterschiedliche Anzahl zu vergebender Direkt- und Listenmandate
   \item \textbf{Stimmkreis} - Regierungsbezirke sind gemäß Bevölkerungszahlen in Stimmkreise aufgeteilt.
-        Jeder Stimmkreis ist widerum in ein oder mehrere Stimmbezirke unterteilt. Pro Stimmkreis wird ein(e)
+        Jeder Stimmkreis ist wiederum in ein oder mehrere Stimmbezirke unterteilt. Pro Stimmkreis wird ein(e)
         DirektkandidatIn gewählt
   \item \textbf{Stimmbezirk} - Die Stimmabgabe erfolgt in Stimmbezirken
   \item \textbf{KandidatIn} - Eine sich zur Wahl stellende Person mit notwendigen persönlichen Angaben. 
@@ -225,24 +327,20 @@ identifizierten Entitäten:
 	\includegraphics[width=\textwidth]{../model.pdf}
 \end{center}
 
-\section{Abnahmekriterien}
-Dieser Abschnitt definiert die wichtigsten Kriterien welche zwischen dem Erzeugnis und der Abnahme stehen.
-Sie leiten sich hauptsächlich aus den in diesem Dokument spezifizierten Anforderungen ab.
+\section{Globale Testfälle und Szenarien}
+\begin{center}
+      \begin{tabular}{|m{3.5cm}|m{12cm}|}
+        \hline
+        \rowcolor{TUMBlue} \textcolor{white}{\textbf{Szenario}} & \textcolor{white}{\textbf{Abnahmekriterium}} \\
+        \hline
+        Stimmabgabe & 10~ Stimmabgaben können pro Sekunde erfolgen \\
+        \hline
+        (statistische-) Auswertung & Zur voraussichtlichen Hauptlastzeit unmittelbar nach Datenfreigabe zum Abschluss des Wahlvorgangs 
+            bleibt das System performant. Es muss hierzu möglich sein 100 Analyseanfragen pro Sekunde zu bearbeiten \\
+        \hline
+      \end{tabular}
+\end{center}
 
-\begin{enumerate}
-  \item Die Softwareplatform ist über eine graphisch ansprechende Weboberfläche benutzbar.
-  \item Das System erlaubt die (statistische) Auswertung von realen Stimmdaten zu bayrischen Landtagswahlen, d.h. 
-        insbesondere die Bestimmung der gewonnenen Mandate im bayrischen Landtag. Dabei müssen gesetzliche
-        Vorgaben genauestens eingehalten sein sowie Daten sicher, Datenschutzrechtlich korrekt und integer gehalten
-        werden.
-  \item WählerInnen haben durch eine bereitgestellte Oberfläche die Möglichkeit ihre Erst- und Zweitstimme abzugeben.
-        Dabei muss gewährleistet sein, dass jede Wahlberechtigte Person nur maximal einmal abstimmen kann, 
-        Datenschutzrechtliche sowie gesetzliche Vorgaben wie das Stimmgeheimnis eingehalten werden und das System 
-        insbesondere vor unbefugtem Zugriff geschützt ist.
-  \item WahlhelferInnen können schnell Stimmen, e.g. analog abgegebene, in einer minimalen Anzahl von Schritten in das
-        System übernehmen.
-  \item Reale Stimmdaten vergangener Wahlen können von berechtigten Nutzern, e.g., WahlleiterInnen, importiert und
-        (statistisch) Ausgewertet werden. Hierbei ist insbesondere auch der vergleich mit den Ergebnissen anderer
-        Wahlvorgänge wichtig.
-\end{enumerate}
+\clearpage
+\input{Glossar}
 \end{document}

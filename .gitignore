@@ -24,11 +24,16 @@ package-lock.json
 specification/**/*.pdf
 specification/**/build
 specification/**/*.aux
+specification/**/*.bbl
+specification/**/*.blg
 specification/**/*.glo
 specification/**/*.ist
 specification/**/*.log
 specification/**/*.out
 specification/**/*.toc
 specification/**/*.glsdefs
+specification/**/*.synctex*
 usecase.*
 !usecase.mp
+!architecture.pdf
+!Mock.pdf
