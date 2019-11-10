@@ -35,3 +35,4 @@ specification/**/*.glsdefs
 specification/**/*.synctex*
 usecase.*
 !usecase.mp
+!architecture.pdf
