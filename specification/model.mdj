@@ -2797,9 +2797,9 @@
 										"$ref": "AAAAAAFt89i1sKZ2Vvg="
 									},
 									"font": "Arial;13;0",
-									"left": 520,
+									"left": 519,
 									"top": 489,
-									"width": 19.5126953125,
+									"width": 20,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 25,
@@ -3809,47 +3809,11 @@
 									"model": {
 										"$ref": "AAAAAAFt89yLjclCfis="
 									},
-									"subViews": [
-										{
-											"_type": "UMLAttributeView",
-											"_id": "AAAAAAFuDK86S7IpHB0=",
-											"_parent": {
-												"$ref": "AAAAAAFt89yLjclKlF0="
-											},
-											"model": {
-												"$ref": "AAAAAAFuDK86JrIIiTY="
-											},
-											"font": "Arial;13;0",
-											"left": 37,
-											"top": 349,
-											"width": 150.6689453125,
-											"height": 13,
-											"text": "+waehlerGeschlecht",
-											"horizontalAlignment": 0
-										},
-										{
-											"_type": "UMLAttributeView",
-											"_id": "AAAAAAFuDK9VebQQv3w=",
-											"_parent": {
-												"$ref": "AAAAAAFt89yLjclKlF0="
-											},
-											"model": {
-												"$ref": "AAAAAAFuDK9VS7Pv+gY="
-											},
-											"font": "Arial;13;0",
-											"left": 37,
-											"top": 364,
-											"width": 150.6689453125,
-											"height": 13,
-											"text": "+waehlerAltersgruppe",
-											"horizontalAlignment": 0
-										}
-									],
 									"font": "Arial;13;0",
 									"left": 32,
 									"top": 344,
 									"width": 160.6689453125,
-									"height": 38
+									"height": 10
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -3872,7 +3836,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 37,
-											"top": 387,
+											"top": 359,
 											"width": 150.6689453125,
 											"height": 13,
 											"text": "+istGültig()",
@@ -3881,7 +3845,7 @@
 									],
 									"font": "Arial;13;0",
 									"left": 32,
-									"top": 382,
+									"top": 354,
 									"width": 160.6689453125,
 									"height": 23
 								},
@@ -10256,26 +10220,6 @@
 								},
 								"multiplicity": "1"
 							}
-						}
-					],
-					"attributes": [
-						{
-							"_type": "UMLAttribute",
-							"_id": "AAAAAAFuDK86JrIIiTY=",
-							"_parent": {
-								"$ref": "AAAAAAFt89yLjclCfis="
-							},
-							"name": "waehlerGeschlecht",
-							"type": ""
-						},
-						{
-							"_type": "UMLAttribute",
-							"_id": "AAAAAAFuDK9VS7Pv+gY=",
-							"_parent": {
-								"$ref": "AAAAAAFt89yLjclCfis="
-							},
-							"name": "waehlerAltersgruppe",
-							"type": ""
 						}
 					],
 					"operations": [
