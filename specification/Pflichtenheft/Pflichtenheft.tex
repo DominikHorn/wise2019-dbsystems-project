@@ -123,14 +123,14 @@ Landtagswahl 2018
 	\addheading{Nummer}{Die Anwendung ermöglicht es...} 
       \addrow{M01}{...WählerInnen Einzelstimmen abzugeben nach vorangestellter Freigabe durch eine(n) WahlhelferIn.}
       \addrow{M02}{...Im Echtbetrieb, das mehrere Stimmen gleichzeitig abgegeben werden}
-      \addrow{M03}{...selbst im katastrophenfall persistierte Wahldaten zu recovern}
+      \addrow{M03}{...selbst im Katastrophenfall persistierte Wahldaten zu recovern}
 	\addrow{M04}{...dem oder der WahlhelferIn Stimmen in aggregierter Form einzugeben.}
 	\addrow{M05}{...Daten von vergangenen Wahlen mit Hilfe einer CSV-Datei fehlerfrei in das System einzuspeisen und statistisch auszuwerten.}
 	\addrow{M06}{...bei der statistischen Auswertung die Verteilung der Sitze, die Auswertung für die Direkt- und Listenmandate und die Anzahl der Stimmen pro Partei einzusehen.}
 	\addrow{M07}{...pro Stimmkreis die Einzelstimmen zu Stimmkreisergebnissen vorzuaggregieren.}
-	\addrow{M08}{...erst nach Abschluss einer Wahl diese statistisch Auszuwerten, e.g., um Wahlbeeinflussung oder timed-attacks auf das Wahlgeheimniss zu verhindern.}
+	\addrow{M08}{...erst nach Abschluss einer Wahl diese statistisch Auszuwerten, e.g., um Wahlbeeinflussung oder timed-attacks auf das Wahlgeheimnis zu verhindern.}
 	\addrow{M09}{Die Anwendung speichert Erst- und Zweitstimmen getrennt voneinander um das Wahlgeheimnis und Datenschutzaspekte zu respektieren.}
-      \addrow{M10}{Das System beachtet alle relveanten gesetzlichen Vorgaben für bayrische Landtagswahlen}
+      \addrow{M10}{Das System beachtet alle relevanten gesetzlichen Vorgaben für bayrische Landtagswahlen}
 \end{usecase}
 
 \subsection{Sollkriterien}
@@ -159,7 +159,7 @@ Landtagswahl 2018
 \section{Technische Umsetzung}
 Dieser Abschnitt widmet sich der geplanten technischen Realisierung
 des Systems. Zunächst werden dazu anhand der Einsatzszenarien die Implementierungsidee
-grob vorgestellt. Im darauf folgenden Abschnitt findet sich eine tabelarische 
+grob vorgestellt. Im darauf folgenden Abschnitt findet sich eine tabellarische 
 Auflistung aller eingesetzten Technologien. Abschließend
 wird der jeweilige Implementierungsansatz für alle Musskriterien beschrieben.
 
@@ -192,21 +192,21 @@ Ebenso stellt das System sicher, dass keine Rückschlüsse auf einzelne durch da
 möglich sind.
 %
 Das Interface zur Stimmabgabe sowie die von WahlhelferInnen und WahlleiterInnen zu benutzenden Oberflächen sind 
-ebenfalls mit Webtechnologien implementiert, jedoch Zugriffbeschränkt und nicht übers Internet aufrufbar. Sie greifen
+ebenfalls mit Webtechnologien implementiert, jedoch zugriffsbeschränkt und nicht über das Internet aufrufbar. Sie greifen
 auf das selbe Backendsystem wie die (statistische-) Analyse Oberfläche zu.
 %
 Der durchgängige Einsatz von Webtechnologien senkt unter anderem den Projektaufwand, da Entwickler sich nur in 
 einem einzigen Technologiestack für das gesamte System bewegen müssen. Weiterhin sind insbesondere 
-Webtechnologien dafür geeignet Geräte- und bildschirmgrößen-unabhängige Software zu erstellen. Dies ist wichtig
+Webtechnologien dafür geeignet Geräte- und Bildschirmgrößen-unabhängige Software zu erstellen. Dies ist wichtig
 da es unpraktikabel ist sich vorab bei Wahlautomaten und (statistischen-)Auswertungsgeräten festzulegen.
 %
 Die Implementierung des Backendsystems erfolgt als minimale Softwareschicht auf einem externen 
 Rechner, fortan \textit{server} genannt. Jede Benutzeroberfläche schickt alle Anfragen, egal ob lesend oder schreibend, 
-an den Server. Dieser führt die jeweilige Operation aus und liefert gegebenfalls hervorgebrachte
+an den Server. Dieser führt die jeweilige Operation aus und liefert gegebenenfalls hervorgebrachte
 Anfrageergebnisse wieder zurück an den Rechner auf welchem die Benutzeroberfläche angezeigt wird, fortan \textit{client}.
 
 Jede Personengruppe kann zu jeder Zeit immer nur auf die für sie relevanten Interfaces zugreifen.
-Dies steigert primär die intuitivität der Benutzeroberfläche und minimiert potentielle Verwirrung
+Dies steigert primär die Intuitivität der Benutzeroberfläche und minimiert potentielle Verwirrung
 bei Benutzern. Die Absicherung des Systems beruht hingegen explizit nicht auf den getrennten 
 Oberflächen. Vielmehr wird das Backendsystem durch Nutzerauthentifizierung der WahlleiterInnen und 
 WahlhelferInnen, sowie Authentifizierung der einzelnen Wahllokale gesichert. Hierzu erhält jede(r)
@@ -215,9 +215,9 @@ Zugriffscode auf einem staatlich gesicherten, externen Kommunikationskanal zuges
 ist jeweils nur für genau die vorgesehene Tätigkeit am vorgesehenen Ort verwendbar.
 
 Zur Persistierung von Daten durch das Backendsystem wird ein zugriffsgesichertes Datenbanksystem eingesetzt. Dieses
-wird exklusiv von der durch das Projektteam implementierten Softwareschicht auf dem server angesprochen.
+wird exklusiv von der durch das Projektteam implementierten Softwareschicht auf dem Server angesprochen.
 Das heißt, dass die Backendsoftware lediglich als Proxy zwischen BenutzerIn und Datenbanksystem agiert. Sämtliche 
-Datenzugriffe erfolgen stets authentifiziert, gefiltert und werden protokoliert. 
+Datenzugriffe erfolgen stets authentifiziert, gefiltert und werden protokolliert. 
 %
 Der Einsatz eines DBMS wird durch mehrere inhärente Vorteile begünstigt:
 
@@ -230,7 +230,7 @@ Der Einsatz eines DBMS wird durch mehrere inhärente Vorteile begünstigt:
       \item Recovery Funktionalität, i.e., falls ein Unglück geschieht (Brand im Datencenter, Stromausfall) 
             oder der Server abstürzt gehen keine Daten verloren, solange die entsprechenden DBMS features 
             (logging, backup) genutzt werden
-      \item Die Datenzugriffschnittstelle ist standartisiert und flexibel (SQL)
+      \item Die Datenzugriffschnittstelle ist standardisiert und flexibel (SQL)
       \item Integritätsbedingungen werden über das Datenbankschema automatisch realisiert
 \end{itemize}
 
@@ -238,10 +238,10 @@ Der Einsatz eines DBMS wird durch mehrere inhärente Vorteile begünstigt:
 Der vorherige Abschnitt identifiziert zur Umsetzung des Systems folgende Softwarekomponenten:
 \begin{itemize}
       \item Datenbanksystem zur Persistierung von Anwendungsdaten, d.h., Wahldaten zur bayrischen Landtagswahl
-      \item Server software zur Annahme und Bearbeitung von Clientanfragen, insbesondere auch zur Ansteuerung des Datenbanksystems
-      \item Client software, je eines für die Stimmabgabe, für Wahlhelfer, Wahlleiter und zur (statistischen-) Auswertung von Wahlergebnissen 
+      \item Server Software zur Annahme und Bearbeitung von Client-Anfragen, insbesondere auch zur Ansteuerung des Datenbanksystems
+      \item Client Software, je eines für die Stimmabgabe, für Wahlhelfer, Wahlleiter und zur (statistischen-) Auswertung von Wahlergebnissen 
 \end{itemize}
-Im folgenden werden die Haupttechnologien zur Umsetzung dieser Systemkomponenten tabelarisch aufgelistet. Abbildung \ref{fig:architecture} zeigt
+Im folgenden werden die Haupttechnologien zur Umsetzung dieser Systemkomponenten tabellarisch aufgelistet. Abbildung \ref{fig:architecture} zeigt
 deren Interaktion und Aufbau graphisch.
 
 \begin{center}
@@ -253,13 +253,13 @@ deren Interaktion und Aufbau graphisch.
         \hline
         Datenbanksystem & PostgreSQL & PostgreSQL ist ein von der Industrie großflächig eingesetztes kostenfreies DBMS mit sehr guter Reputation und erprobtem Produktiveinsatz in großen Anwendungen \\
         \hline
-        Server & NodeJS & NodeJS ermöglicht es Plattformunabhängig JavaScript code auszuführen. Hier dient es dazu die Serversoftware auszuführen \\
+        Server & NodeJS & NodeJS ermöglicht es Plattformunabhängig JavaScript Code auszuführen. Hier dient es dazu die Serversoftware auszuführen \\
         \hline
-        Serverschnittstelle & Apollo Server & Apollo Server implementiert die notwendige serverseitige Funktionalität um auf GraphQL Anfragen zu antworten. Jeder request wird auf einen resolver-Funktion gemapped, welche sich darum kümmert die angeforderte funktion (Daten lesen, Daten schreiben) auszuführen. \\
+        Serverschnittstelle & Apollo Server & Apollo Server implementiert die notwendige serverseitige Funktionalität um auf GraphQL Anfragen zu antworten. Jeder request wird auf einen resolver-Funktion gemapped, welche sich darum kümmert die angeforderte Funktion (Daten lesen, Daten schreiben) auszuführen. \\
         \hline
         Ansprechen Serverschnittstelle & Apollo Client & Apollo Client implementiert die notwendige clientseitige Funktionalität um GraphQL Anfragen an einen Server zu schicken und die Antworten zu empfangen \\
         \hline
-        Frontend UI & React & React ist ein von Facebook entwickeltes UI-Framework und wird zur Darstellung sämmtlicher Inhalte verwendet \\
+        Frontend UI & React & React ist ein von Facebook entwickeltes UI-Framework und wird zur Darstellung sämtlicher Inhalte verwendet \\
         \hline
         Frontend UI & Ant Design & Ant Design ist eine React Component Library, welche viele nützliche GUI-Elemente vorgefertigt bereitstellt \\
         \hline
@@ -276,7 +276,7 @@ deren Interaktion und Aufbau graphisch.
 \clearpage
 
 \subsection{Erreichen der Zielsetzung}
-Die definierten Kriterien und Systemeigenschafften werden durch die eingesetzten Technologien 
+Die definierten Kriterien und Systemeigenschaften werden durch die eingesetzten Technologien 
 offensichtlich erreicht, sofern dieser Abschnitt sie nicht gesondert nennt.
 
 \begin{usecase}
@@ -292,7 +292,7 @@ offensichtlich erreicht, sofern dieser Abschnitt sie nicht gesondert nennt.
 \end{usecase}
 
 \section{GUI Mockups}
-% TODO
+\includepdf[nup=1x2, pages=-, templatesize={\textwidth}{10cm}]{Mock.pdf}
 
 \section{Datenmodell}
 Die grundlegenden zu verwaltenden Produktdaten ergeben sich aus der folgenden Liste von
@@ -310,7 +310,7 @@ identifizierten Entitäten:
         Niederbayern, Schwaben, Ober-, Unter-, Mittelfranken und Oberpfalz. Jeder Regierungsbezirk
         hat eine unterschiedliche Anzahl zu vergebender Direkt- und Listenmandate
   \item \textbf{Stimmkreis} - Regierungsbezirke sind gemäß Bevölkerungszahlen in Stimmkreise aufgeteilt.
-        Jeder Stimmkreis ist widerum in ein oder mehrere Stimmbezirke unterteilt. Pro Stimmkreis wird ein(e)
+        Jeder Stimmkreis ist wiederum in ein oder mehrere Stimmbezirke unterteilt. Pro Stimmkreis wird ein(e)
         DirektkandidatIn gewählt
   \item \textbf{Stimmbezirk} - Die Stimmabgabe erfolgt in Stimmbezirken
   \item \textbf{KandidatIn} - Eine sich zur Wahl stellende Person mit notwendigen persönlichen Angaben. 
