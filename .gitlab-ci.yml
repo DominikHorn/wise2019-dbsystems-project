@@ -10,7 +10,6 @@ variables:
   USECASES_FILE: "specification/usecases.pdf"
   LASTENHEFT_FILE: "specification/Lastenheft/Lastenheft.pdf"
   PFLICHTENHEFT_FILE: "specification/Pflichtenheft/Pflichtenheft.pdf"
-  GLOSSAR_FILE: "specification/Glossar/Glossar.pdf"
   BUILDS_WIKI_SLUG: "Home"
 
 build-mdj-pdfs:
@@ -101,7 +100,6 @@ deploy-artifacts-to-wiki:
   # Upload specification files + fetch uploads/... url from response
   - "LASTENHEFT_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$LASTENHEFT_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
   - "PFLICHTENHEFT_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$PFLICHTENHEFT_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
-  - "GLOSSAR_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$GLOSSAR_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
   - "MODEL_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$MODEL_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
   - "USECASES_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$USECASES_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
   # Get contents of builds wiki page, append new table row and push to server
