@@ -242,6 +242,37 @@ für Ihren Einsatz aufgelistet.
 \section{GUI Mockups}
 
 \section{Datenmodell}
+Die grundlegenden zu verwaltenden Produktdaten ergeben sich aus der folgenden Liste von
+identifizierten Entitäten:
+\begin{itemize}
+  \item \textbf{Wahl} - Repräsentation einer einzelnen Wahl an einem festen Datum. 
+        Durch letzteres Merkmal ist es möglich mehrere Wahlen in einem Jahr festzuhalten.
+  \item \textbf{Stimme} - Jede(r) WählerIn besitzt je eine Erst- und Zweitstimme, welche er oder sie in Ihrem
+        Stimmbezirk für KandidatInnen abgeben können. Mit der Erststimme wählt eine wahlberechtigte Person
+        primär den oder die von ihr bevorzugten DirektkandidatIn ihres Stimmkreises. Über die Zweitstimme wählt 
+        jede wahlberechtigte Person genau einen Kandidaten einer Liste aus ihrem Regierungsbezirk. Das prozentuale
+        Gesamtabschneiden einer Partei aus kombinierten Erst- und Zweitstimmen ist jedoch ebenso für das 
+        Wahlergebnis relevant.
+  \item \textbf{Regierungsbezirk} - Bayern ist in sieben Regierungsbezirke unterteilt: Oberbayern,
+        Niederbayern, Schwaben, Ober-, Unter-, Mittelfranken und Oberpfalz. Jeder Regierungsbezirk
+        hat eine unterschiedliche Anzahl zu vergebender Direkt- und Listenmandate
+  \item \textbf{Stimmkreis} - Regierungsbezirke sind gemäß Bevölkerungszahlen in Stimmkreise aufgeteilt.
+        Jeder Stimmkreis ist widerum in ein oder mehrere Stimmbezirke unterteilt. Pro Stimmkreis wird ein(e)
+        DirektkandidatIn gewählt
+  \item \textbf{Stimmbezirk} - Die Stimmabgabe erfolgt in Stimmbezirken
+  \item \textbf{KandidatIn} - Eine sich zur Wahl stellende Person mit notwendigen persönlichen Angaben. 
+        Insbesondere kann ein(e) KandidatIn als DirektkandidatIn für einen Stimmkreis aufgestellt sein.
+  \item \textbf{Mandat} - Mandate für den Bayrischen Landtag können von KandidatInnen im Rahmen einer Landtagswahl
+        errungen werden. Hierbei wird zwischen Direktmandaten, Listenmandaten und Ausgleichsmandaten unterschieden.
+  \item \textbf{Partei} - KandidatInnen können Mitglied einer Partei sein und sich von dieser für einen Listenplatz
+        aufstellen lassen
+  \item \textbf{Liste} - Jede Partei kann pro Regierungsbezirk eine Liste mit KandidatInnen, welche Mitglieder der 
+        Partei sind, aufstellen.
+\end{itemize}
+
+\begin{center}
+	\includegraphics[width=\textwidth]{../model.pdf}
+\end{center}
 
 \section{Globale Testfälle und Szenarien}
 % 10 Leute gleichzeitig in Wahllokal greifen zu
