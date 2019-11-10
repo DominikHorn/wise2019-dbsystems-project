@@ -36,3 +36,4 @@ specification/**/*.synctex*
 usecase.*
 !usecase.mp
 !architecture.pdf
+!Mock.pdf
