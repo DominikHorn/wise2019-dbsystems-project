@@ -123,13 +123,14 @@ Landtagswahl 2018
 	\addheading{Nummer}{Die Anwendung ermöglicht es...} 
       \addrow{M01}{...WählerInnen Einzelstimmen abzugeben nach vorangestellter Freigabe durch eine(n) WahlhelferIn.}
       \addrow{M02}{...Im Echtbetrieb, das mehrere Stimmen gleichzeitig abgegeben werden}
-	\addrow{M03}{...dem oder der WahlhelferIn Stimmen in aggregierter Form einzugeben.}
-	\addrow{M04}{...Daten von vergangenen Wahlen mit Hilfe einer CSV-Datei fehlerfrei in das System einzuspeisen und statistisch auszuwerten.}
-	\addrow{M05}{...bei der statistischen Auswertung die Verteilung der Sitze, die Auswertung für die Direkt- und Listenmandate und die Anzahl der Stimmen pro Partei einzusehen.}
-	\addrow{M06}{...pro Stimmkreis die Einzelstimmen zu Stimmkreisergebnissen vorzuaggregieren.}
-	\addrow{M07}{...erst nach Abschluss einer Wahl diese statistisch Auszuwerten, e.g., um Wahlbeeinflussung oder timed-attacks auf das Wahlgeheimniss zu verhindern.}
-	\addrow{M08}{Die Anwendung speichert Erst- und Zweitstimmen getrennt voneinander um das Wahlgeheimnis und Datenschutzaspekte zu respektieren.}
-      \addrow{M09}{Das System beachtet alle relveanten gesetzlichen Vorgaben für bayrische Landtagswahlen}
+      \addrow{M03}{...selbst im katastrophenfall persistierte Wahldaten zu recovern}
+	\addrow{M04}{...dem oder der WahlhelferIn Stimmen in aggregierter Form einzugeben.}
+	\addrow{M05}{...Daten von vergangenen Wahlen mit Hilfe einer CSV-Datei fehlerfrei in das System einzuspeisen und statistisch auszuwerten.}
+	\addrow{M06}{...bei der statistischen Auswertung die Verteilung der Sitze, die Auswertung für die Direkt- und Listenmandate und die Anzahl der Stimmen pro Partei einzusehen.}
+	\addrow{M07}{...pro Stimmkreis die Einzelstimmen zu Stimmkreisergebnissen vorzuaggregieren.}
+	\addrow{M08}{...erst nach Abschluss einer Wahl diese statistisch Auszuwerten, e.g., um Wahlbeeinflussung oder timed-attacks auf das Wahlgeheimniss zu verhindern.}
+	\addrow{M09}{Die Anwendung speichert Erst- und Zweitstimmen getrennt voneinander um das Wahlgeheimnis und Datenschutzaspekte zu respektieren.}
+      \addrow{M10}{Das System beachtet alle relveanten gesetzlichen Vorgaben für bayrische Landtagswahlen}
 \end{usecase}
 
 \subsection{Sollkriterien}
@@ -275,8 +276,20 @@ deren Interaktion und Aufbau graphisch.
 \clearpage
 
 \subsection{Erreichen der Zielsetzung}
-% TODO Dieser Abschnitt ist nicht explizit gefordert und kann auch weggelassen werden. falls nicht:
-% Beschreibung wie Ziele durch die genannten Technologien erreicht werden, dazu Musskriterien ansehen
+Die definierten Kriterien und Systemeigenschafften werden durch die eingesetzten Technologien 
+offensichtlich erreicht, sofern dieser Abschnitt sie nicht gesondert nennt.
+
+\begin{usecase}
+	\addheading{Nummer}{Zielsetzung wird erreicht, weil:} 
+      \addrow{M01}{Der oder die WahlhelferIn in einer separaten Oberfläche die individuelle Freigabe für jede Instanz der Stimmabgabeoberfläche im Wahllokal erteilt. Danach kann der oder die WählerIn genau eine Erst- und Zweitstimme- über die Stimmabgabeoberfläche in der Wahlkabine abgeben.}
+      \addrow{M02}{Das eingesetzte DBS PostgreSQL ist performant genug um ein Mehrbenutzer-OLTP Szenario plausibel zu ermöglichen.}
+      \addrow{M03}{Das eingesetzte DBS verfügt über ausreichen Backup und Recovery Funktionalität.}
+	\addrow{M07}{Dies wird über materialized Views im DBS erreicht.}
+	\addrow{M08}{Der lesende Datenzugriff kann für die Wahldauer untersagt werden, beispielsweise auf DBS-Level.}
+      \addrow{M10}{Datenschutz, Wahlgeheimnis u.ä. sind durch das Datenmodel und die Absicherung des Systems gewährleistet. Die restlichen Vorgaben werden von der Implementierung und dem Datenmodel umgesetzt.}
+      \addrow{S02}{Getrennte Oberflächen welche sich ggf. hinter einer für Webanwendungen üblichen Zugriffskontrolle befinden.}
+      \addrow{S03}{Sichere Webanwendungen können diese Garantien genauso sehr treffen wie andere vergleichbare Implementierungsansätze, wie an Ihrem breiten Produktiveinsatz durch viele Spitzenunternehmen ersichtlich ist.}
+\end{usecase}
 
 \section{GUI Mockups}
 % TODO
