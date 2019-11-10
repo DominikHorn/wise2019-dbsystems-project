@@ -157,7 +157,10 @@ Landtagswahl 2018
 
 \section{Technische Umsetzung}
 Dieser Abschnitt widmet sich der geplanten technischen Realisierung
-aller Systemaspekte.
+des Systems. Zunächst werden dazu anhand der Einsatzszenarien die Implementierungsidee
+grob vorgestellt. Im darauf folgenden Abschnitt findet sich eine tabelarische 
+Auflistung aller eingesetzten Technologien. Abschließend
+wird der jeweilige Implementierungsansatz für alle Musskriterien beschrieben.
 
 \subsection{Produkteinsatz und Umgebung}
 Die Anwendung ist konzipiert und entwickelt um die Stimmabgabe 
@@ -182,31 +185,45 @@ Das System wird in verschiedenen Gebieten eingesetzt:
 
 Die (statistische-) Analyse und Auswertung von Wahlergebnissen erfolgt in einer frei zugänglichen
 Weboberfläche, welche auf ein Serversystem zur Datenbeschaffung zugreift. 
-Während eines Wahlvorgangs sind Daten zum aktuellen Vorgang nicht (statistisch-) Auswertbar.
+Während eines Wahlvorgangs sind Daten zum aktuellen Vorgang nicht (statistisch-) Auswertbar,
+unter anderem um eine Beeinflussung oder Verfälschung des Wahlausgangs zu vermeiden.
+Ebenso stellt das System sicher, dass keine Rückschlüsse auf einzelne durch das Auswertungstool
+möglich sind.
 %
-Das Wahlinterface sowie die von WahlhelferInnen und WahlleiterInnen zu benutzenden Oberflächen sind 
+Das Interface zur Stimmabgabe sowie die von WahlhelferInnen und WahlleiterInnen zu benutzenden Oberflächen sind 
 ebenfalls mit Webtechnologien implementiert, jedoch Zugriffbeschränkt und nicht übers Internet aufrufbar.
 %
-Webtechnologien für alle Interfaces zu verwenden senkt den Projektaufwand, da Entwickler sich nur in 
-einem Technologiestack bewegen müssen. Weiterhin sind insbesondere Webtechnologien dafür geeignet
-Geräte und bildschirmgrößen-unabhängige Software zu erzeugen.
-%
+Der durchgängige Einsatz von Webtechnologien senkt unter anderem den Projektaufwand, da Entwickler sich nur in 
+einem einzigen Technologiestack für das gesamte System bewegen müssen. Weiterhin sind insbesondere 
+Webtechnologien dafür geeignet Geräte- und bildschirmgrößen-unabhängige Software zu erstellen. Dies ist wichtig
+da es unpraktikabel ist sich vorab bei Wahlautomaten und (statistischen-)Auswertungsgeräten festzulegen.
+
 Jede Personengruppe kann zu jeder Zeit immer nur auf die für sie relevanten Interfaces zugreifen.
-Dies steigert primär die intuitive Benutzbarkeit und verhindert Benutzern zu verwirren. 
+Dies steigert primär die intuitivität der Benutzeroberfläche und minimiert potentielle Verwirrung
+bei Benutzern. Die Absicherung des Systems beruht hingegen explizit nicht auf den getrennten 
+Oberflächen. Vielmehr wird das Backendsystem durch Nutzerauthentifizierung der WahlleiterInnen und 
+WahlhelferInnen, sowie Authentifizierung der einzelnen Wahllokale gesichert. Hierzu erhält jede(r)
+WahlhelferIn und WahlleiterIn und jedes Wahllokal vor jeder Landtagswahl einen sich je unterscheidenden 
+Zugriffscode auf einem staatlich gesicherten, externen Kommunikationskanal zugesandt. Dieser
+ist jeweils nur für genau die vorgesehene Tätigkeit am vorgesehenen Ort verwendbar.
+
+Zur Persistierung von Daten wird ein zugriffsgesichertes DBMS eingesetzt. Die eingehens 
+angesprochene Backendsoftware agiert dabei als Proxy zwischen BenutzerIn und DBMS, d.h., 
+sämtliche Datenzugriffe werden authentifiziert, gefiltert und
+protokoliert. 
 %
-Als Backendsystem wird ein zugriffsgesichertes DBMS eingesetzt. Dieses implementiert mehrere 
-essentielle Projektbestandteile out-of-the-box:
+Der Einsatz eines DBMS wird durch mehrere inhärente Vorteile begünstigt:
 
 \begin{itemize}
-      \item Parallele OLAP Abfragen, i.e., mehrere Benutzer können gleichzeitig ungehindert voneinander 
-            die Wahlergebnisse statistisch auswerten.
-      \item Mehrbenutzer OLTP, i.e., mehrere WählerInnen und WahlhelferInnen können parallel Stimmen
+      \item Parallele OLAP Abfragen ohne Zusatzaufwand möglich, i.e., mehrere BenutzerInnen können 
+            gleichzeitig ungehindert voneinander `die Wahlergebnisse statistisch auswerten.
+      \item Mehrbenutzer OLTP out-of-the-box, i.e., mehrere WählerInnen und WahlhelferInnen können parallel Stimmen
             eintragen.
       \item Hohe Ausfallsicherheit, i.e., das System läuft stabil über längere Zeiträume
       \item Recovery Funktionalität, i.e., falls ein Unglück geschieht (Brand im Datencenter, Stromausfall) 
-            oder das DBMS abstürzt gehen keine Daten verloren, solange die entsprechenden DBMS features 
-            genutzt werden
-      \item Datenzugriffschnittstelle ist standartisiert und flexibel (SQL)
+            oder der Server abstürzt gehen keine Daten verloren, solange die entsprechenden DBMS features 
+            (logging, backup) genutzt werden
+      \item Die Datenzugriffschnittstelle ist standartisiert und flexibel (SQL)
       \item Integritätsbedingungen werden über das Datenbankschema automatisch realisiert
 \end{itemize}
 
