@@ -16,6 +16,7 @@ const { SubMenu } = Menu;
  */
 export interface IPageProps {
   readonly title: string;
+  readonly subtitle: string;
   readonly client: ApolloClient<any>;
   readonly routeProps: RouteComponentProps<any>;
 }
@@ -38,27 +39,14 @@ class PageComponentClass extends React.Component<IProps, IState> {
     };
   }
 
-  private renderHeader = (title: string) => (
+  private renderHeader = (title: string, subtitle: string) => (
     <Header className={"page-header"}>
-      <Row type={"flex"} justify={"end"}>
-        <Col span={24}>
-          <h1 style={{ textOverflow: "ellipsis" }}>{title}</h1>
-        </Col>
-        {/* {loggedInUser && (
-          <Col span={8}>
-            <Button
-              className={"page-user-button"}
-              icon={"logout"}
-              ghost={true}
-              onClick={() =>
-                this.props.logout().then(this.props.client.resetStore)
-              }
-            >
-              {`Logout ${loggedInUser.name}`}
-            </Button>
-          </Col>
-        )} */}
-      </Row>
+        <div className={'title'}>
+          {title}
+        </div>
+        <div className={'subtitle'}>
+          {subtitle}
+        </div>
     </Header>
   );
 
@@ -144,7 +132,7 @@ class PageComponentClass extends React.Component<IProps, IState> {
   );
 
   render() {
-    const { title } = this.props;
+    const { title, subtitle } = this.props;
     const { menuCollapsed } = this.state;
 
     // Try to obtain active menu path
@@ -152,7 +140,7 @@ class PageComponentClass extends React.Component<IProps, IState> {
 
     return (
       <Layout style={{ minHeight: "100vh" }}>
-        {this.renderHeader(title)}
+        {this.renderHeader(title, subtitle)}
         <Layout className={"page-sider-content-layout"}>
           <>
             {this.renderSider(

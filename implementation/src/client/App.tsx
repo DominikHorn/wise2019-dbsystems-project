@@ -68,7 +68,8 @@ const AppClass = () => (
       <Route
         render={props => (
           <PageComponent
-            title={"WahlDB-System"}
+            title={"E-Voting-System"}
+            subtitle={"Bayrische Landtagswahlen"}
             client={client}
             routeProps={props}
           />
