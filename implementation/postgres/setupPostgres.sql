@@ -37,18 +37,17 @@ CREATE MATERIALIZED VIEW "landtagswahlen".finaleliste AS (
 	FROM listen
 );
 
-
 -- Mangels nicht existierenden Daten werden Stimmbezirke nicht als relation repräsentiert;
 -- Somit entfaellt auch die Modelierung von Direktregionen
 
--- Abbildung "Stimmkreis"-Entität
+-- Abbildung "Stimmkreis"-Entität; TODO: ist das als fix anzunehmen?
 CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreise (
 	id int NOT NULL PRIMARY KEY, -- Schluessel_Nummer in csv
 	"name" varchar(80) NOT NULL,
 --	wahl_id int NOT NULL,
 --	anzahlWahlberechtigte int NOT NULL DEFAULT 0,
 	regierungsbezirk_id int,
-	-- TODO: geographische angaben um zuordnen zu können?
+	-- TODO: geographische angaben für Kartenfunktion?
 	FOREIGN KEY (regierungsbezirk_id) REFERENCES regierungsbezirke(id),
 --	FOREIGN KEY (wahl_id) REFERENCES wahlen(id)
 -- Unsupported in PostgreSQL
@@ -58,14 +57,25 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreise (
 --	))
 );
 
--- TODO: wahl_id in stimmkreise aufnehmen? 2018 und 2013 gleiche Stimmkreise (-> nicht normalisiert?)!
-CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreis_wahlberechtigte (
+-- Hier stehen Daten die sich pro wahl ändern können
+CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreis_wahlinfo (
 	stimmkreis_id int NOT NULL,
 	wahl_id int NOT NULL,
 	anzahlWahlberechtigte int NOT NULL DEFAULT 0,
 	FOREIGN KEY (stimmkreis_id) REFERENCES stimmkreise(id),
 	FOREIGN KEY (wahl_id) REFERENCES wahlen(id),
 	PRIMARY KEY (stimmkreis_id, wahl_id)
+);
+
+-- TODO: ... ; (Relation eig nur interessant um später Wahlzettel anzuzeigen. Man könnte das hier auch als view realisieren)
+CREATE TABLE IF NOT EXISTS "landtagswahlen".direktkandidaten (
+	stimmkreis_id int NOT NULL,
+	wahl_id int NOT NULL,
+	direktkandidat_id int NOT NULL,
+	FOREIGN KEY (stimmkreis_id) REFERENCES stimmkreise(id),
+	FOREIGN KEY (wahl_id) REFERENCES wahlen(id),
+	FOREIGN KEY (direktkandidat_id) REFERENCES kandidaten(id),
+	PRIMARY KEY (stimmkreis_id, wahl_id, direktkandidat_id)
 );
 
 -- Abbildung "Regierungsbezirk"-Entität
