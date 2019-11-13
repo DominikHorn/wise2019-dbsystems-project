@@ -9355,12 +9355,12 @@
 										"$ref": "AAAAAAFuLJMTp5fKaCQ="
 									},
 									"font": "Arial;13;0",
-									"left": 395,
-									"top": 680,
+									"left": 400,
+									"top": 655,
 									"width": 7.22998046875,
 									"height": 13,
-									"alpha": 1.3844140953015631,
-									"distance": 14.212670403551895,
+									"alpha": -0.5292473331087226,
+									"distance": 16.15549442140351,
 									"hostEdge": {
 										"$ref": "AAAAAAFuLJMTp5fMd3M="
 									},
