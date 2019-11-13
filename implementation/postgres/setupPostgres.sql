@@ -79,6 +79,22 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".regierungsbezirke (
 --	))
 );
 
+-- TODO: wenn sich sk ändern können muss hier noch wahl referenziert werden
+CREATE OR REPLACE VIEW "landtagswahlen".direktmandat_anzahl AS (
+	SELECT rb.id, count(sk.id)
+	FROM regierungsbezirke rb join stimmkreise sk on rb.id = sk.regierungsbezirk_id
+	GROUP BY rb.id
+);
+
+CREATE TABLE IF NOT EXISTS "landtagswahlen".listenmandat_anzahl (
+	regierungsbezirk_id int NOT NULL,
+	wahl_id int NOT NULL,
+	anzahl int NOT NULL DEFAULT 0,
+	FOREIGN KEY (regierungsbezirk_id) REFERENCES regierungsbezirke(id),
+	FOREIGN KEY (wahl_id) REFERENCES wahlen(id),
+	PRIMARY KEY (regierungsbezirk_id, wahl_id)
+);
+
 -- Berechnung der #Wahlberechtigten pro Regierungsbezirk statt Speicherung 
 CREATE OR REPLACE VIEW "landtagswahlen".regierungsbezirk_wahlberechtigte AS (
 	SELECT rb.id, rb."name", w.datum, sum(skw.anzahlWahlberechtigte)
