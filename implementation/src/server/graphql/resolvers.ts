@@ -6,7 +6,9 @@ export interface IContext {
 
 export const resolvers: { [key: string]: any } = {
   Query: {
-    helloWorld: () => "Hello World!",
+    helloWorld: () => "Hello World",
   },
-  // Mutation: {}
+  Mutation: {
+    importCSVData: async (_: any, args: {files: any[]}) => (console.warn(args.files), false),
+  },
 };

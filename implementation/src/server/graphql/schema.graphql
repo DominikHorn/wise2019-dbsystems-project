@@ -3,3 +3,7 @@ scalar Upload
 type Query {
     helloWorld: String
 }
+
+type Mutation {
+    importCSVData(files: [Upload]!): Boolean
+}
