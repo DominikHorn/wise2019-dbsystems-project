@@ -19,5 +19,5 @@ docker run \
     -e POSTGRES_PASSWORD=artseti \
     -d \
     -p 5432:5432 \
-    -v /Users/dominik/Documents/Uni/Bachelorarbeit/implementation/postgres/data:/var/lib/postgresql/data \
+    -v /Users/dominik/no_icloud/db-project-postgres-data:/var/lib/postgresql/data \
     postgres
