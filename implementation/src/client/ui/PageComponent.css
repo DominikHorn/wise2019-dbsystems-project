@@ -50,7 +50,7 @@
 .ant-menu-item {
   background-color: #4d6da6;
   margin: 0 !important;
-  border-bottom: 2px solid #365592;
+  border-bottom: 1px solid #365592;
 }
 
 .ant-menu-item-selected {

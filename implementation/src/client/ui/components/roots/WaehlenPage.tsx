@@ -24,7 +24,7 @@ const FACE_PALM = `
 `;
 
 export const WaehlenPage = (props: IWaehlenPageProps) => (
-  <Card title={"Wählen - Rechtsbehelfsbelehrung"} hoverable={true}>
+  <Card title={"Wählen - Rechtsbehelfsbelehrung"} style={{minHeight: '100%'}} hoverable={true}>
     <div style={{ textAlign: "justify" }}>
       {LOREM_IPSUM}
     </div>

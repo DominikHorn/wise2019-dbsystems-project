@@ -6,6 +6,8 @@ import {
   RouteComponentProps
 } from "react-router";
 import { WaehlenPage } from "./components/roots/WaehlenPage";
+import { WahlhelferPage } from "./components/roots/WahlhelferPage";
+import { WahlleiterPage } from "./components/roots/WahlleiterPage";
 
 export interface IRouteProps {
   readonly path: string;
@@ -41,7 +43,9 @@ export const DEFAULT_ROUTE: IRouteProps = {
 };
 
 export const RouteBasepaths = {
-  survey: "/waehlen",
+  waehlen: "/waehlen",
+  wahlhelfer: "/wahlhelfer",
+  wahlleiter: "/wahlleiter",
 };
 
 export const TOPLEVEL_ROUTES: IMenuRoute[] = [
@@ -49,9 +53,27 @@ export const TOPLEVEL_ROUTES: IMenuRoute[] = [
     menuKey: "Waehlen",
     menuTitle: "Waehlen",
     menuIconIdentifier: "check-square",
-    path: `${RouteBasepaths.survey}/`,
+    path: `${RouteBasepaths.waehlen}/`,
     render: (props: RouteComponentProps<any>) => (
       <WaehlenPage routeProps={props} />
+    )
+  },
+  {
+    menuKey: "Wahlhelfer",
+    menuTitle: "WahlhelferIn",
+    menuIconIdentifier: "team",
+    path: `${RouteBasepaths.wahlhelfer}/`,
+    render: (props: RouteComponentProps<any>) => (
+      <WahlhelferPage routeProps={props} />
+    )
+  },
+  {
+    menuKey: "Wahlleiter",
+    menuTitle: "WahlleiterIn",
+    menuIconIdentifier: "user",
+    path: `${RouteBasepaths.wahlleiter}/`,
+    render: (props: RouteComponentProps<any>) => (
+      <WahlleiterPage routeProps={props} />
     )
   },
 ];
