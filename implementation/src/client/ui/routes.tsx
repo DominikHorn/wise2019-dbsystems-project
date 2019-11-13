@@ -5,7 +5,7 @@ import {
   RouteChildrenProps,
   RouteComponentProps
 } from "react-router";
-import { MainPage } from "./components/roots/MainPage";
+import { WaehlenPage } from "./components/roots/WaehlenPage";
 
 export interface IRouteProps {
   readonly path: string;
@@ -37,21 +37,21 @@ export interface IMenuRoute extends IRouteProps {
 
 export const DEFAULT_ROUTE: IRouteProps = {
   path: "/",
-  render: () => <Redirect to={"/main"} />
+  render: () => <Redirect to={"/waehlen"} />
 };
 
 export const RouteBasepaths = {
-  survey: "/main",
+  survey: "/waehlen",
 };
 
 export const TOPLEVEL_ROUTES: IMenuRoute[] = [
   {
-    menuKey: "Main",
-    menuTitle: "Main",
-    menuIconIdentifier: "play-circle",
+    menuKey: "Waehlen",
+    menuTitle: "Waehlen",
+    menuIconIdentifier: "check-square",
     path: `${RouteBasepaths.survey}/`,
     render: (props: RouteComponentProps<any>) => (
-      <MainPage routeProps={props} />
+      <WaehlenPage routeProps={props} />
     )
   },
 ];
