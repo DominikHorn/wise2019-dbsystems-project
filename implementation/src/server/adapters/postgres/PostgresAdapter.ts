@@ -2,6 +2,7 @@ import { Pool, PoolClient, QueryConfig } from "pg";
 import { config } from "../../config";
 import { IDatabaseEntity } from "../../databaseEntities";
 import { IPostgresAdapter } from "../adapterTypes";
+import SETUP_POSTGRES_SQL from '../../../../postgres/setupPostgres.sql';
 
 export class PostgresAdapter implements IPostgresAdapter {
   /** A connection pool for postgresql */
@@ -21,8 +22,8 @@ export class PostgresAdapter implements IPostgresAdapter {
       );
 
       // Execute setupPostgres to make sure DB is initialized
-      // await this.query(setupPostgresSQL)
-      //   .then(async () => {
+      await this.query(SETUP_POSTGRES_SQL)
+        .then(async () => {
       //     // Create admin user if it does not exist
       //     const users = await getAllUsers();
       //     if (!users || users.length === 0) {
@@ -31,9 +32,9 @@ export class PostgresAdapter implements IPostgresAdapter {
       //         "Oot",
       //       );
       //     }
-      //    this.initialized = true;
-      //   })
-      //   .catch(err => console.error(`Failed to initialize postgres: ${err}`));
+         this.initialized = true;
+        })
+        .catch(err => console.error(`Failed to initialize postgres: ${err}`));
     } catch (error) {
       this.pool = null;
       this.initialized = false;
