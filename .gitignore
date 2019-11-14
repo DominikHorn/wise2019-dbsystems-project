@@ -37,3 +37,5 @@ usecase.*
 !usecase.mp
 !architecture.pdf
 !Mock.pdf
+
+implementation/postgres/start_postgres.sh
