@@ -51,7 +51,7 @@ export const RouteBasepaths = {
 export const TOPLEVEL_ROUTES: IMenuRoute[] = [
   {
     menuKey: "Waehlen",
-    menuTitle: "Waehlen",
+    menuTitle: "Wählen",
     menuIconIdentifier: "check-square",
     path: `${RouteBasepaths.waehlen}/`,
     render: (props: RouteComponentProps<any>) => (
