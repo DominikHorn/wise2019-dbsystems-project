@@ -169,13 +169,30 @@
 											"height": 13,
 											"text": "+berechneAusgleichsmandate(gesamtwahlergebnis)",
 											"horizontalAlignment": 0
+										},
+										{
+											"_type": "UMLOperationView",
+											"_id": "AAAAAAFuaf3JF619OdU=",
+											"_parent": {
+												"$ref": "AAAAAAFt87Z382LbbD8="
+											},
+											"model": {
+												"$ref": "AAAAAAFuaf3JAK16gkM="
+											},
+											"font": "Arial;13;0",
+											"left": 901,
+											"top": 374,
+											"width": 309.6513671875,
+											"height": 13,
+											"text": "+anzahlWahlberechtigte()",
+											"horizontalAlignment": 0
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 896,
 									"top": 339,
 									"width": 319.6513671875,
-									"height": 38
+									"height": 53
 								},
 								{
 									"_type": "UMLReceptionCompartmentView",
@@ -261,7 +278,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"left": 810,
-											"top": 384,
+											"top": 372,
 											"height": 13
 										},
 										{
@@ -272,7 +289,7 @@
 											},
 											"font": "Arial;13;1",
 											"left": 649,
-											"top": 325,
+											"top": 318,
 											"width": 167.248046875,
 											"height": 13,
 											"text": "Stimmkreis"
@@ -286,7 +303,7 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"left": 810,
-											"top": 384,
+											"top": 372,
 											"width": 73.67724609375,
 											"height": 13,
 											"text": "(from Model)"
@@ -300,14 +317,14 @@
 											"visible": false,
 											"font": "Arial;13;0",
 											"left": 810,
-											"top": 384,
+											"top": 372,
 											"height": 13,
 											"horizontalAlignment": 1
 										}
 									],
 									"font": "Arial;13;0",
 									"left": 644,
-									"top": 318,
+									"top": 311,
 									"width": 177.248046875,
 									"height": 25,
 									"stereotypeLabel": {
@@ -332,11 +349,30 @@
 									"model": {
 										"$ref": "AAAAAAFt87aucWL86sM="
 									},
+									"subViews": [
+										{
+											"_type": "UMLAttributeView",
+											"_id": "AAAAAAFuaf17SqGyIXI=",
+											"_parent": {
+												"$ref": "AAAAAAFt87aucWMECUg="
+											},
+											"model": {
+												"$ref": "AAAAAAFuaf17JKGvnXY="
+											},
+											"font": "Arial;13;0",
+											"left": 649,
+											"top": 341,
+											"width": 167.248046875,
+											"height": 13,
+											"text": "+anzahlWahlberechtigte",
+											"horizontalAlignment": 0
+										}
+									],
 									"font": "Arial;13;0",
 									"left": 644,
-									"top": 343,
+									"top": 336,
 									"width": 177.248046875,
-									"height": 10
+									"height": 23
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -359,7 +395,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 649,
-											"top": 358,
+											"top": 364,
 											"width": 167.248046875,
 											"height": 13,
 											"text": "+berechneErststimmzettel()",
@@ -376,7 +412,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 649,
-											"top": 373,
+											"top": 379,
 											"width": 167.248046875,
 											"height": 13,
 											"text": "+berechneZweitstimmzettel()",
@@ -393,7 +429,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 649,
-											"top": 388,
+											"top": 394,
 											"width": 167.248046875,
 											"height": 13,
 											"text": "+berechneDirektmandat()",
@@ -402,7 +438,7 @@
 									],
 									"font": "Arial;13;0",
 									"left": 644,
-									"top": 353,
+									"top": 359,
 									"width": 177.248046875,
 									"height": 53
 								},
@@ -418,7 +454,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 237,
-									"top": 112,
+									"top": 106,
 									"width": 10,
 									"height": 10
 								},
@@ -434,7 +470,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 237,
-									"top": 112,
+									"top": 106,
 									"width": 10,
 									"height": 10
 								}
@@ -442,9 +478,9 @@
 							"font": "Arial;13;0",
 							"containerChangeable": true,
 							"left": 644,
-							"top": 318,
+							"top": 311,
 							"width": 177.248046875,
-							"height": 88,
+							"height": 101,
 							"nameCompartment": {
 								"$ref": "AAAAAAFt87aucWL/1ho="
 							},
@@ -2691,8 +2727,8 @@
 										"$ref": "AAAAAAFt89i1sKZ1VvI="
 									},
 									"font": "Arial;13;0",
-									"left": 472,
-									"top": 440,
+									"left": 468,
+									"top": 442,
 									"width": 99.37255859375,
 									"height": 13,
 									"alpha": -3.76218122529374,
@@ -2714,8 +2750,8 @@
 									},
 									"visible": null,
 									"font": "Arial;13;0",
-									"left": 564,
-									"top": 419,
+									"left": 559,
+									"top": 422,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -2735,8 +2771,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 587,
-									"top": 457,
+									"left": 582,
+									"top": 460,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -2820,8 +2856,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 626,
-									"top": 400,
+									"left": 616,
+									"top": 406,
 									"height": 13,
 									"alpha": -0.5235987755982988,
 									"distance": 30,
@@ -2840,8 +2876,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 617,
-									"top": 390,
+									"left": 607,
+									"top": 396,
 									"height": 13,
 									"alpha": -0.7853981633974483,
 									"distance": 40,
@@ -2859,8 +2895,8 @@
 										"$ref": "AAAAAAFt89i1sKZ39OY="
 									},
 									"font": "Arial;13;0",
-									"left": 633,
-									"top": 421,
+									"left": 623,
+									"top": 427,
 									"width": 21.68359375,
 									"height": 13,
 									"alpha": 0.5235987755982988,
@@ -2911,7 +2947,7 @@
 								"$ref": "AAAAAAFt88AfoHr2iuM="
 							},
 							"lineStyle": 1,
-							"points": "505:496;656:406",
+							"points": "505:496;646:412",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAFt89i1sKZ64iM="
@@ -6828,23 +6864,6 @@
 									"subViews": [
 										{
 											"_type": "UMLAttributeView",
-											"_id": "AAAAAAFuDKpTKTLXesk=",
-											"_parent": {
-												"$ref": "AAAAAAFuDKjxLh5gyQ4="
-											},
-											"model": {
-												"$ref": "AAAAAAFuDKpTBzKkfOw="
-											},
-											"font": "Arial;13;0",
-											"left": 597,
-											"top": 46,
-											"width": 233.0478515625,
-											"height": 13,
-											"text": "+anzahlWahlberechtigte",
-											"horizontalAlignment": 0
-										},
-										{
-											"_type": "UMLAttributeView",
 											"_id": "AAAAAAFuZbOggXdNp58=",
 											"_parent": {
 												"$ref": "AAAAAAFuDKjxLh5gyQ4="
@@ -6854,7 +6873,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 597,
-											"top": 61,
+											"top": 46,
 											"width": 233.0478515625,
 											"height": 13,
 											"text": "+name",
@@ -6865,7 +6884,7 @@
 									"left": 592,
 									"top": 41,
 									"width": 243.0478515625,
-									"height": 38
+									"height": 23
 								},
 								{
 									"_type": "UMLOperationCompartmentView",
@@ -6888,7 +6907,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 597,
-											"top": 84,
+											"top": 69,
 											"width": 233.0478515625,
 											"height": 13,
 											"text": "+anzahlStimmenFuerKandidat(kandidat)",
@@ -6905,7 +6924,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 597,
-											"top": 99,
+											"top": 84,
 											"width": 233.0478515625,
 											"height": 13,
 											"text": "+anzahlStimmenFuerPartei(partei)",
@@ -6922,7 +6941,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 597,
-											"top": 114,
+											"top": 99,
 											"width": 233.0478515625,
 											"height": 13,
 											"text": "+berechneGeschlechtsStatistik()",
@@ -6939,7 +6958,7 @@
 											},
 											"font": "Arial;13;0",
 											"left": 597,
-											"top": 129,
+											"top": 114,
 											"width": 233.0478515625,
 											"height": 13,
 											"text": "+berechneAltersStatistik()",
@@ -6948,7 +6967,7 @@
 									],
 									"font": "Arial;13;0",
 									"left": 592,
-									"top": 79,
+									"top": 64,
 									"width": 243.0478515625,
 									"height": 68
 								},
@@ -7539,8 +7558,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 653,
-									"top": 303,
+									"left": 649,
+									"top": 299,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -7560,8 +7579,8 @@
 									},
 									"visible": null,
 									"font": "Arial;13;0",
-									"left": 643,
-									"top": 314,
+									"left": 639,
+									"top": 310,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -7581,8 +7600,8 @@
 									},
 									"visible": false,
 									"font": "Arial;13;0",
-									"left": 674,
-									"top": 280,
+									"left": 670,
+									"top": 278,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -7600,7 +7619,7 @@
 								"$ref": "AAAAAAFt87aucWL+M8E="
 							},
 							"lineStyle": 1,
-							"points": "684:317;644:280",
+							"points": "677:310;644:280",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAFuDKyCwVFRT08="
@@ -8033,7 +8052,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 746,
-									"top": 438,
+									"top": 441,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 15,
@@ -8054,7 +8073,7 @@
 									"visible": null,
 									"font": "Arial;13;0",
 									"left": 761,
-									"top": 438,
+									"top": 441,
 									"height": 13,
 									"alpha": 1.5707963267948966,
 									"distance": 30,
@@ -8075,7 +8094,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 717,
-									"top": 439,
+									"top": 442,
 									"height": 13,
 									"alpha": -1.5707963267948966,
 									"distance": 15,
@@ -8096,7 +8115,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 747,
-									"top": 425,
+									"top": 431,
 									"height": 13,
 									"alpha": 0.5235987755982988,
 									"distance": 30,
@@ -8117,7 +8136,7 @@
 									"visible": false,
 									"font": "Arial;13;0",
 									"left": 760,
-									"top": 428,
+									"top": 434,
 									"height": 13,
 									"alpha": 0.7853981633974483,
 									"distance": 40,
@@ -8137,7 +8156,7 @@
 									},
 									"font": "Arial;13;0",
 									"left": 709,
-									"top": 417,
+									"top": 423,
 									"width": 20,
 									"height": 13,
 									"alpha": -0.6528463950567645,
@@ -8250,7 +8269,7 @@
 								"$ref": "AAAAAAFt87aucWL+M8E="
 							},
 							"lineStyle": 1,
-							"points": "732:406;732:484",
+							"points": "732:412;732:484",
 							"showVisibility": true,
 							"nameLabel": {
 								"$ref": "AAAAAAFuDObS6sODmeI="
@@ -9822,6 +9841,14 @@
 									"type": ""
 								}
 							]
+						},
+						{
+							"_type": "UMLOperation",
+							"_id": "AAAAAAFuaf3JAK16gkM=",
+							"_parent": {
+								"$ref": "AAAAAAFt87Z38mLSueo="
+							},
+							"name": "anzahlWahlberechtigte"
 						}
 					]
 				},
@@ -9976,6 +10003,16 @@
 								"aggregation": "shared",
 								"multiplicity": "1"
 							}
+						}
+					],
+					"attributes": [
+						{
+							"_type": "UMLAttribute",
+							"_id": "AAAAAAFuaf17JKGvnXY=",
+							"_parent": {
+								"$ref": "AAAAAAFt87aucWL86sM="
+							},
+							"name": "anzahlWahlberechtigte"
 						}
 					],
 					"operations": [
@@ -10845,20 +10882,12 @@
 					"attributes": [
 						{
 							"_type": "UMLAttribute",
-							"_id": "AAAAAAFuDKpTBzKkfOw=",
-							"_parent": {
-								"$ref": "AAAAAAFuDKjxLB5Y3fw="
-							},
-							"name": "anzahlWahlberechtigte",
-							"type": ""
-						},
-						{
-							"_type": "UMLAttribute",
 							"_id": "AAAAAAFuZbOgc3cjWTg=",
 							"_parent": {
 								"$ref": "AAAAAAFuDKjxLB5Y3fw="
 							},
-							"name": "name"
+							"name": "name",
+							"type": ""
 						}
 					],
 					"operations": [
