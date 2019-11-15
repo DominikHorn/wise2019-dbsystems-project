@@ -10,7 +10,7 @@ class Landtagswahlen2018Spider(scrapy.Spider):
     partyId = 0
 
     custom_settings = {
-        'HTTPERROR_ALLOWED_CODES': [404]
+        'HTTPERROR_ALLOWED_CODES': [404],
     }
 
     def __init__(self, regierungsbezirkId, partyId, **kwargs):
@@ -19,6 +19,8 @@ class Landtagswahlen2018Spider(scrapy.Spider):
         ]
         self.regierungsbezirkId = regierungsbezirkId
         self.partyId = partyId
+        self.custom_settings['FEED_URI'] = 'wahl2018_{}_{}.csv'.format(regierungsbezirkId, partyId)
+        print(self.custom_settings)
         super().__init__(**kwargs)
 
     def parse(self, response):
@@ -64,7 +66,7 @@ class Landtagswahlen2018Spider(scrapy.Spider):
             if old_result is None:
                 new_result += [new_row_content]
                 continue
-            
+
             # Find old_row_content with matching first field (key '') and merge with new_row_content
             row_content = {**[content for content in old_result if content[''] == new_row_content['']][0], **new_row_content}
             # Update row in result
