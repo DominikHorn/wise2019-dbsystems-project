@@ -1,12 +1,16 @@
 #!/bin/bash
 
 declare -a REGIERUNGS_BEZIRKE=("901" "902" "903" "904" "905" "906" "907")
-declare -a PARTEIEN=("1" "2" "3" "4" "5" "6" "7" "8" "9" "10" "11" "12" "13" "14" "15" "16" "17" "18")
+
+rm wahl2018*
 
 for rb in "${REGIERUNGS_BEZIRKE[@]}"
 do
-    for p in "${REGIERUNGS_BEZIRKE[@]}"
-    do
-        scrapy runspider -a regierungsbezirkId=$rb -a partyId=$p crawler2018.py -o wahl2018_$(echo $rb)_$(echo $p).csv -t csv &
-    done
+    scrapy runspider -a regierungsbezirkId=$rb crawler2018.py -o wahl2018_$(echo $rb).csv -t csv &
+    pids[${i}]=$!
+done
+
+# wait for all pids
+for pid in ${pids[*]}; do
+    wait $pid
 done
