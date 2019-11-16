@@ -1,7 +1,6 @@
 import scrapy
 
-# PARTEIEN = [str(i) for i in range(1, 13)]
-PARTEIEN = [str(i) for i in range(1, 2)]
+PARTEIEN = [str(i) for i in range(1, 13)]
 PARTEI_NAMEN = [
     'CSU',
     'SPD',
@@ -12,7 +11,7 @@ PARTEI_NAMEN = [
     'ÖDP',
     'REP',
     'Bayern Partei',
-    'BüSo'
+    'BüSo',
     'Die Freiheit',
     'Piraten',
 ]
@@ -56,7 +55,7 @@ class Landtagswahlen2018Spider(scrapy.Spider):
             yield scrapy.Request(build_url(self.regierungsbezirkId, PARTEIEN[self.pt_ind], 1), meta={
                 'column_names': response.meta.get('column_names', None),
                 'result': response.meta.get('result', None),
-                'page_index': 0
+                'page_index': 1
             }) 
             return
 
