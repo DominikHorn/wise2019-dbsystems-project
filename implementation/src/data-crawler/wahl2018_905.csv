@@ -1,4 +1,4 @@
-regierungsbezirk-id,partei-id,partei-name,id,Name,SZ.- Rf.1),PL.- Nr.2),G3),Gesamtstimmen,darunter Zweitstimmen,501  Nürnberg-Nord,502  Nürnberg-Ost,503  Nürnberg-Süd,504  Nürnberg-West,505  Ansbach-Nord,"506  Ansbach-Süd, Weißenburg-Gunzenhausen",507  Erlangen-Höchstadt,508  Erlangen-Stadt,509  Fürth,"510  Neustadt a.d.Aisch-Bad Windsheim, Fürth-Land",511  Nürnberger Land,512  Roth
+regierungsbezirk-id,partei-id,partei-name,Nr.,Name,SZ.- Rf.1),PL.- Nr.2),G3),Gesamtstimmen,darunter Zweitstimmen,501  Nürnberg-Nord,502  Nürnberg-Ost,503  Nürnberg-Süd,504  Nürnberg-West,505  Ansbach-Nord,"506  Ansbach-Süd, Weißenburg-Gunzenhausen",507  Erlangen-Höchstadt,508  Erlangen-Stadt,509  Fürth,"510  Neustadt a.d.Aisch-Bad Windsheim, Fürth-Land",511  Nürnberger Land,512  Roth
 905,1,CSU,1,"Söder, Dr. Markus",1,1,S,283.090,256.321,19.110,26.769*,23.280,18.306,25.156,29.185,18.357,15.048,25.329,30.476,27.994,24.080
 905,1,CSU,2,"Herrmann, Joachim",2,2,S,60.365,39.278,1.462,12.746,1.428,769,2.680,2.626,8.118,21.087*,2.443,3.105,2.139,1.762
 905,1,CSU,3,"Herold, Hans",4,3,S,39.223,1.056,46,116,35,27,393,70,103,46,146,38.167*,35,39

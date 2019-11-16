@@ -68,7 +68,7 @@ class Landtagswahlen2018Spider(scrapy.Spider):
 
         # Extract column names from header, building on previous requests
         column_names = response.meta.get('column_names', None)
-        new_columns = ['id'] + list(filter(lambda x: x != "Stimmkreis", [x.xpath("string(.)").extract()[0] for x in table.xpath(".//thead/tr/th")]))[1:]
+        new_columns = ['Nr.'] + list(filter(lambda x: x != "Stimmkreis", [x.xpath("string(.)").extract()[0] for x in table.xpath(".//thead/tr/th")]))[1:]
         if column_names is None:
             # No columns exist yet => include overlapping columns
             column_names = new_columns
@@ -101,11 +101,11 @@ class Landtagswahlen2018Spider(scrapy.Spider):
 
             # Find old_row_content with matching id and party and merge with new_row_content
             old_content = []
-            if new_row_content['id'] == '':
+            if new_row_content['Nr.'] == '':
                 # Special case for bottom most rows
                 old_content = [content for content in old_result if content['Name'] == new_row_content['Name'] and content['partei-id'] == new_row_content['partei-id']]
             else:
-                old_content = [content for content in old_result if content['id'] == new_row_content['id'] and content['partei-id'] == new_row_content['partei-id']]
+                old_content = [content for content in old_result if content['Nr.'] == new_row_content['Nr.'] and content['partei-id'] == new_row_content['partei-id']]
                 
             # Add row to result (or merge/update existing)
             if len(old_content) == 0:
