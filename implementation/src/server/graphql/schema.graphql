@@ -1,9 +1,15 @@
 scalar Upload
+scalar Date
 
 type Query {
-    helloWorld: String
+  getAllWahlen: [Wahl]!
 }
 
 type Mutation {
-    importCSVData(files: [Upload]!): Boolean
+  importCSVData(files: [Upload]!, wahldatum: Date!): Boolean
+}
+
+type Wahl {
+  id: Int!
+  wahldatum: Date!
 }

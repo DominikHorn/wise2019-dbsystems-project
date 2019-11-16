@@ -1,15 +1,14 @@
 /**
  * Schema group name
  */
-export const DatabaseSchemaGroup = "voting-data"
+export const DatabaseSchemaGroup = "landtagswahlen";
 
 /**
  * Empty interface which exists to classify types as database entities
  */
 export interface IDatabaseEntity {}
 
-export interface IDatabaseUser extends IDatabaseEntity {
+export interface IDatabaseWahl extends IDatabaseEntity {
   readonly id: number;
-  readonly name: string;
-  readonly givenname: string;
+  readonly wahldatum: Date;
 }

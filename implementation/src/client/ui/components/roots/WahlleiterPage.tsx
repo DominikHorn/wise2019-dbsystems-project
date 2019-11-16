@@ -1,6 +1,17 @@
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
-import { Card, message, Button, Col, Row, Modal, Form } from "antd";
+import {
+  Card,
+  message,
+  Button,
+  Col,
+  Row,
+  Modal,
+  Form,
+  Select,
+  DatePicker,
+  List
+} from "antd";
 import { FormComponentProps } from "antd/lib/form";
 import { GetFieldDecoratorOptions } from "antd/lib/form/Form";
 import { FilePickerComponent } from "../general/FilePickerComponent";
@@ -10,6 +21,15 @@ import {
   IImportCSVDataMutationHocProps
 } from "../../../graphql/wahlleiter/importCSVDataMutation";
 import { UploadFile } from "antd/lib/upload/interface";
+import {
+  withAllWahlenQuery,
+  IGetAllWahlenQueryHocProps
+} from "../../../graphql/public/getAllWahlenQuery";
+import { renderLoading } from "../../guiUtil";
+import locale from "antd/es/date-picker/locale/de_DE";
+import { withErrorBoundary } from "../general/ErrorBoundary";
+import * as moment from "moment";
+import "./WahlleiterPage.css";
 
 export interface IWahlleiterPageProps {
   routeProps: RouteComponentProps<any>;
@@ -18,7 +38,8 @@ export interface IWahlleiterPageProps {
 interface IProps
   extends IWahlleiterPageProps,
     FormComponentProps,
-    IImportCSVDataMutationHocProps {}
+    IImportCSVDataMutationHocProps,
+    IGetAllWahlenQueryHocProps {}
 
 interface IState {
   modalVisible: boolean;
@@ -45,11 +66,13 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
         this.setState({ uploadLoading: true });
         this.props
           .importCSVData({
-            files: values.files.map((f: UploadFile) => f.originFileObj)
+            files: values.files.map((f: UploadFile) => f.originFileObj),
+            wahldatum: values.wahldatum.toDate()
           })
           .then(res => {
             this.setState({ uploadLoading: false });
             if (res && res.data.success) {
+              this.props.allWahlenData.refetch();
               this.setState({ modalVisible: false });
               this.props.form.resetFields();
               message.success(
@@ -67,7 +90,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
           });
       }
     });
-  }
+  };
 
   private renderUploadForm = (
     getFieldDecorator: <T extends Object = {}>(
@@ -76,15 +99,63 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
     ) => (node: React.ReactNode) => React.ReactNode
   ) => (
     <Form onSubmit={this.handleSubmit}>
-      <Form.Item label={"Files"}>
+      <Form.Item label={"Wahldatum"}>
+        {getFieldDecorator("wahldatum", {
+          rules: [
+            {
+              required: true,
+              message:
+                "Bitte ein Wahldatum für die Zuordnung der CSV Dateien festlegen"
+            }
+          ]
+        })(
+          <DatePicker
+            locale={locale}
+            format={"DD.MM.YYYY"}
+            placeholder={"Datum der Wahl"}
+            style={{ minWidth: "100%" }}
+            renderExtraFooter={
+              this.props.allWahlenData.loading
+                ? renderLoading
+                : !!this.props.allWahlenData.allWahlen &&
+                  (() => (
+                    <List
+                      dataSource={this.props.allWahlenData.allWahlen}
+                      style={{ marginTop: "15px" }}
+                      size={"small"}
+                      renderItem={wahl => (
+                        <List.Item
+                          onClick={() =>
+                            this.props.form.setFieldsValue({
+                              wahldatum: moment(wahl.wahldatum)
+                            })
+                          }
+                        >
+                          <Button style={{ width: "100%" }}>
+                            {wahl.wahldatum.toLocaleDateString("de-DE")}
+                          </Button>
+                        </List.Item>
+                      )}
+                    />
+                  ))
+            }
+          />
+        )}
+      </Form.Item>
+      <Form.Item label={"Dateien"}>
         {getFieldDecorator("files", {
-          rules: [{ required: true, message: "Please add files" }],
+          rules: [
+            {
+              required: true,
+              message: "Bitte mindestens eine CSV Datei anhängen"
+            }
+          ],
           valuePropName: "fileList"
         })(
           <FilePickerComponent
             accept={`.csv`}
             multiple={true}
-            placeholder={`Drag & Drop or click to choose CSV files`}
+            placeholder={`Drag & Drop oder klicken um CSV Dateien auszuwählen`}
           />
         )}
       </Form.Item>
@@ -113,7 +184,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
         onCancel={this.onCancel}
         footer={[
           <Button key={"discard"} icon={"delete"} onClick={this.onCancel}>
-            Discard
+            Verwerfen
           </Button>,
           <Button
             key={"submit"}
@@ -122,7 +193,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
             loading={this.state.uploadLoading}
             onClick={this.handleSubmit}
           >
-            Upload
+            Bestätigen
           </Button>
         ]}
       >
@@ -166,9 +237,14 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
 }
 
 const WahlleiterPageComponentWithGraphQL = compose(
-  withImportCSVDataMutation<IWahlleiterPageProps>()
+  withImportCSVDataMutation<IWahlleiterPageProps>(),
+  withAllWahlenQuery<IWahlleiterPageProps>()
 )(WahlleiterPageComponent);
 
-export const WahlleiterPage = (Form.create()(
+const WahlleiterPageWithForm = (Form.create()(
   WahlleiterPageComponentWithGraphQL
 ) as unknown) as React.ComponentType<IWahlleiterPageProps>;
+
+export const WahlleiterPage = withErrorBoundary<IWahlleiterPageProps>(
+  WahlleiterPageWithForm
+);

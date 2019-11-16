@@ -1,3 +1,37 @@
+import { parse, ParseResult } from "papaparse";
+import { PoolClient } from "pg";
+import { GraphQLFileUpload } from "../../shared/sharedTypes";
+import { adapters } from "../adapters/adapterUtil";
+import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
+
+const regierungsbezirke = {
+  901: "Oberbayern",
+  902: "Niederbayern",
+  903: "Oberpfalz",
+  904: "Oberfranken",
+  905: "Mittelfranken",
+  906: "Unterfranken",
+  907: "Schwaben"
+};
+
+export async function parseCrawledCSV(
+  csv: Promise<GraphQLFileUpload>,
+  wahldatum: Date
+): Promise<boolean> {
+  parse((await csv).createReadStream(), {
+    dynamicTyping: true,
+    header: true,
+    complete: (result: ParseResult) =>
+      adapters.postgres.transaction(async (client: PoolClient) => {
+        // Attempt to find wahl for wahldatum; Create if none exists
+        const wahl = await getOrCreateWahlForDatum(wahldatum, client);
+        console.log("WAHL1:", wahl);
+      })
+  });
+  return true;
+}
+
+/*
 import * as csv from "csv-parser";
 import { adapters } from "./adapters/adapterUtil";
 import {IDatabaseUser, DatabaseSchemaGroup} from "./databaseEntities";
@@ -33,6 +67,7 @@ fs.createReadStream('wahl2018_901.csv')
     //   { NAME: 'Bugs Bunny', AGE: '22' }
     // ]
   });
+ */
 
 // const csvFilePath='wahl2018_901.csv'
 // const csv2=require('csvtojson')
@@ -48,6 +83,5 @@ fs.createReadStream('wahl2018_901.csv')
 //      * 	{a:"1", b:"2", c:"3"},
 //      * 	{a:"4", b:"5". c:"6"}
 //      * ]
-//      */ 
+//      */
 // })
-

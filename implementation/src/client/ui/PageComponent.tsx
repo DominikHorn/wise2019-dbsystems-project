@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { isDevelopmentEnv } from "../../shared/util";
 import "./PageComponent.css";
 import { DEFAULT_ROUTE, IRouteProps, TOPLEVEL_ROUTES } from "./routes";
+import { withErrorBoundary } from "./components/general/ErrorBoundary";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -21,8 +22,7 @@ export interface IPageProps {
   readonly routeProps: RouteComponentProps<any>;
 }
 
-interface IProps
-  extends IPageProps { }
+interface IProps extends IPageProps {}
 
 /**
  * State of a Page component
@@ -41,12 +41,8 @@ class PageComponentClass extends React.Component<IProps, IState> {
 
   private renderHeader = (title: string, subtitle: string) => (
     <Header className={"page-header"}>
-        <div className={'title'}>
-          {title}
-        </div>
-        <div className={'subtitle'}>
-          {subtitle}
-        </div>
+      <div className={"title"}>{title}</div>
+      <div className={"subtitle"}>{subtitle}</div>
     </Header>
   );
 
@@ -71,49 +67,49 @@ class PageComponentClass extends React.Component<IProps, IState> {
     activeMenuKey: string,
     onCollapseChange: (collapsed: boolean) => void
   ) => (
-      <Sider
-        className={"page-sider"}
-        collapsible={true}
-        collapsed={menuCollapsed}
-        onCollapse={onCollapseChange}
-      >
-        <Menu theme={"dark"} mode={"inline"} selectedKeys={[activeMenuKey]}>
-          {TOPLEVEL_ROUTES.map(route =>
-            route.possibleSubroutes ? (
-              <SubMenu
-                key={route.menuKey}
-                title={
-                  <>
-                    <Icon type={route.menuIconIdentifier} />
-                    <span>{route.menuTitle}</span>
-                  </>
-                }
-                onTitleClick={() =>
-                  this.props.routeProps.history.push(
-                    route.possibleSubroutes[0].path
-                  )
-                }
-              >
-                {route.possibleSubroutes.map(subroute => (
-                  <Menu.Item key={subroute.key}>
-                    <Link to={subroute.path}>
-                      <span>{subroute.title}</span>
-                    </Link>
-                  </Menu.Item>
-                ))}
-              </SubMenu>
-            ) : (
-                <Menu.Item key={route.menuKey}>
-                  <Link to={route.path.split(":")[0]}>
-                    <Icon type={route.menuIconIdentifier} />
-                    <span>{route.menuTitle}</span>
+    <Sider
+      className={"page-sider"}
+      collapsible={true}
+      collapsed={menuCollapsed}
+      onCollapse={onCollapseChange}
+    >
+      <Menu theme={"dark"} mode={"inline"} selectedKeys={[activeMenuKey]}>
+        {TOPLEVEL_ROUTES.map(route =>
+          route.possibleSubroutes ? (
+            <SubMenu
+              key={route.menuKey}
+              title={
+                <>
+                  <Icon type={route.menuIconIdentifier} />
+                  <span>{route.menuTitle}</span>
+                </>
+              }
+              onTitleClick={() =>
+                this.props.routeProps.history.push(
+                  route.possibleSubroutes[0].path
+                )
+              }
+            >
+              {route.possibleSubroutes.map(subroute => (
+                <Menu.Item key={subroute.key}>
+                  <Link to={subroute.path}>
+                    <span>{subroute.title}</span>
                   </Link>
                 </Menu.Item>
-              )
-          )}
-        </Menu>
-      </Sider>
-    );
+              ))}
+            </SubMenu>
+          ) : (
+            <Menu.Item key={route.menuKey}>
+              <Link to={route.path.split(":")[0]}>
+                <Icon type={route.menuIconIdentifier} />
+                <span>{route.menuTitle}</span>
+              </Link>
+            </Menu.Item>
+          )
+        )}
+      </Menu>
+    </Sider>
+  );
 
   private renderContent = (menuCollapsed: boolean) => (
     <Content
@@ -121,11 +117,9 @@ class PageComponentClass extends React.Component<IProps, IState> {
       style={{ marginLeft: menuCollapsed ? "80px" : "200px" }}
     >
       <Switch>
-        {TOPLEVEL_ROUTES.map(
-          (route: IRouteProps, index: number) => (
-            <Route key={index} {...route} />
-          )
-        )}
+        {TOPLEVEL_ROUTES.map((route: IRouteProps, index: number) => (
+          <Route key={index} {...route} />
+        ))}
         <Route {...DEFAULT_ROUTE} />
       </Switch>
     </Content>
@@ -161,6 +155,10 @@ class PageComponentClass extends React.Component<IProps, IState> {
     });
 }
 
+const PageComponentWithErrorBoundary = withErrorBoundary<IPageProps>(
+  PageComponentClass
+);
+
 export const PageComponent = isDevelopmentEnv()
-  ? hot(module)(PageComponentClass)
-  : PageComponentClass;
+  ? hot(module)(PageComponentWithErrorBoundary)
+  : PageComponentWithErrorBoundary;
