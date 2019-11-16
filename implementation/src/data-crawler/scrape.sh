@@ -3,10 +3,13 @@
 declare -a REGIERUNGS_BEZIRKE=("901" "902" "903" "904" "905" "906" "907")
 
 rm wahl2018*
+rm wahl2013*
 
 for rb in "${REGIERUNGS_BEZIRKE[@]}"
 do
     scrapy runspider -a regierungsbezirkId=$rb crawler2018.py -o wahl2018_$(echo $rb).csv -t csv &
+    pids[${i}]=$!
+    scrapy runspider -a regierungsbezirkId=$rb crawler2013.py -o wahl2013_$(echo $rb).csv -t csv &
     pids[${i}]=$!
 done
 
