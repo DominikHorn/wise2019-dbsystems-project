@@ -12,3 +12,13 @@ export interface IDatabaseWahl extends IDatabaseEntity {
   readonly id: number;
   readonly wahldatum: Date;
 }
+
+export interface IDatabaseRegierungsbezirk extends IDatabaseEntity {
+  readonly id: number;
+  readonly name: string;
+}
+
+export interface IDatabasePartei extends IDatabaseEntity {
+  readonly id: number;
+  readonly name: string;
+}

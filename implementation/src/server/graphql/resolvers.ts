@@ -19,6 +19,9 @@ export const resolvers: { [key: string]: any } = {
       _: any,
       args: { files: Promise<GraphQLFileUpload>[]; wahldatum: Date }
     ) =>
-      args.files.forEach(wahlfile => parseCrawledCSV(wahlfile, args.wahldatum))
+      // TODO: returning false in the end is for debug purposes such that the modal doesn't close on client
+      await Promise.all(
+        args.files.map(wahlfile => parseCrawledCSV(wahlfile, args.wahldatum))
+      ).then(() => false)
   }
 };

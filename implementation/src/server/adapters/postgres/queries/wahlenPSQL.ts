@@ -49,9 +49,9 @@ export const getOrCreateWahlForDatum = async (
     await client
       .query(
         `
-      INSERT INTO "${DatabaseSchemaGroup}".wahlen
-      VALUES (DEFAULT, $1)
-      `,
+        INSERT INTO "${DatabaseSchemaGroup}".wahlen
+        VALUES (DEFAULT, $1)
+        `,
         [wahldatum.toISOString().slice(0, 10)]
       )
       .then(res => !!res && res.rows[0]);
