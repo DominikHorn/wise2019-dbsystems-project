@@ -118,6 +118,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
               this.props.allWahlenData.loading
                 ? renderLoading
                 : !!this.props.allWahlenData.allWahlen &&
+                  this.props.allWahlenData.allWahlen.length > 0 &&
                   (() => (
                     <List
                       dataSource={this.props.allWahlenData.allWahlen}
