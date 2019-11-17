@@ -46,7 +46,7 @@ export async function getOrCreateParteiForIdAndName(
   if (client) {
     const partei = await getParteiForId(id, client);
     if (partei) return partei;
-    return await client
+    return client
       .query(
         `
         INSERT INTO "${DatabaseSchemaGroup}".parteien
