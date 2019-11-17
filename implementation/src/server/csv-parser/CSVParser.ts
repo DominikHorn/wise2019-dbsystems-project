@@ -44,8 +44,17 @@ export const parseCrawledCSV = async (
                   );
                   switch (columnKey) {
                     case CSV_KEYS.parteiID:
-                      // Ignore parteiId as they are not consistent
-                      // across 2013 and 2018 data
+                    case CSV_KEYS.kandidatNr:
+                      // Ignore parteiId as they are not consistent across 2013 and 2018 data
+                      // Ignore kandidatNr as it is irrelevant
+                      break;
+                    case CSV_KEYS.kandidatName:
+                      // Special cases:
+                      if (!row[CSV_KEYS.kandidatNr]) {
+                        // TODO: Parse 'Zweitstimmen ohne Kennzeichnung eines Bewerbers'
+                        // TODO: check if the following are irrelevant: 'Erststimmen insgesamt', 'Zweitstimmen insgesamt', 'Gesamtstimmen'
+                      } else {
+                      }
                       break;
                     case CSV_KEYS.regierungsbezirkID:
                       await getOrCreateRegierungsbezirkForId(
