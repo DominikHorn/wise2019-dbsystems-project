@@ -10,9 +10,9 @@ export const getParteiForName = async (
   client?: PoolClient
 ): Promise<IDatabasePartei | null> => {
   const QUERY_STR = `
-  SELECT *
-  FROM "${DatabaseSchemaGroup}".parteien
-  WHERE name = $1`;
+    SELECT *
+    FROM "${DatabaseSchemaGroup}".parteien
+    WHERE name = $1`;
   if (client) {
     return client.query(QUERY_STR, [name]).then(res => !!res && res.rows[0]);
   }
@@ -32,9 +32,8 @@ export const getOrCreateParteiForName = async (
     await client
       .query(
         `
-      INSERT INTO "${DatabaseSchemaGroup}".parteien
-      VALUES (DEFAULT, $1)
-      `,
+        INSERT INTO "${DatabaseSchemaGroup}".parteien
+        VALUES (DEFAULT, $1)`,
         [name]
       )
       .then(res => !!res && res.rows[0]);
