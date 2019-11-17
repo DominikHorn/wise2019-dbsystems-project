@@ -5,6 +5,8 @@ import { adapters } from "../adapters/adapterUtil";
 import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
 import { getOrCreateParteiForName } from "../adapters/postgres/queries/parteiPSQL";
+import { IDatabaseKandidat } from "../databaseEntities";
+import { insertKandidat } from "../adapters/postgres/queries/kandidatPSQL";
 
 enum CSV_KEYS {
   regierungsbezirkID = "regierungsbezirk-id",
@@ -37,6 +39,7 @@ export const parseCrawledCSV = async (
             try {
               for (const row of result.data) {
                 index++;
+                let kandidat: IDatabaseKandidat;
                 for (const columnKey of Object.keys(row)) {
                   // TODO: this is for debug purposes
                   console.log(
@@ -54,6 +57,11 @@ export const parseCrawledCSV = async (
                         // TODO: Parse 'Zweitstimmen ohne Kennzeichnung eines Bewerbers'
                         // TODO: check if the following are irrelevant: 'Erststimmen insgesamt', 'Zweitstimmen insgesamt', 'Gesamtstimmen'
                       } else {
+                        kandidat = await insertKandidat(
+                          row[CSV_KEYS.parteiID],
+                          row[CSV_KEYS.parteiName],
+                          client
+                        );
                       }
                       break;
                     case CSV_KEYS.regierungsbezirkID:

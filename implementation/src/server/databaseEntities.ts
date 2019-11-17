@@ -22,3 +22,9 @@ export interface IDatabasePartei extends IDatabaseEntity {
   readonly id: number;
   readonly name: string;
 }
+
+export interface IDatabaseKandidat extends IDatabaseEntity {
+  readonly id: number;
+  readonly partei_id: number;
+  readonly name: string;
+}
