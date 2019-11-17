@@ -71,14 +71,11 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreis_wahlinfo (
 	stimmkreis_id int NOT NULL,
 	wahl_id int NOT NULL,
 	anzahlWahlberechtigte int NOT NULL DEFAULT 0,
-	anzahlUngueltigeErstStimmen int NOT NULL DEFAULT 0,
-	anzahlUngueltigeZweitStimmen int NOT NULL DEFAULT 0,
 	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE SET NULL,
 	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE SET NULL,
 	PRIMARY KEY (stimmkreis_id, wahl_id)
 );
 
--- TODO: ... ; (Relation eig nur interessant um später Wahlzettel anzuzeigen. Man könnte das hier auch als view realisieren)
 CREATE TABLE IF NOT EXISTS "landtagswahlen".direktkandidaten (
 	stimmkreis_id int NOT NULL,
 	wahl_id int NOT NULL,
@@ -114,37 +111,31 @@ CREATE OR REPLACE VIEW "landtagswahlen".regierungsbezirk_wahlberechtigte AS (
 	GROUP BY rb.id, rb."name", skw.wahl_id
 );
 
-CREATE TABLE IF NOT EXISTS "landtagswahlen".erststimmen (
+-- Unterscheidung zwischen erst, zweitstimmen erfolgt über "direktkandidat" relation
+-- Wenn ein Kandidat in einem Stimmkreis direktkandidat ist erhält er dort nur Erststimmen
+CREATE TABLE IF NOT EXISTS "landtagswahlen".kandidatgebundene_stimmen (
+  id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	stimmkreis_id int NOT NULL,
 	kandidat_id int NOT NULL,
 	wahl_id int NOT NULL,
-	anzahlGueltige int NOT NULL DEFAULT 0,
+	gueltig boolean NOT NULL,
 	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE SET NULL,
 	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id) ON DELETE SET NULL,
 	FOREIGN KEY (wahl_id) REFERENCES"landtagswahlen". wahlen(id) ON DELETE SET NULL,
-	PRIMARY KEY (stimmkreis_id, kandidat_id, wahl_id)
+	PRIMARY KEY (id, stimmkreis_id, kandidat_id, wahl_id)
 );
 
-CREATE TABLE IF NOT EXISTS "landtagswahlen".kandidatgebundene_zweitstimmen (
+CREATE TABLE IF NOT EXISTS "landtagswahlen".listengebundene_stimmen (
+	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+	-- Es gibt nur eine Liste pro stimmkreis (TODO: sogar regierungsbezirk ?), wahl und partei
 	stimmkreis_id int NOT NULL,
 	wahl_id int NOT NULL,
-	kandidat_id int NOT NULL,
-	anzahlGueltige int NOT NULL DEFAULT 0,
-	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE SET NULL,
-	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id) ON DELETE SET NULL, -- Eigentlich nur die Listenkandidaten (extra tracken?)
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE SET NULL,
-	PRIMARY KEY (stimmkreis_id, kandidat_id, wahl_id)
-);
-
-CREATE TABLE IF NOT EXISTS "landtagswahlen".listengebundene_zweitstimmen (
-	stimmkreis_id int NOT NULL,
-	wahl_id int NOT NULL,
-	partei_id int NOT NULL, -- Eigentlich Listen, welche aber (noch) nicht modeliert sind
-	anzahlGueltige int NOT NULL DEFAULT 0,
+	partei_id int NOT NULL,
+	gueltig boolean NOT NULL,
 	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE SET NULL,
 	FOREIGN KEY (partei_id) REFERENCES "landtagswahlen".parteien(id) ON DELETE SET NULL,
 	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE SET NULL,
-	PRIMARY KEY (stimmkreis_id, wahl_id, partei_id)
+	PRIMARY KEY (id, stimmkreis_id, wahl_id, partei_id)
 );
 
 -- TODO: Mandatsberechnungsfkt implementieren
