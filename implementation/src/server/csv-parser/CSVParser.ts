@@ -48,6 +48,10 @@ export const parseCrawledCSV = async (
                   switch (columnKey) {
                     case CSV_KEYS.parteiID:
                     case CSV_KEYS.kandidatNr:
+                    case CSV_KEYS.finalerListenPlatz:
+                    case CSV_KEYS.gewaehltImStimmkreis:
+                    case CSV_KEYS.gesamtstimmen:
+                    case CSV_KEYS.zweitstimmen:
                       // Ignore irrelevant columns (insert is triggered by other column keys)
                       // NOTE: Fallthrough is intended
                       break;
@@ -76,6 +80,9 @@ export const parseCrawledCSV = async (
                         row[CSV_KEYS.parteiName],
                         client
                       );
+                      break;
+                    case CSV_KEYS.stimmzettelListenPlatz:
+                      // TODO
                       break;
                     default:
                       // Stimmkreis row! -> Stimmgenerator anmachen.
