@@ -8,9 +8,13 @@ import {
 } from "../adapters/postgres/queries/kandidatPSQL";
 import { getOrCreateParteiForIdAndName } from "../adapters/postgres/queries/parteiPSQL";
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
+import {
+  insertKandidateVotes,
+  insertListenVotes
+} from "../adapters/postgres/queries/stimmenPSQL";
+import { getOrCreateStimmkreis } from "../adapters/postgres/queries/stimmkreisPSQL";
 import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
 import { IDatabaseKandidat, IDatabaseStimmkreis } from "../databaseEntities";
-import { getOrCreateStimmkreis } from "../adapters/postgres/queries/stimmkreisPSQL";
 import { insertListeneintrag } from "../adapters/postgres/queries/listenPSQL";
 
 enum CSV_KEYS {
@@ -33,7 +37,20 @@ export const parseCrawledCSV = async (
   new Promise((resolve, reject) =>
     csvPromise.then(csv =>
       parse(csv.createReadStream(), {
-        dynamicTyping: true,
+        dynamicTyping: (field: string | number) => {
+          switch (field) {
+            case CSV_KEYS.regierungsbezirkID:
+            case CSV_KEYS.parteiID:
+            case CSV_KEYS.kandidatNr:
+            case CSV_KEYS.stimmzettelListenPlatz:
+            case CSV_KEYS.finalerListenPlatz:
+            case CSV_KEYS.gesamtstimmen:
+            case CSV_KEYS.zweitstimmen:
+              return true;
+          }
+
+          return false;
+        },
         header: true,
         complete: (result: ParseResult) =>
           adapters.postgres.transaction(async (client: PoolClient) => {
@@ -43,25 +60,63 @@ export const parseCrawledCSV = async (
               [stimmkreisid: number]: IDatabaseStimmkreis;
             } = {};
 
-            let index = -1;
+            let kandidatStimmenQueryString = "";
+            let listenStimmenQueryString = "";
+
             try {
               for (const row of result.data) {
-                index++;
                 let kandidat: IDatabaseKandidat;
                 // Special cases:
                 if (!row[CSV_KEYS.kandidatNr]) {
-                  // TODO: Parse 'Zweitstimmen ohne Kennzeichnung eines Bewerbers'
                   // TODO: check if the following are irrelevant: 'Erststimmen insgesamt', 'Zweitstimmen insgesamt', 'Gesamtstimmen'
 
+                  if (
+                    row[CSV_KEYS.kandidatName] ==
+                    "Zweitstimmen ohne Kennzeichnung eines Bewerbers"
+                  ) {
+                    for (const columnKey of Object.keys(row)) {
+                      switch (columnKey) {
+                        case CSV_KEYS.parteiID:
+                        case CSV_KEYS.kandidatNr:
+                        case CSV_KEYS.finalerListenPlatz:
+                        case CSV_KEYS.gewaehltImStimmkreis:
+                        case CSV_KEYS.gesamtstimmen:
+                        case CSV_KEYS.zweitstimmen:
+                        case CSV_KEYS.kandidatName:
+                        case CSV_KEYS.regierungsbezirkID:
+                        case CSV_KEYS.parteiName:
+                        case CSV_KEYS.stimmzettelListenPlatz:
+                        default:
+                          // Stimmkreis column with key: "_,_,_;  ______", e.g. "901; Fürstenfeldbruck"
+                          const stimmkreisId = Number(columnKey.slice(0, 3));
+                          const stimmkreisName = columnKey.slice(3).trim();
+                          const parteiId = row[CSV_KEYS.parteiID];
+                          const voteAmount = Number(
+                            `${row[columnKey]}`.replace(/\./, "")
+                          );
+
+                          // Insert statement for stimmen
+                          if (
+                            isNaN(stimmkreisId) ||
+                            isNaN(wahl.id) ||
+                            isNaN(parteiId)
+                          )
+                            continue;
+                          const newQueryString = `SELECT unnest(array_fill(${stimmkreisId}, ARRAY[${voteAmount},1])), unnest(array_fill(${wahl.id}, ARRAY[${voteAmount},1])), unnest(array_fill(${parteiId}, ARRAY[${voteAmount},1])), unnest(array_fill(true, ARRAY[${voteAmount},1]))`;
+                          listenStimmenQueryString +=
+                            (listenStimmenQueryString ? "\nUNION ALL\n" : "") +
+                            newQueryString;
+                          break;
+                      }
+                    }
+                    await insertListenVotes(listenStimmenQueryString, client);
+                    listenStimmenQueryString = "";
+                  }
                   continue;
                 }
 
                 // Parsing logic for regular rows (kandidaten row)
                 for (const columnKey of Object.keys(row)) {
-                  // TODO: this is for debug purposes
-                  console.log(
-                    `row[${index}]: ${columnKey} -> ${row[columnKey]}`
-                  );
                   switch (columnKey) {
                     case CSV_KEYS.parteiID:
                     case CSV_KEYS.kandidatNr:
@@ -73,6 +128,11 @@ export const parseCrawledCSV = async (
                       // NOTE: Fallthrough is intended
                       break;
                     case CSV_KEYS.kandidatName:
+                      console.log(
+                        "processing:",
+                        row[CSV_KEYS.parteiID],
+                        row[CSV_KEYS.kandidatName]
+                      );
                       kandidat = await insertKandidat(
                         row[CSV_KEYS.parteiID],
                         row[CSV_KEYS.kandidatName],
@@ -120,22 +180,44 @@ export const parseCrawledCSV = async (
                         ));
                       stimmkreisCache[stimmkreisId] = stimmkreis;
 
-                      const voteAmount: string = `${row[columnKey]}`;
+                      const voteAmountStr: string = `${row[columnKey]}`.replace(
+                        /\./,
+                        ""
+                      );
+                      let voteAmount: number = Number(voteAmountStr);
 
                       // Insert direktkandidat if field value ends with "*"
-                      if (voteAmount.charAt(voteAmount.length - 1) == "*") {
-                        insertDirektkandidat(
+                      if (
+                        voteAmountStr.charAt(voteAmountStr.length - 1) == "*"
+                      ) {
+                        await insertDirektkandidat(
                           stimmkreisId,
                           wahl.id,
                           kandidat.id,
                           client
                         );
+                        voteAmount = Number(
+                          voteAmountStr.substr(0, voteAmountStr.length - 1)
+                        );
                       }
 
-                      // TODO: Insert stimmen/propagate to stimmgenerator
+                      // Insert statement for stimmen
+                      if (
+                        isNaN(stimmkreisId) ||
+                        isNaN(kandidat.id) ||
+                        isNaN(wahl.id)
+                      )
+                        continue;
+                      const newQueryString = `SELECT unnest(array_fill(${stimmkreisId}, ARRAY[${voteAmount},1])), unnest(array_fill(${kandidat.id}, ARRAY[${voteAmount},1])), unnest(array_fill(${wahl.id}, ARRAY[${voteAmount},1])), unnest(array_fill(true, ARRAY[${voteAmount},1]))`;
+                      kandidatStimmenQueryString +=
+                        (kandidatStimmenQueryString ? "\nUNION ALL\n" : "") +
+                        newQueryString;
                       break;
                   }
                 }
+                // Actually insert votes
+                await insertKandidateVotes(kandidatStimmenQueryString, client);
+                kandidatStimmenQueryString = "";
               }
             } catch (error) {
               console.error(error);

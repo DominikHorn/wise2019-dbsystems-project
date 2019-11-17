@@ -48,3 +48,10 @@ export interface IDatabaseListen extends IDatabaseEntity {
   readonly regierungsbezirk_id: number;
   readonly initialerListenplatz: number;  
 }
+export interface IDatabaseKandidatVote extends IDatabaseEntity {
+  readonly id: number;
+  readonly stimmkreis_id: number;
+  readonly kandidat_id: number;
+  readonly wahl_id: number;
+  readonly gueltig: boolean;
+}
