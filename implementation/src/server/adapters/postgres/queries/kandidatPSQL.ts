@@ -44,19 +44,3 @@ export async function insertDirektkandidat(
     insertDirektkandidat(stimmkreis_id, wahl_id, direktkandidat_id, client)
   );
 }
-
-//LG
-export async function getKandidatIDforParteiIDandName(
-  id: number,
-  name: string,
-  ){
-    const QUERY_STR = `
-      SELECT id
-      FROM "${DatabaseSchemaGroup}".kandidaten
-      WHERE partei_id = $1 and name = $2`;
-    
-      const kandidat_id = await adapters.postgres.query<IDatabaseKandidat>(QUERY_STR, [
-      id, name
-    ]);
-    return kandidat_id;
-  }

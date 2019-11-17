@@ -4,7 +4,7 @@ import { GraphQLFileUpload } from "../../shared/sharedTypes";
 import { adapters } from "../adapters/adapterUtil";
 import {
   insertKandidat,
-  insertDirektkandidat,
+  insertDirektkandidat
 } from "../adapters/postgres/queries/kandidatPSQL";
 import { getOrCreateParteiForIdAndName } from "../adapters/postgres/queries/parteiPSQL";
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
@@ -153,18 +153,19 @@ export const parseCrawledCSV = async (
                       );
                       break;
                     case CSV_KEYS.stimmzettelListenPlatz:
-                      // TODO: testen!!!
-                      const regierungsbezirkId = row[CSV_KEYS.regierungsbezirkID];
+                      const regierungsbezirkId =
+                        row[CSV_KEYS.regierungsbezirkID];
                       const wahl_id = wahl.id;
                       const kandidatId = kandidat.id;
-                      const initialerListenplatz = row[CSV_KEYS.stimmzettelListenPlatz];
+                      const initialerListenplatz =
+                        row[CSV_KEYS.stimmzettelListenPlatz];
                       await insertListeneintrag(
-                         kandidatId,
-                         wahl_id,
-                         regierungsbezirkId,
-                         initialerListenplatz,
-                         client
-                       )
+                        kandidatId,
+                        wahl_id,
+                        regierungsbezirkId,
+                        initialerListenplatz,
+                        client
+                      );
                       break;
                     default:
                       // Stimmkreis column with key: "_,_,_;  ______", e.g. "901; Fürstenfeldbruck"
