@@ -59,7 +59,7 @@ export const parseCrawledCSV = async (
                       } else {
                         kandidat = await insertKandidat(
                           row[CSV_KEYS.parteiID],
-                          row[CSV_KEYS.parteiName],
+                          row[CSV_KEYS.kandidatName],
                           client
                         );
                       }
