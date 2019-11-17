@@ -11,7 +11,7 @@ PARTEI_NAMEN = [
     'Bayern Partei',
     'ÖDP',
     'Piraten',
-    '',
+    'Die Franken',
     'AfD',
     'LKR',
     'mut',
