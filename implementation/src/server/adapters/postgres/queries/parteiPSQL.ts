@@ -1,8 +1,7 @@
 import { PoolClient } from "pg";
 import {
   DatabaseSchemaGroup,
-  IDatabasePartei,
-  IDatabaseKandidat
+  IDatabasePartei
 } from "../../../databaseEntities";
 import { adapters } from "../../adapterUtil";
 
@@ -10,10 +9,10 @@ let cachedParteiForId: (
   id: number,
   client: PoolClient
 ) => IDatabasePartei = () => null;
-export const getParteiForId = async (
+export async function getParteiForId(
   id: number,
   client?: PoolClient
-): Promise<IDatabasePartei | null> => {
+): Promise<IDatabasePartei | null> {
   const QUERY_STR = `
     SELECT *
     FROM "${DatabaseSchemaGroup}".parteien
@@ -37,15 +36,15 @@ export const getParteiForId = async (
     id
   ]);
   return !!parteien && parteien[0];
-};
+}
 
-export const getOrCreateParteiForIdAndName = async (
+export async function getOrCreateParteiForIdAndName(
   id: number,
   name: string,
   client?: PoolClient
-): Promise<IDatabasePartei> => {
+): Promise<IDatabasePartei> {
   if (client) {
-    let partei = await getParteiForId(id, client);
+    const partei = await getParteiForId(id, client);
     if (partei) return partei;
     return await client
       .query(
@@ -61,4 +60,4 @@ export const getOrCreateParteiForIdAndName = async (
   return adapters.postgres.transaction(async client =>
     getOrCreateParteiForIdAndName(id, name, client)
   );
-};
+}

@@ -28,3 +28,9 @@ export interface IDatabaseKandidat extends IDatabaseEntity {
   readonly partei_id: number;
   readonly name: string;
 }
+
+export interface IDatabaseStimmkreis extends IDatabaseEntity {
+  readonly id: number;
+  readonly name: string;
+  readonly regierungsbezirk_id: number;
+}

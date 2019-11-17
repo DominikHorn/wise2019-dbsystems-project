@@ -55,7 +55,7 @@ CREATE MATERIALIZED VIEW "landtagswahlen".finaleliste AS (
 -- Abbildung "Stimmkreis"-Entität
 CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreise (
 	id int NOT NULL PRIMARY KEY, -- Schluessel_Nummer in csv
-	"name" varchar(80) NOT NULL,
+	"name" varchar(200) NOT NULL,
 	regierungsbezirk_id int,
 	-- TODO: geographische angaben für Kartenfunktion?
 	FOREIGN KEY (regierungsbezirk_id) REFERENCES "landtagswahlen".regierungsbezirke(id) ON DELETE SET NULL

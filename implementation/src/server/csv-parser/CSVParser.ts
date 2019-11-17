@@ -7,6 +7,7 @@ import { getOrCreateParteiForIdAndName } from "../adapters/postgres/queries/part
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
 import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
 import { IDatabaseKandidat, IDatabaseStimmkreis } from "../databaseEntities";
+import { getOrCreateStimmkreis } from "../adapters/postgres/queries/stimmkreisPSQL";
 
 enum CSV_KEYS {
   regierungsbezirkID = "regierungsbezirk-id",
@@ -91,11 +92,17 @@ export const parseCrawledCSV = async (
                       // Stimmkreis column with key: "_,_,_;  ______", e.g. "901; Fürstenfeldbruck"
                       const stimmkreisId = Number(columnKey.slice(0, 3));
                       const stimmkreisName = columnKey.slice(3).trim();
-                      console.log(
-                        "FOUND STIMMKREIS:",
-                        stimmkreisId,
-                        stimmkreisName
-                      );
+                      const stimmkreis =
+                        stimmkreisCache[stimmkreisId] ||
+                        (await getOrCreateStimmkreis(
+                          stimmkreisId,
+                          stimmkreisName,
+                          row[CSV_KEYS.regierungsbezirkID],
+                          client
+                        ));
+                      stimmkreisCache[stimmkreisId] = stimmkreis;
+
+                      // TODO: Insert stimmen/propagate to stimmgenerator
                       break;
                   }
                 }
