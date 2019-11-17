@@ -1,8 +1,9 @@
-import {
-  IDatabaseKandidat,
-  DatabaseSchemaGroup
-} from "../../../databaseEntities";
 import { PoolClient } from "pg";
+import {
+  DatabaseSchemaGroup,
+  IDatabaseKandidat,
+  IDatabaseDirektkandidat
+} from "../../../databaseEntities";
 import { adapters } from "../../adapterUtil";
 
 export async function insertKandidat(
@@ -21,5 +22,25 @@ export async function insertKandidat(
   }
   return adapters.postgres.transaction(async client =>
     insertKandidat(parteiId, name, client)
+  );
+}
+
+export async function insertDirektkandidat(
+  stimmkreis_id: number,
+  wahl_id: number,
+  direktkandidat_id: number,
+  client?: PoolClient
+): Promise<IDatabaseDirektkandidat> {
+  const QUERY_STR = `
+    INSERT INTO "${DatabaseSchemaGroup}".direktkandidaten
+    VALUES ($1, $2, $3)
+    RETURNING *;`;
+  if (client) {
+    return client
+      .query(QUERY_STR, [stimmkreis_id, wahl_id, direktkandidat_id])
+      .then(res => !!res && res.rows[0]);
+  }
+  return adapters.postgres.transaction(async client =>
+    insertDirektkandidat(stimmkreis_id, wahl_id, direktkandidat_id, client)
   );
 }

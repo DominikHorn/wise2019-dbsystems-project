@@ -2,7 +2,10 @@ import { parse, ParseResult } from "papaparse";
 import { PoolClient } from "pg";
 import { GraphQLFileUpload } from "../../shared/sharedTypes";
 import { adapters } from "../adapters/adapterUtil";
-import { insertKandidat } from "../adapters/postgres/queries/kandidatPSQL";
+import {
+  insertKandidat,
+  insertDirektkandidat
+} from "../adapters/postgres/queries/kandidatPSQL";
 import { getOrCreateParteiForIdAndName } from "../adapters/postgres/queries/parteiPSQL";
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
 import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
@@ -48,8 +51,11 @@ export const parseCrawledCSV = async (
                 if (!row[CSV_KEYS.kandidatNr]) {
                   // TODO: Parse 'Zweitstimmen ohne Kennzeichnung eines Bewerbers'
                   // TODO: check if the following are irrelevant: 'Erststimmen insgesamt', 'Zweitstimmen insgesamt', 'Gesamtstimmen'
+
                   continue;
                 }
+
+                // Parsing logic for regular rows (kandidaten row)
                 for (const columnKey of Object.keys(row)) {
                   // TODO: this is for debug purposes
                   console.log(
@@ -101,6 +107,18 @@ export const parseCrawledCSV = async (
                           client
                         ));
                       stimmkreisCache[stimmkreisId] = stimmkreis;
+
+                      const voteAmount: string = `${row[columnKey]}`;
+
+                      // Insert direktkandidat if field value ends with "*"
+                      if (voteAmount.charAt(voteAmount.length - 1) == "*") {
+                        insertDirektkandidat(
+                          stimmkreisId,
+                          wahl.id,
+                          kandidat.id,
+                          client
+                        );
+                      }
 
                       // TODO: Insert stimmen/propagate to stimmgenerator
                       break;

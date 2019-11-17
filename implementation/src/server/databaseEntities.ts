@@ -34,3 +34,9 @@ export interface IDatabaseStimmkreis extends IDatabaseEntity {
   readonly name: string;
   readonly regierungsbezirk_id: number;
 }
+
+export interface IDatabaseDirektkandidat extends IDatabaseEntity {
+  readonly stimmkreis_id: number;
+  readonly wahl_id: number;
+  readonly direktkandidat_id: number;
+}
