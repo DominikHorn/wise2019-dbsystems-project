@@ -6,7 +6,7 @@ import { insertKandidat } from "../adapters/postgres/queries/kandidatPSQL";
 import { getOrCreateParteiForIdAndName } from "../adapters/postgres/queries/parteiPSQL";
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
 import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
-import { IDatabaseKandidat } from "../databaseEntities";
+import { IDatabaseKandidat, IDatabaseStimmkreis } from "../databaseEntities";
 
 enum CSV_KEYS {
   regierungsbezirkID = "regierungsbezirk-id",
@@ -34,12 +34,21 @@ export const parseCrawledCSV = async (
           adapters.postgres.transaction(async (client: PoolClient) => {
             // Attempt to find wahl for wahldatum; Create if none exists
             const wahl = await getOrCreateWahlForDatum(wahldatum, client);
+            const stimmkreisCache: {
+              [stimmkreisid: number]: IDatabaseStimmkreis;
+            } = {};
 
             let index = -1;
             try {
               for (const row of result.data) {
                 index++;
                 let kandidat: IDatabaseKandidat;
+                // Special cases:
+                if (!row[CSV_KEYS.kandidatNr]) {
+                  // TODO: Parse 'Zweitstimmen ohne Kennzeichnung eines Bewerbers'
+                  // TODO: check if the following are irrelevant: 'Erststimmen insgesamt', 'Zweitstimmen insgesamt', 'Gesamtstimmen'
+                  continue;
+                }
                 for (const columnKey of Object.keys(row)) {
                   // TODO: this is for debug purposes
                   console.log(
@@ -56,17 +65,11 @@ export const parseCrawledCSV = async (
                       // NOTE: Fallthrough is intended
                       break;
                     case CSV_KEYS.kandidatName:
-                      // Special cases:
-                      if (!row[CSV_KEYS.kandidatNr]) {
-                        // TODO: Parse 'Zweitstimmen ohne Kennzeichnung eines Bewerbers'
-                        // TODO: check if the following are irrelevant: 'Erststimmen insgesamt', 'Zweitstimmen insgesamt', 'Gesamtstimmen'
-                      } else {
-                        kandidat = await insertKandidat(
-                          row[CSV_KEYS.parteiID],
-                          row[CSV_KEYS.kandidatName],
-                          client
-                        );
-                      }
+                      kandidat = await insertKandidat(
+                        row[CSV_KEYS.parteiID],
+                        row[CSV_KEYS.kandidatName],
+                        client
+                      );
                       break;
                     case CSV_KEYS.regierungsbezirkID:
                       await getOrCreateRegierungsbezirkForId(
