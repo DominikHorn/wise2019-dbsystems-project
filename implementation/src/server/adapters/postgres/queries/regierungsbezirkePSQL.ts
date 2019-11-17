@@ -20,9 +20,9 @@ export const getRegierungsbezirkForId = async (
   client?: PoolClient
 ): Promise<IDatabaseRegierungsbezirk | null> => {
   const QUERY_STR = `
-  SELECT *
-  FROM "${DatabaseSchemaGroup}".regierungsbezirke
-  WHERE id = $1;`;
+    SELECT *
+    FROM "${DatabaseSchemaGroup}".regierungsbezirke
+    WHERE id = $1;`;
   if (client) {
     return client.query(QUERY_STR, [id]).then(res => !!res && res.rows[0]);
   }
@@ -39,15 +39,15 @@ export const getOrCreateRegierungsbezirkForId = async (
   if (!!client) {
     let regierungsbezirk = await getRegierungsbezirkForId(id, client);
     if (regierungsbezirk) return regierungsbezirk;
-    await client
+    return await client
       .query(
         `
         INSERT INTO "${DatabaseSchemaGroup}".regierungsbezirke
-        VALUES ($1, $2);`,
+        VALUES ($1, $2)
+        RETURNING *;`,
         [id, REGIERUNGSBEZIRKE[id]]
       )
       .then(res => !!res && res.rows[0]);
-    return getRegierungsbezirkForId(id, client);
   }
 
   return adapters.postgres.transaction(async client =>
