@@ -12,7 +12,10 @@ import {
   insertKandidateVotes,
   insertListenVotes
 } from "../adapters/postgres/queries/stimmenPSQL";
-import { getOrCreateStimmkreis } from "../adapters/postgres/queries/stimmkreisPSQL";
+import {
+  getOrCreateStimmkreis,
+  insertAnzahlStimmberechtigte
+} from "../adapters/postgres/queries/stimmkreisPSQL";
 import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
 import {
   IDatabaseKandidat,
@@ -32,6 +35,10 @@ enum CSV_KEYS {
   gewaehltImStimmkreis = "G3)",
   gesamtstimmen = "Gesamtstimmen",
   zweitstimmen = "darunter Zweitstimmen"
+}
+enum INFO_CSV_KEYS {
+  stimmkreisID = "Schlüsselnummer",
+  stimmberechtigte = "Stimmberechtigte"
 }
 
 async function parseCrawledCSV(
@@ -71,7 +78,6 @@ async function parseCrawledCSV(
             default:
               // Stimmkreis column with key: "_,_,_;  ______", e.g. "901; Fürstenfeldbruck"
               const stimmkreisId = Number(columnKey.slice(0, 3));
-              const stimmkreisName = columnKey.slice(3).trim();
               const parteiId = row[CSV_KEYS.parteiID];
               const voteAmount = Number(`${row[columnKey]}`.replace(/\./, ""));
 
@@ -91,40 +97,44 @@ async function parseCrawledCSV(
       continue;
     }
 
+    console.log(
+      "processing:",
+      row[CSV_KEYS.parteiID],
+      row[CSV_KEYS.kandidatName]
+    );
+
+    await getOrCreateRegierungsbezirkForId(
+      row[CSV_KEYS.regierungsbezirkID],
+      client
+    );
+    await getOrCreateParteiForIdAndName(
+      row[CSV_KEYS.parteiID],
+      row[CSV_KEYS.parteiName],
+      client
+    );
+    kandidat = await insertKandidat(
+      row[CSV_KEYS.parteiID],
+      row[CSV_KEYS.kandidatName],
+      client
+    );
+
     // Parsing logic for regular rows (kandidaten row)
     for (const columnKey of Object.keys(row)) {
+      // TODO: rewrite without switch/case
       switch (columnKey) {
         case CSV_KEYS.parteiID:
         case CSV_KEYS.finalerListenPlatz:
         case CSV_KEYS.gewaehltImStimmkreis:
         case CSV_KEYS.gesamtstimmen:
         case CSV_KEYS.zweitstimmen:
+        case CSV_KEYS.kandidatName:
+        case CSV_KEYS.parteiName:
+        case CSV_KEYS.regierungsbezirkID:
           // Ignore irrelevant columns (insert is triggered by other column keys)
           // NOTE: Fallthrough is intended
           break;
-        case CSV_KEYS.kandidatName:
-          console.log(
-            "processing:",
-            row[CSV_KEYS.parteiID],
-            row[CSV_KEYS.kandidatName]
-          );
-          kandidat = await insertKandidat(
-            row[CSV_KEYS.parteiID],
-            row[CSV_KEYS.kandidatName],
-            client
-          );
-          break;
-        case CSV_KEYS.regierungsbezirkID:
-          await getOrCreateRegierungsbezirkForId(row[columnKey], client);
-          break;
-        case CSV_KEYS.parteiName:
-          await getOrCreateParteiForIdAndName(
-            row[CSV_KEYS.parteiID],
-            row[CSV_KEYS.parteiName],
-            client
-          );
-          break;
         case CSV_KEYS.kandidatNr:
+          if (row[CSV_KEYS.stimmzettelListenPlatz]) continue;
         case CSV_KEYS.stimmzettelListenPlatz:
           const regierungsbezirkId = row[CSV_KEYS.regierungsbezirkID];
           const wahl_id = wahl.id;
@@ -190,7 +200,16 @@ async function parseInfoCSV(
   client: PoolClient,
   wahl: IDatabaseWahl
 ) {
-  // TODO: rausholen der # Wahlberechtigten
+  for (const row of result.data) {
+    const stimmkreis_id = row[INFO_CSV_KEYS.stimmkreisID];
+    const anzahlWahlberechtigte = row[INFO_CSV_KEYS.stimmberechtigte];
+    await insertAnzahlStimmberechtigte(
+      stimmkreis_id,
+      wahl.id,
+      anzahlWahlberechtigte,
+      client
+    );
+  }
 }
 
 export const parseCSV = async (
@@ -225,7 +244,7 @@ export const parseCSV = async (
                 reject("CSV Does not appear to contain columns");
                 return;
               }
-              if (result.meta.fields[0] == "Schlüsselnummer") {
+              if (result.meta.fields[0] == INFO_CSV_KEYS.stimmkreisID) {
                 // Special info pdf
                 await parseInfoCSV(result, client, wahl);
               } else {

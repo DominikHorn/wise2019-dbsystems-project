@@ -1,7 +1,8 @@
 import { PoolClient } from "pg";
 import {
   DatabaseSchemaGroup,
-  IDatabaseStimmkreis
+  IDatabaseStimmkreis,
+  IDatabaseStimmkreisInfo
 } from "../../../databaseEntities";
 import { adapters } from "../../adapterUtil";
 
@@ -45,5 +46,26 @@ export async function getOrCreateStimmkreis(
 
   return adapters.postgres.transaction(async client =>
     getOrCreateStimmkreis(id, name, regierungsbezirk_id, client)
+  );
+}
+
+export async function insertAnzahlStimmberechtigte(
+  stimmkreis_id: number,
+  wahl_id: number,
+  anzahl: number,
+  client?: PoolClient
+): Promise<IDatabaseStimmkreisInfo> {
+  const QUERY_STR = `
+    INSERT INTO "${DatabaseSchemaGroup}".stimmkreis_wahlinfo
+    VALUES ($1, $2, $3)
+    RETURNING *;`;
+  if (client) {
+    return client
+      .query(QUERY_STR, [stimmkreis_id, wahl_id, anzahl])
+      .then(res => !!res && res.rows[0]);
+  }
+
+  return adapters.postgres.transaction(async client =>
+    insertAnzahlStimmberechtigte(stimmkreis_id, wahl_id, anzahl, client)
   );
 }

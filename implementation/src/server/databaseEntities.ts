@@ -35,19 +35,25 @@ export interface IDatabaseStimmkreis extends IDatabaseEntity {
   readonly regierungsbezirk_id: number;
 }
 
+export interface IDatabaseStimmkreisInfo extends IDatabaseEntity {
+  readonly stimmkreis_id: number;
+  readonly wahl_id: number;
+  readonly anzahlWahlberechtigte: number;
+}
+
 export interface IDatabaseDirektkandidat extends IDatabaseEntity {
   readonly stimmkreis_id: number;
   readonly wahl_id: number;
   readonly direktkandidat_id: number;
 }
 
-//LG
 export interface IDatabaseListen extends IDatabaseEntity {
   readonly kandidat_id: number;
   readonly wahl_id: number;
   readonly regierungsbezirk_id: number;
-  readonly initialerListenplatz: number;  
+  readonly initialerListenplatz: number;
 }
+
 export interface IDatabaseKandidatVote extends IDatabaseEntity {
   readonly id: number;
   readonly stimmkreis_id: number;
