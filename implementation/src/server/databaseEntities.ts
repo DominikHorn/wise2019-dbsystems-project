@@ -40,3 +40,11 @@ export interface IDatabaseDirektkandidat extends IDatabaseEntity {
   readonly wahl_id: number;
   readonly direktkandidat_id: number;
 }
+
+//LG
+export interface IDatabaseListen extends IDatabaseEntity {
+  readonly kandidat_id: number;
+  readonly wahl_id: number;
+  readonly regierungsbezirk_id: number;
+  readonly initialerListenplatz: number;  
+}

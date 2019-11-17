@@ -4,13 +4,14 @@ import { GraphQLFileUpload } from "../../shared/sharedTypes";
 import { adapters } from "../adapters/adapterUtil";
 import {
   insertKandidat,
-  insertDirektkandidat
+  insertDirektkandidat,
 } from "../adapters/postgres/queries/kandidatPSQL";
 import { getOrCreateParteiForIdAndName } from "../adapters/postgres/queries/parteiPSQL";
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
 import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
 import { IDatabaseKandidat, IDatabaseStimmkreis } from "../databaseEntities";
 import { getOrCreateStimmkreis } from "../adapters/postgres/queries/stimmkreisPSQL";
+import { insertListeneintrag } from "../adapters/postgres/queries/listenPSQL";
 
 enum CSV_KEYS {
   regierungsbezirkID = "regierungsbezirk-id",
@@ -92,6 +93,21 @@ export const parseCrawledCSV = async (
                       );
                       break;
                     case CSV_KEYS.stimmzettelListenPlatz:
+                      const regierungsbezirkId = row[CSV_KEYS.regierungsbezirkID];
+                      console.log(regierungsbezirkId);
+                      const wahl_id = wahl.id;
+                      console.log(wahl_id);
+                      const kandidatId = kandidat.id;
+                      console.log(kandidatId);
+                      const initialerListenplatz = row[CSV_KEYS.stimmzettelListenPlatz];
+                      console.log(initialerListenplatz);
+                      // await insertListeneintrag(
+                      //   kandidatId,
+                      //   wahl_id,
+                      //   regierungsbezirkId,
+                      //   initialerListenplatz,
+                      //   client
+                      // )
                       // TODO
                       break;
                     default:
