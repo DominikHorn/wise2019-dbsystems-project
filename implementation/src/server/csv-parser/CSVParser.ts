@@ -93,22 +93,18 @@ export const parseCrawledCSV = async (
                       );
                       break;
                     case CSV_KEYS.stimmzettelListenPlatz:
+                      // TODO: testen!!!
                       const regierungsbezirkId = row[CSV_KEYS.regierungsbezirkID];
-                      console.log(regierungsbezirkId);
                       const wahl_id = wahl.id;
-                      console.log(wahl_id);
                       const kandidatId = kandidat.id;
-                      console.log(kandidatId);
                       const initialerListenplatz = row[CSV_KEYS.stimmzettelListenPlatz];
-                      console.log(initialerListenplatz);
-                      // await insertListeneintrag(
-                      //   kandidatId,
-                      //   wahl_id,
-                      //   regierungsbezirkId,
-                      //   initialerListenplatz,
-                      //   client
-                      // )
-                      // TODO
+                      await insertListeneintrag(
+                         kandidatId,
+                         wahl_id,
+                         regierungsbezirkId,
+                         initialerListenplatz,
+                         client
+                       )
                       break;
                     default:
                       // Stimmkreis column with key: "_,_,_;  ______", e.g. "901; Fürstenfeldbruck"
