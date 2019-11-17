@@ -9,7 +9,8 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".kandidaten (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	partei_id int NOT NULL,
 	"name" varchar(400) NOT NULL,
-	FOREIGN KEY (partei_id) REFERENCES "landtagswahlen".parteien(id)
+	-- ON DELETE effectively prohibits deleting parties
+	FOREIGN KEY (partei_id) REFERENCES "landtagswahlen".parteien(id) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".wahlen (
@@ -33,9 +34,9 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".listen (
 	regierungsbezirk_id int NOT NULL,
 	-- Da wir informatiker sind muss man sich hier auf einen standard einigen => Beginn bei 1 zu zählen
 	initialerListenplatz int CHECK (initialerListenplatz > 0),
-	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id),
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id),
-	FOREIGN KEY (regierungsbezirk_id) REFERENCES "landtagswahlen".regierungsbezirke(id),
+	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id) ON DELETE SET NULL,
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE SET NULL,
+	FOREIGN KEY (regierungsbezirk_id) REFERENCES "landtagswahlen".regierungsbezirke(id) ON DELETE SET NULL,
 	-- Regierungsbezirk_id nicht primary key um zu verhindern, dass ein kandidat in mehreren RB auf Liste erscheint
 	PRIMARY KEY (kandidat_id, wahl_id)
 );
@@ -57,7 +58,7 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreise (
 	"name" varchar(80) NOT NULL,
 	regierungsbezirk_id int,
 	-- TODO: geographische angaben für Kartenfunktion?
-	FOREIGN KEY (regierungsbezirk_id) REFERENCES "landtagswahlen".regierungsbezirke(id)
+	FOREIGN KEY (regierungsbezirk_id) REFERENCES "landtagswahlen".regierungsbezirke(id) ON DELETE SET NULL
 -- Unsupported in PostgreSQL
 --	CHECK (id NOT IN (
 --		SELECT id
@@ -72,8 +73,8 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreis_wahlinfo (
 	anzahlWahlberechtigte int NOT NULL DEFAULT 0,
 	anzahlUngueltigeErstStimmen int NOT NULL DEFAULT 0,
 	anzahlUngueltigeZweitStimmen int NOT NULL DEFAULT 0,
-	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id),
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id),
+	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE SET NULL,
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE SET NULL,
 	PRIMARY KEY (stimmkreis_id, wahl_id)
 );
 
@@ -82,9 +83,9 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".direktkandidaten (
 	stimmkreis_id int NOT NULL,
 	wahl_id int NOT NULL,
 	direktkandidat_id int NOT NULL,
-	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id),
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id),
-	FOREIGN KEY (direktkandidat_id) REFERENCES "landtagswahlen".kandidaten(id),
+	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE SET NULL,
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE SET NULL,
+	FOREIGN KEY (direktkandidat_id) REFERENCES "landtagswahlen".kandidaten(id) ON DELETE SET NULL,
 	PRIMARY KEY (stimmkreis_id, wahl_id, direktkandidat_id)
 );
 
@@ -99,8 +100,8 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".regierungsbezirk_wahlinfo (
 	regierungsbezirk_id int NOT NULL,
 	wahl_id int NOT NULL,
 	anzahlListenmandate int NOT NULL DEFAULT 0,
-	FOREIGN KEY (regierungsbezirk_id) REFERENCES "landtagswahlen".regierungsbezirke(id),
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id),
+	FOREIGN KEY (regierungsbezirk_id) REFERENCES "landtagswahlen".regierungsbezirke(id) ON DELETE SET NULL,
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE SET NULL,
 	PRIMARY KEY (regierungsbezirk_id, wahl_id)
 );
 
@@ -118,9 +119,9 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".erststimmen (
 	kandidat_id int NOT NULL,
 	wahl_id int NOT NULL,
 	anzahlGueltige int NOT NULL DEFAULT 0,
-	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id),
-	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id),
-	FOREIGN KEY (wahl_id) REFERENCES"landtagswahlen". wahlen(id),
+	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE SET NULL,
+	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id) ON DELETE SET NULL,
+	FOREIGN KEY (wahl_id) REFERENCES"landtagswahlen". wahlen(id) ON DELETE SET NULL,
 	PRIMARY KEY (stimmkreis_id, kandidat_id, wahl_id)
 );
 
@@ -129,9 +130,9 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".kandidatgebundene_zweitstimmen (
 	wahl_id int NOT NULL,
 	kandidat_id int NOT NULL,
 	anzahlGueltige int NOT NULL DEFAULT 0,
-	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id),
-	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id), -- Eigentlich nur die Listenkandidaten (extra tracken?)
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id),
+	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE SET NULL,
+	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id) ON DELETE SET NULL, -- Eigentlich nur die Listenkandidaten (extra tracken?)
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE SET NULL,
 	PRIMARY KEY (stimmkreis_id, kandidat_id, wahl_id)
 );
 
@@ -140,9 +141,9 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".listengebundene_zweitstimmen (
 	wahl_id int NOT NULL,
 	partei_id int NOT NULL, -- Eigentlich Listen, welche aber (noch) nicht modeliert sind
 	anzahlGueltige int NOT NULL DEFAULT 0,
-	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id),
-	FOREIGN KEY (partei_id) REFERENCES "landtagswahlen".parteien(id),
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id),
+	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE SET NULL,
+	FOREIGN KEY (partei_id) REFERENCES "landtagswahlen".parteien(id) ON DELETE SET NULL,
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE SET NULL,
 	PRIMARY KEY (stimmkreis_id, wahl_id, partei_id)
 );
 
