@@ -1,7 +1,7 @@
 import { GraphQLDateTime } from "graphql-iso-date";
 import { GraphQLFileUpload } from "../../shared/sharedTypes";
 import { getWahlen } from "../adapters/postgres/queries/wahlenPSQL";
-import { parseCrawledCSV } from "../csv-parser/CSVParser";
+import { parseCSV } from "../csv-parser/CSVParser";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -21,7 +21,7 @@ export const resolvers: { [key: string]: any } = {
     ) =>
       // TODO: returning false in the end is for debug purposes such that the modal doesn't close on client
       await Promise.all(
-        args.files.map(wahlfile => parseCrawledCSV(wahlfile, args.wahldatum))
+        args.files.map(wahlfile => parseCSV(wahlfile, args.wahldatum))
       ).then(() => false)
   }
 };
