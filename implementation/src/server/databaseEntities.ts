@@ -40,3 +40,11 @@ export interface IDatabaseDirektkandidat extends IDatabaseEntity {
   readonly wahl_id: number;
   readonly direktkandidat_id: number;
 }
+
+export interface IDatabaseKandidatVote extends IDatabaseEntity {
+  readonly id: number;
+  readonly stimmkreis_id: number;
+  readonly kandidat_id: number;
+  readonly wahl_id: number;
+  readonly gueltig: boolean;
+}

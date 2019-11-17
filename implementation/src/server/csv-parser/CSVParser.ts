@@ -3,14 +3,18 @@ import { PoolClient } from "pg";
 import { GraphQLFileUpload } from "../../shared/sharedTypes";
 import { adapters } from "../adapters/adapterUtil";
 import {
-  insertKandidat,
-  insertDirektkandidat
+  insertDirektkandidat,
+  insertKandidat
 } from "../adapters/postgres/queries/kandidatPSQL";
 import { getOrCreateParteiForIdAndName } from "../adapters/postgres/queries/parteiPSQL";
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
+import {
+  buildGueltigeKandidateVotesValuesString,
+  insertGueltigeKandidateVotes
+} from "../adapters/postgres/queries/stimmenPSQL";
+import { getOrCreateStimmkreis } from "../adapters/postgres/queries/stimmkreisPSQL";
 import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
 import { IDatabaseKandidat, IDatabaseStimmkreis } from "../databaseEntities";
-import { getOrCreateStimmkreis } from "../adapters/postgres/queries/stimmkreisPSQL";
 
 enum CSV_KEYS {
   regierungsbezirkID = "regierungsbezirk-id",
@@ -43,6 +47,7 @@ export const parseCrawledCSV = async (
             } = {};
 
             let index = -1;
+            let gueltigeKandidatenVotesString = "";
             try {
               for (const row of result.data) {
                 index++;
@@ -108,23 +113,47 @@ export const parseCrawledCSV = async (
                         ));
                       stimmkreisCache[stimmkreisId] = stimmkreis;
 
-                      const voteAmount: string = `${row[columnKey]}`;
+                      const voteAmountStr: string = `${row[columnKey]}`;
+                      let voteAmount: number = row[columnKey];
 
                       // Insert direktkandidat if field value ends with "*"
-                      if (voteAmount.charAt(voteAmount.length - 1) == "*") {
-                        insertDirektkandidat(
+                      if (
+                        voteAmountStr.charAt(voteAmountStr.length - 1) == "*"
+                      ) {
+                        await insertDirektkandidat(
                           stimmkreisId,
                           wahl.id,
                           kandidat.id,
                           client
                         );
+                        voteAmount = Number(
+                          voteAmountStr.substr(0, voteAmountStr.length - 1)
+                        );
                       }
 
-                      // TODO: Insert stimmen/propagate to stimmgenerator
+                      // Insert stimmen/propagate to stimmgenerator
+                      const newString:
+                        | string
+                        | null = buildGueltigeKandidateVotesValuesString(
+                        voteAmount,
+                        stimmkreisId,
+                        kandidat.id,
+                        wahl.id
+                      );
+                      if (newString)
+                        gueltigeKandidatenVotesString +=
+                          (gueltigeKandidatenVotesString ? "," : "") +
+                          newString;
                       break;
                   }
                 }
               }
+
+              // Actually insert votes
+              insertGueltigeKandidateVotes(
+                gueltigeKandidatenVotesString,
+                client
+              );
             } catch (error) {
               console.error(error);
               reject(error);
