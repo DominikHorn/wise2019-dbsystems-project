@@ -6,28 +6,17 @@ import {
 import { adapters } from "../../adapterUtil";
 
 export async function insertGueltigeKandidateVotes(
-  stimmkreis_ids: number[],
-  kandidat_ids: number[],
-  wahl_ids: number[],
-  gueltig: boolean[],
+  stimmenQueryString: string,
   client?: PoolClient
 ): Promise<IDatabaseKandidatVote[] | null> {
   const QUERY_STR = `
     INSERT INTO "${DatabaseSchemaGroup}".kandidatgebundene_stimmen (stimmkreis_id, kandidat_id, wahl_id, gueltig)
-    SELECT * FROM UNNEST ($1::int[], $2::int[], $3::int[], $4::boolean[])
+    ${stimmenQueryString}
     RETURNING *;`;
 
   return client
-    ? client
-        .query(QUERY_STR, [stimmkreis_ids, kandidat_ids, wahl_ids, gueltig])
-        .then(res => !!res && res.rows[0])
+    ? client.query(QUERY_STR).then(res => !!res && res.rows[0])
     : adapters.postgres.transaction(async client =>
-        insertGueltigeKandidateVotes(
-          stimmkreis_ids,
-          kandidat_ids,
-          wahl_ids,
-          gueltig,
-          client
-        )
+        insertGueltigeKandidateVotes(stimmenQueryString, client)
       );
 }

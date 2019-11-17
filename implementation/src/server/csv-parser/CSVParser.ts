@@ -57,17 +57,7 @@ export const parseCrawledCSV = async (
             } = {};
 
             let index = -1;
-            let stimmenContainer: {
-              stimmkreis_ids: number[];
-              kandidat_ids: number[];
-              wahl_ids: number[];
-              gueltig: boolean[];
-            } = {
-              stimmkreis_ids: [],
-              kandidat_ids: [],
-              wahl_ids: [],
-              gueltig: []
-            };
+            let stimmenQueryString = "";
 
             try {
               for (const row of result.data) {
@@ -160,29 +150,24 @@ export const parseCrawledCSV = async (
                         );
                       }
 
-                      // Insert stimmen into stimmenContainer, which is then propagated to Stimmengenerator
-                      for (let i = 0; i < voteAmount; i++) {
-                        stimmenContainer.stimmkreis_ids.push(stimmkreisId);
-                        stimmenContainer.kandidat_ids.push(kandidat.id);
-                        stimmenContainer.wahl_ids.push(wahl.id);
-                        stimmenContainer.gueltig.push(true);
-                      }
+                      // Insert statement for stimmen
+                      if (
+                        isNaN(stimmkreisId) ||
+                        isNaN(kandidat.id) ||
+                        isNaN(wahl.id)
+                      )
+                        continue;
+                      const newQueryString = `SELECT unnest(array_fill(${stimmkreisId}, ARRAY[${voteAmount},1])), unnest(array_fill(${kandidat.id}, ARRAY[${voteAmount},1])), unnest(array_fill(${wahl.id}, ARRAY[${voteAmount},1])), unnest(array_fill(true, ARRAY[${voteAmount},1]))`;
+                      stimmenQueryString +=
+                        (stimmenQueryString ? "\nUNION ALL\n" : "") +
+                        newQueryString;
                       break;
                   }
                 }
+                // Actually insert votes
+                await insertGueltigeKandidateVotes(stimmenQueryString, client);
+                stimmenQueryString = "";
               }
-
-              // Actually insert votes
-              console.log(
-                `inserting ${stimmenContainer.wahl_ids.length} tuples`
-              );
-              await insertGueltigeKandidateVotes(
-                stimmenContainer.stimmkreis_ids,
-                stimmenContainer.kandidat_ids,
-                stimmenContainer.wahl_ids,
-                stimmenContainer.gueltig,
-                client
-              );
             } catch (error) {
               console.error(error);
               reject(error);
