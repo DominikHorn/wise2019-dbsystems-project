@@ -33,11 +33,12 @@ export const getOrCreateParteiForName = async (
       .query(
         `
       INSERT INTO "${DatabaseSchemaGroup}".parteien
-      VALUES (DEFAULT, $2)
+      VALUES (DEFAULT, $1)
       `,
         [name]
       )
       .then(res => !!res && res.rows[0]);
+    return getParteiForName(name, client);
   }
 
   return adapters.postgres.transaction(async client =>

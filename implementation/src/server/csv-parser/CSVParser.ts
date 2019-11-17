@@ -48,16 +48,16 @@ export const parseCrawledCSV = async (
                       // across 2013 and 2018 data
                       break;
                     case CSV_KEYS.regierungsbezirkID:
-                      // await getOrCreateRegierungsbezirkForId(
-                      //   row[columnKey],
-                      //   client
-                      // );
+                      await getOrCreateRegierungsbezirkForId(
+                        row[columnKey],
+                        client
+                      );
                       break;
                     case CSV_KEYS.parteiName:
-                      //   await getOrCreateParteiForName(
-                      //     row[CSV_KEYS.parteiName],
-                      //     client
-                      //   );
+                      await getOrCreateParteiForName(
+                        row[CSV_KEYS.parteiName],
+                        client
+                      );
                       break;
                     default:
                       // Stimmkreis row! -> Stimmgenerator anmachen.
