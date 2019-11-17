@@ -5,42 +5,43 @@ import {
 } from "../../../databaseEntities";
 import { adapters } from "../../adapterUtil";
 
-export const getParteiForName = async (
-  name: string,
+export const getParteiForId = async (
+  id: number,
   client?: PoolClient
 ): Promise<IDatabasePartei | null> => {
   const QUERY_STR = `
     SELECT *
     FROM "${DatabaseSchemaGroup}".parteien
-    WHERE name = $1`;
+    WHERE id = $1`;
   if (client) {
-    return client.query(QUERY_STR, [name]).then(res => !!res && res.rows[0]);
+    return client.query(QUERY_STR, [id]).then(res => !!res && res.rows[0]);
   }
   const parteien = await adapters.postgres.query<IDatabasePartei>(QUERY_STR, [
-    name
+    id
   ]);
   return !!parteien && parteien[0];
 };
 
-export const getOrCreateParteiForName = async (
+export const getOrCreateParteiForIdAndName = async (
+  id: number,
   name: string,
   client?: PoolClient
 ): Promise<IDatabasePartei> => {
   if (client) {
-    let partei = await getParteiForName(name, client);
+    let partei = await getParteiForId(id, client);
     if (partei) return partei;
     return await client
       .query(
         `
         INSERT INTO "${DatabaseSchemaGroup}".parteien
-        VALUES (DEFAULT, $1)
+        VALUES ($1, $2)
         RETURNING *;`,
-        [name]
+        [id, name]
       )
       .then(res => !!res && res.rows[0]);
   }
 
   return adapters.postgres.transaction(async client =>
-    getOrCreateParteiForName(name, client)
+    getOrCreateParteiForIdAndName(id, name, client)
   );
 };

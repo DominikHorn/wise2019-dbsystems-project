@@ -1,7 +1,7 @@
 CREATE SCHEMA IF NOT EXISTS "landtagswahlen" AUTHORIZATION postgres;
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".parteien (
-	id int NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	id int NOT NULL PRIMARY KEY,
 	"name" varchar(200) NOT NULL
 );
 

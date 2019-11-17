@@ -10,6 +10,7 @@ export async function insertKandidat(
   name: string,
   client?: PoolClient
 ): Promise<IDatabaseKandidat> {
+  console.log("INSERT:", parteiId, name);
   const QUERY_STR = `
     INSERT INTO "${DatabaseSchemaGroup}".kandidaten
     VALUES (DEFAULT, $1, $2)

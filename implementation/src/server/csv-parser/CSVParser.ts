@@ -2,11 +2,11 @@ import { parse, ParseResult } from "papaparse";
 import { PoolClient } from "pg";
 import { GraphQLFileUpload } from "../../shared/sharedTypes";
 import { adapters } from "../adapters/adapterUtil";
-import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
-import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
-import { getOrCreateParteiForName } from "../adapters/postgres/queries/parteiPSQL";
-import { IDatabaseKandidat } from "../databaseEntities";
 import { insertKandidat } from "../adapters/postgres/queries/kandidatPSQL";
+import { getOrCreateParteiForIdAndName } from "../adapters/postgres/queries/parteiPSQL";
+import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
+import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
+import { IDatabaseKandidat } from "../databaseEntities";
 
 enum CSV_KEYS {
   regierungsbezirkID = "regierungsbezirk-id",
@@ -48,8 +48,8 @@ export const parseCrawledCSV = async (
                   switch (columnKey) {
                     case CSV_KEYS.parteiID:
                     case CSV_KEYS.kandidatNr:
-                      // Ignore parteiId as they are not consistent across 2013 and 2018 data
-                      // Ignore kandidatNr as it is irrelevant
+                      // Ignore irrelevant columns (insert is triggered by other column keys)
+                      // NOTE: Fallthrough is intended
                       break;
                     case CSV_KEYS.kandidatName:
                       // Special cases:
@@ -71,7 +71,8 @@ export const parseCrawledCSV = async (
                       );
                       break;
                     case CSV_KEYS.parteiName:
-                      await getOrCreateParteiForName(
+                      await getOrCreateParteiForIdAndName(
+                        row[CSV_KEYS.parteiID],
                         row[CSV_KEYS.parteiName],
                         client
                       );
