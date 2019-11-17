@@ -5,7 +5,7 @@ import {
 } from "../../../databaseEntities";
 import { adapters } from "../../adapterUtil";
 
-export async function insertGueltigeKandidateVotes(
+export async function insertKandidateVotes(
   stimmenQueryString: string,
   client?: PoolClient
 ): Promise<IDatabaseKandidatVote[] | null> {
@@ -17,6 +17,22 @@ export async function insertGueltigeKandidateVotes(
   return client
     ? client.query(QUERY_STR).then(res => !!res && res.rows[0])
     : adapters.postgres.transaction(async client =>
-        insertGueltigeKandidateVotes(stimmenQueryString, client)
+        insertKandidateVotes(stimmenQueryString, client)
+      );
+}
+
+export async function insertListenVotes(
+  stimmenQueryString: string,
+  client?: PoolClient
+): Promise<IDatabaseKandidatVote[] | null> {
+  const QUERY_STR = `
+    INSERT INTO "${DatabaseSchemaGroup}".listengebundene_stimmen (stimmkreis_id, wahl_id, partei_id, gueltig)
+    ${stimmenQueryString}
+    RETURNING *;`;
+
+  return client
+    ? client.query(QUERY_STR).then(res => !!res && res.rows[0])
+    : adapters.postgres.transaction(async client =>
+        insertListenVotes(stimmenQueryString, client)
       );
 }
