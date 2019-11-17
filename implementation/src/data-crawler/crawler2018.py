@@ -54,7 +54,7 @@ class Landtagswahlen2018Spider(scrapy.Spider):
 
             yield scrapy.Request(build_url(self.regierungsbezirkId, PARTEIEN[self.pt_ind], 0), meta={
                 'column_names': response.meta.get('column_names', None),
-                'result': response.meta.get('result', None),
+                'result': [],
                 'page_index': 0
             }) 
             return
