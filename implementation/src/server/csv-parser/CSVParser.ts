@@ -8,10 +8,7 @@ import {
 } from "../adapters/postgres/queries/kandidatPSQL";
 import { getOrCreateParteiForIdAndName } from "../adapters/postgres/queries/parteiPSQL";
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
-import {
-  buildGueltigeKandidateVotesValuesString,
-  insertGueltigeKandidateVotes
-} from "../adapters/postgres/queries/stimmenPSQL";
+import { insertGueltigeKandidateVotes } from "../adapters/postgres/queries/stimmenPSQL";
 import { getOrCreateStimmkreis } from "../adapters/postgres/queries/stimmkreisPSQL";
 import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
 import { IDatabaseKandidat, IDatabaseStimmkreis } from "../databaseEntities";
@@ -36,7 +33,20 @@ export const parseCrawledCSV = async (
   new Promise((resolve, reject) =>
     csvPromise.then(csv =>
       parse(csv.createReadStream(), {
-        dynamicTyping: true,
+        dynamicTyping: (field: string | number) => {
+          switch (field) {
+            case CSV_KEYS.regierungsbezirkID:
+            case CSV_KEYS.parteiID:
+            case CSV_KEYS.kandidatNr:
+            case CSV_KEYS.stimmzettelListenPlatz:
+            case CSV_KEYS.finalerListenPlatz:
+            case CSV_KEYS.gesamtstimmen:
+            case CSV_KEYS.zweitstimmen:
+              return true;
+          }
+
+          return false;
+        },
         header: true,
         complete: (result: ParseResult) =>
           adapters.postgres.transaction(async (client: PoolClient) => {
@@ -47,7 +57,18 @@ export const parseCrawledCSV = async (
             } = {};
 
             let index = -1;
-            let gueltigeKandidatenVotesString = "";
+            let stimmenContainer: {
+              stimmkreis_ids: number[];
+              kandidat_ids: number[];
+              wahl_ids: number[];
+              gueltig: boolean[];
+            } = {
+              stimmkreis_ids: [],
+              kandidat_ids: [],
+              wahl_ids: [],
+              gueltig: []
+            };
+
             try {
               for (const row of result.data) {
                 index++;
@@ -63,9 +84,9 @@ export const parseCrawledCSV = async (
                 // Parsing logic for regular rows (kandidaten row)
                 for (const columnKey of Object.keys(row)) {
                   // TODO: this is for debug purposes
-                  console.log(
-                    `row[${index}]: ${columnKey} -> ${row[columnKey]}`
-                  );
+                  // console.log(
+                  //   `row[${index}]: ${columnKey} -> ${row[columnKey]}`
+                  // );
                   switch (columnKey) {
                     case CSV_KEYS.parteiID:
                     case CSV_KEYS.kandidatNr:
@@ -77,6 +98,11 @@ export const parseCrawledCSV = async (
                       // NOTE: Fallthrough is intended
                       break;
                     case CSV_KEYS.kandidatName:
+                      console.log(
+                        "inserting:",
+                        row[CSV_KEYS.parteiID],
+                        row[CSV_KEYS.kandidatName]
+                      );
                       kandidat = await insertKandidat(
                         row[CSV_KEYS.parteiID],
                         row[CSV_KEYS.kandidatName],
@@ -113,8 +139,11 @@ export const parseCrawledCSV = async (
                         ));
                       stimmkreisCache[stimmkreisId] = stimmkreis;
 
-                      const voteAmountStr: string = `${row[columnKey]}`;
-                      let voteAmount: number = row[columnKey];
+                      const voteAmountStr: string = `${row[columnKey]}`.replace(
+                        /\./,
+                        ""
+                      );
+                      let voteAmount: number = Number(voteAmountStr);
 
                       // Insert direktkandidat if field value ends with "*"
                       if (
@@ -131,27 +160,27 @@ export const parseCrawledCSV = async (
                         );
                       }
 
-                      // Insert stimmen/propagate to stimmgenerator
-                      const newString:
-                        | string
-                        | null = buildGueltigeKandidateVotesValuesString(
-                        voteAmount,
-                        stimmkreisId,
-                        kandidat.id,
-                        wahl.id
-                      );
-                      if (newString)
-                        gueltigeKandidatenVotesString +=
-                          (gueltigeKandidatenVotesString ? "," : "") +
-                          newString;
+                      // Insert stimmen into stimmenContainer, which is then propagated to Stimmengenerator
+                      for (let i = 0; i < voteAmount; i++) {
+                        stimmenContainer.stimmkreis_ids.push(stimmkreisId);
+                        stimmenContainer.kandidat_ids.push(kandidat.id);
+                        stimmenContainer.wahl_ids.push(wahl.id);
+                        stimmenContainer.gueltig.push(true);
+                      }
                       break;
                   }
                 }
               }
 
               // Actually insert votes
-              insertGueltigeKandidateVotes(
-                gueltigeKandidatenVotesString,
+              console.log(
+                `inserting ${stimmenContainer.wahl_ids.length} tuples`
+              );
+              await insertGueltigeKandidateVotes(
+                stimmenContainer.stimmkreis_ids,
+                stimmenContainer.kandidat_ids,
+                stimmenContainer.wahl_ids,
+                stimmenContainer.gueltig,
                 client
               );
             } catch (error) {
