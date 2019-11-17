@@ -1,10 +1,15 @@
 import { PoolClient } from "pg";
 import {
   DatabaseSchemaGroup,
-  IDatabasePartei
+  IDatabasePartei,
+  IDatabaseKandidat
 } from "../../../databaseEntities";
 import { adapters } from "../../adapterUtil";
 
+let cachedParteiForId: (
+  id: number,
+  client: PoolClient
+) => IDatabasePartei = () => null;
 export const getParteiForId = async (
   id: number,
   client?: PoolClient
@@ -14,7 +19,19 @@ export const getParteiForId = async (
     FROM "${DatabaseSchemaGroup}".parteien
     WHERE id = $1`;
   if (client) {
-    return client.query(QUERY_STR, [id]).then(res => !!res && res.rows[0]);
+    const res = cachedParteiForId(id, client);
+    if (res) {
+      return res;
+    } else {
+      const dbRes = await client
+        .query(QUERY_STR, [id])
+        .then(res => !!res && res.rows[0]);
+      cachedParteiForId = (idParam, clientParam) => {
+        if (id === idParam && client === clientParam) return dbRes;
+        return null;
+      };
+      return dbRes;
+    }
   }
   const parteien = await adapters.postgres.query<IDatabasePartei>(QUERY_STR, [
     id

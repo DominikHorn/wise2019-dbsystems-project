@@ -85,7 +85,14 @@ export const parseCrawledCSV = async (
                       // TODO
                       break;
                     default:
-                      // Stimmkreis row! -> Stimmgenerator anmachen.
+                      // Stimmkreis column with key: "_,_,_;  ______", e.g. "901; Fürstenfeldbruck"
+                      const stimmkreisId = Number(columnKey.slice(0, 3));
+                      const stimmkreisName = columnKey.slice(3).trim();
+                      console.log(
+                        "FOUND STIMMKREIS:",
+                        stimmkreisId,
+                        stimmkreisName
+                      );
                       break;
                   }
                 }

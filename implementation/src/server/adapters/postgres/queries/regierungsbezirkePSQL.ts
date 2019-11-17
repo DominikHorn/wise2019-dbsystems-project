@@ -15,6 +15,10 @@ const REGIERUNGSBEZIRKE: { [key: number]: string } = {
   907: "Schwaben"
 };
 
+let cachedRegierungsbezirkForId: (
+  id: number,
+  client: PoolClient
+) => IDatabaseRegierungsbezirk = () => null;
 export const getRegierungsbezirkForId = async (
   id: number,
   client?: PoolClient
@@ -24,7 +28,19 @@ export const getRegierungsbezirkForId = async (
     FROM "${DatabaseSchemaGroup}".regierungsbezirke
     WHERE id = $1;`;
   if (client) {
-    return client.query(QUERY_STR, [id]).then(res => !!res && res.rows[0]);
+    const res = cachedRegierungsbezirkForId(id, client);
+    if (res) {
+      return res;
+    } else {
+      const dbRes = await client
+        .query(QUERY_STR, [id])
+        .then(res => !!res && res.rows[0]);
+      cachedRegierungsbezirkForId = (idParam, clientParam) => {
+        if (id === idParam && client === clientParam) return dbRes;
+        return null;
+      };
+      return dbRes;
+    }
   }
   const regierungsbezirke = await adapters.postgres.query<
     IDatabaseRegierungsbezirk
