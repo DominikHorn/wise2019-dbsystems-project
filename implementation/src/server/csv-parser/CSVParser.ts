@@ -245,7 +245,7 @@ export const parseCSV = async (
                 return;
               }
               if (result.meta.fields[0] == INFO_CSV_KEYS.stimmkreisID) {
-                // Special info pdf
+                // Special info csv
                 await parseInfoCSV(result, client, wahl);
               } else {
                 // Crawled format
