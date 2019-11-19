@@ -21,7 +21,11 @@ export const resolvers: { [key: string]: any } = {
     ) =>
       // TODO: returning false in the end is for debug purposes such that the modal doesn't close on client
       await Promise.all(
-        args.files.map(wahlfile => parseCSV(wahlfile, args.wahldatum))
-      ).then(() => false)
+        args.files.map(wahlfile =>
+          wahlfile.then(
+            file => (console.log(file), parseCSV(file, args.wahldatum))
+          )
+        )
+      ).then(() => true)
   }
 };

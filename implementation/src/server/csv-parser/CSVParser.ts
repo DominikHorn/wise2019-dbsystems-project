@@ -53,12 +53,12 @@ async function parseCrawledCSV(
   let kandidatStimmenQueryString = "";
   let listenStimmenQueryString = "";
 
+  let index = 0;
   for (const row of result.data) {
-    let kandidat: IDatabaseKandidat;
+    index++;
+    let kandidat: IDatabaseKandidat = null;
     // Special cases:
     if (!row[CSV_KEYS.kandidatNr]) {
-      // TODO: check if the following are irrelevant: 'Erststimmen insgesamt', 'Zweitstimmen insgesamt', 'Gesamtstimmen'
-
       if (
         row[CSV_KEYS.kandidatName] ==
         "Zweitstimmen ohne Kennzeichnung eines Bewerbers"
@@ -97,11 +97,7 @@ async function parseCrawledCSV(
       continue;
     }
 
-    console.log(
-      "processing:",
-      row[CSV_KEYS.parteiID],
-      row[CSV_KEYS.kandidatName]
-    );
+    console.log(`processing row[${index}]:`, row);
 
     await getOrCreateRegierungsbezirkForId(
       row[CSV_KEYS.regierungsbezirkID],
@@ -112,6 +108,10 @@ async function parseCrawledCSV(
       row[CSV_KEYS.parteiName],
       client
     );
+    // TODO: assumption is that partei_id and name are not always unique and hence
+    //       an additional row with the same name and partei_id is a different kandidat.
+    // TODO: store and check kandidat_nr/listenplatz to ensure difference (?)
+    //       => does not work accross different wahlen
     kandidat = await insertKandidat(
       row[CSV_KEYS.parteiID],
       row[CSV_KEYS.kandidatName],
@@ -189,6 +189,7 @@ async function parseCrawledCSV(
           break;
       }
     }
+
     // Actually insert votes
     await insertKandidateVotes(kandidatStimmenQueryString, client);
     kandidatStimmenQueryString = "";
@@ -213,51 +214,48 @@ async function parseInfoCSV(
 }
 
 export const parseCSV = async (
-  csvPromise: Promise<GraphQLFileUpload>,
+  csvFile: GraphQLFileUpload,
   wahldatum: Date
 ): Promise<boolean> =>
   new Promise((resolve, reject) =>
-    csvPromise.then(csv =>
-      parse(csv.createReadStream(), {
-        dynamicTyping: (field: string | number) => {
-          switch (field) {
-            case CSV_KEYS.regierungsbezirkID:
-            case CSV_KEYS.parteiID:
-            case CSV_KEYS.kandidatNr:
-            case CSV_KEYS.stimmzettelListenPlatz:
-            case CSV_KEYS.finalerListenPlatz:
-            case CSV_KEYS.gesamtstimmen:
-            case CSV_KEYS.zweitstimmen:
-              return true;
+    parse(csvFile.createReadStream(), {
+      dynamicTyping: (field: string | number) => {
+        switch (field) {
+          case CSV_KEYS.regierungsbezirkID:
+          case CSV_KEYS.parteiID:
+          case CSV_KEYS.kandidatNr:
+          case CSV_KEYS.stimmzettelListenPlatz:
+          case CSV_KEYS.finalerListenPlatz:
+          case CSV_KEYS.gesamtstimmen:
+          case CSV_KEYS.zweitstimmen:
+            return true;
+        }
+
+        return false;
+      },
+      header: true,
+      complete: (result: ParseResult) =>
+        adapters.postgres.transaction(async (client: PoolClient) => {
+          // Attempt to find wahl for wahldatum; Create if none exists
+          const wahl = await getOrCreateWahlForDatum(wahldatum, client);
+          try {
+            if (!result.meta.fields) {
+              reject("CSV Does not appear to contain columns");
+              return;
+            }
+            if (result.meta.fields[0] == INFO_CSV_KEYS.stimmkreisID) {
+              // Special info pdf
+              await parseInfoCSV(result, client, wahl);
+            } else {
+              // Crawled format
+              await parseCrawledCSV(result, client, wahl);
+            }
+          } catch (error) {
+            console.error(error);
+            reject(error);
           }
 
-          return false;
-        },
-        header: true,
-        complete: (result: ParseResult) =>
-          adapters.postgres.transaction(async (client: PoolClient) => {
-            // Attempt to find wahl for wahldatum; Create if none exists
-            const wahl = await getOrCreateWahlForDatum(wahldatum, client);
-
-            try {
-              if (!result.meta.fields) {
-                reject("CSV Does not appear to contain columns");
-                return;
-              }
-              if (result.meta.fields[0] == INFO_CSV_KEYS.stimmkreisID) {
-                // Special info csv
-                await parseInfoCSV(result, client, wahl);
-              } else {
-                // Crawled format
-                await parseCrawledCSV(result, client, wahl);
-              }
-            } catch (error) {
-              console.error(error);
-              reject(error);
-            }
-
-            resolve(true);
-          })
-      })
-    )
+          resolve(true);
+        })
+    })
   );
