@@ -1,34 +1,34 @@
-import * as React from "react";
-import { RouteComponentProps } from "react-router";
 import {
-  Card,
-  message,
   Button,
+  Card,
   Col,
-  Row,
-  Modal,
-  Form,
-  Select,
   DatePicker,
-  List
+  Form,
+  List,
+  message,
+  Modal,
+  Row,
+  Checkbox
 } from "antd";
+import locale from "antd/es/date-picker/locale/de_DE";
 import { FormComponentProps } from "antd/lib/form";
 import { GetFieldDecoratorOptions } from "antd/lib/form/Form";
-import { FilePickerComponent } from "../general/FilePickerComponent";
-import { compose } from "react-apollo";
-import {
-  withImportCSVDataMutation,
-  IImportCSVDataMutationHocProps
-} from "../../../graphql/wahlleiter/importCSVDataMutation";
 import { UploadFile } from "antd/lib/upload/interface";
-import {
-  withAllWahlenQuery,
-  IGetAllWahlenQueryHocProps
-} from "../../../graphql/public/getAllWahlenQuery";
-import { renderLoading } from "../../guiUtil";
-import locale from "antd/es/date-picker/locale/de_DE";
-import { withErrorBoundary } from "../general/ErrorBoundary";
 import * as moment from "moment";
+import * as React from "react";
+import { compose } from "react-apollo";
+import { RouteComponentProps } from "react-router";
+import {
+  IGetAllWahlenQueryHocProps,
+  withAllWahlenQuery
+} from "../../../graphql/public/getAllWahlenQuery";
+import {
+  IImportCSVDataMutationHocProps,
+  withImportCSVDataMutation
+} from "../../../graphql/wahlleiter/importCSVDataMutation";
+import { renderLoading } from "../../guiUtil";
+import { withErrorBoundary } from "../general/ErrorBoundary";
+import { FilePickerComponent } from "../general/FilePickerComponent";
 import "./WahlleiterPage.css";
 
 export interface IWahlleiterPageProps {
@@ -67,7 +67,8 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
         this.props
           .importCSVData({
             files: values.files.map((f: UploadFile) => f.originFileObj),
-            wahldatum: values.wahldatum.toDate()
+            wahldatum: values.wahldatum.toDate(),
+            aggregiert: values.save_aggr
           })
           .then(res => {
             this.setState({ uploadLoading: false });
@@ -159,6 +160,12 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
             placeholder={`Drag & Drop oder klicken um CSV Dateien auszuwählen`}
           />
         )}
+      </Form.Item>
+      <Form.Item label={"Aggregation"}>
+        {getFieldDecorator("save_aggr", {
+          valuePropName: "checked",
+          initialValue: true
+        })(<Checkbox>Stimmen voraggregiert abspeichern</Checkbox>)}
       </Form.Item>
     </Form>
   );

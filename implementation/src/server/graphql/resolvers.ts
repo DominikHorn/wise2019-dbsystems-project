@@ -17,13 +17,19 @@ export const resolvers: { [key: string]: any } = {
   Mutation: {
     importCSVData: async (
       _: any,
-      args: { files: Promise<GraphQLFileUpload>[]; wahldatum: Date }
+      args: {
+        files: Promise<GraphQLFileUpload>[];
+        wahldatum: Date;
+        aggregiert: boolean;
+      }
     ) =>
       // TODO: returning false in the end is for debug purposes such that the modal doesn't close on client
       await Promise.all(
         args.files.map(wahlfile =>
           wahlfile.then(
-            file => (console.log(file), parseCSV(file, args.wahldatum))
+            file => (
+              console.log(file), parseCSV(file, args.wahldatum, args.aggregiert)
+            )
           )
         )
       ).then(() => true)

@@ -4,8 +4,16 @@ import { FetchResult } from "react-apollo";
 import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
 
 const importCSVDataMutation = gql`
-  mutation importCSVDataMutation($files: [Upload]!, $wahldatum: Date!) {
-    success: importCSVData(files: $files, wahldatum: $wahldatum)
+  mutation importCSVDataMutation(
+    $files: [Upload]!
+    $wahldatum: Date!
+    $aggregiert: Boolean!
+  ) {
+    success: importCSVData(
+      files: $files
+      wahldatum: $wahldatum
+      aggregiert: $aggregiert
+    )
   }
 `;
 
@@ -16,6 +24,7 @@ interface IImportCSVDataMutationResponse extends IGraphqlType {
 interface IImportCSVDataMutationVariables {
   readonly files: File[];
   readonly wahldatum: Date;
+  readonly aggregiert: boolean;
 }
 
 export interface IImportCSVDataMutationHocProps {

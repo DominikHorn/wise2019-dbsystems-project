@@ -6,7 +6,11 @@ type Query {
 }
 
 type Mutation {
-  importCSVData(files: [Upload]!, wahldatum: Date!): Boolean
+  importCSVData(
+    files: [Upload]!
+    wahldatum: Date!
+    aggregiert: Boolean!
+  ): Boolean
 }
 
 type Wahl {
