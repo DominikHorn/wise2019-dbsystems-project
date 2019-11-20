@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".aggregiert_ungueltige_zweitstimmen (
 	PRIMARY KEY (stimmkreis_id, wahl_id)
 );
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS kandidatgebundene_gueltige_stimmen (stimmkreis_id, wahl_id, kandidat_id, anzahl) AS (
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".kandidatgebundene_gueltige_stimmen (stimmkreis_id, wahl_id, kandidat_id, anzahl) AS (
     (
         SELECT egks.stimmkreis_id, egks.wahl_id, egks.kandidat_id, count(*)
         FROM "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen egks
@@ -206,7 +206,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS kandidatgebundene_gueltige_stimmen (stimm
     )
 );
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS listengebundene_gueltige_stimmen (stimmkreis_id, wahl_id, partei_id, anzahl) AS (
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".listengebundene_gueltige_stimmen (stimmkreis_id, wahl_id, partei_id, anzahl) AS (
     (
         SELECT egls.stimmkreis_id, egls.wahl_id, egls.partei_id, count(*)
         FROM "landtagswahlen".einzel_gueltige_listengebundene_stimmen egls
@@ -219,7 +219,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS listengebundene_gueltige_stimmen (stimmkr
     )
 );
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS ungueltige_erststimmen AS (
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".ungueltige_erststimmen AS (
     (
         SELECT eue.stimmkreis_id, eue.wahl_id, count(*)
         FROM "landtagswahlen".einzel_ungueltige_erststimmen eue
@@ -232,7 +232,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS ungueltige_erststimmen AS (
    )
 );
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS ungueltige_zweitstimmen (stimmkreis_id, wahl_id, anzahl) AS (
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".ungueltige_zweitstimmen (stimmkreis_id, wahl_id, anzahl) AS (
     (
         SELECT euz.stimmkreis_id, euz.wahl_id, count(*)
         FROM "landtagswahlen".einzel_ungueltige_zweitstimmen euz

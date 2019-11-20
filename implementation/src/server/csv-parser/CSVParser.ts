@@ -53,58 +53,61 @@ async function parseCrawledCSV(
 
   let kandidatEinzelVotes: VoteType[] = [];
   let kandidatAggregiertVotes: VoteType[] = [];
-  let listenEinzelVotes: VoteType[] = [];
-  let listenAggregiertVotes: VoteType[] = [];
 
   let index = 0;
   for (const row of result.data) {
     let kandidat: IDatabaseKandidat = null;
     // Special case, row with zweitstimmen for liste
-    if (
-      !row[CSV_KEYS.kandidatNr] &&
-      row[CSV_KEYS.kandidatName] ==
+    if (!row[CSV_KEYS.kandidatNr]) {
+      if (
+        row[CSV_KEYS.kandidatName] ==
         "Zweitstimmen ohne Kennzeichnung eines Bewerbers"
-    ) {
-      for (const columnKey of Object.keys(row)) {
-        if ((Object.values(CSV_KEYS) as string[]).includes(columnKey)) continue;
+      ) {
+        let listenEinzelVotes: VoteType[] = [];
+        let listenAggregiertVotes: VoteType[] = [];
+        for (const columnKey of Object.keys(row)) {
+          if ((Object.values(CSV_KEYS) as string[]).includes(columnKey))
+            continue;
 
-        // Stimmkreis column with key: "_,_,_;  ______", e.g. "901; Fürstenfeldbruck"
-        const stimmkreisId = Number(columnKey.slice(0, 3));
-        const parteiId = row[CSV_KEYS.parteiID];
-        const voteAmount = Number(`${row[columnKey]}`.replace(/\./, ""));
+          // Stimmkreis column with key: "_,_,_;  ______", e.g. "901; Fürstenfeldbruck"
+          const stimmkreisId = Number(columnKey.slice(0, 3));
+          const parteiId = row[CSV_KEYS.parteiID];
+          const voteAmount = Number(`${row[columnKey]}`.replace(/\./, ""));
 
-        // Insert statement for stimmen
-        if (isNaN(stimmkreisId) || isNaN(wahl.id) || isNaN(parteiId)) continue;
-        if (aggregiert) {
-          listenAggregiertVotes.push({
-            values: [stimmkreisId, wahl.id, parteiId, voteAmount],
-            quantity: 1
-          });
-        } else {
-          listenEinzelVotes.push({
-            values: [stimmkreisId, wahl.id, parteiId],
-            quantity: voteAmount
-          });
+          // Insert statement for stimmen
+          if (isNaN(stimmkreisId) || isNaN(wahl.id) || isNaN(parteiId))
+            continue;
+          if (aggregiert) {
+            listenAggregiertVotes.push({
+              values: [stimmkreisId, wahl.id, parteiId, voteAmount],
+              quantity: 1
+            });
+          } else {
+            listenEinzelVotes.push({
+              values: [stimmkreisId, wahl.id, parteiId],
+              quantity: voteAmount
+            });
+          }
         }
-      }
 
-      if (listenEinzelVotes.length > 0) {
-        await insertVotes(
-          ["stimmkreis_id", "wahl_id", "partei_id"],
-          "einzel_gueltige_listengebundene_stimmen",
-          listenEinzelVotes,
-          client
-        );
-        listenEinzelVotes = [];
-      }
-      if (listenAggregiertVotes.length > 0) {
-        await insertVotes(
-          ["stimmkreis_id", "wahl_id", "partei_id", "anzahl"],
-          "aggregiert_gueltige_listengebundene_stimmen",
-          listenAggregiertVotes,
-          client
-        );
-        listenAggregiertVotes = [];
+        if (listenEinzelVotes.length > 0) {
+          await insertVotes(
+            ["stimmkreis_id", "wahl_id", "partei_id"],
+            "einzel_gueltige_listengebundene_stimmen",
+            listenEinzelVotes,
+            client
+          );
+          listenEinzelVotes = [];
+        }
+        if (listenAggregiertVotes.length > 0) {
+          await insertVotes(
+            ["stimmkreis_id", "wahl_id", "partei_id", "anzahl"],
+            "aggregiert_gueltige_listengebundene_stimmen",
+            listenAggregiertVotes,
+            client
+          );
+          listenAggregiertVotes = [];
+        }
       }
       continue;
     }
