@@ -86,11 +86,15 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".direktkandidaten (
 	PRIMARY KEY (stimmkreis_id, wahl_id, direktkandidat_id)
 );
 
--- TODO: korrigieren
 CREATE OR REPLACE VIEW "landtagswahlen".direktmandat_anzahl AS (
-	SELECT rb.id, count(sk.id)
-	FROM "landtagswahlen".regierungsbezirke rb join "landtagswahlen".stimmkreise sk on rb.id = sk.regierungsbezirk_id
-	GROUP BY rb.id
+	SELECT sk.regierungsbezirk_id, dk.wahl_id, count(*)
+	FROM (
+						SELECT stimmkreis_id, wahl_id
+						FROM "landtagswahlen".direktkandidaten
+						GROUP BY stimmkreis_id, wahl_id
+				) dk
+			JOIN "landtagswahlen".stimmkreise sk ON sk.id = dk.stimmkreis_id
+	GROUP BY sk.regierungsbezirk_id, dk.wahl_id
 );
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".regierungsbezirk_wahlinfo (
