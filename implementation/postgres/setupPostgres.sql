@@ -103,12 +103,11 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".listen (
 );
 
 -- Refresh am Ende der LW mit: REFRESH MATERIALIZED VIEW "landtagswahlen".finaleliste;
-DROP MATERIALIZED VIEW IF EXISTS "landtagswahlen".finaleliste;
-CREATE MATERIALIZED VIEW "landtagswahlen".finaleliste AS (
-	-- TODO: definiere query wenn klar wie sich das errechnet
-	SELECT *
-	FROM "landtagswahlen".listen
-);
+-- CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".finaleliste AS (
+-- 	-- TODO: definiere query wenn klar wie sich das errechnet
+-- 	SELECT *
+-- 	FROM "landtagswahlen".listen
+-- );
 
 -- Mangels nicht existierenden Daten werden Stimmbezirke nicht als relation repräsentiert;
 -- Somit entfaellt auch die Modelierung von Direktregionen

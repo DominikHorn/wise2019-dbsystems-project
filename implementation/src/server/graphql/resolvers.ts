@@ -2,6 +2,7 @@ import { GraphQLDateTime } from "graphql-iso-date";
 import { GraphQLFileUpload } from "../../shared/sharedTypes";
 import { getWahlen } from "../adapters/postgres/queries/wahlenPSQL";
 import { parseCSV } from "../csv-parser/CSVParser";
+import { computeElectionResults } from "../adapters/postgres/queries/electionPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -32,6 +33,7 @@ export const resolvers: { [key: string]: any } = {
             )
           )
         )
-      ).then(() => true)
+      ).then(() => true),
+    computeElectionResults: computeElectionResults
   }
 };
