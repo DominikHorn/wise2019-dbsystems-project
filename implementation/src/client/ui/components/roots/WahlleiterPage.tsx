@@ -67,7 +67,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
         this.props
           .importCSVData({
             files: values.files.map((f: UploadFile) => f.originFileObj),
-            wahldatum: values.wahldatum.toDate(),
+            wahldatum: values.wahldatum.add(2, "hours").toDate(),
             aggregiert: values.save_aggr
           })
           .then(res => {

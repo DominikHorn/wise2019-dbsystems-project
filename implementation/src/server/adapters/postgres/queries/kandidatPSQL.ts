@@ -6,22 +6,70 @@ import {
 } from "../../../databaseEntities";
 import { adapters } from "../../adapterUtil";
 
-export async function insertKandidat(
+let cachedKandidatForParteiIdAndName: (
+  parteiId: number,
+  name: string,
+  client: PoolClient
+) => IDatabaseKandidat = () => null;
+export async function getKandidatForName(
+  parteiId: number,
+  name: string,
+  client?: PoolClient
+): Promise<IDatabaseKandidat | null> {
+  const QUERY_STR = `
+    SELECT *
+    FROM "${DatabaseSchemaGroup}".kandidaten
+    WHERE partei_id = $1 AND name = $2`;
+  if (client) {
+    const res = cachedKandidatForParteiIdAndName(parteiId, name, client);
+    if (res) {
+      console.error("FOUND DUPLICATE CANDIDATE (?):", parteiId, name);
+      return res;
+    } else {
+      const dbRes = await client
+        .query(QUERY_STR, [parteiId, name])
+        .then(res => !!res && res.rows[0]);
+      cachedKandidatForParteiIdAndName = (
+        parteiIdParam,
+        nameParam,
+        clientParam
+      ) => {
+        if (
+          parteiId === parteiIdParam &&
+          name === nameParam &&
+          client === clientParam
+        )
+          return dbRes;
+        return null;
+      };
+      return dbRes;
+    }
+  }
+  const kandidaten = await adapters.postgres.query<IDatabaseKandidat>(
+    QUERY_STR,
+    [parteiId, name]
+  );
+  return !!kandidaten && kandidaten[0];
+}
+
+export async function getOrCreateKandidatForParteiIdAndName(
   parteiId: number,
   name: string,
   client?: PoolClient
 ): Promise<IDatabaseKandidat> {
-  const QUERY_STR = `
+  if (client) {
+    const QUERY_STR = `
     INSERT INTO "${DatabaseSchemaGroup}".kandidaten
     VALUES (DEFAULT, $1, $2)
     RETURNING *;`;
-  if (client) {
-    return client
-      .query(QUERY_STR, [parteiId, name])
-      .then(res => !!res && res.rows[0]);
+    if (client) {
+      return client
+        .query(QUERY_STR, [parteiId, name])
+        .then(res => !!res && res.rows[0]);
+    }
   }
   return adapters.postgres.transaction(async client =>
-    insertKandidat(parteiId, name, client)
+    getOrCreateKandidatForParteiIdAndName(parteiId, name, client)
   );
 }
 

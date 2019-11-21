@@ -3,8 +3,8 @@ import { PoolClient } from "pg";
 import { GraphQLFileUpload } from "../../shared/sharedTypes";
 import { adapters } from "../adapters/adapterUtil";
 import {
-  insertKandidat,
-  insertDirektkandidat
+  insertDirektkandidat,
+  getOrCreateKandidatForParteiIdAndName
 } from "../adapters/postgres/queries/kandidatPSQL";
 import { getOrCreateParteiForIdAndName } from "../adapters/postgres/queries/parteiPSQL";
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
@@ -130,7 +130,11 @@ async function parseCrawledCSV(
     await getOrCreateRegierungsbezirkForId(regierungsbezirkId, client);
     await getOrCreateParteiForIdAndName(parteiId, parteiName, client);
     // TODO: getOrInsertKandidat with birth id (from henrik)
-    kandidat = await insertKandidat(parteiId, kandidatName, client);
+    kandidat = await getOrCreateKandidatForParteiIdAndName(
+      parteiId,
+      kandidatName,
+      client
+    );
     await insertListeneintrag(
       kandidat.id,
       wahl.id,

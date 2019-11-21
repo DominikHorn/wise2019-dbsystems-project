@@ -86,7 +86,7 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".direktkandidaten (
 	PRIMARY KEY (stimmkreis_id, wahl_id, direktkandidat_id)
 );
 
--- TODO: wenn sich sk ändern können muss hier noch wahl referenziert werden
+-- TODO: korrigieren
 CREATE OR REPLACE VIEW "landtagswahlen".direktmandat_anzahl AS (
 	SELECT rb.id, count(sk.id)
 	FROM "landtagswahlen".regierungsbezirke rb join "landtagswahlen".stimmkreise sk on rb.id = sk.regierungsbezirk_id
@@ -114,7 +114,7 @@ CREATE OR REPLACE VIEW "landtagswahlen".regierungsbezirk_wahlberechtigte AS (
 -- Unterscheidung zwischen erst, zweitstimmen erfolgt über "direktkandidat" relation
 -- Wenn ein Kandidat in einem Stimmkreis direktkandidat ist erhält er dort nur Erststimmen
 CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen (
-    id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
+	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
 	stimmkreis_id smallint NOT NULL,
 	wahl_id smallint NOT NULL,
 	kandidat_id int NOT NULL,
