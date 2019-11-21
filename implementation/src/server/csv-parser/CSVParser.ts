@@ -196,7 +196,7 @@ async function parseCrawledCSV(
     }
     if (kandidatAggregiertVotes.length > 0) {
       await insertVotes(
-        ["stimmkreis_id", "kandidat_id", "wahl_id"],
+        ["stimmkreis_id", "kandidat_id", "wahl_id", "anzahl"],
         "aggregiert_gueltige_kandidatgebundene_stimmen",
         kandidatAggregiertVotes,
         client
