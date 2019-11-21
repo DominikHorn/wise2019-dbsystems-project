@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".kandidaten (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	partei_id smallint NOT NULL,
 	"name" varchar(200) NOT NULL,
-	-- ON DELETE effectively prohibits deleting parties
 	FOREIGN KEY (partei_id) REFERENCES "landtagswahlen".parteien(id) ON DELETE CASCADE
 );
 
@@ -17,16 +16,78 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".wahlen (
 	id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	wahldatum date NOT NULL
 );
+INSERT INTO "landtagswahlen".wahlen (wahldatum)
+	SELECT a.*
+	FROM (
+		SELECT date('2018-10-14')
+		UNION
+		SELECT date('2018-09-15')
+	) a
+	WHERE NOT EXISTS (SELECT * FROM "landtagswahlen".wahlen);
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".regierungsbezirke (
-	id smallint NOT NULL PRIMARY KEY, -- Schluessel_Nummer in csv
+	id smallint NOT NULL PRIMARY KEY,
 	"name" varchar(80) NOT NULL
--- Unsupported in PostgreSQL
---	CHECK (id NOT IN (
---		SELECT id
---		FROM stimmkreise
---	))
 );
+INSERT INTO "landtagswahlen".regierungsbezirke (id, "name")
+SELECT a.*
+FROM (
+    SELECT 901, 'Oberbayern'
+    UNION
+    SELECT 902, 'Niederbayern'
+    UNION
+    SELECT 903, 'Oberpfalz'
+    UNION
+    SELECT 904, 'Oberfranken'
+    UNION
+    SELECT 905, 'Mittelfranken'
+    UNION
+    SELECT 906, 'Unterfranken'
+    UNION
+    SELECT 907, 'Schwaben'
+    ) a
+WHERE NOT EXISTS (SELECT * FROM "landtagswahlen".regierungsbezirke);
+
+CREATE TABLE IF NOT EXISTS "landtagswahlen".regierungsbezirk_wahlinfo (
+	regierungsbezirk_id smallint NOT NULL,
+	wahl_id smallint NOT NULL,
+	anzahlListenmandate smallint NOT NULL DEFAULT 0,
+	FOREIGN KEY (regierungsbezirk_id) REFERENCES "landtagswahlen".regierungsbezirke(id) ON DELETE CASCADE,
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE,
+	PRIMARY KEY (regierungsbezirk_id, wahl_id)
+);
+INSERT INTO "landtagswahlen".regierungsbezirk_wahlinfo (regierungsbezirk_id, wahl_id, anzahlListenmandate)
+SELECT a.*
+FROM (
+    SELECT 901, 1, 30
+    UNION
+    SELECT 902, 1, 9
+    UNION
+    SELECT 903, 1, 8
+    UNION
+    SELECT 904, 1, 8
+    UNION
+    SELECT 905, 1, 12
+    UNION
+    SELECT 906, 1, 9
+    UNION
+    SELECT 907, 1, 13
+		UNION
+		SELECT 901, 2, 30
+		UNION 
+		SELECT 902, 2, 9
+		UNION
+		SELECT 903, 2, 8
+		UNION
+		SELECT 904, 2, 8
+		UNION
+		SELECT 905, 2, 12
+		UNION
+		SELECT 906, 2, 10
+		UNION
+		SELECT 907, 2, 13
+    ) a
+WHERE NOT EXISTS (SELECT * FROM "landtagswahlen".regierungsbezirk_wahlinfo);
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".listen (
 	kandidat_id int NOT NULL, -- Partei ergibt sich durch Kandidat
@@ -95,15 +156,6 @@ CREATE OR REPLACE VIEW "landtagswahlen".direktmandat_anzahl AS (
 				) dk
 			JOIN "landtagswahlen".stimmkreise sk ON sk.id = dk.stimmkreis_id
 	GROUP BY sk.regierungsbezirk_id, dk.wahl_id
-);
-
-CREATE TABLE IF NOT EXISTS "landtagswahlen".regierungsbezirk_wahlinfo (
-	regierungsbezirk_id smallint NOT NULL,
-	wahl_id smallint NOT NULL,
-	anzahlListenmandate smallint NOT NULL DEFAULT 0,
-	FOREIGN KEY (regierungsbezirk_id) REFERENCES "landtagswahlen".regierungsbezirke(id) ON DELETE CASCADE,
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE,
-	PRIMARY KEY (regierungsbezirk_id, wahl_id)
 );
 
 -- Berechnung der #Wahlberechtigten pro Regierungsbezirk statt Speicherung
