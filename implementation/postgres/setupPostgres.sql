@@ -157,6 +157,13 @@ CREATE OR REPLACE VIEW "landtagswahlen".direktmandat_anzahl AS (
 	GROUP BY sk.regierungsbezirk_id, dk.wahl_id
 );
 
+CREATE OR REPLACE VIEW "landtagswahlen".gesamtmandat_anzahl AS (
+    SELECT dm.regierungsbezirk_id, dm.wahl_id, dm.anzahl + rwi.anzahllistenmandate as anzahl
+    FROM "landtagswahlen".direktmandat_anzahl dm
+        JOIN "landtagswahlen".regierungsbezirk_wahlinfo rwi
+            ON rwi.regierungsbezirk_id = dm.regierungsbezirk_id AND rwi.wahl_id = dm.wahl_id
+);
+
 -- Berechnung der #Wahlberechtigten pro Regierungsbezirk statt Speicherung
 CREATE OR REPLACE VIEW "landtagswahlen".regierungsbezirk_wahlberechtigte AS (
 	SELECT rb.id, rb."name", skw.wahl_id, sum(skw.anzahlWahlberechtigte)
