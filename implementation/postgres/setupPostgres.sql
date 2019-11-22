@@ -307,6 +307,18 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".ungueltige_zweitstimmen 
     )
 );
 
+CREATE OR REPLACE VIEW "landtagswahlen".gewonnene_direktmandate (stimmkreis_id, wahl_id, kandidat_id) AS (
+	    SELECT dk.stimmkreis_id, dk.wahl_id, dk.direktkandidat_id
+    FROM "landtagswahlen".direktkandidaten dk
+        JOIN "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
+        ON dk.wahl_id = kgs.wahl_id AND dk.stimmkreis_id = kgs.stimmkreis_id AND dk.direktkandidat_id = kgs.kandidat_id
+    WHERE NOT EXISTS (
+        SELECT *
+        FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs2
+        WHERE kgs.stimmkreis_id = kgs2.stimmkreis_id AND kgs.wahl_id = kgs2.wahl_id AND kgs2.anzahl > kgs.anzahl
+    )
+);
+
 -- TODO: Mandatsberechnungsfkt implementieren
 --DROP MATERIALIZED VIEW "landtagswahlen".direktmandate;
 --CREATE MATERIALIZED VIEW "landtagswahlen".direktmandate AS (
