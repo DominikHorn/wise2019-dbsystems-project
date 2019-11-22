@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".direktkandidaten (
 );
 
 CREATE OR REPLACE VIEW "landtagswahlen".direktmandat_anzahl AS (
-	SELECT sk.regierungsbezirk_id, dk.wahl_id, count(*)
+	SELECT sk.regierungsbezirk_id, dk.wahl_id, count(*) as anzahl
 	FROM (
 						SELECT stimmkreis_id, wahl_id
 						FROM "landtagswahlen".direktkandidaten
