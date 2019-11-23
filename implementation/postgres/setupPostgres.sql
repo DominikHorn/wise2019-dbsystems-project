@@ -102,16 +102,25 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".listen (
 	PRIMARY KEY (kandidat_id, wahl_id)
 );
 
--- Refresh am Ende der LW mit: REFRESH MATERIALIZED VIEW "landtagswahlen".finaleliste;
--- CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".finaleliste AS (
--- 	-- TODO: definiere query wenn klar wie sich das errechnet
--- 	SELECT *
--- 	FROM "landtagswahlen".listen
--- );
+-- Summe aller Stimmen die ein kandidat erhalten hat pro regierungsbezirk und wahl. TODO: ggf materialisieren
+CREATE OR REPLACE VIEW "landtagswahlen".gesamtstimmen_pro_kandidat (wahl_id, regierungsbezirk_id, kandidat_id, anzahl) AS (
+	SELECT kgs.wahl_id, sk.regierungsbezirk_id, kgs.kandidat_id, sum(kgs.anzahl)
+	FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
+			JOIN "landtagswahlen".stimmkreise sk ON sk.id = kgs.stimmkreis_id
+	GROUP BY kgs.wahl_id, sk.regierungsbezirk_id, kgs.kandidat_id
+);
+
+-- Listenplätze nach auszählung. TODO: ggf materialisieren
+CREATE OR REPLACE VIEW "landtagswahlen".finaleliste (wahl_id, regierungsbezirk_id, kandidat_id, finalerListenplatz) AS (
+	SELECT gpk.wahl_id, gpk.regierungsbezirk_id, k.id, row_number() over (
+			PARTITION BY gpk.wahl_id, gpk.regierungsbezirk_id, k.partei_id
+			ORDER BY gpk.anzahl DESC
+	) as finalerListenplatz, k.name, k.partei_id
+	FROM "landtagswahlen".gesamtstimmen_pro_kandidat gpk JOIN "landtagswahlen".kandidaten k ON gpk.kandidat_id = k.id
+);
 
 -- Mangels nicht existierenden Daten werden Stimmbezirke nicht als relation repräsentiert;
 -- Somit entfaellt auch die Modelierung von Direktregionen
-
 -- Abbildung "Stimmkreis"-Entität
 CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreise (
 	id smallint NOT NULL PRIMARY KEY, -- Schluessel_Nummer in csv
