@@ -247,58 +247,73 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".aggregiert_ungueltige_zweitstimmen (
 	PRIMARY KEY (stimmkreis_id, wahl_id)
 );
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".kandidatgebundene_gueltige_stimmen (stimmkreis_id, wahl_id, kandidat_id, anzahl) AS (
-	(
-		SELECT egks.stimmkreis_id, egks.wahl_id, egks.kandidat_id, count(*)
-		FROM "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen egks
-		GROUP BY egks.stimmkreis_id, egks.wahl_id, egks.kandidat_id
-	)
-	UNION ALL
-	(
-		SELECT agks.stimmkreis_id, agks.wahl_id, agks.kandidat_id, agks.anzahl
-		FROM "landtagswahlen".aggregiert_gueltige_kandidatgebundene_stimmen agks
-	)
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".kandidatgebundene_gueltige_stimmen (wahl_id, stimmkreis_id, kandidat_id, anzahl) AS (
+	SELECT kgs.wahl_id, kgs.stimmkreis_id, kgs.kandidat_id, sum(anzahl) as anzahl
+	FROM (
+		(
+			SELECT egks.wahl_id, egks.stimmkreis_id, egks.kandidat_id, count(*) as anzahl
+			FROM "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen egks
+			GROUP BY egks.stimmkreis_id, egks.wahl_id, egks.kandidat_id
+		)
+		UNION ALL
+		(
+			SELECT agks.wahl_id, agks.stimmkreis_id, agks.kandidat_id, agks.anzahl
+			FROM "landtagswahlen".aggregiert_gueltige_kandidatgebundene_stimmen agks
+		)
+	) kgs
+	GROUP BY kgs.wahl_id, kgs.stimmkreis_id, kgs.kandidat_id 
 );
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".listengebundene_gueltige_stimmen (stimmkreis_id, wahl_id, partei_id, anzahl) AS (
-	(
-		SELECT egls.stimmkreis_id, egls.wahl_id, egls.partei_id, count(*)
-		FROM "landtagswahlen".einzel_gueltige_listengebundene_stimmen egls
-		GROUP BY egls.stimmkreis_id, egls.wahl_id, egls.partei_id
-	)
-	UNION ALL
-	(
-		SELECT agls.stimmkreis_id, agls.wahl_id, agls.partei_id, agls.anzahl
-		FROM "landtagswahlen".aggregiert_gueltige_listengebundene_stimmen agls
-	)
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".listengebundene_gueltige_stimmen (wahl_id, stimmkreis_id, partei_id, anzahl) AS (
+	SELECT lgs.wahl_id, lgs.stimmkreis_id, lgs.partei_id, sum(anzahl) as anzahl
+	FROM (
+		(
+			SELECT egls.wahl_id, egls.stimmkreis_id, egls.partei_id, count(*) as anzahl
+			FROM "landtagswahlen".einzel_gueltige_listengebundene_stimmen egls
+			GROUP BY egls.stimmkreis_id, egls.wahl_id, egls.partei_id
+		)
+		UNION ALL
+		(
+			SELECT agls.wahl_id, agls.stimmkreis_id, agls.partei_id, agls.anzahl
+			FROM "landtagswahlen".aggregiert_gueltige_listengebundene_stimmen agls
+		)
+	) lgs
+	GROUP BY lgs.wahl_id, lgs.stimmkreis_id, lgs.partei_id
 );
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".ungueltige_erststimmen AS (
-	(
-		SELECT eue.stimmkreis_id, eue.wahl_id, count(*)
-		FROM "landtagswahlen".einzel_ungueltige_erststimmen eue
-		GROUP BY eue.stimmkreis_id, eue.wahl_id
-	)
-	UNION ALL
-	(
-		SELECT aue.stimmkreis_id, aue.wahl_id, aue.anzahl
-		FROM "landtagswahlen".aggregiert_ungueltige_erststimmen aue
-	)
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".ungueltige_erststimmen (wahl_id, stimmkreis_id, anzahl) AS (
+	SELECT ue.wahl_id, ue.stimmkreis_id, sum(anzahl) as anzahl
+	FROM (
+		(
+			SELECT eue.wahl_id, eue.stimmkreis_id, count(*) as anzahl
+			FROM "landtagswahlen".einzel_ungueltige_erststimmen eue
+			GROUP BY eue.stimmkreis_id, eue.wahl_id
+		)
+		UNION ALL
+		(
+			SELECT aue.wahl_id, aue.stimmkreis_id, aue.anzahl
+			FROM "landtagswahlen".aggregiert_ungueltige_erststimmen aue
+		)
+	) ue
+	GROUP BY ue.wahl_id, ue.stimmkreis_id
 );
 
-CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".ungueltige_zweitstimmen (stimmkreis_id, wahl_id, anzahl) AS (
-	(
-		SELECT euz.stimmkreis_id, euz.wahl_id, count(*)
-		FROM "landtagswahlen".einzel_ungueltige_zweitstimmen euz
-		GROUP BY euz.stimmkreis_id, euz.wahl_id
-	)
-	UNION ALL
-	(
-		SELECT auz.stimmkreis_id, auz.wahl_id, auz.anzahl
-		FROM "landtagswahlen".aggregiert_ungueltige_zweitstimmen auz
-	)
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".ungueltige_zweitstimmen (wahl_id, stimmkreis_id, anzahl) AS (
+	SELECT uz.wahl_id, uz.stimmkreis_id, sum(uz.anzahl) as anzahl
+	FROM (
+			(
+			SELECT euz.wahl_id, euz.stimmkreis_id, count(*) as anzahl
+			FROM "landtagswahlen".einzel_ungueltige_zweitstimmen euz
+			GROUP BY euz.stimmkreis_id, euz.wahl_id
+		)
+		UNION ALL
+		(
+			SELECT auz.wahl_id, auz.stimmkreis_id, auz.anzahl
+			FROM "landtagswahlen".aggregiert_ungueltige_zweitstimmen auz
+		)
+	) uz
+	GROUP BY uz.wahl_id, uz.stimmkreis_id
 );
-
 
 -- Summe aller Stimmen die ein kandidat erhalten hat pro regierungsbezirk und wahl. TODO: ggf materialisieren
 CREATE OR REPLACE VIEW "landtagswahlen".gesamtstimmen_pro_kandidat (wahl_id, regierungsbezirk_id, kandidat_id, anzahl) AS (
