@@ -328,13 +328,6 @@ CREATE OR REPLACE VIEW "landtagswahlen".gewonnene_direktmandate (stimmkreis_id, 
     )
 );
 
--- TODO: Mandatsberechnungsfkt implementieren
---DROP MATERIALIZED VIEW "landtagswahlen".direktmandate;
---CREATE MATERIALIZED VIEW "landtagswahlen".direktmandate AS (
---	SELECT id
---	FROM kandidaten
---	LIMIT 1
---);
 --DROP MATERIALIZED VIEW "landtagswahlen".listenmandate;
 --CREATE MATERIALIZED VIEW "landtagswahlen".listenmandate AS (
 --	SELECT id
