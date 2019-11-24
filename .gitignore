@@ -38,6 +38,7 @@ usecase.*
 !usecase.mp
 !architecture.pdf
 !Mock.pdf
+!Hausaufgabe5_Beschreibung.pdf
 
 # Implementation specific files
 implementation/postgres/start_postgres.sh
