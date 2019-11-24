@@ -11,6 +11,7 @@ type Mutation {
     wahldatum: Date!
     aggregiert: Boolean!
   ): Boolean
+  computeElectionResults: Boolean
 }
 
 type Wahl {

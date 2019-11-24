@@ -30,6 +30,10 @@ import { renderLoading } from "../../guiUtil";
 import { withErrorBoundary } from "../general/ErrorBoundary";
 import { FilePickerComponent } from "../general/FilePickerComponent";
 import "./WahlleiterPage.css";
+import {
+  withComputeElectionResultsMutation,
+  IComputeElectionResultsMutationHocProps
+} from "../../../graphql/wahlleiter/computeElectionResultsMutation";
 
 export interface IWahlleiterPageProps {
   routeProps: RouteComponentProps<any>;
@@ -39,10 +43,12 @@ interface IProps
   extends IWahlleiterPageProps,
     FormComponentProps,
     IImportCSVDataMutationHocProps,
+    IComputeElectionResultsMutationHocProps,
     IGetAllWahlenQueryHocProps {}
 
 interface IState {
   modalVisible: boolean;
+  voteComputationLoading: boolean;
   uploadLoading: boolean;
 }
 
@@ -51,14 +57,33 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
     super(props);
     this.state = {
       modalVisible: false,
+      voteComputationLoading: false,
       uploadLoading: false
     };
   }
 
-  private onCancel = () =>
+  private onComputeElectionResults = () => {
+    this.setState({ voteComputationLoading: true });
+    this.props
+      .computeElectionResults({})
+      .then(res => {
+        this.setState({ voteComputationLoading: false });
+        if (res && res.data.success) {
+          message.success(`Successfully computed election results`);
+        } else {
+          message.error(`Server refused to compute election results`);
+        }
+      })
+      .catch(err => {
+        this.setState({ voteComputationLoading: false });
+        message.error(`Failed to compute election results: ${err}`);
+      });
+  };
+
+  private onCancelUploadModal = () =>
     this.setState({ modalVisible: false }, this.props.form.resetFields);
 
-  private handleSubmit = (e: React.FormEvent<any>) => {
+  private handleSubmitUploadModal = (e: React.FormEvent<any>) => {
     // No further propagation
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
@@ -99,7 +124,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
       options?: GetFieldDecoratorOptions
     ) => (node: React.ReactNode) => React.ReactNode
   ) => (
-    <Form onSubmit={this.handleSubmit}>
+    <Form onSubmit={this.handleSubmitUploadModal}>
       <Form.Item label={"Wahldatum"}>
         {getFieldDecorator("wahldatum", {
           rules: [
@@ -179,7 +204,6 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
     <>
       <Button
         type={"primary"}
-        style={{ float: "right" }}
         onClick={() =>
           this.setState({ modalVisible: !this.state.modalVisible })
         }
@@ -189,9 +213,13 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
       <Modal
         title={"CSV Importieren"}
         visible={this.state.modalVisible}
-        onCancel={this.onCancel}
+        onCancel={this.onCancelUploadModal}
         footer={[
-          <Button key={"discard"} icon={"delete"} onClick={this.onCancel}>
+          <Button
+            key={"discard"}
+            icon={"delete"}
+            onClick={this.onCancelUploadModal}
+          >
             Verwerfen
           </Button>,
           <Button
@@ -199,7 +227,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
             icon={"cloud-upload-o"}
             type={"primary"}
             loading={this.state.uploadLoading}
-            onClick={this.handleSubmit}
+            onClick={this.handleSubmitUploadModal}
           >
             Bestätigen
           </Button>
@@ -226,6 +254,15 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
           justify={"center"}
           style={{ marginTop: "15px" }}
         >
+          <Col>
+            <Button
+              type={"primary"}
+              onClick={this.onComputeElectionResults}
+              loading={this.state.voteComputationLoading}
+            >
+              Ergebnisse berechnen
+            </Button>
+          </Col>
           <Col>{this.renderUploadModal(getFieldDecorator)}</Col>
           <Col>
             <Button
@@ -246,6 +283,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
 
 const WahlleiterPageComponentWithGraphQL = compose(
   withImportCSVDataMutation<IWahlleiterPageProps>(),
+  withComputeElectionResultsMutation<IWahlleiterPageProps>(),
   withAllWahlenQuery<IWahlleiterPageProps>()
 )(WahlleiterPageComponent);
 

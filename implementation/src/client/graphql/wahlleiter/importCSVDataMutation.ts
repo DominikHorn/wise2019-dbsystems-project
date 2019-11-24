@@ -1,4 +1,3 @@
-import { DataProxy } from "apollo-cache";
 import gql from "graphql-tag";
 import { FetchResult } from "react-apollo";
 import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
@@ -21,7 +20,7 @@ interface IImportCSVDataMutationResponse extends IGraphqlType {
   readonly success?: boolean;
 }
 
-interface IImportCSVDataMutationVariables {
+export interface IImportCSVDataMutationVariables {
   readonly files: File[];
   readonly wahldatum: Date;
   readonly aggregiert: boolean;
