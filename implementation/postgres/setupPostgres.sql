@@ -554,7 +554,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_listenmandate 
 			)
 		ORDER BY zl1.partei_id
 	)
-	SELECT flf.wahl_id, flf.regierungsbezirk_id, k.id, k.name, k.partei_id, lpp.zusatzmandate
+	SELECT flf.wahl_id, flf.regierungsbezirk_id, k.id, lpp.zusatzmandate
 	FROM (
 			-- recalculate row number after excluding direkt_mandat gewinner to be able to check with <= predicate who won a listenmandat
 			SELECT fl.wahl_id, fl.regierungsbezirk_id, fl.kandidat_id, row_number() OVER (
