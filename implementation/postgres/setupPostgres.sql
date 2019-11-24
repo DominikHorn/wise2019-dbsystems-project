@@ -456,19 +456,20 @@ STABLE;
 
 -- Der Gewinner/Direktkandidate jedes Stimmkreises
 CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_direktmandate (wahl_id, stimmkreis_id, kandidat_id) AS (
-	WITH gesamtstimmen (wahl_id, regierungsbezirk_id, anzahl) AS (
-		SELECT wahl_id, regierungsbezirk_id, sum(anzahl)
+	WITH gesamtstimmen (wahl_id, anzahl) AS (
+		SELECT wahl_id, sum(anzahl)
 		FROM "landtagswahlen".gesamtstimmen_pro_partei
-		GROUP BY wahl_id, regierungsbezirk_id
+		GROUP BY wahl_id
 	),
 	-- Die Parteien, welche nicht gesperrt sind für die Wahl
-	nicht_gesperrte_parteien (wahl_id, regierungsbezirk_id, partei_id) AS (
-		SELECT gspp.wahl_id, gspp.regierungsbezirk_id, gspp.partei_id
-		FROM "landtagswahlen".gesamtstimmen_pro_partei gspp
-			JOIN gesamtstimmen gs
-				ON gs.wahl_id = gspp.wahl_id
-					AND gs.regierungsbezirk_id = gspp.regierungsbezirk_id
-
+	nicht_gesperrte_parteien (wahl_id, partei_id) AS (
+		SELECT gspp.wahl_id, gspp.partei_id
+		FROM (
+				SELECT wahl_id, partei_id, sum(anzahl) as anzahl
+				FROM "landtagswahlen".gesamtstimmen_pro_partei 
+				GROUP BY wahl_id, partei_id
+			) gspp
+			JOIN gesamtstimmen gs ON gs.wahl_id = gspp.wahl_id
 		WHERE gspp.anzahl / gs.anzahl >= 0.05
 	),
 	nicht_gesperrte_direktkandidaten (wahl_id, stimmkreis_id, kandidat_id, stimmanzahl) AS (
