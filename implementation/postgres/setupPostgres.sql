@@ -445,16 +445,47 @@ CREATE OR REPLACE VIEW "landtagswahlen".zustehende_mandate (wahl_id, regierungsb
 	FROM sitzquoten sq
 );
 
--- Der Gewinner/Direktkandidate jedes stimmkreises
+-- Der Gewinner/Direktkandidate jedes Stimmkreises
 CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_direktmandate (wahl_id, stimmkreis_id, kandidat_id) AS (
-	SELECT  dk.wahl_id, dk.stimmkreis_id, dk.direktkandidat_id
-	FROM "landtagswahlen".direktkandidaten dk
-		JOIN "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
-		ON dk.wahl_id = kgs.wahl_id AND dk.stimmkreis_id = kgs.stimmkreis_id AND dk.direktkandidat_id = kgs.kandidat_id
-	WHERE NOT EXISTS (
+	WITH gesamtstimmen (wahl_id, regierungsbezirk_id, anzahl) AS (
+		SELECT wahl_id, regierungsbezirk_id, sum(anzahl)
+		FROM "landtagswahlen".gesamtstimmen_pro_partei
+		GROUP BY wahl_id, regierungsbezirk_id
+	),
+	-- Die Parteien, welche nicht gesperrt sind für die Wahl
+	nicht_gesperrte_parteien (wahl_id, regierungsbezirk_id, partei_id) AS (
+		SELECT gspp.wahl_id, gspp.regierungsbezirk_id, gspp.partei_id
+		FROM "landtagswahlen".gesamtstimmen_pro_partei gspp
+			JOIN gesamtstimmen gs
+				ON gs.wahl_id = gspp.wahl_id
+					AND gs.regierungsbezirk_id = gspp.regierungsbezirk_id
+
+		WHERE gspp.anzahl / gs.anzahl >= 0.05
+	),
+	nicht_gesperrte_direktkandidaten (wahl_id, stimmkreis_id, kandidat_id, stimmanzahl) AS (
+		SELECT dk.wahl_id, dk.stimmkreis_id, dk.direktkandidat_id, kgs.anzahl
+		FROM "landtagswahlen".direktkandidaten dk
+			JOIN "landtagswahlen".kandidaten k
+				ON k.id = dk.direktkandidat_id
+			JOIN "landtagswahlen".stimmkreise sk
+				ON sk.id = dk.stimmkreis_id
+			JOIN "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
+				ON kgs.kandidat_id = dk.direktkandidat_id
+					AND kgs.wahl_id = dk.wahl_id
+					AND kgs.stimmkreis_id = dk.stimmkreis_id
+			JOIN nicht_gesperrte_parteien ngp
+				ON ngp.wahl_id = dk.wahl_id
+					AND ngp.regierungsbezirk_id = sk.regierungsbezirk_id
+					AND ngp.partei_id = k.partei_id
+	)
+	SELECT ngd1.wahl_id, ngd1.stimmkreis_id, ngd1.kandidat_id
+	FROM nicht_gesperrte_direktkandidaten ngd1
+	WHERE NOT EXISTS(
 		SELECT *
-		FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs2
-		WHERE kgs.stimmkreis_id = kgs2.stimmkreis_id AND kgs.wahl_id = kgs2.wahl_id AND kgs2.anzahl > kgs.anzahl
+		FROM nicht_gesperrte_direktkandidaten ngd2
+		WHERE ngd1.wahl_id = ngd2.wahl_id
+			AND ngd1.stimmkreis_id = ngd2.stimmkreis_id
+			AND ngd2.stimmanzahl > ngd1.stimmanzahl
 	)
 );
 
