@@ -359,13 +359,29 @@ CREATE OR REPLACE FUNCTION zustehende_mandate(p_ausgleichsmandat_anzahl integer)
 	AS $$
 	-- Gesammtstimmen für jeden Regierungsbezirk
 	WITH gesamtstimmen (wahl_id, regierungsbezirk_id, anzahl) AS (
-		SELECT wahl_id, regierungsbezirk_id, sum(anzahl)
-		FROM "landtagswahlen".gesamtstimmen_pro_partei
-		GROUP BY wahl_id, regierungsbezirk_id
+    SELECT wahl_id, regierungsbezirk_id, sum(anzahl)
+    FROM "landtagswahlen".gesamtstimmen_pro_partei
+    GROUP BY wahl_id, regierungsbezirk_id
+	),
+	-- Die Parteien, welche nicht gesperrt sind für die Wahl
+	nicht_gesperrte_parteien (wahl_id, partei_id) AS (
+		SELECT gspp.wahl_id, gspp.partei_id
+		FROM (
+						SELECT wahl_id, partei_id, sum(anzahl) as anzahl
+						FROM "landtagswahlen".gesamtstimmen_pro_partei
+						GROUP BY wahl_id, partei_id
+			) gspp
+			-- Gesammtstimmen gruppiert für Sperrberechnung (hier zählen alle regierungsbezirke und nicht nur der momentane!)
+			JOIN (
+				SELECT wahl_id, sum(anzahl) as anzahl
+				FROM "landtagswahlen".gesamtstimmen_pro_partei
+				GROUP BY wahl_id
+			) gs ON gs.wahl_id = gspp.wahl_id
+		WHERE gspp.anzahl / gs.anzahl >= 0.05
 	),
 	-- Anzahl der regulären mandate (direkt + liste) die in einem Regierungsbezirk zu vergeben sind
 	gesamtmandat_anzahl (regierungsbezirk_id, wahl_id, anzahl) AS (
-		SELECT dm.regierungsbezirk_id, dm.wahl_id, dm.anzahl + rwi.anzahllistenmandate + p_ausgleichsmandat_anzahl as anzahl
+		SELECT dm.regierungsbezirk_id, dm.wahl_id, dm.anzahl + rwi.anzahllistenmandate as anzahl
 		FROM "landtagswahlen".direktmandat_anzahl dm
 			JOIN "landtagswahlen".regierungsbezirk_wahlinfo rwi
 				ON rwi.regierungsbezirk_id = dm.regierungsbezirk_id AND rwi.wahl_id = dm.wahl_id
@@ -382,10 +398,12 @@ CREATE OR REPLACE FUNCTION zustehende_mandate(p_ausgleichsmandat_anzahl integer)
 	sperrklausel_stimmen (wahl_id, regierungsbezirk_id, anzahl) AS (
 		SELECT gspp.wahl_id, gspp.regierungsbezirk_id, sum(gspp.anzahl) as anzahl
 		FROM "landtagswahlen".gesamtstimmen_pro_partei gspp
-			JOIN stimmanteile sat
-				ON sat.wahl_id = gspp.wahl_id AND sat.partei_id = gspp.partei_id AND
-					sat.regierungsbezirk_id = gspp.regierungsbezirk_id
-		WHERE sat.stimmanteil < 0.05
+		WHERE NOT EXISTS (
+			SELECT *
+			FROM nicht_gesperrte_parteien ngp
+			WHERE gspp.wahl_id = ngp.wahl_id
+				AND gspp.partei_id = ngp.partei_id
+		)
 		GROUP BY gspp.wahl_id, gspp.regierungsbezirk_id
 	),
 	-- Gesamtstimmen pro Regierungsbezirk exclusive Sperrklausel Stimmen
@@ -400,12 +418,17 @@ CREATE OR REPLACE FUNCTION zustehende_mandate(p_ausgleichsmandat_anzahl integer)
 		SELECT bgs.wahl_id, bgs.regierungsbezirk_id, gspp.partei_id, gma.anzahl * gspp.anzahl / bgs.anzahl as quote
 		FROM bereinigte_gesamtstimmen bgs
 			JOIN gesamtstimmen gs
-						ON gs.wahl_id = bgs.wahl_id AND gs.regierungsbezirk_id = bgs.regierungsbezirk_id
+				ON gs.wahl_id = bgs.wahl_id 
+					AND gs.regierungsbezirk_id = bgs.regierungsbezirk_id
 			JOIN "landtagswahlen".gesamtstimmen_pro_partei gspp
-						ON gspp.wahl_id = bgs.wahl_id AND gspp.regierungsbezirk_id = bgs.regierungsbezirk_id
+				ON gspp.wahl_id = bgs.wahl_id
+					AND gspp.regierungsbezirk_id = bgs.regierungsbezirk_id
+			JOIN nicht_gesperrte_parteien ngp
+				ON gspp.wahl_id = ngp.wahl_id
+					AND gspp.partei_id = ngp.partei_id
 			JOIN gesamtmandat_anzahl gma
-						ON gma.wahl_id = bgs.wahl_id AND gma.regierungsbezirk_id = bgs.regierungsbezirk_id
-		WHERE gspp.anzahl >= 0.05 * gs.anzahl
+				ON gma.wahl_id = bgs.wahl_id
+					AND gma.regierungsbezirk_id = bgs.regierungsbezirk_id
 	),
 	-- Durch abrunden bleiben Sitze übrig. Damit Verfahren summenerhaltend ist werden übrige Mandate verteilt:
 	uebgrigemandate (wahl_id, regierungsbezirk_id, anzahl) AS (
