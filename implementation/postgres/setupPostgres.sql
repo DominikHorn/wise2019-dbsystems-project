@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".direktkandidaten (
 	PRIMARY KEY (stimmkreis_id, wahl_id, direktkandidat_id)
 );
 
-CREATE OR REPLACE VIEW "landtagswahlen".direktmandat_anzahl AS (
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".direktmandat_anzahl AS (
 	SELECT sk.regierungsbezirk_id, dk.wahl_id, count(*) as anzahl
 	FROM (
 						SELECT stimmkreis_id, wahl_id
@@ -147,13 +147,6 @@ CREATE OR REPLACE VIEW "landtagswahlen".direktmandat_anzahl AS (
 				) dk
 			JOIN "landtagswahlen".stimmkreise sk ON sk.id = dk.stimmkreis_id
 	GROUP BY sk.regierungsbezirk_id, dk.wahl_id
-);
-
-CREATE OR REPLACE VIEW "landtagswahlen".gesamtmandat_anzahl AS (
-    SELECT dm.regierungsbezirk_id, dm.wahl_id, dm.anzahl + rwi.anzahllistenmandate as anzahl
-    FROM "landtagswahlen".direktmandat_anzahl dm
-        JOIN "landtagswahlen".regierungsbezirk_wahlinfo rwi
-            ON rwi.regierungsbezirk_id = dm.regierungsbezirk_id AND rwi.wahl_id = dm.wahl_id
 );
 
 -- Berechnung der #Wahlberechtigten pro Regierungsbezirk statt Speicherung
@@ -315,24 +308,145 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".ungueltige_zweitstimmen 
 	GROUP BY uz.wahl_id, uz.stimmkreis_id
 );
 
--- Summe aller Stimmen die ein kandidat erhalten hat pro regierungsbezirk und wahl. TODO: ggf materialisieren
-CREATE OR REPLACE VIEW "landtagswahlen".gesamtstimmen_pro_kandidat (wahl_id, regierungsbezirk_id, kandidat_id, anzahl) AS (
-	SELECT kgs.wahl_id, sk.regierungsbezirk_id, kgs.kandidat_id, sum(kgs.anzahl)
-	FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
-		JOIN "landtagswahlen".stimmkreise sk ON sk.id = kgs.stimmkreis_id
-	GROUP BY kgs.wahl_id, sk.regierungsbezirk_id, kgs.kandidat_id
-);
-
--- Listenplätze nach auszählung. TODO: ggf materialisieren
-CREATE OR REPLACE VIEW "landtagswahlen".finaleliste (wahl_id, regierungsbezirk_id, kandidat_id, finalerListenplatz) AS (
+-- Listenplätze nach Auszählung; Materialisiert weil schnell, eigene view weil später evtl interessant
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".finaleliste (wahl_id, regierungsbezirk_id, kandidat_id, finalerListenplatz) AS (
+	-- Summe aller Stimmen die ein kandidat erhalten hat pro regierungsbezirk und wahl.
+	WITH gesamtstimmen_pro_kandidat (wahl_id, regierungsbezirk_id, kandidat_id, anzahl) AS (
+		SELECT kgs.wahl_id, sk.regierungsbezirk_id, kgs.kandidat_id, sum(kgs.anzahl)
+		FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
+			JOIN "landtagswahlen".stimmkreise sk ON sk.id = kgs.stimmkreis_id
+		GROUP BY kgs.wahl_id, sk.regierungsbezirk_id, kgs.kandidat_id
+	) 
 	SELECT gpk.wahl_id, gpk.regierungsbezirk_id, k.id, row_number() over (
 		PARTITION BY gpk.wahl_id, gpk.regierungsbezirk_id, k.partei_id
 		ORDER BY gpk.anzahl DESC
 	) as finalerListenplatz
-	FROM "landtagswahlen".gesamtstimmen_pro_kandidat gpk JOIN "landtagswahlen".kandidaten k ON gpk.kandidat_id = k.id
+	FROM gesamtstimmen_pro_kandidat gpk JOIN "landtagswahlen".kandidaten k ON gpk.kandidat_id = k.id
 );
 
-CREATE OR REPLACE VIEW "landtagswahlen".gewonnene_direktmandate (wahl_id, stimmkreis_id, kandidat_id) AS (
+-- Summe von kandidatengebundenen und listengebundenen stimmen pro partei
+CREATE OR REPLACE VIEW "landtagswahlen".gesamtstimmen_pro_partei (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
+	-- Anzahl kandidatengebundener erst+zweitstimmen pro partei
+	WITH kandidatgebundene_gesamtstimmen_pro_partei (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
+		SELECT kgs.wahl_id, sk.regierungsbezirk_id, k.partei_id, sum(kgs.anzahl)
+		FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
+			JOIN "landtagswahlen".stimmkreise sk ON sk.id = kgs.stimmkreis_id
+			JOIN "landtagswahlen".kandidaten k ON k.id = kgs.kandidat_id
+		GROUP BY kgs.wahl_id, sk.regierungsbezirk_id, k.partei_id
+	),
+	-- Anzahl stimmen für die liste/den Wahlvorschlag pro partei
+	listengebundene_gesamtstimmen_pro_partei (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
+		SELECT lgs.wahl_id, sk.regierungsbezirk_id, lgs.partei_id, sum(lgs.anzahl)
+		FROM "landtagswahlen".listengebundene_gueltige_stimmen lgs
+			JOIN "landtagswahlen".stimmkreise sk ON sk.id = lgs.stimmkreis_id
+		GROUP BY lgs.wahl_id, sk.regierungsbezirk_id, lgs.partei_id
+	)
+	SELECT kggs.wahl_id, kggs.regierungsbezirk_id, kggs.partei_id, kggs.anzahl + lggs.anzahl as anzahl
+	FROM kandidatgebundene_gesamtstimmen_pro_partei kggs
+		JOIN listengebundene_gesamtstimmen_pro_partei lggs
+			ON lggs.regierungsbezirk_id = kggs.regierungsbezirk_id AND lggs.partei_id = kggs.partei_id AND
+				lggs.wahl_id = kggs.wahl_id
+);
+
+-- Anzahl der Mandate die einer Partei in einem Regierungsbezirk zustehenden würden nach Hare-Niemeyer
+CREATE OR REPLACE VIEW "landtagswahlen".zustehende_mandate (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
+	-- Gesammtstimmen für jeden Regierungsbezirk
+	WITH gesamtstimmen (wahl_id, regierungsbezirk_id, anzahl) AS (
+		SELECT wahl_id, regierungsbezirk_id, sum(anzahl)
+		FROM "landtagswahlen".gesamtstimmen_pro_partei
+		GROUP BY wahl_id, regierungsbezirk_id
+	), 
+	-- Anzahl der regulären mandate (direkt + liste) die in einem Regierungsbezirk zu vergeben sind
+	gesamtmandat_anzahl (regierungsbezirk_id, wahl_id, anzahl) AS (
+    SELECT dm.regierungsbezirk_id, dm.wahl_id, dm.anzahl + rwi.anzahllistenmandate as anzahl
+    FROM "landtagswahlen".direktmandat_anzahl dm
+        JOIN "landtagswahlen".regierungsbezirk_wahlinfo rwi
+            ON rwi.regierungsbezirk_id = dm.regierungsbezirk_id AND rwi.wahl_id = dm.wahl_id
+	),
+	-- Prozentualer Stimmanteil jeder Partei in Regierungsbezirken
+	stimmanteile (wahl_id, regierungsbezirk_id, partei_id, stimmanteil) AS (
+		SELECT gs.wahl_id, gs.regierungsbezirk_id, gspp.partei_id, gspp.anzahl / gs.anzahl as stimmanteil
+		FROM gesamtstimmen gs
+			JOIN "landtagswahlen".gesamtstimmen_pro_partei gspp
+				ON gspp.wahl_id = gs.wahl_id AND gspp.regierungsbezirk_id = gs.regierungsbezirk_id
+	),
+	-- Anzahl der Stimmen pro Regierungsbezirk die wegen Sperrklausel wegfallen
+	sperrklausel_stimmen (wahl_id, regierungsbezirk_id, anzahl) AS (
+		SELECT gspp.wahl_id, gspp.regierungsbezirk_id, sum(gspp.anzahl) as anzahl
+		FROM "landtagswahlen".gesamtstimmen_pro_partei gspp
+			JOIN stimmanteile sat
+				ON sat.wahl_id = gspp.wahl_id AND sat.partei_id = gspp.partei_id AND
+					sat.regierungsbezirk_id = gspp.regierungsbezirk_id
+		WHERE sat.stimmanteil < 0.05
+		GROUP BY gspp.wahl_id, gspp.regierungsbezirk_id
+	),
+	-- Gesamtstimmen pro Regierungsbezirk exclusive Sperrklausel Stimmen
+	bereinigte_gesamtstimmen (wahl_id, regierungsbezirk_id, anzahl) AS (
+		SELECT gs.wahl_id, gs.regierungsbezirk_id, gs.anzahl - sks.anzahl
+		FROM gesamtstimmen gs
+			JOIN sperrklausel_stimmen sks
+				ON gs.regierungsbezirk_id = sks.regierungsbezirk_id AND gs.wahl_id = sks.wahl_id
+	),
+	-- Hare-Niemeyer quotas per regierungsbezirk and partei
+	sitzquoten (wahl_id, regierungsbezirk_id, partei_id, quote) AS (
+		SELECT bgs.wahl_id, bgs.regierungsbezirk_id, gspp.partei_id, gma.anzahl * gspp.anzahl / bgs.anzahl as quote
+		FROM bereinigte_gesamtstimmen bgs
+			JOIN gesamtstimmen gs
+						ON gs.wahl_id = bgs.wahl_id AND gs.regierungsbezirk_id = bgs.regierungsbezirk_id
+			JOIN "landtagswahlen".gesamtstimmen_pro_partei gspp
+						ON gspp.wahl_id = bgs.wahl_id AND gspp.regierungsbezirk_id = bgs.regierungsbezirk_id
+			JOIN gesamtmandat_anzahl gma
+						ON gma.wahl_id = bgs.wahl_id AND gma.regierungsbezirk_id = bgs.regierungsbezirk_id
+		WHERE gspp.anzahl >= 0.05 * gs.anzahl
+	),
+	-- Durch abrunden bleiben Sitze übrig. Damit Verfahren summenerhaltend ist werden übrige Mandate verteilt:
+	uebgrigemandate (wahl_id, regierungsbezirk_id, anzahl) AS (
+		SELECT sqg.wahl_id, sqg.regierungsbezirk_id, gma.anzahl - sqg.anzahl
+		FROM (
+				SELECT wahl_id, regierungsbezirk_id, sum(floor(quote)) as anzahl
+				FROM sitzquoten sq
+				GROUP BY wahl_id, regierungsbezirk_id
+			) sqg
+			JOIN gesamtmandat_anzahl gma
+				ON gma.wahl_id = sqg.wahl_id AND gma.regierungsbezirk_id = sqg.regierungsbezirk_id
+	),
+	-- Pro Wahl und Regierungsbezirk stehen hier Parteien die je einen Zusatzsitz erhalten damit die Sitzverteilung summenerhaltend bleibt
+	zusatzsitze (wahl_id, regierungsbezirk_id, partei_id) AS (
+		SELECT sqr.wahl_id, sqr.regierungsbezirk_id, sqr.partei_id
+		FROM (
+				SELECT *,
+								-- Da LIMIT keine Variablen nimmt muss man mit row_number() arbeiten
+								row_number() OVER (
+										PARTITION BY wahl_id, regierungsbezirk_id
+										ORDER BY quote - floor(quote) DESC
+										) AS row_number
+				FROM sitzquoten sq
+			) sqr
+			JOIN uebgrigemandate um
+				ON sqr.wahl_id = um.wahl_id AND sqr.regierungsbezirk_id = um.regierungsbezirk_id
+		WHERE sqr.row_number <= um.anzahl
+		ORDER BY sqr.wahl_id, sqr.regierungsbezirk_id
+	)
+	SELECT sq.wahl_id,
+		sq.regierungsbezirk_id,
+		sq.partei_id,
+		floor(sq.quote) + (
+			CASE
+				WHEN EXISTS(
+							SELECT *
+							FROM zusatzsitze zs
+							WHERE zs.wahl_id = sq.wahl_id
+								AND zs.regierungsbezirk_id = sq.regierungsbezirk_id
+								AND zs.partei_id = sq.partei_id
+					)
+					THEN 1
+				ELSE 0 END
+			)
+	FROM sitzquoten sq
+);
+
+-- Der Gewinner/Direktkandidate jedes stimmkreises
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_direktmandate (wahl_id, stimmkreis_id, kandidat_id) AS (
 	SELECT  dk.wahl_id, dk.stimmkreis_id, dk.direktkandidat_id
 	FROM "landtagswahlen".direktkandidaten dk
 		JOIN "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
@@ -344,151 +458,25 @@ CREATE OR REPLACE VIEW "landtagswahlen".gewonnene_direktmandate (wahl_id, stimmk
 	)
 );
 
--- Anzahl kandidatengebundener erst+zweitstimmen pro partei
-CREATE OR REPLACE VIEW "landtagswahlen".kandidatgebundene_gesamtstimmen_pro_partei (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
-	SELECT kgs.wahl_id, sk.regierungsbezirk_id, k.partei_id, sum(kgs.anzahl)
-	FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
-		JOIN "landtagswahlen".stimmkreise sk ON sk.id = kgs.stimmkreis_id
-		JOIN "landtagswahlen".kandidaten k ON k.id = kgs.kandidat_id
-	GROUP BY kgs.wahl_id, sk.regierungsbezirk_id, k.partei_id
-);
-
--- Anzahl stimmen für die liste/den Wahlvorschlag pro partei
-CREATE OR REPLACE VIEW "landtagswahlen".listengebundene_gesamtstimmen_pro_partei (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
-	SELECT lgs.wahl_id, sk.regierungsbezirk_id, lgs.partei_id, sum(lgs.anzahl)
-	FROM "landtagswahlen".listengebundene_gueltige_stimmen lgs
-		JOIN "landtagswahlen".stimmkreise sk ON sk.id = lgs.stimmkreis_id
-	GROUP BY lgs.wahl_id, sk.regierungsbezirk_id, lgs.partei_id
-);
-
--- Summe von kandidatengebundenen und listengebundenen stimmen pro partei
-CREATE OR REPLACE VIEW "landtagswahlen".gesamtstimmen_pro_partei (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
-	SELECT kggs.wahl_id, kggs.regierungsbezirk_id, kggs.partei_id, kggs.anzahl + lggs.anzahl as anzahl
-	FROM "landtagswahlen".kandidatgebundene_gesamtstimmen_pro_partei kggs
-		JOIN "landtagswahlen".listengebundene_gesamtstimmen_pro_partei lggs
-			ON lggs.regierungsbezirk_id = kggs.regierungsbezirk_id AND lggs.partei_id = kggs.partei_id AND
-				lggs.wahl_id = kggs.wahl_id
-);
-
--- Gesammtstimmen für jeden Regierungsbezirk
-CREATE OR REPLACE VIEW "landtagswahlen".gesamtstimmen (wahl_id, regierungsbezirk_id, anzahl) AS (
-	SELECT wahl_id, regierungsbezirk_id, sum(anzahl)
-	FROM "landtagswahlen".gesamtstimmen_pro_partei
-	GROUP BY wahl_id, regierungsbezirk_id
-);
-
--- Prozentualer Stimmanteil pro regierungsbezirk und partei
-CREATE OR REPLACE VIEW "landtagswahlen".stimmanteile (wahl_id, regierungsbezirk_id, partei_id, stimmanteil) AS (
-	SELECT gs.wahl_id, gs.regierungsbezirk_id, gspp.partei_id, gspp.anzahl / gs.anzahl as stimmanteil
-	FROM "landtagswahlen".gesamtstimmen gs
-		JOIN "landtagswahlen".gesamtstimmen_pro_partei gspp
-			ON gspp.wahl_id = gs.wahl_id AND gspp.regierungsbezirk_id = gs.regierungsbezirk_id
-);
-
--- Anzahl der Stimmen pro Regierungsbezirk die wegen Sperrklausel wegfallen
-CREATE OR REPLACE VIEW "landtagswahlen".sperrklausel_stimmen (wahl_id, regierungsbezirk_id, anzahl) AS (
-	SELECT gspp.wahl_id, gspp.regierungsbezirk_id, sum(gspp.anzahl) as anzahl
-	FROM "landtagswahlen".gesamtstimmen_pro_partei gspp
-		JOIN "landtagswahlen".stimmanteile sat
-			ON sat.wahl_id = gspp.wahl_id AND sat.partei_id = gspp.partei_id AND
-				sat.regierungsbezirk_id = gspp.regierungsbezirk_id
-	WHERE sat.stimmanteil < 0.05
-	GROUP BY gspp.wahl_id, gspp.regierungsbezirk_id
-);
-
--- Gesamtstimmen pro Regierungsbezirk ohne Sperrklausel Stimmen
-CREATE OR REPLACE VIEW "landtagswahlen".bereinigte_gesamtstimmen (wahl_id, regierungsbezirk_id, anzahl) AS (
-	SELECT gs.wahl_id, gs.regierungsbezirk_id, gs.anzahl - sks.anzahl
-	FROM "landtagswahlen".gesamtstimmen gs
-		JOIN "landtagswahlen".sperrklausel_stimmen sks
-			ON gs.regierungsbezirk_id = sks.regierungsbezirk_id AND gs.wahl_id = sks.wahl_id
-);
-
--- Hare-Niemeyer quotas per regierungsbezirk and partei
-CREATE OR REPLACE VIEW "landtagswahlen".sitzquoten (wahl_id, regierungsbezirk_id, partei_id, quote) AS (
-	SELECT bgs.wahl_id, bgs.regierungsbezirk_id, gspp.partei_id, gma.anzahl * gspp.anzahl / bgs.anzahl as quote
-	FROM "landtagswahlen".bereinigte_gesamtstimmen bgs
-		JOIN "landtagswahlen".gesamtstimmen gs
-					ON gs.wahl_id = bgs.wahl_id AND gs.regierungsbezirk_id = bgs.regierungsbezirk_id
-		JOIN "landtagswahlen".gesamtstimmen_pro_partei gspp
-					ON gspp.wahl_id = bgs.wahl_id AND gspp.regierungsbezirk_id = bgs.regierungsbezirk_id
-		JOIN "landtagswahlen".gesamtmandat_anzahl gma
-					ON gma.wahl_id = bgs.wahl_id AND gma.regierungsbezirk_id = bgs.regierungsbezirk_id
-	WHERE gspp.anzahl >= 0.05 * gs.anzahl
-);
-
--- Durch abrunden bleiben Sitze übrig. Damit Verfahren summenerhaltend ist werden übrige Mandate verteilt:
-CREATE OR REPLACE VIEW "landtagswahlen".uebgrigemandate (wahl_id, regierungsbezirk_id, anzahl) AS (
-	SELECT sqg.wahl_id, sqg.regierungsbezirk_id, gma.anzahl - sqg.anzahl
-	FROM (
-			SELECT wahl_id, regierungsbezirk_id, sum(floor(quote)) as anzahl
-			FROM "landtagswahlen".sitzquoten sq
-			GROUP BY wahl_id, regierungsbezirk_id
-		) sqg
-		JOIN "landtagswahlen".gesamtmandat_anzahl gma
-			ON gma.wahl_id = sqg.wahl_id AND gma.regierungsbezirk_id = sqg.regierungsbezirk_id
-);
-
--- Pro wahl und regierungsbezirk stehen hier Parteien die je einen zusatzsitz erhalten damit die Sitzverteilung summenerhaltend bleibt
-CREATE OR REPLACE VIEW "landtagswahlen".zusatzsitze (wahl_id, regierungsbezirk_id, partei_id) AS (
-	SELECT sqr.wahl_id, sqr.regierungsbezirk_id, sqr.partei_id
-	FROM (
-			SELECT *,
-							-- Da LIMIT keine Variablen nimmt muss man mit row_number() arbeiten
-							row_number() OVER (
-									PARTITION BY wahl_id, regierungsbezirk_id
-									ORDER BY quote - floor(quote) DESC
-									) AS row_number
-			FROM "landtagswahlen".sitzquoten sq
-		) sqr
-		JOIN "landtagswahlen".uebgrigemandate um
-			ON sqr.wahl_id = um.wahl_id AND sqr.regierungsbezirk_id = um.regierungsbezirk_id
-	WHERE sqr.row_number <= um.anzahl
-	ORDER BY sqr.wahl_id, sqr.regierungsbezirk_id
-);
-
--- Anzahl der Mandate die einer Partei in einem Regierungsbezirk zustehenden würden nach Hare-Niemeyer
-CREATE OR REPLACE VIEW "landtagswahlen".zustehende_mandate (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
-	SELECT sq.wahl_id,
-		sq.regierungsbezirk_id,
-		sq.partei_id,
-		floor(sq.quote) + (
-			CASE
-				WHEN EXISTS(
-							SELECT *
-							FROM "landtagswahlen".zusatzsitze zs
-							WHERE zs.wahl_id = sq.wahl_id
-								AND zs.regierungsbezirk_id = sq.regierungsbezirk_id
-								AND zs.partei_id = sq.partei_id
-					)
-					THEN 1
-				ELSE 0 END
-			)
-	FROM "landtagswahlen".sitzquoten sq
-);
-
--- Count of direktmandate gewonnen per partei per regierungsbezirk
-CREATE OR REPLACE VIEW "landtagswahlen".anzahl_gewonnene_direktmandate (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
-	SELECT gdm.wahl_id, sk.regierungsbezirk_id, k.partei_id, count(*)
-	FROM "landtagswahlen".gewonnene_direktmandate gdm
-		JOIN "landtagswahlen".stimmkreise sk
-			ON sk.id = gdm.stimmkreis_id
-		JOIN "landtagswahlen".kandidaten k
-			ON k.id = gdm.kandidat_id
-	GROUP BY gdm.wahl_id, sk.regierungsbezirk_id, k.partei_id
-);
-
--- Anzahl Listenmandate die jeder Partei zustehen
-CREATE OR REPLACE VIEW "landtagswahlen".listenmandate_pro_partei (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
-	SELECT zm.wahl_id, zm.regierungsbezirk_id, zm.partei_id, zm.anzahl - COALESCE(agd.anzahl, 0) as anzahl
-	FROM "landtagswahlen".zustehende_mandate zm
-		LEFT OUTER JOIN "landtagswahlen".anzahl_gewonnene_direktmandate agd
-			ON zm.wahl_id = agd.wahl_id
-				AND zm.regierungsbezirk_id = agd.regierungsbezirk_id
-				AND zm.partei_id = agd.partei_id
-);
-
-CREATE OR REPLACE VIEW "landtagswahlen".gewonnene_regulaere_listenmandate (wahl_id, regierungsbezirk_id, kandidat_id) AS (
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_regulaere_listenmandate (wahl_id, regierungsbezirk_id, kandidat_id) AS (
+	-- Anzahl der gewonnen direktmandate pro partei und regierungsbezirk
+	WITH anzahl_gewonnene_direktmandate (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
+		SELECT gdm.wahl_id, sk.regierungsbezirk_id, k.partei_id, count(*)
+		FROM "landtagswahlen".gewonnene_direktmandate gdm
+			JOIN "landtagswahlen".stimmkreise sk
+				ON sk.id = gdm.stimmkreis_id
+			JOIN "landtagswahlen".kandidaten k
+				ON k.id = gdm.kandidat_id
+		GROUP BY gdm.wahl_id, sk.regierungsbezirk_id, k.partei_id
+	-- Anzahl Listenmandate die jeder Partei zustehen
+	), listenmandate_pro_partei (wahl_id, regierungsbezirk_id, partei_id, anzahl) AS (
+		SELECT zm.wahl_id, zm.regierungsbezirk_id, zm.partei_id, zm.anzahl - COALESCE(agd.anzahl, 0) as anzahl
+		FROM "landtagswahlen".zustehende_mandate zm
+			LEFT OUTER JOIN anzahl_gewonnene_direktmandate agd
+				ON zm.wahl_id = agd.wahl_id
+					AND zm.regierungsbezirk_id = agd.regierungsbezirk_id
+					AND zm.partei_id = agd.partei_id
+	)
 	SELECT flf.wahl_id, flf.regierungsbezirk_id, k.id
 	FROM (
 			-- recalculate row number after excluding direkt_mandat gewinner to be able to check with <= predicate who won a listenmandat
@@ -513,7 +501,7 @@ CREATE OR REPLACE VIEW "landtagswahlen".gewonnene_regulaere_listenmandate (wahl_
 		) flf
 		JOIN "landtagswahlen".kandidaten k
 			ON k.id = flf.kandidat_id
-		JOIN "landtagswahlen".listenmandate_pro_partei lpp
+		JOIN listenmandate_pro_partei lpp
 			ON flf.wahl_id = lpp.wahl_id
 				AND flf.regierungsbezirk_id = lpp.regierungsbezirk_id
 				AND k.partei_id = lpp.partei_id

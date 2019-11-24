@@ -5,13 +5,19 @@ type MaterialViews =
   | "kandidatgebundene_gueltige_stimmen"
   | "listengebundene_gueltige_stimmen"
   | "ungueltige_erststimmen"
-  | "ungueltige_zweitstimmen";
+  | "ungueltige_zweitstimmen"
+  | "finaleliste"
+  | "gewonnene_direktmandate"
+  | "gewonnene_regulaere_listenmandate";
 
 const refreshOrder: MaterialViews[] = [
   "kandidatgebundene_gueltige_stimmen",
   "listengebundene_gueltige_stimmen",
   "ungueltige_erststimmen",
-  "ungueltige_zweitstimmen"
+  "ungueltige_zweitstimmen",
+  "finaleliste",
+  "gewonnene_direktmandate",
+  "gewonnene_regulaere_listenmandate"
 ];
 
 /**
