@@ -381,7 +381,7 @@ CREATE OR REPLACE FUNCTION zustehende_mandate(p_ausgleichsmandat_anzahl integer)
 	),
 	-- Anzahl der regulären mandate (direkt + liste) die in einem Regierungsbezirk zu vergeben sind
 	gesamtmandat_anzahl (regierungsbezirk_id, wahl_id, anzahl) AS (
-		SELECT dm.regierungsbezirk_id, dm.wahl_id, dm.anzahl + rwi.anzahllistenmandate as anzahl
+		SELECT dm.regierungsbezirk_id, dm.wahl_id, dm.anzahl + rwi.anzahllistenmandate + p_ausgleichsmandat_anzahl as anzahl
 		FROM "landtagswahlen".direktmandat_anzahl dm
 			JOIN "landtagswahlen".regierungsbezirk_wahlinfo rwi
 				ON rwi.regierungsbezirk_id = dm.regierungsbezirk_id AND rwi.wahl_id = dm.wahl_id
@@ -508,7 +508,6 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_direktmandate 
 					AND kgs.stimmkreis_id = dk.stimmkreis_id
 			JOIN nicht_gesperrte_parteien ngp
 				ON ngp.wahl_id = dk.wahl_id
-					AND ngp.regierungsbezirk_id = sk.regierungsbezirk_id
 					AND ngp.partei_id = k.partei_id
 	)
 	SELECT ngd1.wahl_id, ngd1.stimmkreis_id, ngd1.kandidat_id
