@@ -1,0 +1,67 @@
+.page-header {
+  position: fixed;
+  width: 100%;
+  padding: 0px 15px 0px 15px;
+  z-index: 1000;
+  background-color: #365592;
+}
+
+.page-header .title {
+  text-overflow: ellipsis;
+  text-align: right;
+  color: #fff;
+  height: 50%;
+  line-height: 1;
+  font-size: 1.8em;
+  margin-top: 0.3em;
+  font-weight: bold;
+}
+
+.page-header .subtitle {
+  text-overflow: ellipsis;
+  text-align: right;
+  color: #fff;
+  height: 50%;
+  line-height: 0.5;
+  font-size: 1.2em;
+  font-weight: lighter;
+}
+
+.page-user-button {
+  float: right;
+  margin-top: 15px;
+}
+
+.page-sider-content-layout {
+  margin-top: 64px;
+}
+
+.page-sider {
+  position: fixed;
+  left: 0;
+  height: 100vh;
+  background-color: #4d6da6;
+}
+
+.ant-menu {
+  background: #4d6da6; 
+}
+
+.ant-menu-item {
+  background-color: #4d6da6;
+  margin: 0 !important;
+  border-bottom: 1px solid #365592;
+}
+
+.ant-menu-item-selected {
+  background-color: #4d6da6 !important;
+}
+
+.ant-layout-sider-trigger {
+  background-color: #365592;
+}
+
+.page-content {
+  min-height: calc(100vh - 64px);
+  transition: all 0.2s;
+}

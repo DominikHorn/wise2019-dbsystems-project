@@ -1,4 +1,4 @@
-import { Card, Row, Button, Col, notification, message } from "antd";
+import { Button, Card, Col, message, Row } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
 
@@ -24,22 +24,36 @@ const FACE_PALM = `
 `;
 
 export const WaehlenPage = (props: IWaehlenPageProps) => (
-  <Card title={"Wählen - Rechtsbehelfsbelehrung"} style={{minHeight: '100%'}} hoverable={true}>
-    <div style={{ textAlign: "justify" }}>
-      {LOREM_IPSUM}
-    </div>
-    <Row type={'flex'} gutter={16} justify={'end'} style={{ marginTop: "15px" }}>
+  <Card
+    title={"Wählen - Rechtsbehelfsbelehrung"}
+    style={{ minHeight: "100%" }}
+    hoverable={true}
+  >
+    <div style={{ textAlign: "justify" }}>{LOREM_IPSUM}</div>
+    <Row
+      type={"flex"}
+      gutter={16}
+      justify={"end"}
+      style={{ marginTop: "15px" }}
+    >
       <Col>
-        <Button style={{ float: "right" }} onClick={() => {
-          message.info(FACE_PALM);
-        }}>
+        <Button
+          style={{ float: "right" }}
+          onClick={() => {
+            message.info(FACE_PALM);
+          }}
+        >
           Nö, nicht verstanden
         </Button>
       </Col>
       <Col>
-        <Button type={'primary'} style={{ float: "right" }} onClick={() => {
-          message.error("Unimplemented");
-        }}>
+        <Button
+          type={"primary"}
+          style={{ float: "right" }}
+          onClick={() => {
+            message.error("Unimplemented");
+          }}
+        >
           Zur Kenntniss genommen
         </Button>
       </Col>

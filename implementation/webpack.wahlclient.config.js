@@ -7,7 +7,7 @@ const fs = require("fs");
 
 const nodeEnv = process.env.NODE_ENV;
 const isProduction = nodeEnv !== "development";
-console.log(`Webpack Client is in ${nodeEnv} mode`);
+console.log(`Webpack Wahlclient is in ${nodeEnv} mode`);
 
 module.exports = {
   devtool: isProduction ? false : "inline-source-map",
@@ -21,14 +21,14 @@ module.exports = {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Headers": "*"
-        },
+        }
         // https: {
         //   key: fs.readFileSync(".ssl/key.pem"),
         //   cert: fs.readFileSync(".ssl/cert.pem")
         // }
       },
   entry: {
-    app: ["react-hot-loader/patch", "./src/client/index.tsx"]
+    app: ["react-hot-loader/patch", "./src/wahlclient/index.tsx"]
   },
   mode: nodeEnv,
   module: {
@@ -68,7 +68,7 @@ module.exports = {
     new CleanWebpackPlugin(),
     new ForkTsCheckerWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, "src/client/index.html"),
+      template: path.resolve(__dirname, "src/wahlclient/index.html"),
       inject: "body"
     }),
     new webpack.HotModuleReplacementPlugin()
@@ -84,6 +84,6 @@ module.exports = {
   output: {
     publicPath: "/",
     filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "dist/client")
+    path: path.resolve(__dirname, "dist/wahlclient")
   }
 };

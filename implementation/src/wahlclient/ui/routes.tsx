@@ -45,7 +45,7 @@ export const DEFAULT_ROUTE: IRouteProps = {
 export const RouteBasepaths = {
   waehlen: "/waehlen",
   wahlhelfer: "/wahlhelfer",
-  wahlleiter: "/wahlleiter",
+  wahlleiter: "/wahlleiter"
 };
 
 export const TOPLEVEL_ROUTES: IMenuRoute[] = [
@@ -75,5 +75,5 @@ export const TOPLEVEL_ROUTES: IMenuRoute[] = [
     render: (props: RouteComponentProps<any>) => (
       <WahlleiterPage routeProps={props} />
     )
-  },
+  }
 ];

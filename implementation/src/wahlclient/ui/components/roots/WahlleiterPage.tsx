@@ -18,22 +18,22 @@ import * as moment from "moment";
 import * as React from "react";
 import { compose } from "react-apollo";
 import { RouteComponentProps } from "react-router";
-import {
-  IGetAllWahlenQueryHocProps,
-  withAllWahlenQuery
-} from "../../../graphql/public/getAllWahlenQuery";
-import {
-  IImportCSVDataMutationHocProps,
-  withImportCSVDataMutation
-} from "../../../graphql/wahlleiter/importCSVDataMutation";
 import { renderLoading } from "../../guiUtil";
 import { withErrorBoundary } from "../general/ErrorBoundary";
 import { FilePickerComponent } from "../general/FilePickerComponent";
 import "./WahlleiterPage.css";
 import {
-  withComputeElectionResultsMutation,
-  IComputeElectionResultsMutationHocProps
-} from "../../../graphql/wahlleiter/computeElectionResultsMutation";
+  IImportCSVDataMutationHocProps,
+  withImportCSVDataMutation
+} from "../../../../client-graphql/wahlleiter/importCSVDataMutation";
+import {
+  IComputeElectionResultsMutationHocProps,
+  withComputeElectionResultsMutation
+} from "../../../../client-graphql/wahlleiter/computeElectionResultsMutation";
+import {
+  IGetAllWahlenQueryHocProps,
+  withAllWahlenQuery
+} from "../../../../client-graphql/public/getAllWahlenQuery";
 
 export interface IWahlleiterPageProps {
   routeProps: RouteComponentProps<any>;
