@@ -2,7 +2,10 @@ import { GraphQLDateTime } from "graphql-iso-date";
 import { GraphQLFileUpload } from "../../shared/sharedTypes";
 import { getWahlen } from "../adapters/postgres/queries/wahlenPSQL";
 import { parseCSV } from "../csv-parser/CSVParser";
-import { computeElectionResults } from "../adapters/postgres/queries/electionPSQL";
+import {
+  computeElectionResults,
+  getMandate
+} from "../adapters/postgres/queries/electionPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -13,7 +16,8 @@ export interface IContext {
 export const resolvers: { [key: string]: any } = {
   Date: GraphQLDateTime,
   Query: {
-    getAllWahlen: () => getWahlen()
+    getAllWahlen: () => getWahlen(),
+    getMandate: (_: any, args: { wahlid: number }) => getMandate(args.wahlid)
   },
   Mutation: {
     importCSVData: async (

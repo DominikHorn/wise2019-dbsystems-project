@@ -1,5 +1,9 @@
 import { ReadStream } from "fs";
-import { IDatabaseWahl, IDatabasePartei } from "../server/databaseEntities";
+import {
+  IDatabaseWahl,
+  IDatabasePartei,
+  IDatabaseKandidat
+} from "../server/databaseEntities";
 
 export interface GraphQLFileUpload {
   createReadStream: () => ReadStream;
@@ -8,3 +12,15 @@ export interface GraphQLFileUpload {
 export interface IWahl extends IDatabaseWahl {}
 
 export interface IPartei extends IDatabasePartei {}
+
+// TODO: utilize typescript voodo
+export interface IKandidat {
+  id: number;
+  name: string;
+  partei: IPartei;
+}
+
+export interface IMandat {
+  kandidat: IKandidat;
+  direktmandat: boolean;
+}

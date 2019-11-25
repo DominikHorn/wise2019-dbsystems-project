@@ -3,6 +3,7 @@ scalar Date
 
 type Query {
   getAllWahlen: [Wahl]!
+  getMandate(wahlid: Int!): [Mandat]!
 }
 
 type Mutation {
@@ -17,4 +18,20 @@ type Mutation {
 type Wahl {
   id: Int!
   wahldatum: Date!
+}
+
+type Mandat {
+  kandidat: Kandidat!
+  direktmandat: Boolean!
+}
+
+type Kandidat {
+  id: Int!
+  name: String!
+  partei: Partei!
+}
+
+type Partei {
+  id: Int!
+  name: String!
 }

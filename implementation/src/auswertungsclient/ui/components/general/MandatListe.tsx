@@ -1,6 +1,11 @@
 import * as React from "react";
-import { IPartei } from "../../../../shared/sharedTypes";
+import { IPartei, IWahl } from "../../../../shared/sharedTypes";
 import { Tag, Table } from "antd";
+import {
+  withMandateQuery,
+  IGetMandateQueryHocProps
+} from "../../../../client-graphql/public/getMandateQuery";
+import { compose } from "react-apollo";
 
 function getParteiColor(partei: IPartei): string {
   return "blue";
@@ -9,12 +14,12 @@ function getParteiColor(partei: IPartei): string {
 const columns = [
   {
     title: "ID",
-    dataIndex: "id",
+    dataIndex: "kandidat.id",
     key: "id"
   },
   {
     title: "Name",
-    dataIndex: "name",
+    dataIndex: "kandidat.name",
     key: "name",
     render: (name: string) => (
       <a
@@ -36,7 +41,7 @@ const columns = [
   {
     title: "Partei",
     key: "partei",
-    dataIndex: "partei",
+    dataIndex: "kandidat.partei",
     render: (partei: IPartei) => (
       <Tag color={getParteiColor(partei)} key={partei.id}>
         {partei.name}
@@ -49,6 +54,20 @@ export interface IMandatListeProps {
   wahl: IWahl;
 }
 
-export const MandatListe = (props: IMandatListeProps) => (
-  <Table columns={columns}></Table>
+interface IProps extends IMandatListeProps, IGetMandateQueryHocProps {}
+
+const MandatListeComponent = (props: IProps) => (
+  <Table
+    columns={columns}
+    dataSource={props.mandateData.mandate || []}
+    loading={props.mandateData.loading}
+  ></Table>
 );
+
+const MandatListeComponentWithQueries = compose(
+  withMandateQuery<IMandatListeProps>(p => p.wahl.id)
+)(MandatListeComponent);
+
+export const MandatListe = MandatListeComponentWithQueries as React.ComponentType<
+  IMandatListeProps
+>;
