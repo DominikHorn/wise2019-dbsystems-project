@@ -44,6 +44,7 @@ const columns = [
     key: "name",
     render: (name: string) => (
       <a
+        target={"_blank"}
         href={`https://de.lmgtfy.com/?q=${encodeURIComponent(
           `${name} Bayrischer Landtag`
         )}`}
