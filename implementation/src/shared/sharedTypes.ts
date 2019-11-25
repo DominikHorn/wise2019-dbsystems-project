@@ -1,10 +1,10 @@
 import { ReadStream } from "fs";
-import { IDatabaseWahl } from "../server/databaseEntities";
+import { IDatabaseWahl, IDatabasePartei } from "../server/databaseEntities";
 
 export interface GraphQLFileUpload {
-    createReadStream: () => ReadStream;
+  createReadStream: () => ReadStream;
 }
 
-export interface IWahl extends IDatabaseWahl {
-    
-}
+export interface IWahl extends IDatabaseWahl {}
+
+export interface IPartei extends IDatabasePartei {}

@@ -10,6 +10,7 @@ import {
 import { withErrorBoundary } from "../general/ErrorBoundary";
 import { IWahl } from "../../../../shared/sharedTypes";
 import { renderInfo } from "../../guiUtil";
+import { MandatListe } from "../general/MandatListe";
 
 export interface IErgebnissePageProps {
   routeProps: RouteComponentProps<any>;
@@ -53,7 +54,7 @@ class ErgebnissePageComponent extends React.PureComponent<IProps, IState> {
         hoverable={true}
       >
         {ausgewaehlteWahl ? (
-          <div>Hier könnten Ihre Ergebnisse stehen</div>
+          <MandatListe wahl={ausgewaehlteWahl} />
         ) : (
           renderInfo("Bitte eine Landtagswahl auswählen")
         )}
