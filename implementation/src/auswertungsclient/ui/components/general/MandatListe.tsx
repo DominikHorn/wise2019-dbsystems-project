@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IPartei, IWahl } from "../../../../shared/sharedTypes";
+import { IPartei, IWahl, EParteiNamen } from "../../../../shared/sharedTypes";
 import { Tag, Table } from "antd";
 import {
   withMandateQuery,
@@ -8,14 +8,35 @@ import {
 import { compose } from "react-apollo";
 
 function getParteiColor(partei: IPartei): string {
-  return "blue";
+  switch (partei.name) {
+    case EParteiNamen.CSU:
+      return "black";
+    case EParteiNamen.SPD:
+      return "red";
+    case EParteiNamen.FREIE_WAEHLER:
+      return "orange";
+    case EParteiNamen.GRUENE:
+      return "green";
+    case EParteiNamen.AFD:
+      return "blue";
+  }
+  return "";
 }
 
 const columns = [
   {
     title: "ID",
     dataIndex: "kandidat.id",
-    key: "id"
+    key: "id",
+    width: 50
+  },
+  {
+    title: "Direktmandat",
+    dataIndex: "direktmandat",
+    key: "direktmandat",
+    width: 100,
+    render: (value: boolean) =>
+      value && <span style={{ color: "green" }}>✔️</span>
   },
   {
     title: "Name",
@@ -32,16 +53,10 @@ const columns = [
     )
   },
   {
-    title: "Direktmandat",
-    dataIndex: "direktmandat",
-    key: "direktmandat",
-    render: (value: boolean) =>
-      value && <span style={{ color: "green" }}>✔️</span>
-  },
-  {
     title: "Partei",
     key: "partei",
     dataIndex: "kandidat.partei",
+    width: 200,
     render: (partei: IPartei) => (
       <Tag color={getParteiColor(partei)} key={partei.id}>
         {partei.name}
@@ -61,6 +76,11 @@ const MandatListeComponent = (props: IProps) => (
     columns={columns}
     dataSource={props.mandateData.mandate || []}
     loading={props.mandateData.loading}
+    pagination={
+      (props.mandateData.mandate || []).length > 250 && { pageSize: 250 }
+    }
+    size={"small"}
+    scroll={{ y: 600 }}
   ></Table>
 );
 

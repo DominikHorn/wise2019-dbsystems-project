@@ -44,25 +44,29 @@ export async function getMandate(wahlid: number): Promise<IMandat[]> {
     direktmandat: boolean;
   }[] = await adapters.postgres.query(
     `
-    SELECT k.id as kandidat_id, 
-           k.name as kandidat_name,
-           p.id as partei_id, 
-           p.name as partei_name,
-           true as direktmandat
-    FROM "${DatabaseSchemaGroup}".${direktmandatView} dm
-      JOIN "${DatabaseSchemaGroup}".kandidaten k ON dm.kandidat_id = k.id
-      JOIN "${DatabaseSchemaGroup}".parteien p ON k.partei_id = p.id
-    WHERE dm.wahl_id = $1
-    UNION
-    SELECT k.id as kandidat_id, 
-           k.name as kandidat_name,
-           p.id as partei_id, 
-           p.name as partei_name,
-           false as direktmandat
-    FROM "${DatabaseSchemaGroup}".${listenmandatView} lm
-      JOIN "${DatabaseSchemaGroup}".kandidaten k ON lm.kandidat_id = k.id
-      JOIN "${DatabaseSchemaGroup}".parteien p ON k.partei_id = p.id
-    WHERE lm.wahl_id = $1
+    SELECT m.* 
+    FROM (
+      SELECT k.id as kandidat_id, 
+            k.name as kandidat_name,
+            p.id as partei_id, 
+            p.name as partei_name,
+            true as direktmandat
+      FROM "${DatabaseSchemaGroup}".${direktmandatView} dm
+        JOIN "${DatabaseSchemaGroup}".kandidaten k ON dm.kandidat_id = k.id
+        JOIN "${DatabaseSchemaGroup}".parteien p ON k.partei_id = p.id
+      WHERE dm.wahl_id = $1
+      UNION
+      SELECT k.id as kandidat_id, 
+            k.name as kandidat_name,
+            p.id as partei_id, 
+            p.name as partei_name,
+            false as direktmandat
+      FROM "${DatabaseSchemaGroup}".${listenmandatView} lm
+        JOIN "${DatabaseSchemaGroup}".kandidaten k ON lm.kandidat_id = k.id
+        JOIN "${DatabaseSchemaGroup}".parteien p ON k.partei_id = p.id
+      WHERE lm.wahl_id = $1
+    ) m
+    ORDER BY m.direktmandat DESC, m.kandidat_id
   `,
     [wahlid]
   );
