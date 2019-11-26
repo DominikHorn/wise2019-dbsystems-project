@@ -19,6 +19,7 @@ export interface IStatistikPageProps {
 interface IProps extends IStatistikPageProps {}
 
 interface IState {
+  readonly addWidgetLayout: Layout;
   readonly layouts: Layout[];
   readonly availableWidth: number;
 }
@@ -27,16 +28,29 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      layouts: [
-        { i: "add", x: 0, y: 0, w: 6, h: 6, minW: 4, minH: 6 },
-        { i: "1", x: 6, y: 0, w: 6, h: 6, minW: 4, minH: 6 }
-      ],
+      addWidgetLayout: { i: "add", x: 0, y: 0, w: 6, h: 6, minW: 4, minH: 4 },
+      layouts: [],
       availableWidth: window.innerWidth - 80
     };
   }
 
   private updateDimensions = () =>
     this.setState({ availableWidth: window.innerWidth - 80 });
+
+  private onWidgetAdd = () =>
+    this.setState({
+      layouts: this.state.layouts.concat([
+        {
+          i: `${this.state.layouts.length}`,
+          x: 6 * ((this.state.layouts.length + 1) % 2),
+          y: 6 * (this.state.layouts.length / 2),
+          w: 6,
+          h: 6,
+          minW: 4,
+          minH: 6
+        }
+      ])
+    });
 
   componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
@@ -47,12 +61,12 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
   }
 
   render() {
-    const { layouts, availableWidth } = this.state;
+    const { layouts, addWidgetLayout, availableWidth } = this.state;
     const cols = 12;
     return (
       <GridLayout
         className={"layout"}
-        layout={layouts}
+        layout={[addWidgetLayout].concat(layouts)}
         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
         cols={cols}
         rowHeight={50}
@@ -60,11 +74,13 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
         isResizable={true}
       >
         <div key={"add"}>
-          <AddWidgetWidget />
+          <AddWidgetWidget onWidgetAdd={this.onWidgetAdd} />
         </div>
-        <div key={"1"}>
-          <SitzverteilungsWidget />
-        </div>
+        {layouts.map(layout => (
+          <div key={layout.i}>
+            <SitzverteilungsWidget />
+          </div>
+        ))}
       </GridLayout>
     );
   }
