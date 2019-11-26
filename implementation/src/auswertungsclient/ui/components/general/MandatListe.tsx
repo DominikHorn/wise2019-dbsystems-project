@@ -1,6 +1,6 @@
 import * as React from "react";
 import { IPartei, IWahl, EParteiNamen } from "../../../../shared/sharedTypes";
-import { Tag, Table } from "antd";
+import { Tag, Table, Row, Col } from "antd";
 import {
   withMandateQuery,
   IGetMandateQueryHocProps
@@ -44,9 +44,13 @@ const columns = [
     dataIndex: "kandidat.partei",
     width: 200,
     render: (partei: IPartei) => (
-      <Tag color={getParteiColor(partei.name)} key={partei.id}>
-        {partei.name}
-      </Tag>
+      <Row type={"flex"} justify={"center"}>
+        <Col>
+          <Tag color={getParteiColor(partei.name)} key={partei.id}>
+            {partei.name}
+          </Tag>
+        </Col>
+      </Row>
     )
   }
 ];

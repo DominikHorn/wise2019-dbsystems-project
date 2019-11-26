@@ -19,7 +19,7 @@ export function getParteiColor(parteiname: string): string {
     case EParteiNamen.AFD:
       return "#5084cc";
   }
-  return "";
+  return "#8c40c2";
 }
 
 export const renderCenteredLoading = () => (
