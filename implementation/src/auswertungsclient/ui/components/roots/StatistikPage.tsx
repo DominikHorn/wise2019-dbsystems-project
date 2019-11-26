@@ -52,6 +52,11 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
       ])
     });
 
+  private onWidgetRemove = (id: string) =>
+    this.setState({
+      layouts: this.state.layouts.filter(layout => layout.i !== id)
+    });
+
   componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
   }
@@ -78,7 +83,9 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
         </div>
         {layouts.map(layout => (
           <div key={layout.i}>
-            <SitzverteilungsWidget />
+            <SitzverteilungsWidget
+              removeWidget={() => this.onWidgetRemove(layout.i)}
+            />
           </div>
         ))}
       </GridLayout>

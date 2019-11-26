@@ -11,7 +11,9 @@ import { StatistikWidget } from "../StatistikWidget";
 import { WahlSelector } from "../WahlSelector";
 import { SitzverteilungsChart } from "./SitzverteilungsChart";
 
-export interface ISitzverteilungsWidgetProps {}
+export interface ISitzverteilungsWidgetProps {
+  readonly removeWidget?: () => void;
+}
 
 interface IProps
   extends ISitzverteilungsWidgetProps,
@@ -36,9 +38,10 @@ class SitzverteilungsWidgetComponent extends React.PureComponent<
 
   render() {
     const { selectedWahl } = this.state;
-    const { allWahlenData } = this.props;
+    const { allWahlenData, removeWidget } = this.props;
     return (
       <StatistikWidget
+        removeWidget={removeWidget}
         title={
           <>
             {"Landtagswahl: "}
