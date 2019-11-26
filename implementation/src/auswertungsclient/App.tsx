@@ -12,6 +12,8 @@ import config from "../../config.client.json";
 import { isDevelopmentEnv } from "../shared/util";
 import { PageComponent } from "./ui/PageComponent";
 import { readToken } from "./util/token";
+import "../../node_modules/react-grid-layout/css/styles.css";
+import "../../node_modules/react-resizable/css/styles.css";
 
 // Connection to ApolloServer
 const uploadLink = createUploadLink({

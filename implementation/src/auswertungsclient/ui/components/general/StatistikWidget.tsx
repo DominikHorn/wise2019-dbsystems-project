@@ -11,7 +11,7 @@ export interface IStatistikWidgetProps {
 interface IProps extends IStatistikWidgetProps {}
 
 const StatistikWidgetComponent = (props: IProps) => (
-  <Card title={props.title} style={{ margin: "5px" }}>
+  <Card title={props.title} style={{ width: "100%", height: "100%" }}>
     {props.children}
   </Card>
 );
