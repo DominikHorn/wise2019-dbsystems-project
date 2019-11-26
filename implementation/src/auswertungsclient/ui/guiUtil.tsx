@@ -7,17 +7,17 @@ import "./guiUtil.css";
 export function getParteiColor(parteiname: string): string {
   switch (parteiname) {
     case EParteiNamen.CSU:
-      return "black";
+      return "#303030";
     case EParteiNamen.SPD:
-      return "red";
+      return "#e65949";
     case EParteiNamen.FREIE_WAEHLER:
-      return "orange";
+      return "#d99241";
     case EParteiNamen.GRUENE:
-      return "green";
+      return "#3c9e2b";
     case EParteiNamen.FDP:
-      return "yellow";
+      return "#ccc12b";
     case EParteiNamen.AFD:
-      return "blue";
+      return "#5084cc";
   }
   return "";
 }
