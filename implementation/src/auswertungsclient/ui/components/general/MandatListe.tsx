@@ -6,24 +6,7 @@ import {
   IGetMandateQueryHocProps
 } from "../../../../client-graphql/public/getMandateQuery";
 import { compose } from "react-apollo";
-
-function getParteiColor(partei: IPartei): string {
-  switch (partei.name) {
-    case EParteiNamen.CSU:
-      return "black";
-    case EParteiNamen.SPD:
-      return "red";
-    case EParteiNamen.FREIE_WAEHLER:
-      return "orange";
-    case EParteiNamen.GRUENE:
-      return "green";
-    case EParteiNamen.FDP:
-      return "yellow";
-    case EParteiNamen.AFD:
-      return "blue";
-  }
-  return "";
-}
+import { getParteiColor } from "../../guiUtil";
 
 const columns = [
   {
@@ -61,7 +44,7 @@ const columns = [
     dataIndex: "kandidat.partei",
     width: 200,
     render: (partei: IPartei) => (
-      <Tag color={getParteiColor(partei)} key={partei.id}>
+      <Tag color={getParteiColor(partei.name)} key={partei.id}>
         {partei.name}
       </Tag>
     )
