@@ -17,6 +17,8 @@ function getParteiColor(partei: IPartei): string {
       return "orange";
     case EParteiNamen.GRUENE:
       return "green";
+    case EParteiNamen.FDP:
+      return "yellow";
     case EParteiNamen.AFD:
       return "blue";
   }
