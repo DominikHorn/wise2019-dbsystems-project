@@ -8,6 +8,7 @@ import GridLayout, {
   Layout
 } from "react-grid-layout";
 import { Card } from "antd";
+import { AddWidgetWidget } from "../general/statistikwidgets/AddWidgetWidget";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
@@ -27,8 +28,8 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
     super(props);
     this.state = {
       layouts: [
-        { i: "1", x: 0, y: 0, w: 6, h: 6, minW: 4, minH: 6 },
-        { i: "2", x: 6, y: 0, w: 6, h: 6, minW: 4, minH: 6 }
+        { i: "add", x: 0, y: 0, w: 6, h: 6, minW: 4, minH: 6 },
+        { i: "1", x: 6, y: 0, w: 6, h: 6, minW: 4, minH: 6 }
       ],
       availableWidth: window.innerWidth - 80
     };
@@ -58,10 +59,10 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
         width={availableWidth}
         isResizable={true}
       >
-        <div key={"1"}>
-          <SitzverteilungsWidget />
+        <div key={"add"}>
+          <AddWidgetWidget />
         </div>
-        <div key={"2"}>
+        <div key={"1"}>
           <SitzverteilungsWidget />
         </div>
       </GridLayout>

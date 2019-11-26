@@ -16,7 +16,10 @@ const StatistikWidgetComponent = (props: IProps) => (
     className={"statistik-card"}
     title={props.title}
     style={{ width: "100%", height: "100%" }}
-    bodyStyle={{ width: "100%", height: "calc(100% - 65px)" }}
+    bodyStyle={{
+      width: "100%",
+      height: props.title ? "calc(100% - 65px)" : "100%"
+    }}
   >
     {props.children}
   </Card>
