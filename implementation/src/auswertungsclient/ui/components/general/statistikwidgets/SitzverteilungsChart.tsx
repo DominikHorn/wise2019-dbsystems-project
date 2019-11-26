@@ -1,13 +1,13 @@
+import { Spin } from "antd";
+import ReactEcharts from "echarts-for-react";
 import * as React from "react";
-import { getParteiColor } from "../../../guiUtil";
-import { IMandat, IWahl } from "../../../../../shared/sharedTypes";
 import { compose } from "react-apollo";
 import {
-  withMandateQuery,
-  IGetMandateQueryHocProps
+  IGetMandateQueryHocProps,
+  withMandateQuery
 } from "../../../../../client-graphql/public/getMandateQuery";
-import ReactEcharts from "echarts-for-react";
-import { Card } from "antd";
+import { IMandat, IWahl } from "../../../../../shared/sharedTypes";
+import { getParteiColor } from "../../../guiUtil";
 
 function aggregateMandate(
   mandate: IMandat[]
@@ -38,41 +38,37 @@ export interface ISitzverteilungsChartProps {
 
 interface IProps extends ISitzverteilungsChartProps, IGetMandateQueryHocProps {}
 
-const SitzverteilungsChartComponent = (props: IProps) => (
-  <Card loading={props.mandateData.loading}>
-    {props.mandateData.mandate && (
-      <ReactEcharts
-        option={{
-          tooltip: {
-            trigger: "item",
-            formatter: "{a} <br/>{b}: {c} ({d}%)"
-          },
-          series: [
-            {
-              name: "Sitzverteilung",
-              type: "pie",
-              selectedMode: "single",
-              radius: [0, "70%"],
+const SitzverteilungsChartComponent = (props: IProps) =>
+  (props.mandateData.mandate && (
+    <ReactEcharts
+      style={{ width: "100%", height: "100%" }}
+      option={{
+        tooltip: {
+          trigger: "item",
+          formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        series: [
+          {
+            name: "Sitzverteilung",
+            type: "pie",
+            selectedMode: "single",
+            radius: [0, "65%"],
+            label: {
+              normal: {
+                show: true,
+                position: "outer",
+                itemStyle: {
+                  color: "gray"
+                }
+              }
+            },
 
-              label: {
-                normal: {
-                  position: "outer",
-                  color: "black"
-                }
-              },
-              labelLine: {
-                normal: {
-                  show: true
-                }
-              },
-              data: aggregateMandate(props.mandateData.mandate)
-            }
-          ]
-        }}
-      />
-    )}
-  </Card>
-);
+            data: aggregateMandate(props.mandateData.mandate)
+          }
+        ]
+      }}
+    />
+  )) || <Spin />;
 
 const SitzverteilungsChartWithQueries = compose(
   withMandateQuery<ISitzverteilungsChartProps>(props => props.wahl.id)

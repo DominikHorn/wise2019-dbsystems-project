@@ -27,8 +27,8 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
     super(props);
     this.state = {
       layouts: [
-        { i: "1", x: 0, y: 0, w: 6, h: 8, minW: 4, minH: 8 },
-        { i: "2", x: 6, y: 0, w: 6, h: 8, minW: 4, minH: 8 }
+        { i: "1", x: 0, y: 0, w: 6, h: 6, minW: 4, minH: 6 },
+        { i: "2", x: 6, y: 0, w: 6, h: 6, minW: 4, minH: 6 }
       ],
       availableWidth: window.innerWidth - 80
     };

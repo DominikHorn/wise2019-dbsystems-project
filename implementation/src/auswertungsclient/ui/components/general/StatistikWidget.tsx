@@ -2,6 +2,7 @@ import * as React from "react";
 import { Card } from "antd";
 import { withErrorBoundary } from "./ErrorBoundary";
 import { renderError } from "../../guiUtil";
+import "./StatistikWidget.css";
 
 export interface IStatistikWidgetProps {
   readonly title?: string | React.ReactNode;
@@ -11,7 +12,12 @@ export interface IStatistikWidgetProps {
 interface IProps extends IStatistikWidgetProps {}
 
 const StatistikWidgetComponent = (props: IProps) => (
-  <Card title={props.title} style={{ width: "100%", height: "100%" }}>
+  <Card
+    className={"statistik-card"}
+    title={props.title}
+    style={{ width: "100%", height: "100%" }}
+    bodyStyle={{ width: "100%", height: "calc(100% - 65px)" }}
+  >
     {props.children}
   </Card>
 );
