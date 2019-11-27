@@ -47,7 +47,7 @@ export const AddWidgetWidget = (props: IAddWidgetWidgetProps) => (
                 return <Menu.Item key={onlyEntry}>{onlyEntry}</Menu.Item>;
               } else {
                 return (
-                  <SubMenu title={menuEntry.name}>
+                  <SubMenu title={menuEntry.name} key={menuEntry.name}>
                     {menuEntry.values.map(val => (
                       <MenuItem key={val}>{val}</MenuItem>
                     ))}

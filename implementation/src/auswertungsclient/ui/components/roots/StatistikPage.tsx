@@ -99,23 +99,27 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
     window.removeEventListener("resize", this.updateDimensions);
   }
 
-  private renderWidget = (setting: StatistikWidgetSettings) => (
-    <div key={setting.layout.i}>
-      {setting.type === WidgetType.ADD ? (
-        <AddWidgetWidget onWidgetAdd={this.onWidgetAdd} />
-      ) : setting.type === WidgetType.PLACEHOLDER ? (
-        <PlaceholderWidget
-          removeWidget={() => this.onWidgetRemove(setting.layout.i)}
-        />
-      ) : setting.type === WidgetType.SITZVERTEILUNG_PIECHART ? (
-        <SitzverteilungsWidget
-          removeWidget={() => this.onWidgetRemove(setting.layout.i)}
-        />
-      ) : (
-        renderError("Unkown Widget type")
-      )}
-    </div>
-  );
+  private renderWidget = (setting: StatistikWidgetSettings) => {
+    const removeWidget = () => this.onWidgetRemove(setting.layout.i);
+    return (
+      <div key={setting.layout.i}>
+        {setting.type === WidgetType.ADD ? (
+          <AddWidgetWidget onWidgetAdd={this.onWidgetAdd} />
+        ) : setting.type === WidgetType.PLACEHOLDER ? (
+          <PlaceholderWidget removeWidget={removeWidget} />
+        ) : setting.type === WidgetType.SITZVERTEILUNG_PIECHART ? (
+          <SitzverteilungsWidget removeWidget={removeWidget} />
+        ) : setting.type === WidgetType.SITZVERTEILUNG_TABLE ? (
+          <SitzverteilungsWidget
+            removeWidget={removeWidget}
+            renderAsTable={true}
+          />
+        ) : (
+          renderError("Unkown Widget type")
+        )}
+      </div>
+    );
+  };
 
   render() {
     const { availableWidth, widgetSettings } = this.state;
@@ -130,6 +134,7 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
         isResizable={true}
         onLayoutChange={this.onLayoutChange}
         compactType={"vertical"}
+        margin={[5, 5]}
       >
         {widgetSettings.map(setting => this.renderWidget(setting))}
       </GridLayout>

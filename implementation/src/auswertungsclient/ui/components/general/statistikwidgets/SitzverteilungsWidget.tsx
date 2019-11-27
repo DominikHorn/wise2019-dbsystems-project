@@ -10,8 +10,11 @@ import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
 import { WahlSelector } from "../WahlSelector";
 import { SitzverteilungsChart } from "./SitzverteilungsChart";
+import { SitzverteilungsTable } from "./SitzverteilungsTable";
 
-export interface ISitzverteilungsWidgetProps extends IStatistikWidgetProps {}
+export interface ISitzverteilungsWidgetProps extends IStatistikWidgetProps {
+  readonly renderAsTable?: boolean;
+}
 
 interface IProps
   extends ISitzverteilungsWidgetProps,
@@ -36,7 +39,7 @@ class SitzverteilungsWidgetComponent extends React.PureComponent<
 
   render() {
     const { selectedWahl } = this.state;
-    const { allWahlenData, removeWidget } = this.props;
+    const { allWahlenData, removeWidget, renderAsTable } = this.props;
     return (
       <StatistikWidget
         removeWidget={removeWidget}
@@ -64,7 +67,11 @@ class SitzverteilungsWidgetComponent extends React.PureComponent<
         }
       >
         {selectedWahl ? (
-          <SitzverteilungsChart wahl={selectedWahl} />
+          renderAsTable ? (
+            <SitzverteilungsTable wahl={selectedWahl} />
+          ) : (
+            <SitzverteilungsChart wahl={selectedWahl} />
+          )
         ) : (
           renderInfo("Bitte eine Wahl auswählen")
         )}
