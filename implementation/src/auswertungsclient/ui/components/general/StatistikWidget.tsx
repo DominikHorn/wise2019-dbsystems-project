@@ -20,6 +20,7 @@ const StatistikWidgetComponent = (props: IProps) => (
       props.removeWidget && (
         <Button
           shape={"circle"}
+          size={"small"}
           type={"danger"}
           icon={"close"}
           onClick={props.removeWidget}
