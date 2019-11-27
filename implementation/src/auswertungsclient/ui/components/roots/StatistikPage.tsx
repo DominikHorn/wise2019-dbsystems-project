@@ -1,16 +1,16 @@
 import * as React from "react";
+import * as GridLayout from "react-grid-layout";
+import { Layout } from "react-grid-layout";
 import { RouteComponentProps } from "react-router";
 import { withErrorBoundary } from "../general/ErrorBoundary";
-import { SitzverteilungsWidget } from "../general/statistikwidgets/SitzverteilungsWidget";
-import GridLayout, {
-  Responsive,
-  WidthProvider,
-  Layout
-} from "react-grid-layout";
-import { Card } from "antd";
 import { AddWidgetWidget } from "../general/statistikwidgets/AddWidgetWidget";
+import { SitzverteilungsWidget } from "../general/statistikwidgets/SitzverteilungsWidget";
+import { renderError } from "../../../../wahlclient/ui/guiUtil";
 
-const ResponsiveGridLayout = WidthProvider(Responsive);
+type StatistikWidgetSettings = {
+  layout: Layout;
+  type: WidgetType;
+};
 
 export interface IStatistikPageProps {
   routeProps: RouteComponentProps<any>;
@@ -19,17 +19,35 @@ export interface IStatistikPageProps {
 interface IProps extends IStatistikPageProps {}
 
 interface IState {
-  readonly addWidgetLayout: Layout;
-  readonly layouts: Layout[];
+  readonly widgetSettings: StatistikWidgetSettings[];
+  readonly addCnt: number;
   readonly availableWidth: number;
+}
+
+enum WidgetType {
+  ADD,
+  SITZVERTEILUNG_PIECHART
 }
 
 class StatistikPageComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      addWidgetLayout: { i: "add", x: 0, y: 0, w: 6, h: 6, minW: 4, minH: 4 },
-      layouts: [],
+      widgetSettings: [
+        {
+          type: WidgetType.ADD,
+          layout: {
+            i: "add",
+            x: 0,
+            y: 0,
+            w: 4,
+            h: 4,
+            minW: 4,
+            minH: 4
+          }
+        }
+      ],
+      addCnt: 0,
       availableWidth: window.innerWidth - 80
     };
   }
@@ -39,22 +57,37 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
 
   private onWidgetAdd = () =>
     this.setState({
-      layouts: this.state.layouts.concat([
+      widgetSettings: this.state.widgetSettings.concat([
         {
-          i: `${this.state.layouts.length}`,
-          x: 6 * ((this.state.layouts.length + 1) % 2),
-          y: 6 * (this.state.layouts.length / 2),
-          w: 6,
-          h: 6,
-          minW: 4,
-          minH: 6
+          type: WidgetType.SITZVERTEILUNG_PIECHART,
+          layout: {
+            i: `${this.state.addCnt}`,
+            x: 4 * (this.state.widgetSettings.length % 3),
+            // Puts it at the bottom
+            y: Infinity,
+            w: 4,
+            h: 4,
+            minW: 4,
+            minH: 4
+          }
         }
-      ])
+      ]),
+      addCnt: this.state.addCnt + 1
     });
 
-  private onWidgetRemove = (id: string) =>
+  private onWidgetRemove = (removedI: string) =>
     this.setState({
-      layouts: this.state.layouts.filter(layout => layout.i !== id)
+      widgetSettings: this.state.widgetSettings.filter(
+        setting => setting.layout.i !== removedI
+      )
+    });
+
+  private onLayoutChange = (layouts: Layout[]) =>
+    this.setState({
+      widgetSettings: this.state.widgetSettings.map((setting, index) => ({
+        ...setting,
+        layout: layouts[index]
+      }))
     });
 
   componentDidMount() {
@@ -65,29 +98,36 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
     window.removeEventListener("resize", this.updateDimensions);
   }
 
+  private renderWidget = (setting: StatistikWidgetSettings) => (
+    <div key={setting.layout.i}>
+      {setting.type === WidgetType.ADD ? (
+        <AddWidgetWidget onWidgetAdd={this.onWidgetAdd} />
+      ) : setting.type === WidgetType.SITZVERTEILUNG_PIECHART ? (
+        <SitzverteilungsWidget
+          removeWidget={() => this.onWidgetRemove(setting.layout.i)}
+        />
+      ) : (
+        renderError("Unkown Widget type")
+      )}
+    </div>
+  );
+
   render() {
-    const { layouts, addWidgetLayout, availableWidth } = this.state;
+    const { availableWidth, widgetSettings } = this.state;
     const cols = 12;
+
     return (
       <GridLayout
         className={"layout"}
-        layout={[addWidgetLayout].concat(layouts)}
-        breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
+        layout={widgetSettings.map(setting => setting.layout)}
         cols={cols}
         rowHeight={50}
         width={availableWidth}
         isResizable={true}
+        onLayoutChange={this.onLayoutChange}
+        compactType={"vertical"}
       >
-        <div key={"add"}>
-          <AddWidgetWidget onWidgetAdd={this.onWidgetAdd} />
-        </div>
-        {layouts.map(layout => (
-          <div key={layout.i}>
-            <SitzverteilungsWidget
-              removeWidget={() => this.onWidgetRemove(layout.i)}
-            />
-          </div>
-        ))}
+        {widgetSettings.map(setting => this.renderWidget(setting))}
       </GridLayout>
     );
   }
