@@ -10,6 +10,7 @@ import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { StatistikWidget } from "../StatistikWidget";
 import { WahlSelector } from "../WahlSelector";
 import { SitzverteilungsChart } from "./SitzverteilungsChart";
+import { Row, Col } from "antd";
 
 export interface ISitzverteilungsWidgetProps {
   readonly removeWidget?: () => void;
@@ -44,13 +45,24 @@ class SitzverteilungsWidgetComponent extends React.PureComponent<
         removeWidget={removeWidget}
         title={
           <>
-            {"Landtagswahl: "}
-            <WahlSelector
-              displayLoading={allWahlenData.loading}
-              selectedWahl={selectedWahl}
-              selectableWahlen={allWahlenData.allWahlen}
-              onSelectWahl={this.onSelectWahl}
-            />
+            <span style={{ float: "left" }}>{"Landtagswahl:"}</span>
+            <span
+              style={{
+                display: "block",
+                overflow: "hidden",
+                paddingRight: "10px",
+                paddingLeft: "10px"
+              }}
+            >
+              <WahlSelector
+                displayLoading={allWahlenData.loading}
+                selectedWahl={selectedWahl}
+                selectableWahlen={allWahlenData.allWahlen}
+                onSelectWahl={this.onSelectWahl}
+                style={{ width: "100%" }}
+                size={"small"}
+              />
+            </span>
           </>
         }
       >

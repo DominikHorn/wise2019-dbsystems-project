@@ -7,6 +7,8 @@ export interface IWahlSelectorProps {
   displayLoading?: boolean;
   selectedWahl?: IWahl;
   onSelectWahl?: (wahl: IWahl) => void;
+  style?: React.CSSProperties;
+  size?: "small" | "default" | "large";
 }
 
 export const WahlSelector = (props: IWahlSelectorProps) =>
@@ -14,7 +16,8 @@ export const WahlSelector = (props: IWahlSelectorProps) =>
     <Select
       loading={props.displayLoading}
       placeholder={"Datum einer Landtagswahl"}
-      style={{ minWidth: "250px" }}
+      style={props.style || { minWidth: "220px" }}
+      size={props.size}
       onSelect={(wahlidstr: string) =>
         props.onSelectWahl &&
         props.onSelectWahl(
