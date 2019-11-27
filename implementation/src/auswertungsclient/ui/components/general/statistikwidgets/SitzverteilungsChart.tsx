@@ -25,11 +25,17 @@ function aggregateMandate(
       (parteiAggr[mandat.kandidat.partei.name] || 0) + 1;
   });
 
-  return Object.keys(parteiAggr).map(parteiname => ({
-    value: parteiAggr[parteiname],
-    name: parteiname,
-    itemStyle: { color: getParteiColor(parteiname) }
-  }));
+  return Object.keys(parteiAggr)
+    .map(parteiname => ({
+      value: parteiAggr[parteiname],
+      name: parteiname,
+      itemStyle: { color: getParteiColor(parteiname) }
+    }))
+    .sort((a, b) => {
+      if (a.value < b.value) return -1;
+      if (a.value > b.value) return 1;
+      return 0;
+    });
 }
 
 export interface ISitzverteilungsChartProps {
