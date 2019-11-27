@@ -2,10 +2,12 @@ import * as React from "react";
 import * as GridLayout from "react-grid-layout";
 import { Layout } from "react-grid-layout";
 import { RouteComponentProps } from "react-router";
+import { renderError } from "../../../../wahlclient/ui/guiUtil";
 import { withErrorBoundary } from "../general/ErrorBoundary";
 import { AddWidgetWidget } from "../general/statistikwidgets/AddWidgetWidget";
 import { SitzverteilungsWidget } from "../general/statistikwidgets/SitzverteilungsWidget";
-import { renderError } from "../../../../wahlclient/ui/guiUtil";
+import { WidgetType } from "../general/statistikwidgets/WidgetTypes";
+import { PlaceholderWidget } from "../general/statistikwidgets/PlaceholderWidget";
 
 type StatistikWidgetSettings = {
   layout: Layout;
@@ -22,11 +24,6 @@ interface IState {
   readonly widgetSettings: StatistikWidgetSettings[];
   readonly addCnt: number;
   readonly availableWidth: number;
-}
-
-enum WidgetType {
-  ADD,
-  SITZVERTEILUNG_PIECHART
 }
 
 const COLUMN_COUNT = 12;
@@ -59,11 +56,11 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
   private updateDimensions = () =>
     this.setState({ availableWidth: window.innerWidth - 80 });
 
-  private onWidgetAdd = () =>
+  private onWidgetAdd = (widgetType: WidgetType) =>
     this.setState({
       widgetSettings: this.state.widgetSettings.concat([
         {
-          type: WidgetType.SITZVERTEILUNG_PIECHART,
+          type: widgetType,
           layout: {
             i: `${this.state.addCnt}`,
             x:
@@ -106,6 +103,10 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
     <div key={setting.layout.i}>
       {setting.type === WidgetType.ADD ? (
         <AddWidgetWidget onWidgetAdd={this.onWidgetAdd} />
+      ) : setting.type === WidgetType.PLACEHOLDER ? (
+        <PlaceholderWidget
+          removeWidget={() => this.onWidgetRemove(setting.layout.i)}
+        />
       ) : setting.type === WidgetType.SITZVERTEILUNG_PIECHART ? (
         <SitzverteilungsWidget
           removeWidget={() => this.onWidgetRemove(setting.layout.i)}

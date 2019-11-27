@@ -7,14 +7,11 @@ import {
 import { IGetMandateQueryHocProps } from "../../../../../client-graphql/public/getMandateQuery";
 import { IWahl } from "../../../../../shared/sharedTypes";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
-import { StatistikWidget } from "../StatistikWidget";
+import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
 import { WahlSelector } from "../WahlSelector";
 import { SitzverteilungsChart } from "./SitzverteilungsChart";
-import { Row, Col } from "antd";
 
-export interface ISitzverteilungsWidgetProps {
-  readonly removeWidget?: () => void;
-}
+export interface ISitzverteilungsWidgetProps extends IStatistikWidgetProps {}
 
 interface IProps
   extends ISitzverteilungsWidgetProps,
