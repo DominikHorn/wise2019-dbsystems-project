@@ -1,5 +1,10 @@
 import * as React from "react";
-import { IPartei, IWahl, EParteiNamen } from "../../../../shared/sharedTypes";
+import {
+  IPartei,
+  IWahl,
+  EParteiNamen,
+  IMandat
+} from "../../../../shared/sharedTypes";
 import { Tag, Table, Row, Col } from "antd";
 import {
   withMandateQuery,
@@ -7,6 +12,7 @@ import {
 } from "../../../../client-graphql/public/getMandateQuery";
 import { compose } from "react-apollo";
 import { getParteiColor } from "../../guiUtil";
+import { TableProps } from "antd/lib/table";
 
 const columns = [
   {
@@ -56,21 +62,24 @@ const columns = [
 ];
 
 export interface IMandatListeProps {
-  wahl: IWahl;
+  readonly wahl: IWahl;
+  readonly tableProps?: TableProps<IMandat>;
+  readonly omitIdColumn?: boolean;
 }
 
 interface IProps extends IMandatListeProps, IGetMandateQueryHocProps {}
 
 const MandatListeComponent = (props: IProps) => (
   <Table
-    columns={columns}
-    dataSource={props.mandateData.mandate || []}
-    loading={props.mandateData.loading}
     pagination={
       (props.mandateData.mandate || []).length > 250 && { pageSize: 250 }
     }
     size={"small"}
     scroll={{ y: 600 }}
+    {...props.tableProps}
+    columns={props.omitIdColumn ? columns.slice(1) : columns}
+    dataSource={props.mandateData.mandate || []}
+    loading={props.mandateData.loading}
   ></Table>
 );
 

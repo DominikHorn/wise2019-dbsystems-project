@@ -1,34 +1,24 @@
 import * as React from "react";
+import { IWahl } from "../../../../../shared/sharedTypes";
 import { compose } from "react-apollo";
 import {
   IGetAllWahlenQueryHocProps,
   withAllWahlenQuery
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
-import { IGetMandateQueryHocProps } from "../../../../../client-graphql/public/getMandateQuery";
-import { IWahl } from "../../../../../shared/sharedTypes";
-import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
 import { WahlSelector } from "../WahlSelector";
-import { SitzverteilungsChart } from "./SitzverteilungsChart";
-import { SitzverteilungsTable } from "./SitzverteilungsTable";
+import { MandatListe } from "../MandatListe";
+import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 
-export interface ISitzverteilungsWidgetProps extends IStatistikWidgetProps {
-  readonly renderAsTable?: boolean;
-}
+export interface IMandatListeWidgetProps extends IStatistikWidgetProps {}
 
-interface IProps
-  extends ISitzverteilungsWidgetProps,
-    IGetAllWahlenQueryHocProps,
-    IGetMandateQueryHocProps {}
+interface IProps extends IMandatListeWidgetProps, IGetAllWahlenQueryHocProps {}
 
 interface IState {
-  selectedWahl?: IWahl;
+  readonly selectedWahl?: IWahl;
 }
 
-class SitzverteilungsWidgetComponent extends React.PureComponent<
-  IProps,
-  IState
-> {
+class MandatListeWidgetComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {};
@@ -39,7 +29,8 @@ class SitzverteilungsWidgetComponent extends React.PureComponent<
 
   render() {
     const { selectedWahl } = this.state;
-    const { allWahlenData, removeWidget, renderAsTable } = this.props;
+    const { allWahlenData } = this.props;
+
     return (
       <StatistikWidget
         {...this.props}
@@ -67,11 +58,15 @@ class SitzverteilungsWidgetComponent extends React.PureComponent<
         }
       >
         {selectedWahl ? (
-          renderAsTable ? (
-            <SitzverteilungsTable wahl={selectedWahl} />
-          ) : (
-            <SitzverteilungsChart wahl={selectedWahl} />
-          )
+          <MandatListe
+            wahl={selectedWahl}
+            tableProps={{
+              scroll: {},
+              style: { overflowY: "scroll", height: "100%" },
+              size: "small"
+            }}
+            omitIdColumn={true}
+          />
         ) : (
           renderInfo("Bitte eine Wahl auswählen")
         )}
@@ -80,10 +75,10 @@ class SitzverteilungsWidgetComponent extends React.PureComponent<
   }
 }
 
-const SitzverteilungsWidgetWithQueries = compose(
-  withAllWahlenQuery<ISitzverteilungsWidgetProps>()
-)(SitzverteilungsWidgetComponent);
+const MandatListeWidgetWithQueries = compose(
+  withAllWahlenQuery<IMandatListeWidgetProps>()
+)(MandatListeWidgetComponent);
 
-export const SitzverteilungsWidget = SitzverteilungsWidgetWithQueries as React.ComponentType<
-  ISitzverteilungsWidgetProps
+export const MandatListeWidget = MandatListeWidgetWithQueries as React.ComponentType<
+  IMandatListeWidgetProps
 >;

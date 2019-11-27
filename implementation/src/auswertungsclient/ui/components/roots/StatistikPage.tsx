@@ -8,6 +8,7 @@ import { AddWidgetWidget } from "../general/statistikwidgets/AddWidgetWidget";
 import { SitzverteilungsWidget } from "../general/statistikwidgets/SitzverteilungsWidget";
 import { WidgetType } from "../general/statistikwidgets/WidgetTypes";
 import { PlaceholderWidget } from "../general/statistikwidgets/PlaceholderWidget";
+import { MandatListeWidget } from "../general/statistikwidgets/MandatListeWidget";
 
 type StatistikWidgetSettings = {
   layout: Layout;
@@ -114,6 +115,8 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
             removeWidget={removeWidget}
             renderAsTable={true}
           />
+        ) : setting.type === WidgetType.MANDAT_LISTE ? (
+          <MandatListeWidget removeWidget={removeWidget} />
         ) : (
           renderError("Unkown Widget type")
         )}
