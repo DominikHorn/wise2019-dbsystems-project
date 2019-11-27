@@ -29,6 +29,13 @@ enum WidgetType {
   SITZVERTEILUNG_PIECHART
 }
 
+const COLUMN_COUNT = 12;
+const WIDGET_DIMENSIONS = {
+  w: 4,
+  h: 4,
+  minW: 4,
+  minH: 4
+};
 class StatistikPageComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
@@ -40,10 +47,7 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
             i: "add",
             x: 0,
             y: 0,
-            w: 4,
-            h: 4,
-            minW: 4,
-            minH: 4
+            ...WIDGET_DIMENSIONS
           }
         }
       ],
@@ -62,13 +66,13 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
           type: WidgetType.SITZVERTEILUNG_PIECHART,
           layout: {
             i: `${this.state.addCnt}`,
-            x: 4 * (this.state.widgetSettings.length % 3),
+            x:
+              WIDGET_DIMENSIONS.minW *
+              (this.state.widgetSettings.length %
+                (COLUMN_COUNT / WIDGET_DIMENSIONS.minW)),
             // Puts it at the bottom
             y: Infinity,
-            w: 4,
-            h: 4,
-            minW: 4,
-            minH: 4
+            ...WIDGET_DIMENSIONS
           }
         }
       ]),
@@ -114,13 +118,12 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
 
   render() {
     const { availableWidth, widgetSettings } = this.state;
-    const cols = 12;
 
     return (
       <GridLayout
         className={"layout"}
         layout={widgetSettings.map(setting => setting.layout)}
-        cols={cols}
+        cols={COLUMN_COUNT}
         rowHeight={50}
         width={availableWidth}
         isResizable={true}
