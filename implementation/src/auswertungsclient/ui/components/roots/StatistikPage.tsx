@@ -63,10 +63,10 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
           type: widgetType,
           layout: {
             i: `${this.state.addCnt}`,
-            x:
-              WIDGET_DIMENSIONS.minW *
-              (this.state.widgetSettings.length %
-                (COLUMN_COUNT / WIDGET_DIMENSIONS.minW)),
+            x: 0,
+            // WIDGET_DIMENSIONS.minW *
+            // (this.state.widgetSettings.length %
+            //   (COLUMN_COUNT / WIDGET_DIMENSIONS.minW)),
             // Puts it at the bottom
             y: Infinity,
             ...WIDGET_DIMENSIONS
