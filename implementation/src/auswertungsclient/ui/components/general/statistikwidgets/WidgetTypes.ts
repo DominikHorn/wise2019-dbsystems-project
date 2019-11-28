@@ -3,5 +3,7 @@ export enum WidgetType {
   PLACEHOLDER = "Platzhalter",
   SITZVERTEILUNG_PIECHART = "Sitzverteilung - Torte",
   SITZVERTEILUNG_TABLE = "Sitzverteilung - Tabelle",
-  MANDAT_LISTE = "Mandatliste"
+  MANDAT_LISTE = "Mandatliste",
+  STIMMVERTEILUNG_REGIERUNGSBEZIRKE = "Stimmverteilung - Regierungsbezirke",
+  STIMMVERTEILUNG_STIMMKREISE = "Stimmverteilung - Stimmkreise"
 }

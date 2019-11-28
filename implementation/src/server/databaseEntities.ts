@@ -1,3 +1,5 @@
+import { EParteiName } from "../shared/enums";
+
 /**
  * Schema group name
  */
@@ -20,7 +22,7 @@ export interface IDatabaseRegierungsbezirk extends IDatabaseEntity {
 
 export interface IDatabasePartei extends IDatabaseEntity {
   readonly id: number;
-  readonly name: string;
+  readonly name: EParteiName;
 }
 
 export interface IDatabaseKandidat extends IDatabaseEntity {

@@ -8,6 +8,7 @@ import {
 } from "../../../../../client-graphql/public/getMandateQuery";
 import { IMandat, IWahl } from "../../../../../shared/sharedTypes";
 import { getParteiColor } from "../../../guiUtil";
+import { EParteiName } from "../../../../../shared/enums";
 
 function aggregateMandate(
   mandate: IMandat[]
@@ -26,7 +27,7 @@ function aggregateMandate(
   });
 
   return Object.keys(parteiAggr)
-    .map(parteiname => ({
+    .map((parteiname: EParteiName) => ({
       value: parteiAggr[parteiname],
       name: parteiname,
       itemStyle: { color: getParteiColor(parteiname) }

@@ -1,6 +1,7 @@
 import { adapters } from "../../adapterUtil";
 import { DatabaseSchemaGroup } from "../../../databaseEntities";
 import { IMandat } from "../../../../shared/sharedTypes";
+import { EParteiName } from "../../../../shared/enums";
 
 type MaterialViews =
   | "kandidatgebundene_gueltige_stimmen"
@@ -77,7 +78,7 @@ export async function getMandate(wahlid: number): Promise<IMandat[]> {
       name: resobj.kandidat_name,
       partei: {
         id: resobj.partei_id,
-        name: resobj.partei_name
+        name: resobj.partei_name as EParteiName
       }
     },
     direktmandat: resobj.direktmandat

@@ -31,6 +31,7 @@
     "@hot-loader/react-dom": "^16.8.6",
     "@types/apollo-upload-client": "^8.1.1",
     "@types/bcrypt": "^3.0.0",
+    "@types/echarts": "^4.4.1",
     "@types/graphql": "^14.2.0",
     "@types/graphql-iso-date": "^3.3.3",
     "@types/memoize-one": "^4.1.1",

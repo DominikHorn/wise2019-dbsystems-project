@@ -1,25 +1,20 @@
 import { Alert, Col, Divider, Icon, Row, Spin, Tooltip } from "antd";
 import { AlertProps } from "antd/lib/alert";
 import * as React from "react";
-import { EParteiNamen } from "../../shared/sharedTypes";
 import "./guiUtil.css";
+import { EParteiName } from "../../shared/enums";
 
-export function getParteiColor(parteiname: string): string {
-  switch (parteiname) {
-    case EParteiNamen.CSU:
-      return "#303030";
-    case EParteiNamen.SPD:
-      return "#e65949";
-    case EParteiNamen.FREIE_WAEHLER:
-      return "#d99241";
-    case EParteiNamen.GRUENE:
-      return "#3c9e2b";
-    case EParteiNamen.FDP:
-      return "#ccc12b";
-    case EParteiNamen.AFD:
-      return "#5084cc";
-  }
-  return "#8c40c2";
+export const PARTEI_COLORS: { [parteiname: string]: string } = {
+  [EParteiName.CSU]: "#303030",
+  [EParteiName.SPD]: "#e65949",
+  [EParteiName.FREIE_WAEHLER]: "#d99241",
+  [EParteiName.GRUENE]: "#3c9e2b",
+  [EParteiName.FDP]: "#ccc12b",
+  [EParteiName.AFD]: "#5084cc"
+};
+
+export function getParteiColor(parteiname: EParteiName): string {
+  return PARTEI_COLORS[parteiname] || "#8c40c2";
 }
 
 export const renderCenteredLoading = () => (

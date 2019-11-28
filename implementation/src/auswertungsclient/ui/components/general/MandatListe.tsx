@@ -1,10 +1,5 @@
 import * as React from "react";
-import {
-  IPartei,
-  IWahl,
-  EParteiNamen,
-  IMandat
-} from "../../../../shared/sharedTypes";
+import { IPartei, IWahl, IMandat } from "../../../../shared/sharedTypes";
 import { Tag, Table, Row, Col } from "antd";
 import {
   withMandateQuery,
