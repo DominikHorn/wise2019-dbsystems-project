@@ -1,9 +1,11 @@
 scalar Upload
+
 scalar Date
 
 type Query {
   getAllWahlen: [Wahl]!
   getMandate(wahlid: Int!): [Mandat]!
+  getStimmkreisWinner(wahlid: Int!, erststimmen: Boolean!): [StimmkreisWinner]!
 }
 
 type Mutation {
@@ -34,4 +36,11 @@ type Kandidat {
 type Partei {
   id: Int!
   name: String!
+}
+
+type StimmkreisWinner {
+  wahl_id: Int!
+  stimmkreis_id: Int!
+  partei_id: Int!
+  anzahl: Int!
 }

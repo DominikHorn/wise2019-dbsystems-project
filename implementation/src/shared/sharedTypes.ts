@@ -1,5 +1,9 @@
 import { ReadStream } from "fs";
-import { IDatabaseWahl, IDatabasePartei } from "../server/databaseEntities";
+import {
+  IDatabaseWahl,
+  IDatabasePartei,
+  IDatabaseStimmkreisWinner
+} from "../server/databaseEntities";
 
 export interface GraphQLFileUpload {
   createReadStream: () => ReadStream;
@@ -19,3 +23,5 @@ export interface IMandat {
   kandidat: IKandidat;
   direktmandat: boolean;
 }
+
+export interface IStimmkreisWinner extends IDatabaseStimmkreisWinner {}

@@ -4,7 +4,8 @@ import { getWahlen } from "../adapters/postgres/queries/wahlenPSQL";
 import { parseCSV } from "../csv-parser/CSVParser";
 import {
   computeElectionResults,
-  getMandate
+  getMandate,
+  computeWinnerParties
 } from "../adapters/postgres/queries/electionPSQL";
 
 export interface IContext {
@@ -17,7 +18,11 @@ export const resolvers: { [key: string]: any } = {
   Date: GraphQLDateTime,
   Query: {
     getAllWahlen: () => getWahlen(),
-    getMandate: (_: any, args: { wahlid: number }) => getMandate(args.wahlid)
+    getMandate: (_: any, args: { wahlid: number }) => getMandate(args.wahlid),
+    getStimmkreisWinner: (
+      _: any,
+      args: { wahlid: number; erststimmen: boolean }
+    ) => computeWinnerParties(args.wahlid, args.erststimmen)
   },
   Mutation: {
     importCSVData: async (

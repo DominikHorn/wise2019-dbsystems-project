@@ -606,3 +606,49 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_listenmandate 
 			AND k.partei_id = lpp.partei_id
 	WHERE flf.mandatordnung <= lpp.anzahl
 );
+
+CREATE OR REPLACE VIEW "landtagswahlen".sieger_erstimmen_pro_stimmkreis  AS (
+with erststimmen_pro_stimmkreis AS(
+    SELECT kgs.wahl_id, kgs.stimmkreis_id, kgs.kandidat_id, kgs.anzahl
+    FROM "landtagswahlen".direktkandidaten dk, "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
+    WHERE dk.wahl_id = kgs.wahl_id AND dk.stimmkreis_id = kgs.stimmkreis_id AND dk.direktkandidat_id = kgs.kandidat_id
+), erststimmen_pro_partei AS (
+    SELECT eps.wahl_id, dk.stimmkreis_id, k.partei_id, sum(eps.anzahl) as anzahl
+    FROM erststimmen_pro_stimmkreis eps, "landtagswahlen".kandidaten k, "landtagswahlen".direktkandidaten dk
+    WHERE eps.wahl_id  = dk.wahl_id AND eps.kandidat_id = k.id AND k.id = dk.direktkandidat_id
+    GROUP BY eps.wahl_id, dk.stimmkreis_id, k.partei_id
+    )
+
+    SELECT epp.wahl_id, epp.stimmkreis_id, epp.partei_id, epp.anzahl
+    FROM erststimmen_pro_partei epp
+    WHERE not exists(SELECT * FROM erststimmen_pro_partei epp2 WHERE epp2.anzahl > epp.anzahl AND epp2.wahl_id = epp.wahl_id AND epp2.stimmkreis_id = epp.stimmkreis_id)
+    
+);
+
+
+CREATE OR REPLACE VIEW "landtagswahlen".sieger_zweitstimmen_pro_stimmkreis AS (   
+		 with zweitstimmen_pro_stimmkreis AS(
+        SELECT lgs.wahl_id, lgs.stimmkreis_id, lgs.partei_id, lgs.anzahl
+        FROM "landtagswahlen".listengebundene_gueltige_stimmen lgs
+
+        UNION
+
+        SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, sum(kgs.anzahl) as anzahl
+        FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs, "landtagswahlen".kandidaten k
+        WHERE not exists(select * FROM "landtagswahlen".direktkandidaten dk WHERE kgs.kandidat_id = dk.direktkandidat_id AND dk.stimmkreis_id = kgs.stimmkreis_id AND dk.wahl_id = kgs.wahl_id)
+        AND k.id = kgs.kandidat_id
+        GROUP BY kgs.wahl_id, kgs.stimmkreis_id, k.partei_id
+
+    ), zweitstimmen_pro_partei as (
+        SELECT zps.wahl_id, zps.stimmkreis_id, zps.partei_id, sum(zps.anzahl) as anzahl
+        FROM zweitstimmen_pro_stimmkreis zps
+        GROUP BY zps.wahl_id, zps.stimmkreis_id, zps.partei_id
+    )
+    SELECT zpp.wahl_id, zpp.stimmkreis_id, zpp.partei_id, zpp.anzahl
+    FROM zweitstimmen_pro_partei zpp
+    WHERE not exists(SELECT * FROM zweitstimmen_pro_partei zpp2 WHERE zpp2.anzahl > zpp.anzahl AND zpp2.wahl_id = zpp.wahl_id AND zpp2.stimmkreis_id = zpp.stimmkreis_id)
+     
+		 );
+
+
+

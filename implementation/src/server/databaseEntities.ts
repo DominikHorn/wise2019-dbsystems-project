@@ -63,3 +63,10 @@ export interface IDatabaseKandidatVote extends IDatabaseEntity {
   readonly wahl_id: number;
   readonly gueltig: boolean;
 }
+
+export interface IDatabaseStimmkreisWinner extends IDatabaseEntity {
+  readonly wahl_id: number;
+  readonly stimmkreis_id: number;
+  readonly partei_id: number;
+  readonly anzahl: number;
+}

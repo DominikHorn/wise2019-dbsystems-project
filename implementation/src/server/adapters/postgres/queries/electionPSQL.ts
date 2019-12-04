@@ -1,5 +1,8 @@
 import { adapters } from "../../adapterUtil";
-import { DatabaseSchemaGroup } from "../../../databaseEntities";
+import {
+  DatabaseSchemaGroup,
+  IDatabaseStimmkreisWinner
+} from "../../../databaseEntities";
 import { IMandat } from "../../../../shared/sharedTypes";
 import { EParteiName } from "../../../../shared/enums";
 
@@ -32,6 +35,24 @@ export async function computeElectionResults(): Promise<boolean> {
     );
   }
   return true;
+}
+
+export async function computeWinnerParties(
+  wahlid: number,
+  erststimmen: boolean
+): Promise<IDatabaseStimmkreisWinner[]> {
+  if (erststimmen) {
+    return adapters.postgres.query(
+      `SELECT * FROM "landtagswahlen".sieger_erstimmen_pro_stimmkreis
+    `
+    );
+  } else {
+    return adapters.postgres.query(
+      `
+      SELECT * FROM "landtagswahlen".sieger_zweitstimmen_pro_stimmkreis
+      `
+    );
+  }
 }
 
 export async function getMandate(wahlid: number): Promise<IMandat[]> {
