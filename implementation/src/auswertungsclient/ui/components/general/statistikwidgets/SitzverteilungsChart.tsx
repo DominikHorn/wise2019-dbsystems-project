@@ -9,6 +9,7 @@ import {
 import { IMandat, IWahl } from "../../../../../shared/sharedTypes";
 import { getParteiColor } from "../../../guiUtil";
 import { EParteiName } from "../../../../../shared/enums";
+import { sleep } from "../../../../../shared/util";
 
 function aggregateMandate(
   mandate: IMandat[]
@@ -45,37 +46,45 @@ export interface ISitzverteilungsChartProps {
 
 interface IProps extends ISitzverteilungsChartProps, IGetMandateQueryHocProps {}
 
-const SitzverteilungsChartComponent = (props: IProps) =>
-  (props.mandateData.mandate && (
-    <ReactEcharts
-      style={{ width: "100%", height: "100%" }}
-      option={{
-        tooltip: {
-          trigger: "item",
-          formatter: "{a} <br/>{b}: {c} ({d}%)"
-        },
-        series: [
-          {
-            name: "Sitzverteilung",
-            type: "pie",
-            selectedMode: "single",
-            radius: [0, "65%"],
-            label: {
-              normal: {
-                show: true,
-                position: "outer",
-                itemStyle: {
-                  color: "gray"
-                }
-              }
-            },
-
-            data: aggregateMandate(props.mandateData.mandate)
+class SitzverteilungsChartComponent extends React.PureComponent<IProps> {
+  private getOptions = () => ({
+    tooltip: {
+      trigger: "item",
+      formatter: "{a} <br/>{b}: {c} ({d}%)"
+    },
+    // animationDelayUpdate: () => 10
+    series: [
+      {
+        name: "Sitzverteilung",
+        type: "pie",
+        selectedMode: "single",
+        radius: [0, "65%"],
+        label: {
+          normal: {
+            show: true,
+            position: "outer",
+            itemStyle: {
+              color: "gray"
+            }
           }
-        ]
-      }}
-    />
-  )) || <Spin />;
+        },
+        data: aggregateMandate(this.props.mandateData.mandate || [])
+      }
+    ]
+  });
+
+  render() {
+    const { mandateData } = this.props;
+    return (
+      (mandateData.mandate && mandateData.mandate.length > 0 && (
+        <ReactEcharts
+          style={{ width: "100%", height: "100%" }}
+          option={this.getOptions()}
+        />
+      )) || <Spin />
+    );
+  }
+}
 
 const SitzverteilungsChartWithQueries = compose(
   withMandateQuery<ISitzverteilungsChartProps>(props => props.wahl.id)

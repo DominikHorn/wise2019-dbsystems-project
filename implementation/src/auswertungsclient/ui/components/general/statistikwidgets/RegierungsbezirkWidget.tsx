@@ -26,49 +26,45 @@ const regierungsbezirk_data = [
 
 const stimmkreis_data = JSON.parse(SK_JSON).features.map((feature: any) => ({
   name: feature.properties.name,
-  value: Math.floor(Math.random() * Object.values(PARTEI_COLORS).length)
+  value: Math.floor(Math.random() * (Object.values(PARTEI_COLORS).length - 1))
 }));
 
-console.log(stimmkreis_data);
-
 export const RegierungsbezirkWidget = (props: IRegierungsbezirkWidgetProps) => (
-  <StatistikWidget {...props}>
+  <StatistikWidget
+    {...props}
+    title={`Stimmverteilung - ${
+      props.showStimmkreise ? "Stimmkreise" : "Regierungsbezirke"
+    }`}
+  >
     <ReactEcharts
       style={{ width: "100%", height: "100%" }}
       option={{
-        title: {
-          text: "Stimmverteilung",
-          left: "center"
-        },
         tooltip: {
           trigger: "item",
-          // showDelay: 0,
-          // transitionDuration: 0.2,
+          showDelay: 0,
+          transitionDuration: 0.2,
           formatter: (params: any) =>
             `${params.data.name}<br/>${
               Object.keys(EParteiName)[params.data.value]
             }`
         },
         visualMap: {
-          //   left: "right",
           show: false,
           min: 0,
           max: Object.values(PARTEI_COLORS).length - 1,
           inRange: {
             color: Object.values(PARTEI_COLORS)
           }
-          //   text: ["Sonstige", "CSU"],
-          //   calculable: true
         },
         toolbox: {
-          show: false
-          // left: "left",
-          // top: "top",
-          // feature: {
-          //   dataView: { readOnly: false },
-          //   restore: {},
-          //   saveAsImage: {}
-          // }
+          left: "left",
+          top: "top",
+          language: "en",
+          feature: {
+            dataView: { readOnly: false },
+            restore: {},
+            saveAsImage: {}
+          }
         },
         series: [
           {
