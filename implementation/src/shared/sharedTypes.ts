@@ -24,4 +24,15 @@ export interface IMandat {
   direktmandat: boolean;
 }
 
-export interface IStimmkreisWinner extends IDatabaseStimmkreisWinner {}
+export interface IStimmkreis {
+  id: number;
+  // regierungsbezirk: IRegierungsbezirk;
+  name: string;
+}
+
+export interface IStimmkreisWinner {
+  wahl: IWahl;
+  partei: IPartei;
+  stimmkreis: IStimmkreis;
+  anzahl: number;
+}

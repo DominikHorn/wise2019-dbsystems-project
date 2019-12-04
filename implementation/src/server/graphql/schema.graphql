@@ -38,9 +38,14 @@ type Partei {
   name: String!
 }
 
+type Stimmkreis {
+  id: Int!
+  name: String!
+}
+
 type StimmkreisWinner {
-  wahl_id: Int!
-  stimmkreis_id: Int!
-  partei_id: Int!
+  wahl: Wahl!
+  stimmkreis: Stimmkreis!
+  partei: Partei!
   anzahl: Int!
 }

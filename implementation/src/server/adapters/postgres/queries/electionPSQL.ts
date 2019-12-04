@@ -3,7 +3,7 @@ import {
   DatabaseSchemaGroup,
   IDatabaseStimmkreisWinner
 } from "../../../databaseEntities";
-import { IMandat } from "../../../../shared/sharedTypes";
+import { IMandat, IStimmkreisWinner } from "../../../../shared/sharedTypes";
 import { EParteiName } from "../../../../shared/enums";
 
 type MaterialViews =
@@ -37,22 +37,53 @@ export async function computeElectionResults(): Promise<boolean> {
   return true;
 }
 
+enum EWinnerPartyViews {
+  SIEGER_ERSTSTIMMEN = "sieger_erstimmen_pro_stimmkreis",
+  SIEGER_ZWEITSTIMMEN = "sieger_zweitsimmen_pro_stimmkreis"
+}
+
 export async function computeWinnerParties(
   wahlid: number,
   erststimmen: boolean
-): Promise<IDatabaseStimmkreisWinner[]> {
-  if (erststimmen) {
-    return adapters.postgres.query(
-      `SELECT * FROM "landtagswahlen".sieger_erstimmen_pro_stimmkreis
+): Promise<IStimmkreisWinner[]> {
+  let data: IDatabaseStimmkreisWinner[] = [];
+  data = await adapters.postgres.query(
     `
-    );
-  } else {
-    return adapters.postgres.query(
-      `
-      SELECT * FROM "landtagswahlen".sieger_zweitstimmen_pro_stimmkreis
-      `
-    );
-  }
+      SELECT 
+        p.id as partei_id,
+        p.name as partei_name,
+        w.id as wahl_id,
+        w.wahldatum as wahldatum,
+        sk.id as stimmkreis_id,
+        sk.name as stimmkreis_name,
+        seps.anzahl as anzahl
+      FROM "landtagswahlen".${
+        erststimmen
+          ? EWinnerPartyViews.SIEGER_ERSTSTIMMEN
+          : EWinnerPartyViews.SIEGER_ZWEITSTIMMEN
+      } seps
+        JOIN "landtagswahlen".parteien p on seps.partei_id = p.id
+        JOIN "landtagswahlen".wahlen w on seps.wahl_id = w.id
+        JOIN "landtagswahlen".stimmkreise sk on seps.stimmkreis_id = sk.id
+      WHERE seps.wahl_id = $1
+    `,
+    [wahlid]
+  );
+  return data.map(skwinner => ({
+    wahl: {
+      id: skwinner.wahl_id,
+      wahldatum: skwinner.wahldatum
+    },
+    stimmkreis: {
+      id: skwinner.stimmkreis_id,
+      name: skwinner.stimmkreis_name
+    },
+    partei: {
+      id: skwinner.partei_id,
+      name: skwinner.partei_name as EParteiName
+    },
+    anzahl: skwinner.anzahl
+  }));
 }
 
 export async function getMandate(wahlid: number): Promise<IMandat[]> {

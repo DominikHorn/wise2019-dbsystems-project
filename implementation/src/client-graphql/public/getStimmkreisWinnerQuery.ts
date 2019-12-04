@@ -4,11 +4,23 @@ import { IStimmkreisWinner } from "../../shared/sharedTypes";
 import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
 
 const getStimmkreisWinnerQuery = gql`
-  query getStimmkreisWinnerQuery($wahlid: Int!, erststimmen: Boolean!) {
-    stimmkreisWinner: getStimmkreisWinner(wahlid: $wahlid, erststimmen: $erststimmen) {
-      wahl_id
-      stimmkreis_id
-      partei_id
+  query getStimmkreisWinnerQuery($wahlid: Int!, $erststimmen: Boolean!) {
+    stimmkreisWinner: getStimmkreisWinner(
+      wahlid: $wahlid
+      erststimmen: $erststimmen
+    ) {
+      wahl {
+        id
+        wahldatum
+      }
+      stimmkreis {
+        id
+        name
+      }
+      partei {
+        id
+        name
+      }
       anzahl
     }
   }
