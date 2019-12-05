@@ -183,7 +183,7 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_gueltige_listengebundene_stim
 );
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_ungueltige_erststimmen (
-    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	wahl_id smallint NOT NULL,
 	stimmkreis_id smallint NOT NULL,
 	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE,
@@ -192,7 +192,7 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_ungueltige_erststimmen (
 );
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_ungueltige_zweitstimmen (
-    id int NOT NULL GENERATED ALWAYS AS IDENTITY,
+	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	wahl_id smallint NOT NULL,
 	stimmkreis_id smallint NOT NULL,
 	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE,

@@ -30,9 +30,9 @@ interface IState {
 
 const COLUMN_COUNT = 12;
 const WIDGET_DIMENSIONS = {
-  w: 4,
+  w: 6,
   h: 6,
-  minW: 4,
+  minW: 6,
   minH: 6
 };
 class StatistikPageComponent extends React.PureComponent<IProps, IState> {

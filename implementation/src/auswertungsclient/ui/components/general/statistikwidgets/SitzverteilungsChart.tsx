@@ -1,4 +1,3 @@
-import { Spin } from "antd";
 import ReactEcharts from "echarts-for-react";
 import * as React from "react";
 import { compose } from "react-apollo";
@@ -6,10 +5,11 @@ import {
   IGetMandateQueryHocProps,
   withMandateQuery
 } from "../../../../../client-graphql/public/getMandateQuery";
+import { EParteiName } from "../../../../../shared/enums";
 import { IMandat, IWahl } from "../../../../../shared/sharedTypes";
 import { getParteiColor } from "../../../guiUtil";
-import { EParteiName } from "../../../../../shared/enums";
 import { sleep } from "../../../../../shared/util";
+import { Spin } from "antd";
 
 function aggregateMandate(
   mandate: IMandat[]
@@ -52,36 +52,60 @@ class SitzverteilungsChartComponent extends React.PureComponent<IProps> {
       trigger: "item",
       formatter: "{a} <br/>{b}: {c} ({d}%)"
     },
-    // animationDelayUpdate: () => 10
-    series: [
-      {
-        name: "Sitzverteilung",
-        type: "pie",
-        selectedMode: "single",
-        radius: [0, "65%"],
-        label: {
-          normal: {
-            show: true,
-            position: "outer",
-            itemStyle: {
-              color: "gray"
-            }
-          }
-        },
-        data: aggregateMandate(this.props.mandateData.mandate || [])
-      }
-    ]
+    animate: true
+    // animationDelayUpdate: () => 100,
+    // animationDuration: 3000
   });
 
+  componentWillReceiveProps(newProps: IProps) {
+    if (this.props.mandateData.mandate !== newProps.mandateData.mandate) {
+      this.updateChartData(newProps);
+    }
+  }
+
+  private updateChartData = (props: IProps) => {
+    if (!this.chart) return;
+    if (!props.mandateData || !props.mandateData.mandate) return;
+    sleep(100).then(() =>
+      this.chart.setOption({
+        series: [
+          {
+            name: "Sitzverteilung",
+            type: "pie",
+            selectedMode: "single",
+            radius: [0, "65%"],
+            label: {
+              normal: {
+                show: true,
+                position: "outer",
+                itemStyle: {
+                  color: "gray"
+                }
+              }
+            },
+            data: aggregateMandate(props.mandateData.mandate || [])
+          }
+        ]
+      })
+    );
+  };
+
+  // Echart types ;/
+  private chart: any = null;
   render() {
     const { mandateData } = this.props;
     return (
-      (mandateData.mandate && mandateData.mandate.length > 0 && (
+      <>
         <ReactEcharts
           style={{ width: "100%", height: "100%" }}
+          onChartReady={chart => {
+            this.chart = chart;
+            this.updateChartData(this.props);
+          }}
           option={this.getOptions()}
         />
-      )) || <Spin />
+        {mandateData.loading && <Spin />}
+      </>
     );
   }
 }

@@ -21,7 +21,8 @@
     "watch:server": "webpack --progress --config webpack.server.config.js --watch",
     "start:postgres": "../../postgres/start_postgres.sh",
     "stop:postgres": "postgres/stop_postgres.sh",
-    "nodemon:server": "node dist/server/server.bundle.js --watch dist/server"
+    "nodemon:server": "node dist/server/server.bundle.js --watch dist/server",
+    "echarts:english": "node node_modules/echarts/build/build.js --lang en"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",

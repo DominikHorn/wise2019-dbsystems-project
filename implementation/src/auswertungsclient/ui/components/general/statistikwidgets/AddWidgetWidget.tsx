@@ -13,11 +13,17 @@ type WidgetMenuEntry = {
   values: string[];
 };
 
+// Delay in seconds for menu close
+const MENU_CLOSE_DELAY = 1;
 export const AddWidgetWidget = (props: IAddWidgetWidgetProps) => (
   <StatistikWidget>
     <Dropdown
+      mouseLeaveDelay={MENU_CLOSE_DELAY}
       overlay={
-        <Menu onClick={param => props.onWidgetAdd(param.key as WidgetType)}>
+        <Menu
+          onClick={param => props.onWidgetAdd(param.key as WidgetType)}
+          subMenuCloseDelay={MENU_CLOSE_DELAY}
+        >
           {Object.values(WidgetType)
             .filter(type => type !== WidgetType.ADD)
             .reduce((prev, curr) => {
