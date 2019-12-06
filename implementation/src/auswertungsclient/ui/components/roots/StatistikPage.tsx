@@ -31,9 +31,9 @@ interface IState {
 const COLUMN_COUNT = 12;
 const WIDGET_DIMENSIONS = {
   w: 6,
-  h: 6,
+  h: 8,
   minW: 6,
-  minH: 6
+  minH: 8
 };
 class StatistikPageComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
@@ -65,10 +65,10 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
           type: widgetType,
           layout: {
             i: `${this.state.addCnt}`,
-            x: 0,
-            // WIDGET_DIMENSIONS.minW *
-            // (this.state.widgetSettings.length %
-            //   (COLUMN_COUNT / WIDGET_DIMENSIONS.minW)),
+            x:
+              WIDGET_DIMENSIONS.minW *
+              (this.state.widgetSettings.length %
+                (COLUMN_COUNT / WIDGET_DIMENSIONS.minW)),
             // Puts it at the bottom
             y: Infinity,
             ...WIDGET_DIMENSIONS
