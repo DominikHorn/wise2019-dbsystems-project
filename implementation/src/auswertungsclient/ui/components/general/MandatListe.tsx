@@ -43,7 +43,7 @@ const columns = [
     title: "Partei",
     key: "partei",
     dataIndex: "kandidat.partei",
-    width: 200,
+    width: 100,
     render: (partei: IPartei) => (
       <Row type={"flex"} justify={"center"}>
         <Col>
@@ -74,6 +74,7 @@ const MandatListeComponent = (props: IProps) => (
     {...props.tableProps}
     columns={props.omitIdColumn ? columns.slice(1) : columns}
     dataSource={props.mandateData.mandate || []}
+    rowKey={"kandidat.id"}
     loading={props.mandateData.loading}
   ></Table>
 );
