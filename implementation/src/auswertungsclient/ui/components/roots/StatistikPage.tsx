@@ -119,7 +119,7 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
         ) : setting.type === WidgetType.MANDAT_LISTE ? (
           <MandatListeWidget removeWidget={removeWidget} />
         ) : setting.type === WidgetType.GEWINNER_STIMMKREISE ? (
-          <GewinnerWidget removeWidget={removeWidget} erststimmen={true} />
+          <GewinnerWidget removeWidget={removeWidget} />
         ) : (
           renderError("Unkown Widget type")
         )}

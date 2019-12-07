@@ -1,24 +1,18 @@
 import { registerMap } from "echarts";
-import ReactEcharts from "echarts-for-react";
 import * as React from "react";
-import SK_JSON from "../../../../geojson/stimmkreise.geojson";
-import { PARTEI_COLORS, renderCenteredLoading } from "../../../guiUtil";
-import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
-import { EParteiName } from "../../../../../shared/enums";
 import { compose } from "react-apollo";
 import {
-  withStimmkreisWinnerQuery,
-  IGetStimmkreisWinnerHocProps
-} from "../../../../../client-graphql/public/getStimmkreisWinnerQuery";
-import { IStimmkreisWinner } from "../../../../../shared/sharedTypes";
-
-registerMap("Stimmkreise", SK_JSON as Object);
-
-export interface IGewinnerWidgetProps extends IStatistikWidgetProps {
-  readonly erststimmen: boolean;
-}
-
-interface IProps extends IGewinnerWidgetProps, IGetStimmkreisWinnerHocProps {}
+  withAllWahlenQuery,
+  IGetAllWahlenQueryHocProps
+} from "../../../../../client-graphql/public/getAllWahlenQuery";
+import SK_JSON from "../../../../geojson/stimmkreise.geojson";
+import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
+import { WahlSelector } from "../dataselectors/WahlSelector";
+import { IWahl } from "../../../../../shared/sharedTypes";
+import { Row, Col } from "antd";
+import { BooleanSelector } from "../dataselectors/BooleanSelector";
+import { GewinnerGeoChart } from "./GewinnerGeoChart";
+import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 
 // import RB_JSON from "../../../../geojson/regierungsbezirke.geojson";
 // registerMap("Regierungsbezirke", RB_JSON as Object);
@@ -32,82 +26,68 @@ interface IProps extends IGewinnerWidgetProps, IGetStimmkreisWinnerHocProps {}
 //   { name: "Schwaben", value: 1 }
 // ];
 
-function mapToChartData(
-  queryData: IStimmkreisWinner[]
-): { name: string; value: number }[] {
-  return queryData.map(winner => ({
-    name: `${winner.stimmkreis.name}`,
-    value: winner.partei.id - 1,
-    stimmanzahl: winner.anzahl
-  }));
+registerMap("Stimmkreise", SK_JSON as Object);
+
+export interface IGewinnerWidgetProps extends IStatistikWidgetProps {}
+
+interface IProps extends IGewinnerWidgetProps, IGetAllWahlenQueryHocProps {}
+
+interface IState {
+  readonly selectedWahl?: IWahl;
+  readonly erststimmen: boolean;
 }
 
-class GewinnerWidgetComponent extends React.PureComponent<IProps> {
-  private eatEvent = (event: React.MouseEvent) => {
-    event.preventDefault();
-    event.stopPropagation();
-  };
+class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
+  constructor(props: IProps) {
+    super(props);
+    this.state = {
+      erststimmen: true
+    };
+  }
+
+  private onSelectWahl = (selectedWahl: IWahl) =>
+    this.setState({ selectedWahl });
+
+  private onSelectErststimmen = (erststimmen: boolean) =>
+    this.setState({ erststimmen });
 
   render() {
-    const { erststimmen, stimmkreisWinnerData } = this.props;
-    const data = mapToChartData(stimmkreisWinnerData.stimmkreisWinner || []);
+    const { allWahlenData } = this.props;
+    const { selectedWahl, erststimmen } = this.state;
     return (
       <StatistikWidget
         {...this.props}
-        title={`${
-          erststimmen ? "Erststimm" : "Zweitstimm"
-        }gewinner der Stimmkreise`}
+        title={
+          <>
+            <Row type={"flex"} gutter={16}>
+              <Col>{"Stimmkreisgewinner"}</Col>
+              <Col>
+                <BooleanSelector
+                  label={"Erststimmen"}
+                  checked={erststimmen}
+                  onValueChanged={this.onSelectErststimmen}
+                />
+              </Col>
+            </Row>
+            <Row style={{ marginRight: "10px" }}>
+              <Col>
+                <WahlSelector
+                  displayLoading={allWahlenData.loading}
+                  selectedWahl={selectedWahl}
+                  selectableWahlen={allWahlenData.allWahlen}
+                  onSelectWahl={this.onSelectWahl}
+                  style={{ width: "100%" }}
+                  size={"small"}
+                />
+              </Col>
+            </Row>
+          </>
+        }
       >
-        {stimmkreisWinnerData.stimmkreisWinner &&
-        stimmkreisWinnerData.stimmkreisWinner.length > 0 ? (
-          <div
-            onMouseDown={this.eatEvent}
-            style={{ width: "100%", height: "100%" }}
-          >
-            <ReactEcharts
-              style={{ width: "100%", height: "100%" }}
-              option={{
-                tooltip: {
-                  trigger: "item",
-                  showDelay: 0,
-                  transitionDuration: 0.2,
-                  formatter: (params: any) =>
-                    `${params.name}<br/>${
-                      Object.values(EParteiName)[params.value]
-                    }<br/>Stimmen: ${params.data.stimmanzahl}`
-                },
-                visualMap: {
-                  show: false,
-                  min: 0,
-                  max: Object.values(PARTEI_COLORS).length - 1,
-                  inRange: {
-                    color: Object.values(PARTEI_COLORS)
-                  }
-                },
-                toolbox: {
-                  left: "15px",
-                  top: "5px",
-                  feature: {
-                    saveAsImage: { title: "Als Bild speichern" }
-                  }
-                },
-                series: [
-                  {
-                    name: "Stimmkreise",
-                    type: "map",
-                    roam: true,
-                    map: "Stimmkreise",
-                    itemStyle: {
-                      emphasis: { label: { show: false } }
-                    },
-                    data: data
-                  }
-                ]
-              }}
-            />
-          </div>
+        {selectedWahl ? (
+          <GewinnerGeoChart erststimmen={erststimmen} wahl={selectedWahl} />
         ) : (
-          renderCenteredLoading()
+          renderInfo("Bitte eine Wahl auswählen")
         )}
       </StatistikWidget>
     );
@@ -115,10 +95,7 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps> {
 }
 
 const GewinnerWidgetWithQueries = compose(
-  withStimmkreisWinnerQuery<IGewinnerWidgetProps>(
-    () => 1,
-    props => props.erststimmen
-  )
+  withAllWahlenQuery<IGewinnerWidgetProps>()
 )(GewinnerWidgetComponent);
 
 export const GewinnerWidget = GewinnerWidgetWithQueries as React.ComponentType<

@@ -39,7 +39,7 @@ class SitzverteilungsWidgetComponent extends React.PureComponent<
 
   render() {
     const { selectedWahl } = this.state;
-    const { allWahlenData, removeWidget, renderAsTable } = this.props;
+    const { allWahlenData, renderAsTable } = this.props;
     return (
       <StatistikWidget
         {...this.props}
