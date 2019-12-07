@@ -37,27 +37,31 @@ function mapToChartData(
 ): { name: string; value: number }[] {
   return queryData.map(winner => ({
     name: `${winner.stimmkreis.name}`,
-    value: winner.partei.id - 1
+    value: winner.partei.id - 1,
+    stimmanzahl: winner.anzahl
   }));
 }
 
 class GewinnerWidgetComponent extends React.PureComponent<IProps> {
   private eatEvent = (event: React.MouseEvent) => {
-    event.bubbles = false;
     event.preventDefault();
+    event.stopPropagation();
   };
 
   render() {
-    const { stimmkreisWinnerData } = this.props;
+    const { erststimmen, stimmkreisWinnerData } = this.props;
     const data = mapToChartData(stimmkreisWinnerData.stimmkreisWinner || []);
     return (
-      <StatistikWidget {...this.props} title={`Gewinner der Stimmkreise`}>
+      <StatistikWidget
+        {...this.props}
+        title={`${
+          erststimmen ? "Erststimm" : "Zweitstimm"
+        }gewinner der Stimmkreise`}
+      >
         {stimmkreisWinnerData.stimmkreisWinner &&
         stimmkreisWinnerData.stimmkreisWinner.length > 0 ? (
           <div
-            onClick={this.eatEvent}
-            onDrag={this.eatEvent}
-            onDrop={this.eatEvent}
+            onMouseDown={this.eatEvent}
             style={{ width: "100%", height: "100%" }}
           >
             <ReactEcharts
@@ -67,11 +71,10 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps> {
                   trigger: "item",
                   showDelay: 0,
                   transitionDuration: 0.2,
-                  formatter: (params: any) => {
-                    return `${params.name}<br/>${
-                      Object.keys(EParteiName)[params.value]
-                    }`;
-                  }
+                  formatter: (params: any) =>
+                    `${params.name}<br/>${
+                      Object.values(EParteiName)[params.value]
+                    }<br/>Stimmen: ${params.data.stimmanzahl}`
                 },
                 visualMap: {
                   show: false,
@@ -85,10 +88,7 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps> {
                   left: "left",
                   top: "top",
                   feature: {
-                    // dataView: { readOnly: true, title: "Als Tabelle ansehen" },
-                    // restore: {},
-                    saveAsImage: { title: "Als Bild speichern" },
-                    dataZoom: {}
+                    saveAsImage: { title: "Als Bild speichern" }
                   }
                 },
                 series: [
@@ -98,7 +98,7 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps> {
                     roam: true,
                     map: "Stimmkreise",
                     itemStyle: {
-                      emphasis: { label: { show: true } }
+                      emphasis: { label: { show: false } }
                     },
                     data: data
                   }
