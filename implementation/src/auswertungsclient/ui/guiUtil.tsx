@@ -17,6 +17,19 @@ export function getParteiColor(parteiname: EParteiName): string {
   return PARTEI_COLORS[parteiname] || "#8c40c2";
 }
 
+/**
+ * This function ensures that the Mousevent is not received
+ * By child or parent components. This is necessary to enable
+ * mouse controls within widgets, as the propagated
+ * mouse down event will otherwise start the widget drag and
+ * drop.
+ * @param event MouseEvent from React
+ */
+export function eatEvent(event: React.MouseEvent) {
+  event.preventDefault();
+  event.stopPropagation();
+}
+
 export const renderCenteredLoading = () => (
   <Icon
     className={"gui-util-centered-loading"}

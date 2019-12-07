@@ -4,7 +4,11 @@ import {
   withStimmkreisWinnerQuery
 } from "../../../../../client-graphql/public/getStimmkreisWinnerQuery";
 import { EParteiName } from "../../../../../shared/enums";
-import { PARTEI_COLORS, renderCenteredLoading } from "../../../guiUtil";
+import {
+  PARTEI_COLORS,
+  renderCenteredLoading,
+  eatEvent
+} from "../../../guiUtil";
 import ReactEcharts from "echarts-for-react";
 import { IStimmkreisWinner, IWahl } from "../../../../../shared/sharedTypes";
 import { compose } from "react-apollo";
@@ -15,20 +19,6 @@ export interface IGewinnerGeoChartProps {
 }
 
 interface IProps extends IGewinnerGeoChartProps, IGetStimmkreisWinnerHocProps {}
-
-/**
- * This function ensures that the Mousevent is not received
- * By child or parent components. This is necessary to enable
- * panning the geojson map inside the widget, as the propagated
- * mouse down event will otherwise start the widget drag and
- * drop.
- * @param event MouseEvent from React
- */
-function eatEvent(event: React.MouseEvent) {
-  event.preventDefault();
-  event.stopPropagation();
-}
-
 /**
  * Function for mapping the received IStimmkreisWinner array to
  * the data format required for ECharts geojson map

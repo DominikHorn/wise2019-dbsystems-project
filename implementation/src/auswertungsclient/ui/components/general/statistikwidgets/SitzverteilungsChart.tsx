@@ -7,7 +7,7 @@ import {
 } from "../../../../../client-graphql/public/getMandateQuery";
 import { EParteiName } from "../../../../../shared/enums";
 import { IMandat, IWahl } from "../../../../../shared/sharedTypes";
-import { getParteiColor } from "../../../guiUtil";
+import { getParteiColor, eatEvent } from "../../../guiUtil";
 import { sleep } from "../../../../../shared/util";
 import { Spin } from "antd";
 import { renderCenteredLoading } from "../../../../../wahlclient/ui/guiUtil";
@@ -53,7 +53,14 @@ class SitzverteilungsChartComponent extends React.PureComponent<IProps> {
       trigger: "item",
       formatter: "{a} <br/>{b}: {c} ({d}%)"
     },
-    animate: true
+    animate: true,
+    toolbox: {
+      left: "15px",
+      top: "5px",
+      feature: {
+        saveAsImage: { title: "Als Bild speichern" }
+      }
+    }
   });
 
   componentWillReceiveProps(newProps: IProps) {
@@ -94,7 +101,7 @@ class SitzverteilungsChartComponent extends React.PureComponent<IProps> {
   render() {
     const { mandateData } = this.props;
     return (
-      <>
+      <div style={{ width: "100%", height: "100%" }} onMouseDown={eatEvent}>
         <ReactEcharts
           style={{ width: "100%", height: "100%" }}
           onChartReady={chart => {
@@ -104,7 +111,7 @@ class SitzverteilungsChartComponent extends React.PureComponent<IProps> {
           option={this.getOptions()}
         />
         {mandateData.loading && renderCenteredLoading()}
-      </>
+      </div>
     );
   }
 }

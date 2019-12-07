@@ -6,7 +6,11 @@ import {
 import { compose } from "react-apollo";
 import { IWahl, IUeberhangMandat } from "../../../../../shared/sharedTypes";
 import ReactEcharts from "echarts-for-react";
-import { renderCenteredLoading, getParteiColor } from "../../../guiUtil";
+import {
+  renderCenteredLoading,
+  getParteiColor,
+  eatEvent
+} from "../../../guiUtil";
 import { sleep } from "../../../../../shared/util";
 import { EParteiName } from "../../../../../shared/enums";
 
@@ -30,7 +34,6 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
     animationEasing: "elasticOut",
     legend: {
       data: [
-        // EMandatCategory.DIREKTMANDATE,
         EMandatCategory.UEBERHANGMANDATE,
         EMandatCategory.AUSGLEICHSMANDATE
       ],
@@ -39,21 +42,27 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
       left: 10,
       top: 5
     },
-    brush: {
-      toolbox: ["rect", "polygon", "lineX", "lineY", "keep", "clear"],
-      xAxisIndex: 0
-    },
+    // brush: {
+    //   toolbox: ["rect", "polygon", "lineX", "lineY", "keep", "clear"],
+    //   xAxisIndex: 0
+    // },
     toolbox: {
       feature: {
+        saveAsImage: {},
         magicType: {
           type: ["stack", "tiled"]
         },
-        dataView: {}
+        dataZoom: { title: "Zoom", yAxisIndex: false }
       }
     },
-    tooltip: {},
+    tooltip: {
+      formatter: (param: any) =>
+        `${param.data.category} <br/> ${param.data.partei.name}: ${
+          param.data.value < 0 ? -param.data.value : param.data.value
+        }`
+    },
     yAxis: {
-      inverse: true,
+      inverse: false,
       splitArea: { show: false }
     },
     grid: {
@@ -88,23 +97,24 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
           ...(prev.data || {}),
           [curr.partei.id]: {
             ...(prev.data[curr.partei.id] || {}),
+            parteiname: curr.partei.name,
             [EMandatCategory.DIREKTMANDATE]: {
               ...((prev.data[curr.partei.id] || {})[
                 EMandatCategory.DIREKTMANDATE
               ] || {}),
-              [curr.regierungsbezirk.id]: -(curr.zustehend + curr.ueberhang)
+              [curr.regierungsbezirk.id]: curr.zustehend + curr.ueberhang
             },
             [EMandatCategory.AUSGLEICHSMANDATE]: {
               ...((prev.data[curr.partei.id] || {})[
                 EMandatCategory.AUSGLEICHSMANDATE
               ] || {}),
-              [curr.regierungsbezirk.id]: curr.ausgleich
+              [curr.regierungsbezirk.id]: -curr.ausgleich
             },
             [EMandatCategory.UEBERHANGMANDATE]: {
               ...((prev.data[curr.partei.id] || {})[
                 EMandatCategory.UEBERHANGMANDATE
               ] || {}),
-              [curr.regierungsbezirk.id]: curr.ueberhang
+              [curr.regierungsbezirk.id]: -curr.ueberhang
             }
           }
         },
@@ -133,8 +143,10 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
       data: Object.keys(res.data[partei_id][category])
         .sort()
         .map((key: string) => ({
+          category,
           name: key,
           value: res.data[partei_id][category][key],
+          partei: { id: partei_id, name: res.data[partei_id].parteiname },
           itemStyle: category === EMandatCategory.DIREKTMANDATE && {
             color: getParteiColor(
               Object.values(EParteiName)[Number(partei_id) - 1]
@@ -166,9 +178,8 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
       props.ueberhangmandateData.ueberhangmandate
     );
 
-    console.log(chartData);
-    this.chart.clear();
-    sleep(100).then(() =>
+    sleep(100).then(() => {
+      this.chart.clear();
       this.chart.setOption({
         ...this.getOptions(),
         xAxis: {
@@ -177,35 +188,20 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
           silent: false,
           axisLine: { onZero: true },
           splitLine: { show: false },
-          splitArea: { show: false }
+          splitArea: { show: false },
+          axisLabel: { rotate: -45 }
         },
         series: chartData.series
-      })
-    );
+      });
+    });
   };
-
-  /**
-   * This function ensures that the Mousevent is not received
-   * By child or parent components. This is necessary to enable
-   * panning the brush feature, as the propagated
-   * mouse down event will otherwise start the widget drag and
-   * drop.
-   * @param event MouseEvent from React
-   */
-  private eatEvent(event: React.MouseEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-  }
 
   // Echart types are bad ;/
   private chart: any = null;
   render() {
     const { ueberhangmandateData } = this.props;
     return (
-      <div
-        onMouseDown={this.eatEvent}
-        style={{ width: "100%", height: "100%" }}
-      >
+      <div onMouseDown={eatEvent} style={{ width: "100%", height: "100%" }}>
         <ReactEcharts
           style={{ width: "100%", height: "100%" }}
           onChartReady={chart => {
