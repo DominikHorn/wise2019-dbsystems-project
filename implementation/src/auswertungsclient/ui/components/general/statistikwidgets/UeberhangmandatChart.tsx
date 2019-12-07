@@ -6,8 +6,9 @@ import {
 import { compose } from "react-apollo";
 import { IWahl, IUeberhangMandat } from "../../../../../shared/sharedTypes";
 import ReactEcharts from "echarts-for-react";
-import { renderCenteredLoading } from "../../../guiUtil";
+import { renderCenteredLoading, getParteiColor } from "../../../guiUtil";
 import { sleep } from "../../../../../shared/util";
+import { EParteiName } from "../../../../../shared/enums";
 
 export interface IUeberhangmandatChartProps {
   readonly wahl: IWahl;
@@ -26,6 +27,7 @@ enum EMandatCategory {
 class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
   private getOptions = () => ({
     animate: true,
+    animationEasing: "elasticOut",
     legend: {
       data: [
         EMandatCategory.DIREKTMANDATE,
@@ -75,7 +77,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
       type: string; // immer bar
       stack: number; // welcher stapel im regierungsbezirk (parteiId)
       itemStyle: any; // fixed css style
-      data: number[]; // Die zahlen pro bar
+      data: { name: string; value: number; itemStyle: any }[]; // Die zahlen pro bar
     }[];
   } => {
     const res = ueberhangmandate.reduce(
@@ -128,7 +130,15 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
       },
       data: Object.keys(res.data[partei_id][category])
         .sort()
-        .map((key: string) => res.data[partei_id][category][key])
+        .map((key: string) => ({
+          name: key,
+          value: res.data[partei_id][category][key],
+          itemStyle: category === EMandatCategory.DIREKTMANDATE && {
+            color: getParteiColor(
+              Object.values(EParteiName)[Number(partei_id) - 1]
+            )
+          }
+        }))
     });
 
     return {
@@ -154,12 +164,14 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
       props.ueberhangmandateData.ueberhangmandate
     );
 
+    console.log(chartData);
+    this.chart.clear();
     sleep(100).then(() =>
       this.chart.setOption({
         ...this.getOptions(),
         xAxis: {
           data: chartData.xAxisLabels,
-          name: "Regierungsbezirke",
+          name: "",
           silent: false,
           axisLine: { onZero: true },
           splitLine: { show: false },
@@ -170,12 +182,28 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
     );
   };
 
+  /**
+   * This function ensures that the Mousevent is not received
+   * By child or parent components. This is necessary to enable
+   * panning the brush feature, as the propagated
+   * mouse down event will otherwise start the widget drag and
+   * drop.
+   * @param event MouseEvent from React
+   */
+  private eatEvent(event: React.MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
   // Echart types are bad ;/
   private chart: any = null;
   render() {
     const { ueberhangmandateData } = this.props;
     return (
-      <>
+      <div
+        onMouseDown={this.eatEvent}
+        style={{ width: "100%", height: "100%" }}
+      >
         <ReactEcharts
           style={{ width: "100%", height: "100%" }}
           onChartReady={chart => {
@@ -185,7 +213,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
           option={{}}
         />
         {ueberhangmandateData.loading && renderCenteredLoading()}
-      </>
+      </div>
     );
   }
 }
