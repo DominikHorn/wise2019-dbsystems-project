@@ -54,8 +54,6 @@ class SitzverteilungsChartComponent extends React.PureComponent<IProps> {
       formatter: "{a} <br/>{b}: {c} ({d}%)"
     },
     animate: true
-    // animationDelayUpdate: () => 100,
-    // animationDuration: 3000
   });
 
   componentWillReceiveProps(newProps: IProps) {

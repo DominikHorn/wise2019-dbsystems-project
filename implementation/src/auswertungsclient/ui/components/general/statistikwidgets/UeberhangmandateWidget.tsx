@@ -1,13 +1,14 @@
 import * as React from "react";
-import { StatistikWidget, IStatistikWidgetProps } from "../StatistikWidget";
 import { compose } from "react-apollo";
 import {
-  withAllWahlenQuery,
-  IGetAllWahlenQueryHocProps
+  IGetAllWahlenQueryHocProps,
+  withAllWahlenQuery
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
-import { WahlSelector } from "../dataselectors/WahlSelector";
 import { IWahl } from "../../../../../shared/sharedTypes";
-import { Row, Col } from "antd";
+import { renderInfo } from "../../../guiUtil";
+import { WahlSelector } from "../dataselectors/WahlSelector";
+import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
+import { UeberhangMandatChart } from "./UeberhangmandatChart";
 
 export interface IUeberhangmandateWidgetProps extends IStatistikWidgetProps {}
 
@@ -58,7 +59,13 @@ class UeberhangmandateWidgetComponent extends React.PureComponent<
             </span>
           </>
         }
-      ></StatistikWidget>
+      >
+        {selectedWahl ? (
+          <UeberhangMandatChart wahl={selectedWahl} />
+        ) : (
+          renderInfo("Bitte eine Wahl auswählen")
+        )}
+      </StatistikWidget>
     );
   }
 }

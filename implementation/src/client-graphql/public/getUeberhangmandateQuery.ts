@@ -5,7 +5,7 @@ import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
 
 const getUeberhangmandateQuery = gql`
   query getUeberhangmandateQuery($wahlid: Int!) {
-    ueberhangmandate: getUeberhangmandate(wahlid: $wahlid) {
+    ueberhangmandate: getUeberhangMandate(wahlid: $wahlid) {
       regierungsbezirk {
         id
         name
