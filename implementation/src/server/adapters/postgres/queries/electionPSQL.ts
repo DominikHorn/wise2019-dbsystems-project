@@ -39,7 +39,7 @@ export async function computeElectionResults(): Promise<boolean> {
 
 enum EWinnerPartyViews {
   SIEGER_ERSTSTIMMEN = "sieger_erstimmen_pro_stimmkreis",
-  SIEGER_ZWEITSTIMMEN = "sieger_zweitsimmen_pro_stimmkreis"
+  SIEGER_ZWEITSTIMMEN = "sieger_zweitstimmen_pro_stimmkreis"
 }
 
 export async function computeWinnerParties(
