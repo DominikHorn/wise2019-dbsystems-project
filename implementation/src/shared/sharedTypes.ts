@@ -1,6 +1,9 @@
 import { ReadStream } from "fs";
-import { IDatabasePartei, IDatabaseWahl } from "../server/databaseEntities";
-import e = require("express");
+import {
+  IDatabaseWahl,
+  IDatabasePartei,
+  IDatabaseWahlbeteiligung
+} from "../server/databaseEntities";
 
 export interface GraphQLFileUpload {
   createReadStream: () => ReadStream;
@@ -58,3 +61,5 @@ export interface IKnapperKandidat {
   gewinner: boolean; // Ob der Kandidat gewonnen hat oder nicht
   platz: number; // Platz in der knappsten Liste seiner Partei
 }
+
+export interface IWahlbeteiligung extends IDatabaseWahlbeteiligung {}

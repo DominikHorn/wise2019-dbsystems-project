@@ -71,3 +71,9 @@ export interface IDatabaseStimmkreisWinner extends IDatabaseEntity {
   readonly partei_name: string;
   readonly anzahl: number;
 }
+
+export interface IDatabaseWahlbeteiligung extends IDatabaseEntity {
+  readonly wahl_id: number;
+  readonly stimmkreis_id: number;
+  readonly wahlbeteiligung: number;
+}

@@ -41,6 +41,8 @@ enum INFO_CSV_KEYS {
   stimmberechtigte = "Stimmberechtigte",
   ungueltige_erstimmen = "ungueltige Erststimmen 2018",
   ungueltige_zweitstimmen = "ungueltige Zweitstimmen 2018"
+  //ungueltige_erstimmen = "gültige Erststimmen insgesamt 2018",
+  //ungueltige_zweitstimmen = "gültige Zweitstimmen insgesamt 2018"
 }
 
 async function parseCrawledCSV(
@@ -214,14 +216,19 @@ async function parseInfoCSV(
   wahl: IDatabaseWahl,
   aggregiert: boolean
 ) {
+  console.log("column: " + INFO_CSV_KEYS.ungueltige_erstimmen);
+  console.log("column: " + INFO_CSV_KEYS.ungueltige_zweitstimmen);
   for (const row of result.data) {
     const stimmkreis_id = row[INFO_CSV_KEYS.stimmkreisID];
     const anzahlWahlberechtigte = row[INFO_CSV_KEYS.stimmberechtigte];
-    //TODO: ungueltige Stimmen für 2013 einlesen!! LG
-    const erstvoteAmount = Number(`${row[INFO_CSV_KEYS.ungueltige_erstimmen]}`);
-    const zweitvoteAmount = Number(
-      `${row[INFO_CSV_KEYS.ungueltige_zweitstimmen]}`
-    );
+    //TODO: ungueltige Stimmen für 2013 einlesen LG
+    const erstvoteAmountStr = row[INFO_CSV_KEYS.ungueltige_erstimmen];
+    const zweitvoteAmountStr = row[INFO_CSV_KEYS.ungueltige_zweitstimmen];
+    const erstvoteAmount = Number(erstvoteAmountStr);
+    const zweitvoteAmount = Number(zweitvoteAmountStr);
+
+    console.log("anzahl erstimmen: " + erstvoteAmount);
+    console.log("anzahl zweitstimmen: " + zweitvoteAmount);
 
     let ungueltigeEinzelErstVotes: VoteType[] = [];
     let ungueltigeAggregiertErstVotes: VoteType[] = []; //TODO 2013
@@ -238,8 +245,8 @@ async function parseInfoCSV(
     //insert ungueltige erstimmen
     if (aggregiert) {
       ungueltigeAggregiertErstVotes.push({
-        values: [stimmkreis_id, wahl.id],
-        quantity: erstvoteAmount
+        values: [stimmkreis_id, wahl.id, erstvoteAmount],
+        quantity: 1
       });
     } else {
       ungueltigeEinzelErstVotes.push({
@@ -249,7 +256,7 @@ async function parseInfoCSV(
     }
     if (ungueltigeAggregiertErstVotes.length > 0) {
       await insertVotes(
-        ["stimmkreis_id", "wahl_id"],
+        ["stimmkreis_id", "wahl_id", "anzahl"],
         "aggregiert_ungueltige_erststimmen",
         ungueltigeAggregiertErstVotes,
         client
@@ -268,8 +275,8 @@ async function parseInfoCSV(
     //insert ungueltige zweitstimmen
     if (aggregiert) {
       ungueltigeAggregiertZweitVotes.push({
-        values: [stimmkreis_id, wahl.id],
-        quantity: zweitvoteAmount
+        values: [stimmkreis_id, wahl.id, zweitvoteAmount],
+        quantity: 1
       });
     } else {
       ungueltigeEinzelZweitVotes.push({
@@ -279,7 +286,7 @@ async function parseInfoCSV(
     }
     if (ungueltigeAggregiertZweitVotes.length > 0) {
       await insertVotes(
-        ["stimmkreis_id", "wahl_id"],
+        ["stimmkreis_id", "wahl_id", "anzahl"],
         "aggregiert_ungueltige_zweitstimmen",
         ungueltigeAggregiertZweitVotes,
         client
