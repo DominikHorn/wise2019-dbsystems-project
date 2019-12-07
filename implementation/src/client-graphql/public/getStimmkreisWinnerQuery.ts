@@ -9,10 +9,6 @@ const getStimmkreisWinnerQuery = gql`
       wahlid: $wahlid
       erststimmen: $erststimmen
     ) {
-      wahl {
-        id
-        wahldatum
-      }
       stimmkreis {
         id
         name

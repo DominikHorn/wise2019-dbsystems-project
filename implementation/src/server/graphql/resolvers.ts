@@ -5,7 +5,8 @@ import { parseCSV } from "../csv-parser/CSVParser";
 import {
   computeElectionResults,
   getMandate,
-  computeWinnerParties
+  computeWinnerParties,
+  getUeberhangmandate
 } from "../adapters/postgres/queries/electionPSQL";
 
 export interface IContext {
@@ -22,7 +23,9 @@ export const resolvers: { [key: string]: any } = {
     getStimmkreisWinner: (
       _: any,
       args: { wahlid: number; erststimmen: boolean }
-    ) => computeWinnerParties(args.wahlid, args.erststimmen)
+    ) => computeWinnerParties(args.wahlid, args.erststimmen),
+    getUeberhangMandate: (_: any, args: { wahlid: number }) =>
+      getUeberhangmandate(args.wahlid)
   },
   Mutation: {
     importCSVData: async (

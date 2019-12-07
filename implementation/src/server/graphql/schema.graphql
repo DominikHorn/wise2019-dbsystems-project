@@ -6,6 +6,7 @@ type Query {
   getAllWahlen: [Wahl]!
   getMandate(wahlid: Int!): [Mandat]!
   getStimmkreisWinner(wahlid: Int!, erststimmen: Boolean!): [StimmkreisWinner]!
+  getUeberhangMandate(wahlid: Int!): [UeberhangMandat]!
 }
 
 type Mutation {
@@ -44,8 +45,20 @@ type Stimmkreis {
 }
 
 type StimmkreisWinner {
-  wahl: Wahl!
   stimmkreis: Stimmkreis!
   partei: Partei!
   anzahl: Int!
+}
+
+type Regierungsbezirk {
+  id: Int!
+  name: String!
+}
+
+type UeberhangMandat {
+  regierungsbezirk: Regierungsbezirk!
+  partei: Partei!
+  ueberhang: Int!
+  ausgleich: Int!
+  zustehend: Int!
 }
