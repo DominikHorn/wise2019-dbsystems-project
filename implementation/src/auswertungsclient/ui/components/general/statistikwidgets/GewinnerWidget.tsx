@@ -85,8 +85,8 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps> {
                   }
                 },
                 toolbox: {
-                  left: "left",
-                  top: "top",
+                  left: "15px",
+                  top: "5px",
                   feature: {
                     saveAsImage: { title: "Als Bild speichern" }
                   }

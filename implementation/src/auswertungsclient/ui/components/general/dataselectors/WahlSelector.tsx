@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Select, Spin } from "antd";
-import { IWahl } from "../../../../shared/sharedTypes";
-import { renderCenteredLoading } from "../../guiUtil";
+import { IWahl } from "../../../../../shared/sharedTypes";
+import { renderCenteredLoading } from "../../../guiUtil";
 
 export interface IWahlSelectorProps {
   selectableWahlen?: IWahl[];

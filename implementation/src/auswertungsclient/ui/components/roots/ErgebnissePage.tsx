@@ -1,7 +1,7 @@
 import { Card } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
-import { WahlSelector } from "../general/WahlSelector";
+import { WahlSelector } from "../general/dataselectors/WahlSelector";
 import { compose } from "react-apollo";
 import {
   IGetAllWahlenQueryHocProps,

@@ -8,7 +8,7 @@ import { IGetMandateQueryHocProps } from "../../../../../client-graphql/public/g
 import { IWahl } from "../../../../../shared/sharedTypes";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
-import { WahlSelector } from "../WahlSelector";
+import { WahlSelector } from "../dataselectors/WahlSelector";
 import { SitzverteilungsChart } from "./SitzverteilungsChart";
 import { SitzverteilungsTable } from "./SitzverteilungsTable";
 

@@ -6,7 +6,7 @@ import {
   withAllWahlenQuery
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
-import { WahlSelector } from "../WahlSelector";
+import { WahlSelector } from "../dataselectors/WahlSelector";
 import { MandatListe } from "../MandatListe";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 
