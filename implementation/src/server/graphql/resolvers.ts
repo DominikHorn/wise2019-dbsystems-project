@@ -36,7 +36,6 @@ export const resolvers: { [key: string]: any } = {
         aggregiert: boolean;
       }
     ) =>
-      // TODO: returning false in the end is for debug purposes such that the modal doesn't close on client
       await Promise.all(
         args.files.map(wahlfile =>
           wahlfile.then(
