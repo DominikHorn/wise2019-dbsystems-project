@@ -9,7 +9,7 @@ import { SitzverteilungsWidget } from "../general/statistikwidgets/Sitzverteilun
 import { WidgetType } from "../general/statistikwidgets/WidgetTypes";
 import { PlaceholderWidget } from "../general/statistikwidgets/PlaceholderWidget";
 import { MandatListeWidget } from "../general/statistikwidgets/MandatListeWidget";
-import { BezirkWidget } from "../general/statistikwidgets/BezirkWidget";
+import { GewinnerWidget } from "../general/statistikwidgets/GewinnerWidget";
 
 type StatistikWidgetSettings = {
   layout: Layout;
@@ -118,10 +118,8 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
           />
         ) : setting.type === WidgetType.MANDAT_LISTE ? (
           <MandatListeWidget removeWidget={removeWidget} />
-        ) : setting.type === WidgetType.STIMMVERTEILUNG_REGIERUNGSBEZIRKE ? (
-          <BezirkWidget removeWidget={removeWidget} />
-        ) : setting.type === WidgetType.STIMMVERTEILUNG_STIMMKREISE ? (
-          <BezirkWidget removeWidget={removeWidget} showStimmkreise={true} />
+        ) : setting.type === WidgetType.GEWINNER_STIMMKREISE ? (
+          <GewinnerWidget removeWidget={removeWidget} erststimmen={true} />
         ) : (
           renderError("Unkown Widget type")
         )}

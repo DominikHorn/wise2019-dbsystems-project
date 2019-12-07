@@ -10,6 +10,7 @@ import { IMandat, IWahl } from "../../../../../shared/sharedTypes";
 import { getParteiColor } from "../../../guiUtil";
 import { sleep } from "../../../../../shared/util";
 import { Spin } from "antd";
+import { renderCenteredLoading } from "../../../../../wahlclient/ui/guiUtil";
 
 function aggregateMandate(
   mandate: IMandat[]
@@ -104,7 +105,7 @@ class SitzverteilungsChartComponent extends React.PureComponent<IProps> {
           }}
           option={this.getOptions()}
         />
-        {mandateData.loading && <Spin />}
+        {mandateData.loading && renderCenteredLoading()}
       </>
     );
   }

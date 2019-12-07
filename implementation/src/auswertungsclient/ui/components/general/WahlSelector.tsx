@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Select, Spin } from "antd";
 import { IWahl } from "../../../../shared/sharedTypes";
+import { renderCenteredLoading } from "../../guiUtil";
 
 export interface IWahlSelectorProps {
   selectableWahlen?: IWahl[];
@@ -37,4 +38,5 @@ export const WahlSelector = (props: IWahlSelectorProps) =>
         </Select.Option>
       ))}
     </Select>
-  )) || <Spin />;
+  )) ||
+  renderCenteredLoading();
