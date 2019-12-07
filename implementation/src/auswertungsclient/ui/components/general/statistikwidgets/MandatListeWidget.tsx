@@ -50,6 +50,7 @@ class MandatListeWidgetComponent extends React.PureComponent<IProps, IState> {
                 selectedWahl={selectedWahl}
                 selectableWahlen={allWahlenData.allWahlen}
                 onSelectWahl={this.onSelectWahl}
+                selectDefaultWahl={true}
                 style={{ width: "100%" }}
                 size={"small"}
               />

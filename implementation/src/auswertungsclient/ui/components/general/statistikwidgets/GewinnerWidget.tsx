@@ -73,27 +73,21 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
                 selectedWahl={selectedWahl}
                 selectableWahlen={allWahlenData.allWahlen}
                 onSelectWahl={this.onSelectWahl}
+                selectDefaultWahl={true}
                 style={{ width: "100%" }}
                 size={"small"}
               />
             </span>
-            <Row type={"flex"} justify={"start"} style={{ marginTop: "5px" }}>
-              <Col>
-                <BooleanSelector
-                  label={`Aggregierter Stimmtyp (Aktuell ${
-                    erststimmen ? "Erststimm" : "Zweitstimm"
-                  }gewinner)`}
-                  checked={erststimmen}
-                  onValueChanged={this.onSelectErststimmen}
-                />
-              </Col>
-            </Row>
           </>
         }
-        titleHeight={"85px"}
+        // titleHeight={"85px"}
       >
         {selectedWahl ? (
-          <GewinnerGeoChart erststimmen={erststimmen} wahl={selectedWahl} />
+          <GewinnerGeoChart
+            erststimmen={erststimmen}
+            onErststimmenChanged={this.onSelectErststimmen}
+            wahl={selectedWahl}
+          />
         ) : (
           renderInfo("Bitte eine Wahl auswählen")
         )}

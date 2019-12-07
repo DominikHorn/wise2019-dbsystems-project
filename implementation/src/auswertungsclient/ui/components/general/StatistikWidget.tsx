@@ -33,7 +33,7 @@ const StatistikWidgetComponent = (props: IProps) => (
       width: "100%",
       height:
         props.title || props.removeWidget
-          ? `calc(100% - ${props.titleHeight || "65px"})`
+          ? `calc(100% - ${props.titleHeight || "55px"})`
           : "100%",
       overflow: "hidden"
     }}

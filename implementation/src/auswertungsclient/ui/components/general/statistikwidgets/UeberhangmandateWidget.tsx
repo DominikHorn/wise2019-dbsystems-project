@@ -53,6 +53,7 @@ class UeberhangmandateWidgetComponent extends React.PureComponent<
                 selectedWahl={selectedWahl}
                 selectableWahlen={allWahlenData.allWahlen}
                 onSelectWahl={this.onSelectWahl}
+                selectDefaultWahl={true}
                 style={{ width: "100%" }}
                 size={"small"}
               />

@@ -12,9 +12,11 @@ import {
 import ReactEcharts from "echarts-for-react";
 import { IStimmkreisWinner, IWahl } from "../../../../../shared/sharedTypes";
 import { compose } from "react-apollo";
+import { BooleanSelector } from "../dataselectors/BooleanSelector";
 
 export interface IGewinnerGeoChartProps {
   readonly erststimmen: boolean;
+  readonly onErststimmenChanged: (newValue: boolean) => void;
   readonly wahl: IWahl;
 }
 
@@ -39,6 +41,14 @@ const GewinnerGeoChartComponent = (props: IProps) => (
     {props.stimmkreisWinnerData.stimmkreisWinner &&
     props.stimmkreisWinnerData.stimmkreisWinner.length > 0 ? (
       <div onMouseDown={eatEvent} style={{ width: "100%", height: "100%" }}>
+        <BooleanSelector
+          label={`Aggregierter Stimmtyp (Aktuell ${
+            props.erststimmen ? "Erststimm" : "Zweitstimm"
+          }gewinner)`}
+          style={{ marginLeft: "25px", marginTop: "5px", marginBottom: "5px" }}
+          checked={props.erststimmen}
+          onValueChanged={props.onErststimmenChanged}
+        />
         <ReactEcharts
           style={{ width: "100%", height: "100%" }}
           option={{

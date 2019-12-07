@@ -54,6 +54,7 @@ class SitzverteilungsChartComponent extends React.PureComponent<IProps> {
       formatter: "{a} <br/>{b}: {c} ({d}%)"
     },
     animate: true,
+    animationEasing: "circularInOut",
     toolbox: {
       left: "15px",
       top: "5px",
@@ -72,7 +73,8 @@ class SitzverteilungsChartComponent extends React.PureComponent<IProps> {
   private updateChartData = (props: IProps) => {
     if (!this.chart) return;
     if (!props.mandateData || !props.mandateData.mandate) return;
-    sleep(100).then(() =>
+    sleep(150).then(() => {
+      // this.chart.clear();
       this.chart.setOption({
         series: [
           {
@@ -92,8 +94,8 @@ class SitzverteilungsChartComponent extends React.PureComponent<IProps> {
             data: aggregateMandate(props.mandateData.mandate || [])
           }
         ]
-      })
-    );
+      });
+    });
   };
 
   // Echart types ;/
