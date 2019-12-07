@@ -5,7 +5,7 @@ import "./guiUtil.css";
 import { EParteiName } from "../../shared/enums";
 
 export const PARTEI_COLORS: { [parteiname: string]: string } = {
-  [EParteiName.CSU]: "#303030",
+  [EParteiName.CSU]: "#212121",
   [EParteiName.SPD]: "#e65949",
   [EParteiName.FREIE_WAEHLER]: "#d99241",
   [EParteiName.GRUENE]: "#3c9e2b",
