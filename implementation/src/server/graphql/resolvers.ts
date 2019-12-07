@@ -6,7 +6,8 @@ import {
   computeElectionResults,
   getMandate,
   computeWinnerParties,
-  getUeberhangmandate
+  getUeberhangmandate,
+  getKnappsteKandidaten
 } from "../adapters/postgres/queries/electionPSQL";
 
 export interface IContext {
@@ -25,7 +26,11 @@ export const resolvers: { [key: string]: any } = {
       args: { wahlid: number; erststimmen: boolean }
     ) => computeWinnerParties(args.wahlid, args.erststimmen),
     getUeberhangMandate: (_: any, args: { wahlid: number }) =>
-      getUeberhangmandate(args.wahlid)
+      getUeberhangmandate(args.wahlid),
+    getKnappsteKandidaten: (
+      _: any,
+      args: { wahlid: number; amountPerPartei?: number }
+    ) => getKnappsteKandidaten(args.wahlid, args.amountPerPartei)
   },
   Mutation: {
     importCSVData: async (

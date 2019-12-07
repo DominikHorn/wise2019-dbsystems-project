@@ -7,6 +7,7 @@ type Query {
   getMandate(wahlid: Int!): [Mandat]!
   getStimmkreisWinner(wahlid: Int!, erststimmen: Boolean!): [StimmkreisWinner]!
   getUeberhangMandate(wahlid: Int!): [UeberhangMandat]!
+  getKnappsteKandidaten(wahlid: Int!, amountPerPartei: Int): [KnapperKandidat]!
 }
 
 type Mutation {
@@ -61,4 +62,13 @@ type UeberhangMandat {
   ueberhang: Int!
   ausgleich: Int!
   zustehend: Int!
+}
+
+type KnapperKandidat {
+  wahl: Wahl!
+  stimmkreis: Stimmkreis!
+  kandidat: Kandidat!
+  differenz: Int!
+  gewinner: Boolean!
+  platz: Int!
 }

@@ -1,5 +1,6 @@
 import { ReadStream } from "fs";
 import { IDatabasePartei, IDatabaseWahl } from "../server/databaseEntities";
+import e = require("express");
 
 export interface GraphQLFileUpload {
   createReadStream: () => ReadStream;
@@ -47,4 +48,13 @@ export interface IStimmkreisWinner {
   partei: IPartei;
   stimmkreis: IStimmkreis;
   anzahl: number;
+}
+
+export interface IKnapperKandidat {
+  wahl: IWahl;
+  stimmkreis: IStimmkreis;
+  kandidat: IKandidat;
+  differenz: number;
+  gewinner: boolean; // Ob der Kandidat gewonnen hat oder nicht
+  platz: number; // Platz in der knappsten Liste seiner Partei
 }
