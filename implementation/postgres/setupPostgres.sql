@@ -478,7 +478,7 @@ $$ LANGUAGE SQL
 STABLE;
 
 -- Der Gewinner/Direktkandidate jedes Stimmkreises
-CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_direktmandate (wahl_id, stimmkreis_id, kandidat_id) AS (
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_direktmandate (wahl_id, stimmkreis_id, kandidat_id, stimmanzahl) AS (
 	WITH gesamtstimmen (wahl_id, anzahl) AS (
 		SELECT wahl_id, sum(anzahl)
 		FROM "landtagswahlen".gesamtstimmen_pro_partei
@@ -510,7 +510,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_direktmandate 
 				ON ngp.wahl_id = dk.wahl_id
 					AND ngp.partei_id = k.partei_id
 	)
-	SELECT ngd1.wahl_id, ngd1.stimmkreis_id, ngd1.kandidat_id
+	SELECT ngd1.wahl_id, ngd1.stimmkreis_id, ngd1.kandidat_id, ngd1.stimmanzahl
 	FROM nicht_gesperrte_direktkandidaten ngd1
 	WHERE NOT EXISTS(
 		SELECT *
