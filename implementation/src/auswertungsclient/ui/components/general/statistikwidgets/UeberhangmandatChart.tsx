@@ -30,18 +30,20 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
     animationEasing: "elasticOut",
     legend: {
       data: [
-        EMandatCategory.DIREKTMANDATE,
+        // EMandatCategory.DIREKTMANDATE,
         EMandatCategory.UEBERHANGMANDATE,
         EMandatCategory.AUSGLEICHSMANDATE
       ],
-      align: "left",
-      left: 10
+      align: "auto",
+      orient: "vertical",
+      left: 10,
+      top: 5
     },
     brush: {
       toolbox: ["rect", "polygon", "lineX", "lineY", "keep", "clear"],
       xAxisIndex: 0
     },
-    tollbox: {
+    toolbox: {
       feature: {
         magicType: {
           type: ["stack", "tiled"]
