@@ -20,7 +20,7 @@ const getMandateQuery = gql`
 `;
 
 interface IGetMandateQueryResponse extends IGraphqlType {
-  readonly mandate: IMandat[];
+  readonly mandate?: IMandat[];
 }
 
 interface IGetMandateQueryVariables {
