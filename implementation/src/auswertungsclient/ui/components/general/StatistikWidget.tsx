@@ -8,6 +8,7 @@ export interface IStatistikWidgetProps {
   readonly title?: string | React.ReactNode;
   readonly children?: React.ReactNode;
   readonly removeWidget?: () => void;
+  readonly titleHeight?: string;
 }
 
 interface IProps extends IStatistikWidgetProps {}
@@ -30,7 +31,10 @@ const StatistikWidgetComponent = (props: IProps) => (
     style={{ width: "100%", height: "100%" }}
     bodyStyle={{
       width: "100%",
-      height: props.title || props.removeWidget ? "calc(100% - 65px)" : "100%",
+      height:
+        props.title || props.removeWidget
+          ? `calc(100% - ${props.titleHeight || "65px"})`
+          : "100%",
       overflow: "hidden"
     }}
   >

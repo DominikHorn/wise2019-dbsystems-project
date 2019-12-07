@@ -59,30 +59,38 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
         {...this.props}
         title={
           <>
-            <Row type={"flex"} gutter={16}>
-              <Col>{"Stimmkreisgewinner"}</Col>
+            <span style={{ float: "left" }}>{"Stimmkreisgewinner:"}</span>
+            <span
+              style={{
+                display: "block",
+                overflow: "hidden",
+                paddingRight: "10px",
+                paddingLeft: "10px"
+              }}
+            >
+              <WahlSelector
+                displayLoading={allWahlenData.loading}
+                selectedWahl={selectedWahl}
+                selectableWahlen={allWahlenData.allWahlen}
+                onSelectWahl={this.onSelectWahl}
+                style={{ width: "100%" }}
+                size={"small"}
+              />
+            </span>
+            <Row type={"flex"} justify={"start"} style={{ marginTop: "5px" }}>
               <Col>
                 <BooleanSelector
-                  label={"Erststimmen"}
+                  label={`Aggregierter Stimmtyp (Aktuell ${
+                    erststimmen ? "Erststimm" : "Zweitstimm"
+                  }gewinner)`}
                   checked={erststimmen}
                   onValueChanged={this.onSelectErststimmen}
                 />
               </Col>
             </Row>
-            <Row style={{ marginRight: "10px" }}>
-              <Col>
-                <WahlSelector
-                  displayLoading={allWahlenData.loading}
-                  selectedWahl={selectedWahl}
-                  selectableWahlen={allWahlenData.allWahlen}
-                  onSelectWahl={this.onSelectWahl}
-                  style={{ width: "100%" }}
-                  size={"small"}
-                />
-              </Col>
-            </Row>
           </>
         }
+        titleHeight={"85px"}
       >
         {selectedWahl ? (
           <GewinnerGeoChart erststimmen={erststimmen} wahl={selectedWahl} />
