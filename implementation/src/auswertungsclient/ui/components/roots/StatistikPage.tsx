@@ -33,8 +33,8 @@ const COLUMN_COUNT = 12;
 const WIDGET_DIMENSIONS = {
   w: 6,
   h: 8,
-  minW: 6,
-  minH: 8
+  minW: 4,
+  minH: 4
 };
 class StatistikPageComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
@@ -67,9 +67,9 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
           layout: {
             i: `${this.state.addCnt}`,
             x:
-              WIDGET_DIMENSIONS.minW *
+              WIDGET_DIMENSIONS.w *
               (this.state.widgetSettings.length %
-                (COLUMN_COUNT / WIDGET_DIMENSIONS.minW)),
+                (COLUMN_COUNT / WIDGET_DIMENSIONS.w)),
             // Puts it at the bottom
             y: Infinity,
             ...WIDGET_DIMENSIONS

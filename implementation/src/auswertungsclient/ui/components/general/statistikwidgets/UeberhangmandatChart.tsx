@@ -111,7 +111,6 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
       }),
       { data: {}, xAxisLabels: {} } as { [key: string]: any }
     );
-    console.warn("reductio:", res);
 
     const mapCategory = (category: EMandatCategory, partei_id: string) => ({
       name: category,
