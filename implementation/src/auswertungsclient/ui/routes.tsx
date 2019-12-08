@@ -49,7 +49,7 @@ export const RouteBasepaths = {
 export const TOPLEVEL_ROUTES: IMenuRoute[] = [
   {
     menuKey: "Statistik",
-    menuTitle: "(Statistische-) Auswertung",
+    menuTitle: "Auswertung",
     menuIconIdentifier: "pie-chart",
     path: `${RouteBasepaths.statistik}/`,
     render: (props: RouteComponentProps<any>) => (

@@ -2,6 +2,36 @@ import { Alert, Col, Divider, Icon, Row, Spin, Tooltip } from "antd";
 import { AlertProps } from "antd/lib/alert";
 import * as React from "react";
 import "./guiUtil.css";
+import { EParteiName } from "../../shared/enums";
+
+export const PARTEI_COLORS: { [parteiname: string]: string } = {
+  [EParteiName.CSU]: "#212121",
+  [EParteiName.SPD]: "#e65949",
+  [EParteiName.FREIE_WAEHLER]: "#d99241",
+  [EParteiName.GRUENE]: "#3c9e2b",
+  [EParteiName.FDP]: "#ccc12b",
+  [EParteiName.DIE_LINKE]: "#ad0c00",
+  [EParteiName.BAYERN_PARTEI]: "#ddccdd",
+  [EParteiName.V_PARTEI]: "#c22fbd",
+  [EParteiName.AFD]: "#5084cc"
+};
+
+export function getParteiColor(parteiname: EParteiName): string {
+  return PARTEI_COLORS[parteiname] || "#8c40c2";
+}
+
+/**
+ * This function ensures that the Mousevent is not received
+ * By child or parent components. This is necessary to enable
+ * mouse controls within widgets, as the propagated
+ * mouse down event will otherwise start the widget drag and
+ * drop.
+ * @param event MouseEvent from React
+ */
+export function eatEvent(event: React.MouseEvent) {
+  event.preventDefault();
+  event.stopPropagation();
+}
 
 export const renderCenteredLoading = () => (
   <Icon

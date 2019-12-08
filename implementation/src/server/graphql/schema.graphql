@@ -1,8 +1,13 @@
 scalar Upload
+
 scalar Date
 
 type Query {
   getAllWahlen: [Wahl]!
+  getMandate(wahlid: Int!): [Mandat]!
+  getStimmkreisWinner(wahlid: Int!, erststimmen: Boolean!): [StimmkreisWinner]!
+  getUeberhangMandate(wahlid: Int!): [UeberhangMandat]!
+  getKnappsteKandidaten(wahlid: Int!, amountPerPartei: Int): [KnapperKandidat]!
 }
 
 type Mutation {
@@ -17,4 +22,53 @@ type Mutation {
 type Wahl {
   id: Int!
   wahldatum: Date!
+}
+
+type Mandat {
+  kandidat: Kandidat!
+  direktmandat: Boolean!
+}
+
+type Kandidat {
+  id: Int!
+  name: String!
+  partei: Partei!
+}
+
+type Partei {
+  id: Int!
+  name: String!
+}
+
+type Stimmkreis {
+  id: Int!
+  name: String!
+}
+
+type StimmkreisWinner {
+  stimmkreis: Stimmkreis!
+  partei: Partei!
+  anzahl: Int!
+}
+
+type Regierungsbezirk {
+  id: Int!
+  name: String!
+}
+
+type UeberhangMandat {
+  regierungsbezirk: Regierungsbezirk!
+  partei: Partei!
+  ueberhang: Int!
+  ausgleich: Int!
+  zustehend: Int!
+}
+
+type KnapperKandidat {
+  wahl: Wahl!
+  stimmkreis: Stimmkreis!
+  kandidat: Kandidat!
+  differenz: Int!
+  gewinner: Boolean!
+  platz: Int!
 }

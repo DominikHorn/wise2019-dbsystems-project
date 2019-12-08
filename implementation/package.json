@@ -21,7 +21,8 @@
     "watch:server": "webpack --progress --config webpack.server.config.js --watch",
     "start:postgres": "../../postgres/start_postgres.sh",
     "stop:postgres": "postgres/stop_postgres.sh",
-    "nodemon:server": "node dist/server/server.bundle.js --watch dist/server"
+    "nodemon:server": "node dist/server/server.bundle.js --watch dist/server",
+    "echarts:english": "node node_modules/echarts/build/build.js --lang en"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
@@ -31,6 +32,7 @@
     "@hot-loader/react-dom": "^16.8.6",
     "@types/apollo-upload-client": "^8.1.1",
     "@types/bcrypt": "^3.0.0",
+    "@types/echarts": "^4.4.1",
     "@types/graphql": "^14.2.0",
     "@types/graphql-iso-date": "^3.3.3",
     "@types/memoize-one": "^4.1.1",
@@ -39,6 +41,7 @@
     "@types/pg": "^7.4.14",
     "@types/react": "^16.8.10",
     "@types/react-dom": "^16.8.4",
+    "@types/react-grid-layout": "^0.16.7",
     "@types/react-router-dom": "^4.3.2",
     "babel-loader": "^8.0.5",
     "babel-plugin-import": "^1.11.0",
@@ -77,6 +80,9 @@
     "apollo-upload-client": "~10.0.0",
     "bcrypt": "^3.0.6",
     "cors": "^2.8.5",
+    "echarts": "^4.5.0",
+    "echarts-for-react": "^2.0.15-beta.1",
+    "echarts-gl": "^1.1.1",
     "express-history-api-fallback": "^2.2.1",
     "file-saver": "^2.0.2",
     "graphql": "14.1.x",
@@ -87,6 +93,7 @@
     "react": "^16.8.6",
     "react-apollo": "2.5.3",
     "react-dom": "^16.8.6",
+    "react-grid-layout": "^0.17.1",
     "react-router-dom": "^5.0.0"
   }
 }

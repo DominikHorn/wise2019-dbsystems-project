@@ -61,6 +61,10 @@ module.exports = {
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"]
+      },
+      {
+        test: /\.geojson$/,
+        use: ["raw-loader"]
       }
     ]
   },
@@ -75,9 +79,12 @@ module.exports = {
   ],
   resolve: {
     alias: isProduction
-      ? {}
+      ? {
+          echarts: "echarts/dist/echarts-en.min"
+        }
       : {
-          "react-dom": "@hot-loader/react-dom"
+          "react-dom": "@hot-loader/react-dom",
+          echarts: "echarts/dist/echarts-en.min"
         },
     extensions: [".tsx", ".ts", ".jsx", ".js"]
   },

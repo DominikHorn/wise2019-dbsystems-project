@@ -1,0 +1,14 @@
+.show-only-on-hover {
+  width: 100%;
+  height: 100%;
+  display: table;
+}
+
+.show-only-on-hover div {
+  display: none;
+  vertical-align: middle;
+}
+
+.show-only-on-hover:hover div {
+  display: table-cell;
+}
