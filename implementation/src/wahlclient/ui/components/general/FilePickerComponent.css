@@ -1,0 +1,59 @@
+.file-picker-dragger-box {
+    max-height: 250px;
+    overflow-y: scroll;
+}
+
+.file-picker-close-button {
+    float: right;
+    margin-top: -7px;
+    margin-right: -7px;
+    top: 0px;
+    right: 0;
+}
+
+.file-picker-file-box {
+    background-color: #ffffff;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    padding: 10px;
+    width: 100%;
+    font-size: 12px;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    box-shadow: 1px 1px 2px grey;
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: solid;
+    border-color: #EEEEEE;
+
+    transition: all 0.3s;
+
+    animation-duration: 0.3s;
+    animation-name: file-picker-appear;
+}
+
+@keyframes file-picker-appear {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+.file-picker-file-box:hover {
+    transform: scale(0.95);
+}
+
+.file-picker-file-box-placeholder-icon {
+    font-size: 54px;
+}
+
+.file-picker-file-box-icon {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
