@@ -1,4 +1,4 @@
-import { Card } from "antd";
+import { Card, Col, Row } from "antd";
 import * as React from "react";
 import * as GridLayout from "react-grid-layout";
 import { Layout } from "react-grid-layout";
@@ -15,6 +15,7 @@ import { renderInfo } from "../../guiUtil";
 import { MandatListe } from "../general/MandatListe";
 import { WidgetType } from "../general/statistikwidgets/WidgetTypes";
 import { RegierungsbezirkWidget } from "../general/statistikwidgets/RegierungsbezirkWidget";
+import * as ReactDOM from "react-dom";
 
 type StatistikWidgetSettings = {
   layout: Layout;
@@ -65,59 +66,9 @@ class StimmkreisePageComponent extends React.PureComponent<IProps, IState> {
       ausgewaehlteWahl: wahl
     });
 
-  private updateDimensions = () =>
-    this.setState({ availableWidth: window.innerWidth - 80 });
-
-  private onWidgetRemove = (removedI: string) =>
-    this.setState({
-      widgetSettings: this.state.widgetSettings.filter(
-        setting => setting.layout.i !== removedI
-      )
-    });
-
-  private onLayoutChange = (layouts: Layout[]) =>
-    this.setState({
-      widgetSettings: this.state.widgetSettings.map((setting, index) => ({
-        ...setting,
-        layout: layouts[index]
-      }))
-    });
-
-  componentDidMount() {
-    window.addEventListener("resize", this.updateDimensions);
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener("resize", this.updateDimensions);
-  }
-
-  private renderPageLayout = (setting: StatistikWidgetSettings) => {
-    const { availableWidth, widgetSettings } = this.state;
-
-    return (
-      <GridLayout
-        className={"layout"}
-        layout={widgetSettings.map(setting => setting.layout)}
-        cols={COLUMN_COUNT}
-        rowHeight={50}
-        width={availableWidth}
-        isResizable={true}
-        onLayoutChange={this.onLayoutChange}
-        compactType={"vertical"}
-        margin={[5, 5]}
-      >
-        <RegierungsbezirkWidget
-          //removeWidget={removeWidget}
-          showStimmkreise={true}
-        />
-      </GridLayout>
-    );
-  };
-
   render() {
     const { allWahlenData } = this.props;
     const { ausgewaehlteWahl } = this.state;
-    const { availableWidth, widgetSettings } = this.state;
 
     return (
       <Card
@@ -135,9 +86,22 @@ class StimmkreisePageComponent extends React.PureComponent<IProps, IState> {
         style={{ minHeight: "100%" }}
         hoverable={true}
       >
-        {ausgewaehlteWahl
-          ? widgetSettings.map(setting => this.renderPageLayout(setting))
-          : renderInfo("Bitte eine Landtagswahl auswählen")}
+        {ausgewaehlteWahl ? (
+          <div>
+            <Row>
+              <Col span={8}>col-8</Col>
+              <Col span={8}>col-8</Col>
+              <Col span={8}>col-8</Col>
+            </Row>
+            <Row>
+              <Col span={8}>col-8</Col>
+              <Col span={8}>col-8</Col>
+              <Col span={8}>col-8</Col>
+            </Row>
+          </div>
+        ) : (
+          renderInfo("Bitte eine Landtagswahl auswählen")
+        )}
       </Card>
     );
   }

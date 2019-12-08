@@ -2,7 +2,8 @@ import { ReadStream } from "fs";
 import {
   IDatabaseWahl,
   IDatabasePartei,
-  IDatabaseWahlbeteiligung
+  IDatabaseWahlbeteiligung,
+  IDatabaseAnteil
 } from "../server/databaseEntities";
 
 export interface GraphQLFileUpload {
@@ -63,3 +64,7 @@ export interface IKnapperKandidat {
 }
 
 export interface IWahlbeteiligung extends IDatabaseWahlbeteiligung {}
+
+export interface IAnteil extends IDatabaseAnteil {}
+
+export interface IStimmenEntwicklung {}

@@ -84,3 +84,17 @@ export interface IDatabaseDirektmandate extends IDatabaseEntity {
   readonly direktmandat_name: string;
   readonly partei_id: number;
 }
+
+export interface IDatabaseAnteil extends IDatabaseEntity {
+  readonly wahl_id: number;
+  readonly stimmkreis_id: number;
+  readonly partei_id: number;
+  readonly partei_name: string;
+  readonly anteil: number;
+}
+
+export interface IDatabaseStimmenEntwicklung extends IDatabaseEntity {
+  readonly partei_id: number;
+  readonly partei_name: string;
+  readonly veraenderung: number;
+}
