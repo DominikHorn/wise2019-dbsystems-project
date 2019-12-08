@@ -67,6 +67,9 @@ function getOption(knappsteKandidaten: IKnapperKandidat[]) {
     .map(key => partyMap[key]);
 
   return {
+    toolbox: {
+      feature: { saveAsImage: { title: "Als Bild speichern" } }
+    },
     tooltip: {
       textStyle: {
         fontSize: 16
@@ -94,17 +97,11 @@ function getOption(knappsteKandidaten: IKnapperKandidat[]) {
     zAxis3D: {
       type: "value",
       show: false
-      // axisLine: { show: false }
-      // axisLabel: {
-      //   show: false
-      // }
     },
     grid3D: {
       boxWidth: 200,
       boxDepth: 80,
-      viewControl: {
-        // projection: 'orthographic'
-      },
+      viewControl: {},
       postEffect: {
         enable: true,
         SSAO: {
