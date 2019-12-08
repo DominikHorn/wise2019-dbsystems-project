@@ -11,6 +11,7 @@ import { PlaceholderWidget } from "../general/statistikwidgets/PlaceholderWidget
 import { MandatListeWidget } from "../general/statistikwidgets/MandatListeWidget";
 import { GewinnerWidget } from "../general/statistikwidgets/GewinnerWidget";
 import { UeberhangmandateWidget } from "../general/statistikwidgets/UeberhangmandateWidget";
+import { KnappsteKandidatenWidget } from "../general/statistikwidgets/KnappsteKandidatenWidget";
 
 type StatistikWidgetSettings = {
   layout: Layout;
@@ -123,6 +124,8 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
           <GewinnerWidget removeWidget={removeWidget} />
         ) : setting.type === WidgetType.UEBERHANGMANDATE ? (
           <UeberhangmandateWidget removeWidget={removeWidget} />
+        ) : setting.type === WidgetType.KNAPPSTE_KANDIDATEN ? (
+          <KnappsteKandidatenWidget removeWidget={removeWidget} />
         ) : (
           renderError("Unkown Widget type")
         )}

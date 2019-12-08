@@ -5,5 +5,6 @@ export enum WidgetType {
   SITZVERTEILUNG_TABLE = "Sitzverteilung (Q1) - Tabelle",
   MANDAT_LISTE = "Mandatliste (Q2)",
   GEWINNER_STIMMKREISE = "Stimmkreisgewinner (Q4)",
-  UEBERHANGMANDATE = "Überhangmandate (Q5)"
+  UEBERHANGMANDATE = "Überhangmandate (Q5)",
+  KNAPPSTE_KANDIDATEN = "Knappste Kandidaten (Q6)"
 }
