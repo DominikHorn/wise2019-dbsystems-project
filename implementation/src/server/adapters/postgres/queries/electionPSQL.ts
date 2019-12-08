@@ -56,73 +56,73 @@ const refreshOrder: MaterialViews[] = [
 ];
 
 //LG
-export async function computeWahlbeteiligung(
-  wahlid: number
-): Promise<IWahlbeteiligung> {
-  //const ungueltigeErststimmenView: MaterialViews = "ungueltige_erststimmen";
-  //const ungueltigeZweitstimmenView: MaterialViews = "ungueltige_zweitstimmen";
-  const res: {
-    wahl_id: number;
-    stimmkreis_id: number;
-    wahlbeteiligung: number;
-  }[] = await adapters.postgres.query(
-    `
-  with gueltige_erststimmen_pro_stimmkreis AS(
-    SELECT kgs.wahl_id, kgs.stimmkreis_id, sum(kgs.anzahl) as anzahl
-    FROM "${DatabaseSchemaGroup}".direktkandidaten dk, "${DatabaseSchemaGroup}".kandidatgebundene_gueltige_stimmen kgs
-    WHERE dk.wahl_id = $1 AND dk.wahl_id = kgs.wahl_id AND dk.stimmkreis_id = kgs.stimmkreis_id AND dk.direktkandidat_id = kgs.kandidat_id
-    GROUP BY  kgs.wahl_id, kgs.stimmkreis_id
-    ORDER BY kgs.wahl_id, kgs.stimmkreis_id
-),  gesamtanzahl_erststimmen_pro_stimmkreis AS(
-    SELECT geps.wahl_id, geps.stimmkreis_id, (geps.anzahl + ue.anzahl) as anzahl
-    FROM gueltige_erststimmen_pro_stimmkreis geps, "${DatabaseSchemaGroup}".ungueltige_erststimmen ue
-    WHERE geps.wahl_id = $1 AND geps.wahl_id = ue.wahl_id AND geps.stimmkreis_id = ue.stimmkreis_id
-), gueltige_kandidat_zweitstimmen_pro_stimmkreis AS(
-    SELECT kgs.wahl_id, kgs.stimmkreis_id, sum(kgs.anzahl) as anzahl
-    FROM "${DatabaseSchemaGroup}".kandidatgebundene_gueltige_stimmen kgs
-    WHERE WHERE kgs.wahl_id = $1 AND not exists(SELECT * FROM "${DatabaseSchemaGroup}".direktkandidaten dk WHERE kgs.kandidat_id = dk.direktkandidat_id AND dk.wahl_id = kgs.wahl_id AND dk.stimmkreis_id = kgs.stimmkreis_id)
-    GROUP BY kgs.wahl_id, kgs.stimmkreis_id
-    ),
-     listengebundene_stimmen_pro_stimmkreis AS (
-         SELECT wahl_id, stimmkreis_id, sum(anzahl) as anzahl
-         FROM "${DatabaseSchemaGroup}".listengebundene_gueltige_stimmen
-         WHERE wahl_id = $1
-         GROUP BY wahl_id, stimmkreis_id
-     ),
-     gueltige_zweitstimmen_pro_stimmkreis AS(
-         SELECT lgs.wahl_id, lgs.stimmkreis_id, (lgs.anzahl + gkz.anzahl) as anzahl
-         FROM listengebundene_stimmen_pro_stimmkreis lgs, gueltige_kandidat_zweitstimmen_pro_stimmkreis gkz
-         WHERE lgs.wahl_id = gkz.wahl_id AND lgs.stimmkreis_id = gkz.stimmkreis_id
-     ), gesamtzahl_zweitstimmen_pro_stimmkreis AS (
-         SELECT gzps.wahl_id, gzps.stimmkreis_id, (gzps.anzahl + uz.anzahl) as anzahl
-         FROM gueltige_zweitstimmen_pro_stimmkreis gzps, "${DatabaseSchemaGroup}".ungueltige_zweitstimmen uz
-         WHERE gzps.wahl_id = uz.wahl_id AND gzps.stimmkreis_id = uz.stimmkreis_id 
-),
-     gesamt_stimmen_pro_stimmkreis AS(
-        SELECT wahl_id, stimmkreis_id, max(anzahl) as anzahl
-        FROM (SELECT *
-              FROM gesamtanzahl_erststimmen_pro_stimmkreis
-              UNION ALL
-              SELECT *
-              FROM gesamtzahl_zweitstimmen_pro_stimmkreis
-             ) as "sz"
-         GROUP BY sz.wahl_id, sz.stimmkreis_id
-     ),
-     wahlbeteiligung AS(
-         SELECT swi.wahl_id, swi.stimmkreis_id, (gsps.anzahl / swi.anzahlwahlberechtigte) * 100 as wahlbeteiligung
-         FROM "${DatabaseSchemaGroup}".stimmkreis_wahlinfo swi, gesamt_stimmen_pro_stimmkreis gsps
-         WHERE swi.wahl_id = gsps.wahl_id AND swi.stimmkreis_id = gsps.stimmkreis_id
-     )
-    SELECT * FROM wahlbeteiligung ORDER BY wahl_id, stimmkreis_id;`,
-    [wahlid]
-  );
+// export async function computeWahlbeteiligung(
+//   wahlid: number
+// ): Promise<IWahlbeteiligung> {
+//   //const ungueltigeErststimmenView: MaterialViews = "ungueltige_erststimmen";
+//   //const ungueltigeZweitstimmenView: MaterialViews = "ungueltige_zweitstimmen";
+//   const res: {
+//     wahl_id: number;
+//     stimmkreis_id: number;
+//     wahlbeteiligung: number;
+//   }[] = await adapters.postgres.query(
+//     `
+//   with gueltige_erststimmen_pro_stimmkreis AS(
+//     SELECT kgs.wahl_id, kgs.stimmkreis_id, sum(kgs.anzahl) as anzahl
+//     FROM "${DatabaseSchemaGroup}".direktkandidaten dk, "${DatabaseSchemaGroup}".kandidatgebundene_gueltige_stimmen kgs
+//     WHERE dk.wahl_id = $1 AND dk.wahl_id = kgs.wahl_id AND dk.stimmkreis_id = kgs.stimmkreis_id AND dk.direktkandidat_id = kgs.kandidat_id
+//     GROUP BY  kgs.wahl_id, kgs.stimmkreis_id
+//     ORDER BY kgs.wahl_id, kgs.stimmkreis_id
+// ),  gesamtanzahl_erststimmen_pro_stimmkreis AS(
+//     SELECT geps.wahl_id, geps.stimmkreis_id, (geps.anzahl + ue.anzahl) as anzahl
+//     FROM gueltige_erststimmen_pro_stimmkreis geps, "${DatabaseSchemaGroup}".ungueltige_erststimmen ue
+//     WHERE geps.wahl_id = $1 AND geps.wahl_id = ue.wahl_id AND geps.stimmkreis_id = ue.stimmkreis_id
+// ), gueltige_kandidat_zweitstimmen_pro_stimmkreis AS(
+//     SELECT kgs.wahl_id, kgs.stimmkreis_id, sum(kgs.anzahl) as anzahl
+//     FROM "${DatabaseSchemaGroup}".kandidatgebundene_gueltige_stimmen kgs
+//     WHERE WHERE kgs.wahl_id = $1 AND not exists(SELECT * FROM "${DatabaseSchemaGroup}".direktkandidaten dk WHERE kgs.kandidat_id = dk.direktkandidat_id AND dk.wahl_id = kgs.wahl_id AND dk.stimmkreis_id = kgs.stimmkreis_id)
+//     GROUP BY kgs.wahl_id, kgs.stimmkreis_id
+//     ),
+//      listengebundene_stimmen_pro_stimmkreis AS (
+//          SELECT wahl_id, stimmkreis_id, sum(anzahl) as anzahl
+//          FROM "${DatabaseSchemaGroup}".listengebundene_gueltige_stimmen
+//          WHERE wahl_id = $1
+//          GROUP BY wahl_id, stimmkreis_id
+//      ),
+//      gueltige_zweitstimmen_pro_stimmkreis AS(
+//          SELECT lgs.wahl_id, lgs.stimmkreis_id, (lgs.anzahl + gkz.anzahl) as anzahl
+//          FROM listengebundene_stimmen_pro_stimmkreis lgs, gueltige_kandidat_zweitstimmen_pro_stimmkreis gkz
+//          WHERE lgs.wahl_id = gkz.wahl_id AND lgs.stimmkreis_id = gkz.stimmkreis_id
+//      ), gesamtzahl_zweitstimmen_pro_stimmkreis AS (
+//          SELECT gzps.wahl_id, gzps.stimmkreis_id, (gzps.anzahl + uz.anzahl) as anzahl
+//          FROM gueltige_zweitstimmen_pro_stimmkreis gzps, "${DatabaseSchemaGroup}".ungueltige_zweitstimmen uz
+//          WHERE gzps.wahl_id = uz.wahl_id AND gzps.stimmkreis_id = uz.stimmkreis_id
+// ),
+//      gesamt_stimmen_pro_stimmkreis AS(
+//         SELECT wahl_id, stimmkreis_id, max(anzahl) as anzahl
+//         FROM (SELECT *
+//               FROM gesamtanzahl_erststimmen_pro_stimmkreis
+//               UNION ALL
+//               SELECT *
+//               FROM gesamtzahl_zweitstimmen_pro_stimmkreis
+//              ) as "sz"
+//          GROUP BY sz.wahl_id, sz.stimmkreis_id
+//      ),
+//      wahlbeteiligung AS(
+//          SELECT swi.wahl_id, swi.stimmkreis_id, (gsps.anzahl / swi.anzahlwahlberechtigte) * 100 as wahlbeteiligung
+//          FROM "${DatabaseSchemaGroup}".stimmkreis_wahlinfo swi, gesamt_stimmen_pro_stimmkreis gsps
+//          WHERE swi.wahl_id = gsps.wahl_id AND swi.stimmkreis_id = gsps.stimmkreis_id
+//      )
+//     SELECT * FROM wahlbeteiligung ORDER BY wahl_id, stimmkreis_id;`,
+//     [wahlid]
+//   );
 
-  return res.map(resobj => ({
-    wahl_id = resobj.wahl_id,
-    stimmkreis_id = resobj.stimmkreis_id,
-    wahlbeteiligung = resobj.wahlbeteiligung
-  }));
-}
+//   return res.map(resobj => ({
+//     wahl_id = resobj.wahl_id,
+//     stimmkreis_id = resobj.stimmkreis_id,
+//     wahlbeteiligung = resobj.wahlbeteiligung
+//   }));
+// }
 
 /**
  * Computes election results by refreshing materialized views
