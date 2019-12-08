@@ -23,7 +23,7 @@ interface IProps
     IGetUeberhangmandateQueryHocProps {}
 
 enum EMandatCategory {
-  GEWONNENEMANDATE = "Gewonnene Mandate",
+  ZUSTEHENDEMANDATE = "Zustehende Mandate",
   UEBERHANGMANDATE = "Überhangmandate",
   AUSGLEICHSMANDATE = "Ausgleichsmandate"
 }
@@ -94,11 +94,12 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
           [curr.partei.id]: {
             ...(prev.data[curr.partei.id] || {}),
             parteiname: curr.partei.name,
-            [EMandatCategory.GEWONNENEMANDATE]: {
+            [EMandatCategory.ZUSTEHENDEMANDATE]: {
               ...((prev.data[curr.partei.id] || {})[
-                EMandatCategory.GEWONNENEMANDATE
+                EMandatCategory.ZUSTEHENDEMANDATE
               ] || {}),
-              [curr.regierungsbezirk.id]: curr.zustehend + curr.ueberhang
+              [curr.regierungsbezirk.id]:
+                curr.zustehend + curr.ausgleich + curr.ueberhang
             },
             [EMandatCategory.AUSGLEICHSMANDATE]: {
               ...((prev.data[curr.partei.id] || {})[
@@ -143,7 +144,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
           name: key,
           value: res.data[partei_id][category][key],
           partei: { id: partei_id, name: res.data[partei_id].parteiname },
-          itemStyle: category === EMandatCategory.GEWONNENEMANDATE && {
+          itemStyle: category === EMandatCategory.ZUSTEHENDEMANDATE && {
             color: getParteiColor(
               Object.values(EParteiName)[Number(partei_id) - 1]
             )
@@ -156,7 +157,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
         .sort()
         .map(key => res.xAxisLabels[key]),
       series: Object.keys(res.data).flatMap(partei_id => [
-        mapCategory(EMandatCategory.GEWONNENEMANDATE, partei_id),
+        mapCategory(EMandatCategory.ZUSTEHENDEMANDATE, partei_id),
         mapCategory(EMandatCategory.AUSGLEICHSMANDATE, partei_id),
         mapCategory(EMandatCategory.UEBERHANGMANDATE, partei_id)
       ])
