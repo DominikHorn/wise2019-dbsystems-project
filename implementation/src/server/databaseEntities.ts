@@ -77,3 +77,10 @@ export interface IDatabaseWahlbeteiligung extends IDatabaseEntity {
   readonly stimmkreis_id: number;
   readonly wahlbeteiligung: number;
 }
+
+export interface IDatabaseDirektmandate extends IDatabaseEntity {
+  readonly wahl_id: number;
+  readonly stimmkreis_id: number;
+  readonly direktmandat_name: string;
+  readonly partei_id: number;
+}
