@@ -7,7 +7,6 @@ import {
 } from "react-router";
 import { StatistikPage } from "./components/roots/StatistikPage";
 import { ErgebnissePage } from "./components/roots/ErgebnissePage";
-import { StimmkreisePage } from "./components/roots/StimmkreisePage";
 
 export interface IRouteProps {
   readonly path: string;
@@ -44,8 +43,7 @@ export const DEFAULT_ROUTE: IRouteProps = {
 
 export const RouteBasepaths = {
   statistik: "/statistik",
-  ergebnisse: "/ergebnisse",
-  stimmkreise: "/stimmkreise"
+  ergebnisse: "/ergebnisse"
 };
 
 export const TOPLEVEL_ROUTES: IMenuRoute[] = [
@@ -65,15 +63,6 @@ export const TOPLEVEL_ROUTES: IMenuRoute[] = [
     path: `${RouteBasepaths.ergebnisse}/`,
     render: (props: RouteComponentProps<any>) => (
       <ErgebnissePage routeProps={props} />
-    )
-  },
-  {
-    menuKey: "Stimmkreisübersicht",
-    menuTitle: "Stimmkreisübersicht",
-    menuIconIdentifier: "pie-chart",
-    path: `${RouteBasepaths.stimmkreise}/`,
-    render: (props: RouteComponentProps<any>) => (
-      <StimmkreisePage routeProps={props} />
     )
   }
 ];

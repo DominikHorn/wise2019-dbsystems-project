@@ -2,7 +2,6 @@ import { ReadStream } from "fs";
 import {
   IDatabaseWahl,
   IDatabasePartei,
-  IDatabaseWahlbeteiligung,
   IDatabaseAnteil
 } from "../server/databaseEntities";
 
@@ -63,7 +62,11 @@ export interface IKnapperKandidat {
   platz: number; // Platz in der knappsten Liste seiner Partei
 }
 
-export interface IWahlbeteiligung extends IDatabaseWahlbeteiligung {}
+export interface IWahlbeteiligung {
+  readonly wahl: IWahl;
+  readonly stimmkreis: IStimmkreis;
+  readonly wahlbeteiligung: number;
+}
 
 export interface IAnteil extends IDatabaseAnteil {}
 

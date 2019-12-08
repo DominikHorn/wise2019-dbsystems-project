@@ -7,7 +7,8 @@ import {
   getMandate,
   computeWinnerParties,
   getUeberhangmandate,
-  getKnappsteKandidaten
+  getKnappsteKandidaten,
+  computeWahlbeteiligung
 } from "../adapters/postgres/queries/electionPSQL";
 
 export interface IContext {
@@ -30,7 +31,9 @@ export const resolvers: { [key: string]: any } = {
     getKnappsteKandidaten: (
       _: any,
       args: { wahlid: number; amountPerPartei?: number }
-    ) => getKnappsteKandidaten(args.wahlid, args.amountPerPartei)
+    ) => getKnappsteKandidaten(args.wahlid, args.amountPerPartei),
+    getWahlbeteiligung: (_: any, args: { wahlid: number }) =>
+      computeWahlbeteiligung(args.wahlid)
   },
   Mutation: {
     importCSVData: async (
