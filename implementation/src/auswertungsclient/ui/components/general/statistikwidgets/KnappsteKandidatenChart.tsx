@@ -112,7 +112,9 @@ function getOption(knappsteKandidaten: IKnapperKandidat[]) {
       light: {
         main: {
           intensity: 3,
-          shadow: true
+          shadow: true,
+          alpha: 25,
+          beta: 210
         },
         ambient: {
           intensity: 1
