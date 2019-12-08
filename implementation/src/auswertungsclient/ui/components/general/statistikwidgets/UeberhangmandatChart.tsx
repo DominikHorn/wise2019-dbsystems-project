@@ -23,7 +23,7 @@ interface IProps
     IGetUeberhangmandateQueryHocProps {}
 
 enum EMandatCategory {
-  DIREKTMANDATE = "Direktmandate",
+  GEWONNENEMANDATE = "Gewonnene Mandate",
   UEBERHANGMANDATE = "Überhangmandate",
   AUSGLEICHSMANDATE = "Ausgleichsmandate"
 }
@@ -42,10 +42,6 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
       left: 10,
       top: 5
     },
-    // brush: {
-    //   toolbox: ["rect", "polygon", "lineX", "lineY", "keep", "clear"],
-    //   xAxisIndex: 0
-    // },
     toolbox: {
       feature: {
         saveAsImage: {},
@@ -98,9 +94,9 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
           [curr.partei.id]: {
             ...(prev.data[curr.partei.id] || {}),
             parteiname: curr.partei.name,
-            [EMandatCategory.DIREKTMANDATE]: {
+            [EMandatCategory.GEWONNENEMANDATE]: {
               ...((prev.data[curr.partei.id] || {})[
-                EMandatCategory.DIREKTMANDATE
+                EMandatCategory.GEWONNENEMANDATE
               ] || {}),
               [curr.regierungsbezirk.id]: curr.zustehend + curr.ueberhang
             },
@@ -147,7 +143,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
           name: key,
           value: res.data[partei_id][category][key],
           partei: { id: partei_id, name: res.data[partei_id].parteiname },
-          itemStyle: category === EMandatCategory.DIREKTMANDATE && {
+          itemStyle: category === EMandatCategory.GEWONNENEMANDATE && {
             color: getParteiColor(
               Object.values(EParteiName)[Number(partei_id) - 1]
             )
@@ -160,7 +156,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
         .sort()
         .map(key => res.xAxisLabels[key]),
       series: Object.keys(res.data).flatMap(partei_id => [
-        mapCategory(EMandatCategory.DIREKTMANDATE, partei_id),
+        mapCategory(EMandatCategory.GEWONNENEMANDATE, partei_id),
         mapCategory(EMandatCategory.AUSGLEICHSMANDATE, partei_id),
         mapCategory(EMandatCategory.UEBERHANGMANDATE, partei_id)
       ])
