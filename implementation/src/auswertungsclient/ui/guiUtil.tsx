@@ -10,6 +10,9 @@ export const PARTEI_COLORS: { [parteiname: string]: string } = {
   [EParteiName.FREIE_WAEHLER]: "#d99241",
   [EParteiName.GRUENE]: "#3c9e2b",
   [EParteiName.FDP]: "#ccc12b",
+  [EParteiName.DIE_LINKE]: "#ad0c00",
+  [EParteiName.BAYERN_PARTEI]: "#ddccdd",
+  [EParteiName.V_PARTEI]: "#c22fbd",
   [EParteiName.AFD]: "#5084cc"
 };
 
