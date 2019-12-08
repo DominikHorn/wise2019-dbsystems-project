@@ -59,7 +59,8 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
     },
     yAxis: {
       inverse: false,
-      splitArea: { show: false }
+      splitArea: { show: false },
+      interval: 2
     },
     grid: {
       left: 100
