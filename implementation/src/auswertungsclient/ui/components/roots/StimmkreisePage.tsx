@@ -1,21 +1,17 @@
 import { Card, Col, Row } from "antd";
 import * as React from "react";
-import * as GridLayout from "react-grid-layout";
+import { compose } from "react-apollo";
 import { Layout } from "react-grid-layout";
 import { RouteComponentProps } from "react-router";
-import { WahlSelector } from "../general/WahlSelector";
-import { compose } from "react-apollo";
 import {
   IGetAllWahlenQueryHocProps,
   withAllWahlenQuery
 } from "../../../../client-graphql/public/getAllWahlenQuery";
-import { withErrorBoundary } from "../general/ErrorBoundary";
 import { IWahl } from "../../../../shared/sharedTypes";
 import { renderInfo } from "../../guiUtil";
-import { MandatListe } from "../general/MandatListe";
+import { withErrorBoundary } from "../general/ErrorBoundary";
 import { WidgetType } from "../general/statistikwidgets/WidgetTypes";
-import { RegierungsbezirkWidget } from "../general/statistikwidgets/RegierungsbezirkWidget";
-import * as ReactDOM from "react-dom";
+import { WahlSelector } from "../general/dataselectors/WahlSelector";
 
 type StatistikWidgetSettings = {
   layout: Layout;
