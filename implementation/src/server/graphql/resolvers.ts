@@ -9,7 +9,8 @@ import {
   getUeberhangmandate,
   getKnappsteKandidaten,
   computeWahlbeteiligung,
-  getDirektmandat
+  getDirektmandat,
+  computeEntwicklungDerStimmmen
 } from "../adapters/postgres/queries/electionPSQL";
 
 export interface IContext {
@@ -36,7 +37,16 @@ export const resolvers: { [key: string]: any } = {
     getWahlbeteiligung: (_: any, args: { wahlid: number }) =>
       computeWahlbeteiligung(args.wahlid, false),
     getDirektmandat: (_: any, args: { wahlid: number; stimmkreisid: number }) =>
-      getDirektmandat(args.wahlid, args.stimmkreisid)
+      getDirektmandat(args.wahlid, args.stimmkreisid),
+    getStimmentwicklung: (
+      _: any,
+      args: { wahlid: number; vglwahlid: number; stimmkreisid: number }
+    ) =>
+      computeEntwicklungDerStimmmen(
+        args.wahlid,
+        args.vglwahlid,
+        args.stimmkreisid
+      )
   },
   Mutation: {
     importCSVData: async (

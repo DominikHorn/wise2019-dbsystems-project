@@ -71,4 +71,8 @@ export interface IWahlbeteiligung {
 
 export interface IAnteil extends IDatabaseAnteil {}
 
-export interface IStimmenEntwicklung {}
+export interface IStimmenEntwicklung {
+  readonly partei: IPartei;
+  readonly vorher: number;
+  readonly nachher: number;
+}

@@ -207,15 +207,17 @@ export async function computeWahlbeteiligung(
 
 export async function computeEntwicklungDerStimmmen(
   wahl_id: number,
-  wahl_davor_id: number,
+  vgl_wahl_id: number,
   stimmkreis_id: number
 ): Promise<IStimmenEntwicklung[]> {
   const res: {
     partei_id: number;
     partei_name: string;
-    veraenderung: number;
+    vorher: number;
+    nachher: number;
   }[] = await adapters.postgres.query(
-    `with kandidatgebundene_stimmen_pro_partei_pro_stimmkreis  AS (
+    `
+    with kandidatgebundene_stimmen_pro_partei_pro_stimmkreis  AS (
       SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, sum(kgs.anzahl) as anzahl
       FROM "${DatabaseSchemaGroup}".kandidatgebundene_gueltige_stimmen kgs
         JOIN "${DatabaseSchemaGroup}".kandidaten k ON k.id = kgs.kandidat_id
@@ -228,28 +230,33 @@ export async function computeEntwicklungDerStimmmen(
       FROM kandidatgebundene_stimmen_pro_partei_pro_stimmkreis kggs
         JOIN "${DatabaseSchemaGroup}".listengebundene_gueltige_stimmen lgs
           ON lgs.stimmkreis_id = kggs.stimmkreis_id AND lgs.partei_id = kggs.partei_id AND
-            lgs.wahl_id = kggs.wahl_id
-    ),
-    gesamtstimmen_pro_partei AS(
+             lgs.wahl_id = kggs.wahl_id
+    ), gesamtstimmen_pro_partei AS(
       SELECT gppps2.wahl_id, gppps2.partei_id, sum(gppps2.anzahl) as anzahl
       FROM gesamtstimmen_pro_partei_pro_stimmkreis gppps2
       GROUP BY gppps2.wahl_id, gppps2.partei_id
-  ),
-       --koennen da negative werte zurueck gegeben werden? man muss noch die korrekten wahl ids angeben!!!#########################
-       entwicklung_der_gesamtstimmen AS(
-           SELECT gpp1.partei_id, (gpp1.anzahl - gpp2.anzahl) as veraenderung
+    ), entwicklung_der_gesamtstimmen AS (
+           SELECT gpp1.partei_id, gpp1.anzahl as vorher, gpp2.anzahl as nachher
            FROM gesamtstimmen_pro_partei  gpp1
            JOIN gesamtstimmen_pro_partei gpp2
            ON gpp1.partei_id = gpp2.partei_id AND gpp1.wahl_id = $2 AND gpp2.wahl_id = $1
-       )
-       SELECT edg.partei_id,  p.name, edg.veraenderung FROM entwicklung_der_gesamtstimmen edg, "${DatabaseSchemaGroup}".parteien p
-       WHERE p.id = edg.partei_id;`,
-    [wahl_id, wahl_davor_id, stimmkreis_id]
+    )
+    SELECT edg.partei_id as partei_id, 
+          p.name as partei_name, 
+          edg.vorher as vorher, 
+          edg.nachher as nachher
+    FROM entwicklung_der_gesamtstimmen edg, "${DatabaseSchemaGroup}".parteien p
+    WHERE p.id = edg.partei_id;
+    `,
+    [wahl_id, vgl_wahl_id, stimmkreis_id]
   );
   return res.map(resobj => ({
-    partei_id: resobj.partei_id,
-    partei_name: resobj.partei_name,
-    veraenderung: resobj.veraenderung
+    partei: {
+      id: resobj.partei_id,
+      name: resobj.partei_name as EParteiName
+    },
+    vorher: resobj.vorher,
+    nachher: resobj.nachher
   }));
 }
 

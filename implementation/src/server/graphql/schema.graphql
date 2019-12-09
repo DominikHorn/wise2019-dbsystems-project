@@ -9,7 +9,12 @@ type Query {
   getUeberhangMandate(wahlid: Int!): [UeberhangMandat]!
   getKnappsteKandidaten(wahlid: Int!, amountPerPartei: Int): [KnapperKandidat]!
   getWahlbeteiligung(wahlid: Int!): [Wahlbeteiligung]!
-  getDirektmandat(wahlid: Int!, stimmkreisid: Int!): Mandat
+  getDirektmandat(wahlid: Int!, stimmkreisid: Int!): Mandat!
+  getStimmentwicklung(
+    wahlid: Int!
+    vglwahlid: Int!
+    stimmkreisid: Int!
+  ): [Stimmentwicklung]!
 }
 
 type Mutation {
@@ -80,4 +85,10 @@ type Wahlbeteiligung {
   wahl: Wahl!
   stimmkreis: Stimmkreis!
   wahlbeteiligung: Float!
+}
+
+type Stimmentwicklung {
+  partei: Partei!
+  vorher: Int!
+  nachher: Int!
 }
