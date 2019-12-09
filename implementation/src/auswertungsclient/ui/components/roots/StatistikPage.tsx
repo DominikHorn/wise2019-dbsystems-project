@@ -12,6 +12,7 @@ import { MandatListeWidget } from "../general/statistikwidgets/MandatListeWidget
 import { GewinnerWidget } from "../general/statistikwidgets/GewinnerWidget";
 import { UeberhangmandateWidget } from "../general/statistikwidgets/UeberhangmandateWidget";
 import { KnappsteKandidatenWidget } from "../general/statistikwidgets/KnappsteKandidatenWidget";
+import { StimmkreisInfoWidget } from "../general/statistikwidgets/StimmkreisInfoWidget";
 
 type StatistikWidgetSettings = {
   layout: Layout;
@@ -120,6 +121,8 @@ class StatistikPageComponent extends React.PureComponent<IProps, IState> {
           />
         ) : setting.type === WidgetType.MANDAT_LISTE ? (
           <MandatListeWidget removeWidget={removeWidget} />
+        ) : setting.type === WidgetType.STIMMKREIS_INFO_WAHLBETEILIGUNG ? (
+          <StimmkreisInfoWidget removeWidget={removeWidget} />
         ) : setting.type === WidgetType.GEWINNER_STIMMKREISE ? (
           <GewinnerWidget removeWidget={removeWidget} />
         ) : setting.type === WidgetType.UEBERHANGMANDATE ? (

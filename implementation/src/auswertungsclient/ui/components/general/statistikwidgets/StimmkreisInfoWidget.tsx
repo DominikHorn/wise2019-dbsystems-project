@@ -1,47 +1,47 @@
 import * as React from "react";
-import { compose } from "react-apollo";
 import {
-  withAllWahlenQuery,
-  IGetAllWahlenQueryHocProps
+  IGetAllWahlenQueryHocProps,
+  withAllWahlenQuery
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
-import { WahlSelector } from "../dataselectors/WahlSelector";
 import { IWahl } from "../../../../../shared/sharedTypes";
-import { GewinnerGeoChart } from "./GewinnerGeoChart";
+import { compose } from "react-apollo";
+import { WahlSelector } from "../dataselectors/WahlSelector";
+import { WahlbeteiligungChart } from "./WahlbeteiligungChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 
-export interface IGewinnerWidgetProps extends IStatistikWidgetProps {}
+export interface IStimmkreisInfoWidgetProps extends IStatistikWidgetProps {}
 
-interface IProps extends IGewinnerWidgetProps, IGetAllWahlenQueryHocProps {}
+interface IProps
+  extends IStimmkreisInfoWidgetProps,
+    IGetAllWahlenQueryHocProps {}
 
 interface IState {
   readonly selectedWahl?: IWahl;
-  readonly erststimmen: boolean;
 }
 
-class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
+class StimmkreisInfoWidgetComponent extends React.PureComponent<
+  IProps,
+  IState
+> {
   constructor(props: IProps) {
     super(props);
-    this.state = {
-      erststimmen: true
-    };
+    this.state = {};
   }
 
   private onSelectWahl = (selectedWahl: IWahl) =>
     this.setState({ selectedWahl });
 
-  private onSelectErststimmen = (erststimmen: boolean) =>
-    this.setState({ erststimmen });
-
   render() {
     const { allWahlenData } = this.props;
-    const { selectedWahl, erststimmen } = this.state;
+    const { selectedWahl } = this.state;
+
     return (
       <StatistikWidget
         {...this.props}
         title={
           <>
-            <span style={{ float: "left" }}>{"Stimmkreisgewinner:"}</span>
+            <span style={{ float: "left" }}>{"Wahlbeteiligung:"}</span>
             <span
               style={{
                 display: "block",
@@ -64,11 +64,7 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
         }
       >
         {selectedWahl ? (
-          <GewinnerGeoChart
-            erststimmen={erststimmen}
-            onErststimmenChanged={this.onSelectErststimmen}
-            wahl={selectedWahl}
-          />
+          <WahlbeteiligungChart wahl={selectedWahl} />
         ) : (
           renderInfo("Bitte eine Wahl auswählen")
         )}
@@ -77,10 +73,10 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
   }
 }
 
-const GewinnerWidgetWithQueries = compose(
-  withAllWahlenQuery<IGewinnerWidgetProps>()
-)(GewinnerWidgetComponent);
+const StimmkreisInfoWidgetWithQueries = compose(
+  withAllWahlenQuery<IStimmkreisInfoWidgetProps>()
+)(StimmkreisInfoWidgetComponent);
 
-export const GewinnerWidget = GewinnerWidgetWithQueries as React.ComponentType<
-  IGewinnerWidgetProps
+export const StimmkreisInfoWidget = StimmkreisInfoWidgetWithQueries as React.ComponentType<
+  IStimmkreisInfoWidgetProps
 >;
