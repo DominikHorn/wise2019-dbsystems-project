@@ -9,6 +9,7 @@ type Query {
   getUeberhangMandate(wahlid: Int!): [UeberhangMandat]!
   getKnappsteKandidaten(wahlid: Int!, amountPerPartei: Int): [KnapperKandidat]!
   getWahlbeteiligung(wahlid: Int!): [Wahlbeteiligung]!
+  getDirektmandat(wahlid: Int!, stimmkreisid: Int!): Mandat
 }
 
 type Mutation {
@@ -27,6 +28,7 @@ type Wahl {
 
 type Mandat {
   kandidat: Kandidat!
+  stimmkreis: Stimmkreis
   direktmandat: Boolean!
 }
 

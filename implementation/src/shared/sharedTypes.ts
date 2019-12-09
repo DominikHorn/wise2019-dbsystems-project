@@ -22,6 +22,7 @@ export interface IKandidat {
 export interface IMandat {
   kandidat: IKandidat;
   direktmandat: boolean;
+  stimmkreis?: IStimmkreis;
 }
 
 export interface IUeberhangMandat {

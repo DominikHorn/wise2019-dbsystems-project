@@ -253,34 +253,41 @@ export async function computeEntwicklungDerStimmmen(
   }));
 }
 
-export async function getDirektmandate(wahlid: number): Promise<IMandat[]> {
+export async function getDirektmandat(
+  wahlid: number,
+  stimmkreisid: number
+): Promise<IMandat> {
   const direktmandatView: MaterialViews = "gewonnene_direktmandate";
   const res: {
     kandidat_id: number;
     kandidat_name: string;
     partei_id: number;
     partei_name: string;
+    stimmkreis_id: number;
+    stimmkreis_name: string;
     direktmandat: boolean;
   }[] = await adapters.postgres.query(
     `
-    SELECT m.* 
-    FROM (
-      SELECT k.id as kandidat_id, 
-            k.name as kandidat_name,
-            p.id as partei_id, 
-            p.name as partei_name,
-            true as direktmandat
-      FROM "${DatabaseSchemaGroup}".${direktmandatView} dm
-        JOIN "${DatabaseSchemaGroup}".kandidaten k ON dm.kandidat_id = k.id
-        JOIN "${DatabaseSchemaGroup}".parteien p ON k.partei_id = p.id
-      WHERE dm.wahl_id = $1
-    ) m
-    ORDER BY m.direktmandat DESC, m.kandidat_id
+    SELECT k.id as kandidat_id, 
+          k.name as kandidat_name,
+          p.id as partei_id, 
+          p.name as partei_name,
+          sk.id as stimmkreis_id,
+          sk.name as stimmkreis_name
+    FROM "${DatabaseSchemaGroup}".${direktmandatView} dm
+      JOIN "${DatabaseSchemaGroup}".kandidaten k ON dm.kandidat_id = k.id
+      JOIN "${DatabaseSchemaGroup}".parteien p ON k.partei_id = p.id
+      JOIN "${DatabaseSchemaGroup}".${STIMMKREIS_TABLE} sk ON sk.id = dm.stimmkreis_id
+    WHERE dm.wahl_id = $1 AND dm.stimmkreis_id = $2
   `,
-    [wahlid]
+    [wahlid, stimmkreisid]
   );
 
   return res.map(resobj => ({
+    stimmkreis: {
+      id: resobj.stimmkreis_id,
+      name: resobj.stimmkreis_name
+    },
     kandidat: {
       id: resobj.kandidat_id,
       name: resobj.kandidat_name,
@@ -289,8 +296,8 @@ export async function getDirektmandate(wahlid: number): Promise<IMandat[]> {
         name: resobj.partei_name as EParteiName
       }
     },
-    direktmandat: resobj.direktmandat
-  }));
+    direktmandat: true
+  }))[0];
 }
 
 export async function computeAbsolutenAnteil(
@@ -593,6 +600,8 @@ export async function getMandate(wahlid: number): Promise<IMandat[]> {
   const res: {
     kandidat_id: number;
     kandidat_name: string;
+    stimmkreis_id?: number;
+    stimmkreis_name?: string;
     partei_id: number;
     partei_name: string;
     direktmandat: boolean;
@@ -608,10 +617,13 @@ export async function getMandate(wahlid: number): Promise<IMandat[]> {
       FROM "${DatabaseSchemaGroup}".${GEWONNENE_DIREKTMANDATE_MVIEW} dm
         JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k ON dm.kandidat_id = k.id
         JOIN "${DatabaseSchemaGroup}".${PARTEIEN_TABLE} p ON k.partei_id = p.id
+        JOIN "${DatabaseSchemaGroup}".${STIMMKREIS_TABLE} sk ON sk.id = dm.stimmkreis_id
       WHERE dm.wahl_id = $1
       UNION
       SELECT k.id as kandidat_id, 
             k.name as kandidat_name,
+            null as stimmkreis_id,
+            null as stimmkreis_name,
             p.id as partei_id, 
             p.name as partei_name,
             false as direktmandat
@@ -626,6 +638,10 @@ export async function getMandate(wahlid: number): Promise<IMandat[]> {
   );
 
   return res.map(resobj => ({
+    stimmkreis: {
+      id: resobj.stimmkreis_id,
+      name: resobj.stimmkreis_name
+    },
     kandidat: {
       id: resobj.kandidat_id,
       name: resobj.kandidat_name,
