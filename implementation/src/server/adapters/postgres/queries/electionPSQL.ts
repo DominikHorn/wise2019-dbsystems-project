@@ -142,7 +142,7 @@ export async function computeWahlbeteiligung(
       gueltige_kandidat_zweitstimmen_pro_stimmkreis AS(
         SELECT kgs.wahl_id, kgs.stimmkreis_id, sum(kgs.anzahl) as anzahl
         FROM "${DatabaseSchemaGroup}".kandidatgebundene_gueltige_stimmen kgs
-        WHERE WHERE kgs.wahl_id = $1 AND not exists(SELECT * FROM "${DatabaseSchemaGroup}".direktkandidaten dk WHERE kgs.kandidat_id = dk.direktkandidat_id AND dk.wahl_id = kgs.wahl_id AND dk.stimmkreis_id = kgs.stimmkreis_id)
+        WHERE kgs.wahl_id = $1 AND not exists(SELECT * FROM "${DatabaseSchemaGroup}".direktkandidaten dk WHERE kgs.kandidat_id = dk.direktkandidat_id AND dk.wahl_id = kgs.wahl_id AND dk.stimmkreis_id = kgs.stimmkreis_id)
         GROUP BY kgs.wahl_id, kgs.stimmkreis_id
       ),
       listengebundene_stimmen_pro_stimmkreis AS (

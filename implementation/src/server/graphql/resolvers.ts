@@ -33,7 +33,7 @@ export const resolvers: { [key: string]: any } = {
       args: { wahlid: number; amountPerPartei?: number }
     ) => getKnappsteKandidaten(args.wahlid, args.amountPerPartei),
     getWahlbeteiligung: (_: any, args: { wahlid: number }) =>
-      computeWahlbeteiligung(args.wahlid)
+      computeWahlbeteiligung(args.wahlid, false)
   },
   Mutation: {
     importCSVData: async (
