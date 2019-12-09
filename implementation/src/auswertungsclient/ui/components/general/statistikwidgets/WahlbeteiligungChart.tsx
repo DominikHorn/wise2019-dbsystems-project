@@ -18,66 +18,82 @@ interface IProps
     IGetWahlbeteiligungQueryHocProps {}
 
 function mapToChartData(wahlbeteiligung: IWahlbeteiligung[]) {
-  return wahlbeteiligung.map(w => ({
-    name: `${w.stimmkreis.name}`,
-    value: w.wahlbeteiligung
-  }));
+  let min = 100;
+  let max = 0;
+  const data = wahlbeteiligung.map(w => {
+    if (w.wahlbeteiligung > max) {
+      max = w.wahlbeteiligung;
+    }
+    if (w.wahlbeteiligung < min) {
+      min = w.wahlbeteiligung;
+    }
+    return {
+      name: `${w.stimmkreis.name}`,
+      value: w.wahlbeteiligung
+    };
+  });
+  return { data, min, max };
 }
 
-const WahlbeteiligungChartComponent = (props: IProps) => (
-  <>
-    {props.wahlbeteiligungData.wahlbeteiligung &&
-    props.wahlbeteiligungData.wahlbeteiligung.length > 0 ? (
-      <div onMouseDown={eatEvent} style={{ width: "100%", height: "100%" }}>
-        <ReactEcharts
-          style={{ width: "100%", height: "100%" }}
-          option={{
-            tooltip: {
-              trigger: "item",
-              showDelay: 0,
-              transitionDuration: 0.2
-              // formatter: (params: any) =>
-              //   `${params.name}<br/>${params.value}`
-            },
-            visualMap: {
-              show: true,
-              min: 0,
-              max: 100,
-              inRange: {
-                // TODO: adjust colors
-                color: ["#b3402e", "#bdb03a", "#40b830"]
+const WahlbeteiligungChartComponent = (props: IProps) => {
+  const data = mapToChartData(props.wahlbeteiligungData.wahlbeteiligung || []);
+
+  return (
+    <>
+      {props.wahlbeteiligungData.wahlbeteiligung &&
+      props.wahlbeteiligungData.wahlbeteiligung.length > 0 ? (
+        <div onMouseDown={eatEvent} style={{ width: "100%", height: "100%" }}>
+          <ReactEcharts
+            style={{ width: "100%", height: "100%" }}
+            onEvents={{
+              mapselectchanged: event => {
+                console.log("selection changed event:", event);
               }
-            },
-            toolbox: {
-              // Visually pleasant align with StatistikWidget card's title
-              left: "15px",
-              top: "5px",
-              feature: {
-                saveAsImage: { title: "Als Bild speichern" }
-              }
-            },
-            series: [
-              {
-                name: "Wahlbeteiligung",
-                type: "map",
-                roam: true,
-                map: "Stimmkreise",
-                itemStyle: {
-                  emphasis: { label: { show: false } }
-                },
-                data: mapToChartData(
-                  props.wahlbeteiligungData.wahlbeteiligung || []
-                )
-              }
-            ]
-          }}
-        />
-      </div>
-    ) : (
-      renderCenteredLoading()
-    )}
-  </>
-);
+            }}
+            option={{
+              tooltip: {
+                trigger: "item",
+                showDelay: 0,
+                transitionDuration: 0.2
+              },
+              visualMap: {
+                show: true,
+                min: data.min,
+                max: data.max,
+                inRange: {
+                  color: ["#b3402e", "#bdb03a", "#40b830"]
+                }
+              },
+              toolbox: {
+                // Visually pleasant align with StatistikWidget card's title
+                left: "15px",
+                top: "5px",
+                feature: {
+                  saveAsImage: { title: "Als Bild speichern" }
+                }
+              },
+              series: [
+                {
+                  name: "Wahlbeteiligung",
+                  type: "map",
+                  roam: true,
+                  selectedMode: "single",
+                  map: "Stimmkreise",
+                  itemStyle: {
+                    emphasis: { label: { show: false }, areaColor: "#ccc" }
+                  },
+                  data: data.data
+                }
+              ]
+            }}
+          />
+        </div>
+      ) : (
+        renderCenteredLoading()
+      )}
+    </>
+  );
+};
 
 const WahlbeteiligungChartWithQueries = compose(
   withWahlbeteiligungQuery<IWahlbeteiligungChartProps>(props => props.wahl.id)
