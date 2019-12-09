@@ -71,3 +71,30 @@ export interface IDatabaseStimmkreisWinner extends IDatabaseEntity {
   readonly partei_name: string;
   readonly anzahl: number;
 }
+
+export interface IDatabaseWahlbeteiligung extends IDatabaseEntity {
+  readonly wahl_id: number;
+  readonly stimmkreis_id: number;
+  readonly wahlbeteiligung: number;
+}
+
+export interface IDatabaseDirektmandate extends IDatabaseEntity {
+  readonly wahl_id: number;
+  readonly stimmkreis_id: number;
+  readonly direktmandat_name: string;
+  readonly partei_id: number;
+}
+
+export interface IDatabaseAnteil extends IDatabaseEntity {
+  readonly wahl_id: number;
+  readonly stimmkreis_id: number;
+  readonly partei_id: number;
+  readonly partei_name: string;
+  readonly anteil: number;
+}
+
+export interface IDatabaseStimmenEntwicklung extends IDatabaseEntity {
+  readonly partei_id: number;
+  readonly partei_name: string;
+  readonly veraenderung: number;
+}
