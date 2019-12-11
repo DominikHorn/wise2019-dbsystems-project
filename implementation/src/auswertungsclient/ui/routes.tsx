@@ -49,10 +49,34 @@ export const PRECONFIGURED_WIDGET_ROUTES: IMenuRoute[] = [
             type: "Mandatliste (Q2)",
             layout: {
               w: 6,
-              h: 8,
+              h: 20,
               x: 0,
               y: 0,
               i: "0",
+              minW: 4,
+              minH: 4
+            }
+          },
+          {
+            type: "Sitzverteilung (Q1) - Torte",
+            layout: {
+              w: 6,
+              h: 10,
+              x: 6,
+              y: 0,
+              i: "1",
+              minW: 4,
+              minH: 4
+            }
+          },
+          {
+            type: "Überhangmandate (Q5)",
+            layout: {
+              w: 6,
+              h: 10,
+              x: 6,
+              y: 10,
+              i: "2",
               minW: 4,
               minH: 4
             }

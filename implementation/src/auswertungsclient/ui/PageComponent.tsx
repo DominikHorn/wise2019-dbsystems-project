@@ -49,6 +49,7 @@ export interface IState {
 
   // Important for react grid layout sizing
   readonly availableWidth: number;
+  readonly availableHeight: number;
 }
 
 const COLUMN_COUNT = 12;
@@ -76,12 +77,16 @@ class PageComponentClass extends React.Component<IProps, IState> {
     super(props);
     this.state = {
       menuCollapsed: true,
-      availableWidth: window.innerWidth - 80
+      availableWidth: window.innerWidth - 80,
+      availableHeight: window.innerHeight - 64
     };
   }
 
   private updateDimensions = () =>
-    this.setState({ availableWidth: window.innerWidth - 80 });
+    this.setState({
+      availableWidth: window.innerWidth - (this.state.menuCollapsed ? 80 : 200),
+      availableHeight: window.innerHeight - 64
+    });
 
   componentDidMount() {
     window.addEventListener("resize", this.updateDimensions);
@@ -380,7 +385,7 @@ class PageComponentClass extends React.Component<IProps, IState> {
     settings: StatistikWidgetSetting[],
     history: H.History
   ) => {
-    const { availableWidth } = this.state;
+    const { availableWidth, availableHeight } = this.state;
 
     return (
       <Content
@@ -393,7 +398,8 @@ class PageComponentClass extends React.Component<IProps, IState> {
             (setting: StatistikWidgetSetting) => setting.layout
           )}
           cols={COLUMN_COUNT}
-          rowHeight={50}
+          // header height + margin borders + other
+          rowHeight={(availableHeight - (64 + 10 + 30)) / 20}
           width={availableWidth}
           isResizable={true}
           onLayoutChange={layouts =>
@@ -467,9 +473,12 @@ class PageComponentClass extends React.Component<IProps, IState> {
   }
 
   private onMenuCollapseChange = (collapsed: boolean) =>
-    this.setState({
-      menuCollapsed: collapsed
-    });
+    this.setState(
+      {
+        menuCollapsed: collapsed
+      },
+      this.updateDimensions
+    );
 }
 
 const PageComponentWithErrorBoundary = withErrorBoundary<IPageProps>(
