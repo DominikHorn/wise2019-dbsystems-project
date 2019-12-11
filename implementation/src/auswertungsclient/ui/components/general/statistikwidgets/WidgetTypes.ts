@@ -11,7 +11,7 @@ export enum WidgetType {
   KNAPPSTE_KANDIDATEN = "Knappste Kandidaten (Q6)"
 }
 
-export type StatistikWidgetSettings = {
+export type StatistikWidgetSetting = {
   layout: GridLayout;
   type: WidgetType;
   // Arbitrary widget state
