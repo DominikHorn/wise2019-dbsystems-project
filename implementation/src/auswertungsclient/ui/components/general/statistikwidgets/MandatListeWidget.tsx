@@ -10,14 +10,14 @@ import { WahlSelector } from "../dataselectors/WahlSelector";
 import { MandatListe } from "../MandatListe";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 
-export interface IMandatListeWidgetProps extends IStatistikWidgetProps {}
-
-interface IProps extends IMandatListeWidgetProps, IGetAllWahlenQueryHocProps {}
-
 interface IState {
   readonly selectedWahl?: IWahl;
 }
 
+export interface IMandatListeWidgetProps
+  extends IStatistikWidgetProps<IState> {}
+
+interface IProps extends IMandatListeWidgetProps, IGetAllWahlenQueryHocProps {}
 class MandatListeWidgetComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
@@ -25,11 +25,18 @@ class MandatListeWidgetComponent extends React.PureComponent<IProps, IState> {
   }
 
   private onSelectWahl = (selectedWahl: IWahl) =>
-    this.setState({ selectedWahl });
+    this.props.setRoutableState
+      ? this.props.setRoutableState({ selectedWahl })
+      : this.setState({ selectedWahl });
 
   render() {
-    const { selectedWahl } = this.state;
-    const { allWahlenData } = this.props;
+    const { allWahlenData, routableState } = this.props;
+    let selectedWahl = null;
+    if (routableState) {
+      selectedWahl = routableState.selectedWahl;
+    } else {
+      selectedWahl = this.state.selectedWahl;
+    }
 
     return (
       <StatistikWidget

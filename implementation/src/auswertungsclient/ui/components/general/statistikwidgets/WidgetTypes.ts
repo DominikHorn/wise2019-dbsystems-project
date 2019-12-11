@@ -1,5 +1,6 @@
+import { Layout as GridLayout } from "react-grid-layout";
+
 export enum WidgetType {
-  ADD = "Hinzufüge Widget",
   PLACEHOLDER = "Platzhalter",
   SITZVERTEILUNG_PIECHART = "Sitzverteilung (Q1) - Torte",
   SITZVERTEILUNG_TABLE = "Sitzverteilung (Q1) - Tabelle",
@@ -9,3 +10,10 @@ export enum WidgetType {
   UEBERHANGMANDATE = "Überhangmandate (Q5)",
   KNAPPSTE_KANDIDATEN = "Knappste Kandidaten (Q6)"
 }
+
+export type StatistikWidgetSetting = {
+  layout: GridLayout;
+  type: WidgetType;
+  // Arbitrary widget state
+  routableState?: any;
+};

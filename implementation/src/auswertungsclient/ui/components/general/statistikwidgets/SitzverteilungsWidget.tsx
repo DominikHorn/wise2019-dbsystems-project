@@ -12,7 +12,11 @@ import { WahlSelector } from "../dataselectors/WahlSelector";
 import { SitzverteilungsChart } from "./SitzverteilungsChart";
 import { SitzverteilungsTable } from "./SitzverteilungsTable";
 
-export interface ISitzverteilungsWidgetProps extends IStatistikWidgetProps {
+interface IState {
+  selectedWahl?: IWahl;
+}
+export interface ISitzverteilungsWidgetProps
+  extends IStatistikWidgetProps<IState> {
   readonly renderAsTable?: boolean;
 }
 
@@ -20,10 +24,6 @@ interface IProps
   extends ISitzverteilungsWidgetProps,
     IGetAllWahlenQueryHocProps,
     IGetMandateQueryHocProps {}
-
-interface IState {
-  selectedWahl?: IWahl;
-}
 
 class SitzverteilungsWidgetComponent extends React.PureComponent<
   IProps,
@@ -35,11 +35,19 @@ class SitzverteilungsWidgetComponent extends React.PureComponent<
   }
 
   private onSelectWahl = (selectedWahl: IWahl) =>
-    this.setState({ selectedWahl });
+    this.props.setRoutableState
+      ? this.props.setRoutableState({ selectedWahl })
+      : this.setState({ selectedWahl });
 
   render() {
-    const { selectedWahl } = this.state;
-    const { allWahlenData, renderAsTable } = this.props;
+    const { allWahlenData, renderAsTable, routableState } = this.props;
+    let selectedWahl = null;
+    if (routableState) {
+      selectedWahl = routableState.selectedWahl;
+    } else {
+      selectedWahl = this.state.selectedWahl;
+    }
+
     return (
       <StatistikWidget
         {...this.props}

@@ -10,14 +10,14 @@ import { IWahl } from "../../../../../shared/sharedTypes";
 import { GewinnerGeoChart } from "./GewinnerGeoChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 
-export interface IGewinnerWidgetProps extends IStatistikWidgetProps {}
-
-interface IProps extends IGewinnerWidgetProps, IGetAllWahlenQueryHocProps {}
-
 interface IState {
   readonly selectedWahl?: IWahl;
   readonly erststimmen: boolean;
 }
+
+export interface IGewinnerWidgetProps extends IStatistikWidgetProps<IState> {}
+
+interface IProps extends IGewinnerWidgetProps, IGetAllWahlenQueryHocProps {}
 
 class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
@@ -28,14 +28,27 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
   }
 
   private onSelectWahl = (selectedWahl: IWahl) =>
-    this.setState({ selectedWahl });
+    this.props.setRoutableState
+      ? this.props.setRoutableState({ selectedWahl })
+      : this.setState({ selectedWahl });
 
   private onSelectErststimmen = (erststimmen: boolean) =>
-    this.setState({ erststimmen });
+    this.props.setRoutableState
+      ? this.props.setRoutableState({ erststimmen })
+      : this.setState({ erststimmen });
 
   render() {
-    const { allWahlenData } = this.props;
-    const { selectedWahl, erststimmen } = this.state;
+    const { allWahlenData, routableState } = this.props;
+    let selectedWahl,
+      erststimmen = null;
+    if (routableState) {
+      selectedWahl = routableState.selectedWahl;
+      erststimmen = routableState.erststimmen || true;
+    } else {
+      selectedWahl = this.state.selectedWahl;
+      erststimmen = this.state.erststimmen;
+    }
+
     return (
       <StatistikWidget
         {...this.props}

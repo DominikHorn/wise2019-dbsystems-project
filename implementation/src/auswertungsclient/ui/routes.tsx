@@ -1,12 +1,10 @@
 import * as H from "history";
 import * as React from "react";
+import { RouteChildrenProps, RouteComponentProps } from "react-router";
 import {
-  Redirect,
-  RouteChildrenProps,
-  RouteComponentProps
-} from "react-router";
-import { StatistikPage } from "./components/roots/StatistikPage";
-import { ErgebnissePage } from "./components/roots/ErgebnissePage";
+  WidgetType,
+  StatistikWidgetSetting
+} from "./components/general/statistikwidgets/WidgetTypes";
 
 export interface IRouteProps {
   readonly path: string;
@@ -36,33 +34,77 @@ export interface IMenuRoute extends IRouteProps {
   readonly possibleSubroutes?: ISubRoute[];
 }
 
-export const DEFAULT_ROUTE: IRouteProps = {
-  path: "/",
-  render: () => <Redirect to={RouteBasepaths.statistik} />
-};
+function encodeWidgetSettings(settings: StatistikWidgetSetting[]) {
+  return `/${btoa(encodeURIComponent(JSON.stringify(settings)))}`;
+}
 
-export const RouteBasepaths = {
-  statistik: "/statistik",
-  ergebnisse: "/ergebnisse"
-};
-
-export const TOPLEVEL_ROUTES: IMenuRoute[] = [
+export const PRECONFIGURED_WIDGET_ROUTES: IMenuRoute[] = [
   {
-    menuKey: "Statistik",
-    menuTitle: "Auswertung",
-    menuIconIdentifier: "pie-chart",
-    path: `${RouteBasepaths.statistik}/`,
-    render: (props: RouteComponentProps<any>) => (
-      <StatistikPage routeProps={props} />
-    )
+    menuKey: "Empty",
+    menuTitle: "Neues Layout",
+    menuIconIdentifier: "delete",
+    path: `/`
   },
   {
     menuKey: "Ergebnisse",
     menuTitle: "Ergebnisse",
-    menuIconIdentifier: "database",
-    path: `${RouteBasepaths.ergebnisse}/`,
-    render: (props: RouteComponentProps<any>) => (
-      <ErgebnissePage routeProps={props} />
-    )
+    menuIconIdentifier: "pie-chart",
+    path: encodeWidgetSettings([
+      {
+        type: WidgetType.MANDAT_LISTE,
+        layout: {
+          w: 6,
+          h: 20,
+          x: 0,
+          y: 0,
+          i: "0",
+          minW: 4,
+          minH: 4
+        }
+      },
+      {
+        type: WidgetType.SITZVERTEILUNG_PIECHART,
+        layout: {
+          w: 6,
+          h: 10,
+          x: 6,
+          y: 0,
+          i: "1",
+          minW: 4,
+          minH: 4
+        }
+      },
+      {
+        type: WidgetType.UEBERHANGMANDATE,
+        layout: {
+          w: 6,
+          h: 10,
+          x: 6,
+          y: 10,
+          i: "2",
+          minW: 4,
+          minH: 4
+        }
+      }
+    ])
+  },
+  {
+    menuKey: "Stimmkreisinfo",
+    menuTitle: "Stimmkreisinfo",
+    menuIconIdentifier: "pic-left",
+    path: encodeWidgetSettings([
+      {
+        type: WidgetType.STIMMKREIS_INFO_WAHLBETEILIGUNG,
+        layout: {
+          w: 12,
+          h: 20,
+          x: 0,
+          y: 0,
+          i: "0",
+          minW: 4,
+          minH: 4
+        }
+      }
+    ])
   }
 ];

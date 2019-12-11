@@ -611,6 +611,8 @@ export async function getMandate(wahlid: number): Promise<IMandat[]> {
     FROM (
       SELECT k.id as kandidat_id, 
             k.name as kandidat_name,
+            sk.id as stimmkreis_id,
+            sk.name as stimmkreis_name,
             p.id as partei_id, 
             p.name as partei_name,
             true as direktmandat

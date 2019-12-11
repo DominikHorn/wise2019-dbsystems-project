@@ -4,14 +4,16 @@ import { withErrorBoundary } from "./ErrorBoundary";
 import { renderError } from "../../guiUtil";
 import "./StatistikWidget.css";
 
-export interface IStatistikWidgetProps {
+export interface IStatistikWidgetProps<State> {
   readonly title?: string | React.ReactNode;
   readonly children?: React.ReactNode;
   readonly removeWidget?: () => void;
+  readonly routableState?: State;
+  readonly setRoutableState?: (newState: Partial<State>) => void;
   readonly titleHeight?: string;
 }
 
-interface IProps extends IStatistikWidgetProps {}
+interface IProps extends IStatistikWidgetProps<{}> {}
 
 const StatistikWidgetComponent = (props: IProps) => (
   <Card
@@ -43,9 +45,9 @@ const StatistikWidgetComponent = (props: IProps) => (
 );
 
 const StatistikWidgetWithErrorBoundary = withErrorBoundary<
-  IStatistikWidgetProps
+  IStatistikWidgetProps<{}>
 >(StatistikWidgetComponent, error => <Card>{renderError(error.message)}</Card>);
 
 export const StatistikWidget = StatistikWidgetWithErrorBoundary as React.ComponentType<
-  IStatistikWidgetProps
+  IStatistikWidgetProps<{}>
 >;
