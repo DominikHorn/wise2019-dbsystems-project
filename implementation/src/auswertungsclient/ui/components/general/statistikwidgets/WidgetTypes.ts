@@ -14,6 +14,6 @@ export enum WidgetType {
 export type StatistikWidgetSettings = {
   layout: GridLayout;
   type: WidgetType;
-  // Arbitrary other widget props
-  otherProps?: any;
+  // Arbitrary widget state
+  routableState?: any;
 };

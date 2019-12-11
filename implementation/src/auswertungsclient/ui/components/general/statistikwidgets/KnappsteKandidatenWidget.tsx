@@ -10,16 +10,15 @@ import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { KnappsteKandidatenChart } from "./KnappsteKandidatenChart";
 import { WahlSelector } from "../dataselectors/WahlSelector";
 
-export interface IKnappsteKandidatenWidgetProps extends IStatistikWidgetProps {}
+interface IState {
+  readonly selectedWahl?: IWahl;
+}
+export interface IKnappsteKandidatenWidgetProps
+  extends IStatistikWidgetProps<IState> {}
 
 interface IProps
   extends IKnappsteKandidatenWidgetProps,
     IGetAllWahlenQueryHocProps {}
-
-interface IState {
-  readonly selectedWahl?: IWahl;
-}
-
 class KnappsteKandidatenWidgetComponent extends React.PureComponent<
   IProps,
   IState
@@ -30,11 +29,18 @@ class KnappsteKandidatenWidgetComponent extends React.PureComponent<
   }
 
   private onSelectWahl = (selectedWahl: IWahl) =>
-    this.setState({ selectedWahl });
+    this.props.setRoutableState
+      ? this.props.setRoutableState({ selectedWahl })
+      : this.setState({ selectedWahl });
 
   render() {
-    const { allWahlenData } = this.props;
-    const { selectedWahl } = this.state;
+    const { allWahlenData, routableState } = this.props;
+    let selectedWahl = null;
+    if (routableState) {
+      selectedWahl = routableState.selectedWahl;
+    } else {
+      selectedWahl = this.state.selectedWahl;
+    }
 
     return (
       <StatistikWidget

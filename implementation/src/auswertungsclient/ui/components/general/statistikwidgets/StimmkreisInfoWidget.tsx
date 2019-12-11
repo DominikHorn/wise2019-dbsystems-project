@@ -10,15 +10,16 @@ import { WahlSelector } from "../dataselectors/WahlSelector";
 import { WahlbeteiligungChart } from "./WahlbeteiligungChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 
-export interface IStimmkreisInfoWidgetProps extends IStatistikWidgetProps {}
+interface IState {
+  readonly selectedWahl?: IWahl;
+}
+
+export interface IStimmkreisInfoWidgetProps
+  extends IStatistikWidgetProps<IState> {}
 
 interface IProps
   extends IStimmkreisInfoWidgetProps,
     IGetAllWahlenQueryHocProps {}
-
-interface IState {
-  readonly selectedWahl?: IWahl;
-}
 
 class StimmkreisInfoWidgetComponent extends React.PureComponent<
   IProps,
@@ -30,11 +31,18 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
   }
 
   private onSelectWahl = (selectedWahl: IWahl) =>
-    this.setState({ selectedWahl });
+    this.props.setRoutableState
+      ? this.props.setRoutableState({ selectedWahl })
+      : this.setState({ selectedWahl });
 
   render() {
-    const { allWahlenData } = this.props;
-    const { selectedWahl } = this.state;
+    const { allWahlenData, routableState } = this.props;
+    let selectedWahl = null;
+    if (routableState) {
+      selectedWahl = routableState.selectedWahl;
+    } else {
+      selectedWahl = this.state.selectedWahl;
+    }
 
     return (
       <StatistikWidget

@@ -107,7 +107,13 @@ class PageComponentClass extends React.Component<IProps, IState> {
         {
           type: widgetType,
           layout: {
-            i: `${currentWidgetSettings.length}`,
+            i: `${currentWidgetSettings.reduce(
+              (prevMax, curr) =>
+                Number(curr.layout.i) > prevMax
+                  ? Number(curr.layout.i)
+                  : prevMax,
+              0
+            ) + 1}`,
             x:
               WIDGET_DIMENSIONS.w *
               (currentWidgetSettings.length %
@@ -136,6 +142,7 @@ class PageComponentClass extends React.Component<IProps, IState> {
     history: H.History,
     layouts: GridLayout[]
   ) =>
+    // TODO: only update on diff
     this.setWidgetSettings(
       currentWidgetSettings.map((setting, index) => ({
         ...setting,
@@ -283,56 +290,65 @@ class PageComponentClass extends React.Component<IProps, IState> {
 
   private renderWidget = (
     setting: StatistikWidgetSetting,
-    removeWidget: () => void
+    removeWidget: () => void,
+    setRoutableState: (newState: any) => void
   ) => {
     return (
       <div key={setting.layout.i}>
         {setting.type === WidgetType.PLACEHOLDER ? (
           <PlaceholderWidget
-            {...(setting.otherProps || {})}
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
             key={setting.layout.i}
             removeWidget={removeWidget}
           />
         ) : setting.type === WidgetType.SITZVERTEILUNG_PIECHART ? (
           <SitzverteilungsWidget
-            {...(setting.otherProps || {})}
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
             key={setting.layout.i}
             removeWidget={removeWidget}
           />
         ) : setting.type === WidgetType.SITZVERTEILUNG_TABLE ? (
           <SitzverteilungsWidget
-            {...(setting.otherProps || {})}
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
             key={setting.layout.i}
             removeWidget={removeWidget}
             renderAsTable={true}
           />
         ) : setting.type === WidgetType.MANDAT_LISTE ? (
           <MandatListeWidget
-            {...(setting.otherProps || {})}
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
             key={setting.layout.i}
             removeWidget={removeWidget}
           />
         ) : setting.type === WidgetType.STIMMKREIS_INFO_WAHLBETEILIGUNG ? (
           <StimmkreisInfoWidget
-            {...(setting.otherProps || {})}
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
             key={setting.layout.i}
             removeWidget={removeWidget}
           />
         ) : setting.type === WidgetType.GEWINNER_STIMMKREISE ? (
           <GewinnerWidget
-            {...(setting.otherProps || {})}
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
             key={setting.layout.i}
             removeWidget={removeWidget}
           />
         ) : setting.type === WidgetType.UEBERHANGMANDATE ? (
           <UeberhangmandateWidget
-            {...(setting.otherProps || {})}
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
             key={setting.layout.i}
             removeWidget={removeWidget}
           />
         ) : setting.type === WidgetType.KNAPPSTE_KANDIDATEN ? (
           <KnappsteKandidatenWidget
-            {...(setting.otherProps || {})}
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
             key={setting.layout.i}
             removeWidget={removeWidget}
           />
@@ -371,8 +387,24 @@ class PageComponentClass extends React.Component<IProps, IState> {
           margin={[5, 5]}
         >
           {settings.map((setting: StatistikWidgetSetting) =>
-            this.renderWidget(setting, () =>
-              this.onWidgetRemove(settings, history, setting.layout.i)
+            this.renderWidget(
+              setting,
+              () => this.onWidgetRemove(settings, history, setting.layout.i),
+              newRoutableState =>
+                this.setWidgetSettings(
+                  settings.map(s =>
+                    s.layout.i === setting.layout.i
+                      ? {
+                          ...s,
+                          routableState: {
+                            ...(s.routableState || {}),
+                            ...newRoutableState
+                          }
+                        }
+                      : s
+                  ),
+                  history
+                )
             )
           )}
         </ReactGridLayout>

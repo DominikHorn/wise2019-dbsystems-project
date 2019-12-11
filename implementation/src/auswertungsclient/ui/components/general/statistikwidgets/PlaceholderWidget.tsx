@@ -3,7 +3,7 @@ import { StatistikWidget, IStatistikWidgetProps } from "../StatistikWidget";
 import { Button } from "antd";
 import "./PlaceholderWidget.css";
 
-export interface IPlaceholderWidgetProps extends IStatistikWidgetProps {}
+export interface IPlaceholderWidgetProps extends IStatistikWidgetProps<{}> {}
 
 export const PlaceholderWidget = (props: IPlaceholderWidgetProps) => (
   <StatistikWidget>
