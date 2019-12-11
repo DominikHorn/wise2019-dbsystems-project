@@ -35,13 +35,13 @@ export const PRECONFIGURED_WIDGET_ROUTES: IMenuRoute[] = [
   {
     menuKey: "Empty",
     menuTitle: "Neues Layout",
-    menuIconIdentifier: "plus",
+    menuIconIdentifier: "delete",
     path: `/`
   },
   {
     menuKey: "Ergebnisse",
     menuTitle: "Ergebnisse",
-    menuIconIdentifier: "database",
+    menuIconIdentifier: "pie-chart",
     path: `/${btoa(
       encodeURIComponent(
         JSON.stringify([
