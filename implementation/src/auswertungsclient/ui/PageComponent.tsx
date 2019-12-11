@@ -141,15 +141,31 @@ class PageComponentClass extends React.Component<IProps, IState> {
     currentWidgetSettings: StatistikWidgetSetting[],
     history: H.History,
     layouts: GridLayout[]
-  ) =>
-    // TODO: only update on diff
-    this.setWidgetSettings(
-      currentWidgetSettings.map((setting, index) => ({
-        ...setting,
-        layout: layouts[index]
-      })),
-      history
-    );
+  ) => {
+    // Only update layout and thus route param when actual
+    // user noticable or non deductable changes happen
+    let meaningfullUpdate = false;
+    const newSettings = currentWidgetSettings.map((setting, index) => {
+      if (
+        setting.layout.x !== layouts[index].x ||
+        setting.layout.y !== layouts[index].y ||
+        setting.layout.w !== layouts[index].w ||
+        setting.layout.h !== layouts[index].h ||
+        setting.layout.minW !== layouts[index].minW ||
+        setting.layout.minH !== layouts[index].minH
+      ) {
+        meaningfullUpdate = true;
+        return {
+          ...setting,
+          layout: layouts[index]
+        };
+      }
+      return setting;
+    });
+    if (meaningfullUpdate) {
+      this.setWidgetSettings(newSettings, history);
+    }
+  };
 
   private renderWidgetAddMenu = () =>
     Object.values(WidgetType)
