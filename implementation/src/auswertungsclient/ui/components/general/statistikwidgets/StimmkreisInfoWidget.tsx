@@ -9,6 +9,8 @@ import { compose } from "react-apollo";
 import { WahlSelector } from "../dataselectors/WahlSelector";
 import { WahlbeteiligungChart } from "./WahlbeteiligungChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
+import { Row, Col } from "antd";
+import { StimmentwicklungChart } from "./StimmentwicklungChart";
 
 interface IState {
   readonly selectedWahl?: IWahl;
@@ -44,6 +46,14 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
       selectedWahl = this.state.selectedWahl;
     }
 
+    const previousWahl =
+      selectedWahl &&
+      (allWahlenData.allWahlen || [])
+        .sort((w1, w2) =>
+          w1.wahldatum < w2.wahldatum ? -1 : w1.wahldatum > w2.wahldatum ? 1 : 0
+        )
+        .find(w => w.wahldatum < selectedWahl.wahldatum);
+
     return (
       <StatistikWidget
         {...this.props}
@@ -72,7 +82,28 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
         }
       >
         {selectedWahl ? (
-          <WahlbeteiligungChart wahl={selectedWahl} />
+          <Row
+            type={"flex"}
+            gutter={16}
+            style={{ height: "100%", width: "100%" }}
+          >
+            <Col span={10}>
+              <WahlbeteiligungChart wahl={selectedWahl} />
+            </Col>
+            <Col>
+              Stimmkreis: Fürstenfeldbruck Ost
+              <br />
+              Wahlbeteiligung: 78 %
+              <br />
+              Gewinner: Hans
+              <br />
+              <StimmentwicklungChart
+                wahl={selectedWahl}
+                vglwahl={previousWahl}
+                stimmkreis={{ id: 101, name: "test" }}
+              />
+            </Col>
+          </Row>
         ) : (
           renderInfo("Bitte eine Wahl auswählen")
         )}
