@@ -17,10 +17,11 @@ export const PlaceholderWidget = (props: IPlaceholderWidgetProps) => (
         backgroundColor: "#f0f2f5",
         border: "2px dashed lightGray"
       }}
-      onClick={props.removeWidget}
     >
       <div className={"show-only-on-hover"}>
-        <div>Zum Entfernen Klicken</div>
+        <div>
+          <span onClick={props.removeWidget}>Zum Entfernen Klicken </span>
+        </div>
       </div>
     </Button>
   </StatistikWidget>
