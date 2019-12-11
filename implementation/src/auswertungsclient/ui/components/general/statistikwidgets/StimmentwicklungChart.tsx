@@ -27,46 +27,31 @@ function getOptions() {
       }
     },
     yAxis: {
-      interval: 5
+      // interval: 5,
+      type: "value"
     },
     xAxis: {
-      data: ["901", "902"],
-      name: "",
-      silent: false,
-      axisLine: { onZero: true },
-      axisLabel: { rotate: -45 }
+      type: "category",
+      data: ["901", "902"]
+      // axisLabel: { rotate: -45 }
     },
     grid: {
       left: 100
     },
-    series: {
-      name: "Stimmentwicklung",
-      type: "bar",
-      data: [
-        {
-          category: "901",
-          name: "2018",
-          value: 10
-        },
-        {
-          category: "901",
-          name: "2013",
-          value: 15
-        },
-        {
-          category: "902",
-          name: "2018",
-          value: 5
-        },
-        {
-          category: "902",
-          name: "2013",
-          value: 6
-        }
-      ]
-    }
-    // tooltip: {}
-    // grid: {}
+    // tooltip: {},
+    series: [
+      {
+        name: "2018",
+        type: "bar",
+        barGap: 0,
+        data: [10, 5]
+      },
+      {
+        name: "2013",
+        type: "bar",
+        data: [15, 6]
+      }
+    ]
   };
 }
 
