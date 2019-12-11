@@ -1,12 +1,7 @@
 import * as H from "history";
 import * as React from "react";
-import {
-  Redirect,
-  RouteChildrenProps,
-  RouteComponentProps
-} from "react-router";
-import { StatistikPage } from "./components/roots/StatistikPage";
-import { ErgebnissePage } from "./components/roots/ErgebnissePage";
+import { RouteChildrenProps, RouteComponentProps } from "react-router";
+import { WidgetType } from "./components/general/statistikwidgets/WidgetTypes";
 
 export interface IRouteProps {
   readonly path: string;
@@ -36,33 +31,32 @@ export interface IMenuRoute extends IRouteProps {
   readonly possibleSubroutes?: ISubRoute[];
 }
 
-export const DEFAULT_ROUTE: IRouteProps = {
-  path: "/",
-  render: () => <Redirect to={RouteBasepaths.statistik} />
-};
-
-export const RouteBasepaths = {
-  statistik: "/statistik",
-  ergebnisse: "/ergebnisse"
-};
-
-export const TOPLEVEL_ROUTES: IMenuRoute[] = [
+export const PRECONFIGURED_WIDGET_ROUTES: IMenuRoute[] = [
   {
-    menuKey: "Statistik",
-    menuTitle: "Auswertung",
-    menuIconIdentifier: "pie-chart",
-    path: `${RouteBasepaths.statistik}/`,
-    render: (props: RouteComponentProps<any>) => (
-      <StatistikPage routeProps={props} />
-    )
+    menuKey: "Empty",
+    menuTitle: "Neues Layout",
+    menuIconIdentifier: "plus",
+    path: `/`
   },
   {
     menuKey: "Ergebnisse",
     menuTitle: "Ergebnisse",
     menuIconIdentifier: "database",
-    path: `${RouteBasepaths.ergebnisse}/`,
-    render: (props: RouteComponentProps<any>) => (
-      <ErgebnissePage routeProps={props} />
-    )
+    path: `/${encodeURIComponent(
+      JSON.stringify([
+        {
+          type: "Mandatliste (Q2)",
+          layout: {
+            w: 8,
+            h: 8,
+            x: 0,
+            y: 0,
+            i: "0",
+            minW: 4,
+            minH: 4
+          }
+        }
+      ])
+    )}`
   }
 ];
