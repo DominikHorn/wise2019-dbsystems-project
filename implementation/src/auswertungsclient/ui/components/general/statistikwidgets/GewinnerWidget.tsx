@@ -43,7 +43,7 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
       erststimmen = null;
     if (routableState) {
       selectedWahl = routableState.selectedWahl;
-      erststimmen = routableState.erststimmen;
+      erststimmen = routableState.erststimmen || true;
     } else {
       selectedWahl = this.state.selectedWahl;
       erststimmen = this.state.erststimmen;
