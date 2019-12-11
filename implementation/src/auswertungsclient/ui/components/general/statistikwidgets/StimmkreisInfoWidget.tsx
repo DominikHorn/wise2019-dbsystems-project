@@ -11,6 +11,7 @@ import { WahlbeteiligungChart } from "./WahlbeteiligungChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { Row, Col } from "antd";
 import { StimmentwicklungChart } from "./StimmentwicklungChart";
+import { renderCenteredLoading } from "../../../guiUtil";
 
 interface IState {
   readonly selectedWahl?: IWahl;
@@ -52,7 +53,7 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
         .sort((w1, w2) =>
           w1.wahldatum < w2.wahldatum ? -1 : w1.wahldatum > w2.wahldatum ? 1 : 0
         )
-        .find(w => w.wahldatum < selectedWahl.wahldatum);
+        .find(w => new Date(w.wahldatum) < new Date(selectedWahl.wahldatum));
 
     return (
       <StatistikWidget
@@ -97,11 +98,15 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
               <br />
               Gewinner: Hans
               <br />
-              <StimmentwicklungChart
-                wahl={selectedWahl}
-                vglwahl={previousWahl}
-                stimmkreis={{ id: 101, name: "test" }}
-              />
+              {previousWahl ? (
+                <StimmentwicklungChart
+                  wahl={selectedWahl}
+                  vglwahl={previousWahl}
+                  stimmkreis={{ id: 101, name: "test" }}
+                />
+              ) : (
+                renderCenteredLoading()
+              )}
             </Col>
           </Row>
         ) : (
