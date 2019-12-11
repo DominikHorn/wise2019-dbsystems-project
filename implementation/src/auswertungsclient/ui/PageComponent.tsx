@@ -94,7 +94,7 @@ class PageComponentClass extends React.Component<IProps, IState> {
   private setWidgetSettings = (
     newSettings: StatistikWidgetSetting[],
     history: H.History
-  ) => history.push(`/${encodeURIComponent(JSON.stringify(newSettings))}`);
+  ) => history.push(`/${btoa(JSON.stringify(newSettings))}`);
 
   // TODO: rework where widgets are added -> fit in empty spaces
   private onWidgetAdd = (
@@ -394,7 +394,8 @@ class PageComponentClass extends React.Component<IProps, IState> {
           path={"/:settings?"}
           render={(props: RouteComponentProps<MainRouteProps>) => {
             const settings = JSON.parse(
-              decodeURIComponent(props.match.params.settings || "") || "[]"
+              decodeURIComponent(atob(props.match.params.settings || "")) ||
+                "[]"
             );
             return (
               <Layout style={{ minHeight: "100vh" }}>

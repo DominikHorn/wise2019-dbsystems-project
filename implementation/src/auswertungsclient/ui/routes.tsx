@@ -42,21 +42,23 @@ export const PRECONFIGURED_WIDGET_ROUTES: IMenuRoute[] = [
     menuKey: "Ergebnisse",
     menuTitle: "Ergebnisse",
     menuIconIdentifier: "database",
-    path: `/${encodeURIComponent(
-      JSON.stringify([
-        {
-          type: "Mandatliste (Q2)",
-          layout: {
-            w: 8,
-            h: 8,
-            x: 0,
-            y: 0,
-            i: "0",
-            minW: 4,
-            minH: 4
+    path: `/${btoa(
+      encodeURIComponent(
+        JSON.stringify([
+          {
+            type: "Mandatliste (Q2)",
+            layout: {
+              w: 6,
+              h: 8,
+              x: 0,
+              y: 0,
+              i: "0",
+              minW: 4,
+              minH: 4
+            }
           }
-        }
-      ])
+        ])
+      )
     )}`
   }
 ];
