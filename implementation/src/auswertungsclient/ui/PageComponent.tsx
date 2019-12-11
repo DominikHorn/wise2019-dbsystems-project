@@ -9,11 +9,11 @@ import { matchPath, Route, RouteComponentProps, Switch } from "react-router";
 import { Link } from "react-router-dom";
 import { isDevelopmentEnv } from "../../shared/util";
 import "./PageComponent.css";
-import { IRouteProps, PRECONFIGURED_WIDGET_ROUTES } from "./routes";
+import { PRECONFIGURED_WIDGET_ROUTES } from "./routes";
 import { withErrorBoundary } from "./components/general/ErrorBoundary";
 import {
   WidgetType,
-  StatistikWidgetSettings as StatistikWidgetSetting
+  StatistikWidgetSetting
 } from "./components/general/statistikwidgets/WidgetTypes";
 import MenuItem from "antd/lib/menu/MenuItem";
 import { PlaceholderWidget } from "./components/general/statistikwidgets/PlaceholderWidget";
