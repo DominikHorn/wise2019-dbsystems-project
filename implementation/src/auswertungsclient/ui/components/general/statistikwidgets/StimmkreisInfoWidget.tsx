@@ -37,7 +37,7 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
 
   render() {
     const { allWahlenData, routableState } = this.props;
-    let selectedWahl = null;
+    let selectedWahl: IWahl = null;
     if (routableState) {
       selectedWahl = routableState.selectedWahl;
     } else {
