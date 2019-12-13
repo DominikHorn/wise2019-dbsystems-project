@@ -8,6 +8,7 @@ import { IWahl } from "../../../../../shared/sharedTypes";
 import { compose } from "react-apollo";
 import { WahlSelector } from "../dataselectors/WahlSelector";
 import { WahlbeteiligungChart } from "./WahlbeteiligungChart";
+import { StimmenanteilChart } from "./StimmanzahlChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { Row, Col } from "antd";
 import { StimmentwicklungChart } from "./StimmentwicklungChart";
@@ -107,6 +108,12 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
               ) : (
                 renderCenteredLoading()
               )}
+              <br />
+              <StimmenanteilChart
+                wahl={selectedWahl}
+                stimmkreis={{ id: 101, name: "test" }}
+                einzelstimmen={false}
+              />
             </Col>
           </Row>
         ) : (
