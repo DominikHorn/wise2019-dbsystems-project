@@ -29,16 +29,16 @@ const SLEEP_BASE = 1000;
 let WORK_NUM = 0;
 function spawnWorker(
   baseWorkloadMix: WorkloadMix[],
-  exitCallback: (workerID: number, code: number) => void = (_, code) => {
+  exitCallback: (workerID: string, code: number) => void = (_, code) => {
     if (code !== 0) throw new Error(`Worker stopped with exit code ${code}`);
     console.log("Worker", workerID, "exited cleanly");
   },
-  messageCallback: (workerID: number, message: any) => void = (_, m) =>
+  messageCallback: (workerID: string, message: any) => void = (_, m) =>
     console.log("MSG:", m),
-  errorCallback: (workerID: number, error: any) => void = (_, e) =>
+  errorCallback: (workerID: string, error: any) => void = (_, e) =>
     console.error("ERROR:", e)
 ) {
-  const workerID = WORK_NUM++;
+  const workerID = `${WORK_NUM++}`;
   // Interval [0.8 t, 1.2 t]
   const sleepTime = (Math.random() / 2.5 + 0.8) * SLEEP_BASE;
 
@@ -135,9 +135,6 @@ function calculateWorkloadMix(allWahlen: IWahl[]): WorkloadMix[] {
     .sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
 }
 
-// TODO: dynamically spawn workers on graphql request
-const WORKER_AMOUNT = 2;
-
 if (isMainThread) {
   const client = new ApolloClient({
     link: createHttpLink({
@@ -146,7 +143,17 @@ if (isMainThread) {
     cache: new InMemoryCache()
   });
 
-  let workers: { worker: Worker; id: number }[] = [];
+  let workers: {
+    [workerID: string]: {
+      worker: Worker;
+      queryStats: {
+        [queryID: string]: {
+          timestamp: [number, number];
+          delta: [number, number];
+        }[];
+      };
+    };
+  } = {};
   console.log("Scheduler successfully started up");
   client
     .query({
@@ -166,12 +173,31 @@ if (isMainThread) {
 
         startServer({
           Query: {
-            helloWorld: () => "hallo welt"
+            getBenchmarkResults: () => {
+              return Object.keys(workers).map((workerID: string) => ({
+                workerID,
+                queryResults: Object.keys(workers[workerID].queryStats).map(
+                  queryID => ({
+                    queryID,
+                    results: workers[workerID].queryStats[queryID].map(val => ({
+                      timestamp: {
+                        hrfirst: val.timestamp[0],
+                        hrsecond: val.timestamp[1]
+                      },
+                      delta: {
+                        hrfirst: val.delta[0],
+                        hrsecond: val.delta[1]
+                      }
+                    }))
+                  })
+                )
+              }));
+            }
           },
           Mutation: {
             stopWorkers: (_: any, args: { workerIDs: number[] }) =>
               args.workerIDs.map(workerID => {
-                const w = workers.find(w => w.id === workerID);
+                const w = workers[workerID];
                 if (w) {
                   w.worker.postMessage(WorkerMessages.TERMINATE);
                   return true;
@@ -180,24 +206,29 @@ if (isMainThread) {
               }),
             startWorkers: (_: any, args: { amount: number }) => {
               for (let i = 0; i < args.amount; i++) {
-                workers.push(
-                  spawnWorker(baseWorkloadMix, (workerID, code) => {
+                const w = spawnWorker(
+                  baseWorkloadMix,
+                  (workerID, code) => {
                     if (code !== 0)
                       throw new Error(`Worker stopped with exit code ${code}`);
                     console.log("Worker", workerID, "exited cleanly");
-                    workers = workers.filter(w => w.id !== workerID);
-                  })
+                    workers[workerID] = null;
+                  },
+                  (workerId, message) => {
+                    workers[workerId].queryStats[message.queryID] = (
+                      workers[workerId].queryStats[message.queryID] || []
+                    ).concat({
+                      timestamp: process.hrtime(),
+                      delta: message.hrtime
+                    });
+                  }
                 );
+                workers[w.id] = { worker: w.worker, queryStats: {} };
               }
               return true;
             }
           }
         });
-
-        // // TODO: remove and terminate on qraphql request
-        // sleep(5000).then(() =>
-        //   workers.forEach(w => w.worker.postMessage(WorkerMessages.TERMINATE))
-        // );
       },
       err => console.error("ERROR:", err)
     );

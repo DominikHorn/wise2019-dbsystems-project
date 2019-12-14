@@ -51,7 +51,6 @@ export async function runBenchmark(
       fetchPolicy: "network-only"
     }).then(hrtime =>
       parentPort.postMessage({
-        workerID,
         queryID: query.id,
         hrtime
       })
