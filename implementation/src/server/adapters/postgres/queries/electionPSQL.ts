@@ -205,18 +205,22 @@ export async function computeWahlbeteiligung(
   }
 }
 
+//TODO Graphql query anpassen, sodass einzel mitgegeben wird
 export async function computeEntwicklungDerStimmmen(
   wahl_id: number,
   vgl_wahl_id: number,
-  stimmkreis_id: number
+  stimmkreis_id: number,
+  einzel: boolean
 ): Promise<IStimmenEntwicklung[]> {
-  const res: {
-    partei_id: number;
-    partei_name: string;
-    vorher: number;
-    nachher: number;
-  }[] = await adapters.postgres.query(
-    `
+  if (einzel) {
+  } else {
+    const res: {
+      partei_id: number;
+      partei_name: string;
+      vorher: number;
+      nachher: number;
+    }[] = await adapters.postgres.query(
+      `
     with kandidatgebundene_stimmen_pro_partei_pro_stimmkreis  AS (
       SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, sum(kgs.anzahl) as anzahl
       FROM "${DatabaseSchemaGroup}".kandidatgebundene_gueltige_stimmen kgs
@@ -248,33 +252,78 @@ export async function computeEntwicklungDerStimmmen(
     FROM entwicklung_der_gesamtstimmen edg, "${DatabaseSchemaGroup}".parteien p
     WHERE p.id = edg.partei_id;
     `,
-    [wahl_id, vgl_wahl_id, stimmkreis_id]
-  );
-  return res.map(resobj => ({
-    partei: {
-      id: resobj.partei_id,
-      name: resobj.partei_name as EParteiName
-    },
-    vorher: resobj.vorher,
-    nachher: resobj.nachher
-  }));
+      [wahl_id, vgl_wahl_id, stimmkreis_id]
+    );
+    return res.map(resobj => ({
+      partei: {
+        id: resobj.partei_id,
+        name: resobj.partei_name as EParteiName
+      },
+      vorher: resobj.vorher,
+      nachher: resobj.nachher
+    }));
+  }
 }
 
+//TODO Berechnung auf Einzelstimmen noch korrekt
 export async function getDirektmandat(
   wahlid: number,
-  stimmkreisid: number
+  stimmkreisid: number,
+  einzel: boolean
 ): Promise<IMandat> {
   const direktmandatView: MaterialViews = "gewonnene_direktmandate";
-  const res: {
-    kandidat_id: number;
-    kandidat_name: string;
-    partei_id: number;
-    partei_name: string;
-    stimmkreis_id: number;
-    stimmkreis_name: string;
-    direktmandat: boolean;
-  }[] = await adapters.postgres.query(
-    `
+  if (einzel) {
+    const res: {
+      kandidat_id: number;
+      kandidat_name: string;
+      partei_id: number;
+      partei_name: string;
+      stimmkreis_id: number;
+      stimmkreis_name: string;
+      direktmandat: boolean;
+    }[] = await adapters.postgres.query(
+      `
+  SELECT k.id as kandidat_id, 
+        k.name as kandidat_name,
+        p.id as partei_id, 
+        p.name as partei_name,
+        sk.id as stimmkreis_id,
+        sk.name as stimmkreis_name
+  FROM "${DatabaseSchemaGroup}".${direktmandatView} dm
+    JOIN "${DatabaseSchemaGroup}".kandidaten k ON dm.kandidat_id = k.id
+    JOIN "${DatabaseSchemaGroup}".parteien p ON k.partei_id = p.id
+    JOIN "${DatabaseSchemaGroup}".${STIMMKREIS_TABLE} sk ON sk.id = dm.stimmkreis_id
+  WHERE dm.wahl_id = $1 AND dm.stimmkreis_id = $2
+`,
+      [wahlid, stimmkreisid]
+    );
+
+    return res.map(resobj => ({
+      stimmkreis: {
+        id: resobj.stimmkreis_id,
+        name: resobj.stimmkreis_name
+      },
+      kandidat: {
+        id: resobj.kandidat_id,
+        name: resobj.kandidat_name,
+        partei: {
+          id: resobj.partei_id,
+          name: resobj.partei_name as EParteiName
+        }
+      },
+      direktmandat: true
+    }))[0];
+  } else {
+    const res: {
+      kandidat_id: number;
+      kandidat_name: string;
+      partei_id: number;
+      partei_name: string;
+      stimmkreis_id: number;
+      stimmkreis_name: string;
+      direktmandat: boolean;
+    }[] = await adapters.postgres.query(
+      `
     SELECT k.id as kandidat_id, 
           k.name as kandidat_name,
           p.id as partei_id, 
@@ -287,24 +336,25 @@ export async function getDirektmandat(
       JOIN "${DatabaseSchemaGroup}".${STIMMKREIS_TABLE} sk ON sk.id = dm.stimmkreis_id
     WHERE dm.wahl_id = $1 AND dm.stimmkreis_id = $2
   `,
-    [wahlid, stimmkreisid]
-  );
+      [wahlid, stimmkreisid]
+    );
 
-  return res.map(resobj => ({
-    stimmkreis: {
-      id: resobj.stimmkreis_id,
-      name: resobj.stimmkreis_name
-    },
-    kandidat: {
-      id: resobj.kandidat_id,
-      name: resobj.kandidat_name,
-      partei: {
-        id: resobj.partei_id,
-        name: resobj.partei_name as EParteiName
-      }
-    },
-    direktmandat: true
-  }))[0];
+    return res.map(resobj => ({
+      stimmkreis: {
+        id: resobj.stimmkreis_id,
+        name: resobj.stimmkreis_name
+      },
+      kandidat: {
+        id: resobj.kandidat_id,
+        name: resobj.kandidat_name,
+        partei: {
+          id: resobj.partei_id,
+          name: resobj.partei_name as EParteiName
+        }
+      },
+      direktmandat: true
+    }))[0];
+  }
 }
 
 export async function computeAbsolutenAnteil(
@@ -416,6 +466,7 @@ export async function computeAbsolutenAnteil(
   }
 }
 
+//TODO muss ich hier noch boolean zurueck geben, dass prozentual?
 export async function computeProzentualenAnteil(
   wahl_id: number,
   stimmkreis_id: number,

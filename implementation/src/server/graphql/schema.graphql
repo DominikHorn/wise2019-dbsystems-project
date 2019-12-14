@@ -15,6 +15,9 @@ type Query {
     vglwahlid: Int!
     stimmkreisid: Int!
   ): [Stimmentwicklung]!
+  getAbsoluteAnzahl: (wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
+  getProzentualenAnteil: (wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
+  
 }
 
 type Mutation {
@@ -92,3 +95,12 @@ type Stimmentwicklung {
   vorher: Int!
   nachher: Int!
 }
+
+type StimmAnteil {
+  wahl: Wahl!
+  stimmkreis: Stimmkreis!
+  partei: Partei!
+  anzahl: Int!
+  prozentual: boolean!
+}
+

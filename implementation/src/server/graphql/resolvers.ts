@@ -10,7 +10,9 @@ import {
   getKnappsteKandidaten,
   computeWahlbeteiligung,
   getDirektmandat,
-  computeEntwicklungDerStimmmen
+  computeEntwicklungDerStimmmen,
+  computeAbsolutenAnteil,
+  computeProzentualenAnteil
 } from "../adapters/postgres/queries/electionPSQL";
 
 export interface IContext {
@@ -46,7 +48,15 @@ export const resolvers: { [key: string]: any } = {
         args.wahlid,
         args.vglwahlid,
         args.stimmkreisid
-      )
+      ),
+    getAbsoluteAnzahl: (
+      _: any,
+      args: { wahlid: number; stimmkreisid: number }
+    ) => computeAbsolutenAnteil(args.wahlid, args.stimmkreisid, false),
+    getProzentualenAnteil: (
+      _: any,
+      args: { wahlid: number; stimmkreisid: number }
+    ) => computeProzentualenAnteil(args.wahlid, args.stimmkreisid, false)
   },
   Mutation: {
     importCSVData: async (

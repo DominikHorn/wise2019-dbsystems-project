@@ -3,6 +3,7 @@ import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
 import { IStimmenEntwicklung } from "../../shared/sharedTypes";
 import { DataValue } from "react-apollo";
 import { getStimmkreisForId } from "../../server/adapters/postgres/queries/stimmkreisPSQL";
+
 const getStimmentwicklungQuery = gql`
   query getStimmentwicklungQuery(
     $wahlid: Int!
