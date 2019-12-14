@@ -1,5 +1,5 @@
 import "babel-polyfill";
-import { runBenchmark } from "./client";
+import { runBenchmark } from "./worker";
 import ApolloClient, { QueryOptions } from "apollo-client";
 import { sleep } from "../shared/util";
 import { WorkerMessages } from "./messages";

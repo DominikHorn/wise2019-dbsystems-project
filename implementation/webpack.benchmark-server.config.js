@@ -4,8 +4,8 @@ const webpack = require("webpack");
 
 const nodeEnv = process.env.NODE_ENV;
 const OUTPUT_BUNDLE_NAME = "benchmark.bundle.js";
-const SRC_DIR_NAME = "benchmark-client";
-const NAME = "benchmark-client";
+const SRC_DIR_NAME = "benchmark-server";
+const NAME = "benchmark-server";
 
 const plugins = [
   new webpack.DefinePlugin({
