@@ -3,10 +3,9 @@ import * as cors from "cors";
 import * as express from "express";
 import * as http from "http";
 import * as config from "../../../config.server.json";
-import { resolvers } from "./resolvers";
 import schemaFile from "./schema.graphql";
 
-export function startServer() {
+export function startServer(resolvers: { Query: any; Mutation: any }) {
   console.log("Initial server setup complete. Booting apollo server");
 
   // Setup schema
@@ -36,7 +35,7 @@ export function startServer() {
     },
     () => {
       console.log(
-        `🚀  Server ready at http://${config.benchmarkServerConfig.hostname}:${config.benchmarkServerConfig.port}`
+        `🚀 Server ready at http://${config.benchmarkServerConfig.hostname}:${config.benchmarkServerConfig.port}`
       );
     }
   );

@@ -163,23 +163,41 @@ if (isMainThread) {
         }
 
         const baseWorkloadMix: WorkloadMix[] = calculateWorkloadMix(allWahlen);
-        for (let i = 0; i < WORKER_AMOUNT; i++) {
-          workers.push(
-            spawnWorker(baseWorkloadMix, (workerID, code) => {
-              if (code !== 0)
-                throw new Error(`Worker stopped with exit code ${code}`);
-              console.log("Worker", workerID, "exited cleanly");
-              workers = workers.filter(w => w.id);
-            })
-          );
-        }
 
-        startServer();
+        startServer({
+          Query: {
+            helloWorld: () => "hallo welt"
+          },
+          Mutation: {
+            stopWorkers: (_: any, args: { workerIDs: number[] }) =>
+              args.workerIDs.map(workerID => {
+                const w = workers.find(w => w.id === workerID);
+                if (w) {
+                  w.worker.postMessage(WorkerMessages.TERMINATE);
+                  return true;
+                }
+                return false;
+              }),
+            startWorkers: (_: any, args: { amount: number }) => {
+              for (let i = 0; i < args.amount; i++) {
+                workers.push(
+                  spawnWorker(baseWorkloadMix, (workerID, code) => {
+                    if (code !== 0)
+                      throw new Error(`Worker stopped with exit code ${code}`);
+                    console.log("Worker", workerID, "exited cleanly");
+                    workers = workers.filter(w => w.id !== workerID);
+                  })
+                );
+              }
+              return true;
+            }
+          }
+        });
 
-        // TODO: remove and terminate on qraphql request
-        sleep(5000).then(() =>
-          workers.forEach(w => w.worker.postMessage(WorkerMessages.TERMINATE))
-        );
+        // // TODO: remove and terminate on qraphql request
+        // sleep(5000).then(() =>
+        //   workers.forEach(w => w.worker.postMessage(WorkerMessages.TERMINATE))
+        // );
       },
       err => console.error("ERROR:", err)
     );
