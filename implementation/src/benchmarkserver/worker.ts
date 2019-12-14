@@ -8,7 +8,6 @@ import config from "../../config.client.json";
 import { parentPort } from "worker_threads";
 import { sleep } from "../shared/util";
 import { WorkerMessages } from "./messages";
-import { exists } from "fs";
 
 export async function runBenchmark(
   workerID: number,

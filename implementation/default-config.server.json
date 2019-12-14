@@ -8,10 +8,7 @@
   },
   "benchmarkServerConfig": {
     "hostname": "localhost",
-    "port": "4001",
-    "ssl": false,
-    "sslKeypath": "./ssl/key.pem",
-    "sslCertpath": "./ssl/cert.pem"
+    "port": "4001"
   },
   "postgresConfig": {
     "user": "postgres",

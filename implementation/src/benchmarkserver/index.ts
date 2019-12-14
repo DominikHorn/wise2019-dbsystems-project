@@ -1,4 +1,3 @@
-import "babel-polyfill";
 import { runBenchmark } from "./worker";
 import ApolloClient, { QueryOptions } from "apollo-client";
 import { sleep } from "../shared/util";
@@ -18,6 +17,7 @@ import { createHttpLink } from "apollo-link-http";
 import clientConfig from "../../config.client.json";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { IWahl } from "../shared/sharedTypes";
+import { startServer } from "./graphql/server";
 
 type WorkloadMix = {
   opts: QueryOptions<any>;
@@ -173,6 +173,8 @@ if (isMainThread) {
             })
           );
         }
+
+        startServer();
 
         // TODO: remove and terminate on qraphql request
         sleep(5000).then(() =>

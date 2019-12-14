@@ -1,11 +1,13 @@
 const path = require("path");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const WebpackShellPlugin = require("webpack-shell-plugin");
 const webpack = require("webpack");
+const nodeExternals = require("webpack-node-externals");
 
 const nodeEnv = process.env.NODE_ENV;
+const isProduction = nodeEnv !== "development";
+
 const OUTPUT_BUNDLE_NAME = "benchmark.bundle.js";
-const SRC_DIR_NAME = "benchmark-server";
-const NAME = "benchmark-server";
 
 const plugins = [
   new webpack.DefinePlugin({
@@ -18,19 +20,35 @@ const plugins = [
 
 let entry = [
   "babel-polyfill",
-  path.resolve(path.join(__dirname, `./src/${SRC_DIR_NAME}/index.ts`))
+  path.resolve(path.join(__dirname, "./src/benchmarkserver/index.ts"))
 ];
+
+console.log(`Webpack Server is in ${nodeEnv} mode`);
+if (!isProduction) {
+  plugins.push(
+    new WebpackShellPlugin({
+      onBuildEnd: ["yarn run nodemon:benchmark"]
+    })
+  );
+  plugins.push(new webpack.HotModuleReplacementPlugin());
+  entry = ["webpack/hot/poll?1000", ...entry];
+}
 
 module.exports = {
   entry,
   plugins,
   devtool: false,
-  mode: "production",
-  name: NAME,
+  externals: [
+    nodeExternals({
+      whitelist: ["webpack/hot/poll?1000"]
+    })
+  ],
+  mode: nodeEnv,
+  name: "benchmark",
   target: "node",
   output: {
     filename: OUTPUT_BUNDLE_NAME,
-    path: path.resolve(__dirname, `dist/${SRC_DIR_NAME}`)
+    path: path.resolve(__dirname, "dist/benchmarkserver")
   },
   resolve: {
     extensions: [
@@ -38,16 +56,14 @@ module.exports = {
       ".web-loader.js",
       ".loader.js",
       ".ts",
-      ".tsx",
-      ".js",
-      ".jsx"
+      ".js"
     ],
     modules: [path.resolve(__dirname, "node_modules")]
   },
   module: {
     rules: [
       {
-        test: /\.(j|t)sx?$/,
+        test: /\.(j|t)s$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -61,6 +77,16 @@ module.exports = {
             plugins: ["transform-class-properties"]
           }
         }
+      },
+      {
+        test: /\.graphql$/,
+        exclude: /node_modules/,
+        loader: "graphql-tag/loader"
+      },
+      {
+        test: /\.sql$/,
+        exclude: /node_modules/,
+        loader: "raw-loader"
       }
     ]
   },
