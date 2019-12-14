@@ -15,9 +15,8 @@ import {
 import { Worker, isMainThread, workerData } from "worker_threads";
 import { createHttpLink } from "apollo-link-http";
 // @ts-ignore this works though tsc can't know that
-import config from "../../config.client.json";
+import clientConfig from "../../config.client.json";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { exists } from "fs";
 import { IWahl } from "../shared/sharedTypes";
 
 type WorkloadMix = {
@@ -28,24 +27,32 @@ type WorkloadMix = {
 
 const SLEEP_BASE = 1000;
 let WORK_NUM = 0;
-function spawnWorker(baseWorkloadMix: WorkloadMix[]) {
-  WORK_NUM++;
+function spawnWorker(
+  baseWorkloadMix: WorkloadMix[],
+  exitCallback: (workerID: number, code: number) => void = (_, code) => {
+    if (code !== 0) throw new Error(`Worker stopped with exit code ${code}`);
+    console.log("Worker", workerID, "exited cleanly");
+  },
+  messageCallback: (workerID: number, message: any) => void = (_, m) =>
+    console.log("MSG:", m),
+  errorCallback: (workerID: number, error: any) => void = (_, e) =>
+    console.error("ERROR:", e)
+) {
+  const workerID = WORK_NUM++;
   // Interval [0.8 t, 1.2 t]
   const sleepTime = (Math.random() / 2.5 + 0.8) * SLEEP_BASE;
 
   const worker = new Worker(__filename, {
     workerData: {
-      workerID: WORK_NUM,
+      workerID,
       sleepTime,
       workloadMix: baseWorkloadMix
     }
   });
-  worker.on("message", (m: any) => console.log("MSG:", m));
-  worker.on("error", (e: any) => console.error("ERROR:", e));
-  worker.on("exit", (code: number) => {
-    if (code !== 0) throw new Error(`Worker stopped with exit code ${code}`);
-  });
-  return worker;
+  worker.on("message", m => messageCallback(workerID, m));
+  worker.on("error", e => errorCallback(workerID, e));
+  worker.on("exit", c => exitCallback(workerID, c));
+  return { worker, id: workerID };
 }
 
 function calculateWorkloadMix(allWahlen: IWahl[]): WorkloadMix[] {
@@ -134,12 +141,12 @@ const WORKER_AMOUNT = 2;
 if (isMainThread) {
   const client = new ApolloClient({
     link: createHttpLink({
-      uri: `${config.graphqlServer.protocol}://${config.graphqlServer.host}:${config.graphqlServer.port}/graphql`
+      uri: `${clientConfig.applicationGraphqlServer.protocol}://${clientConfig.applicationGraphqlServer.host}:${clientConfig.applicationGraphqlServer.port}/graphql`
     }),
     cache: new InMemoryCache()
   });
 
-  const workers: Worker[] = [];
+  let workers: { worker: Worker; id: number }[] = [];
   console.log("Scheduler successfully started up");
   client
     .query({
@@ -156,14 +163,20 @@ if (isMainThread) {
         }
 
         const baseWorkloadMix: WorkloadMix[] = calculateWorkloadMix(allWahlen);
-        console.log("Base Workload mix:", baseWorkloadMix);
         for (let i = 0; i < WORKER_AMOUNT; i++) {
-          workers.push(spawnWorker(baseWorkloadMix));
+          workers.push(
+            spawnWorker(baseWorkloadMix, (workerID, code) => {
+              if (code !== 0)
+                throw new Error(`Worker stopped with exit code ${code}`);
+              console.log("Worker", workerID, "exited cleanly");
+              workers = workers.filter(w => w.id);
+            })
+          );
         }
 
         // TODO: remove and terminate on qraphql request
         sleep(5000).then(() =>
-          workers.forEach(w => w.postMessage(WorkerMessages.TERMINATE))
+          workers.forEach(w => w.worker.postMessage(WorkerMessages.TERMINATE))
         );
       },
       err => console.error("ERROR:", err)

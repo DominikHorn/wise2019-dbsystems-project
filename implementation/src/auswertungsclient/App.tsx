@@ -17,7 +17,7 @@ import { readToken } from "../client-graphql/token.js";
 
 // Connection to ApolloServer
 const uploadLink = createUploadLink({
-  uri: `${config.graphqlServer.protocol}://${config.graphqlServer.host}:${config.graphqlServer.port}/graphql`
+  uri: `${config.applicationGraphqlServer.protocol}://${config.applicationGraphqlServer.host}:${config.applicationGraphqlServer.port}/graphql`
 });
 
 // Inject token into headers

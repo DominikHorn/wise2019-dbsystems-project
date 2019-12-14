@@ -8,6 +8,7 @@ import config from "../../config.client.json";
 import { parentPort } from "worker_threads";
 import { sleep } from "../shared/util";
 import { WorkerMessages } from "./messages";
+import { exists } from "fs";
 
 export async function runBenchmark(
   workerID: number,
@@ -16,7 +17,7 @@ export async function runBenchmark(
 ) {
   const client = new ApolloClient({
     link: createHttpLink({
-      uri: `${config.graphqlServer.protocol}://${config.graphqlServer.host}:${config.graphqlServer.port}/graphql`
+      uri: `${config.applicationGraphqlServer.protocol}://${config.applicationGraphqlServer.host}:${config.applicationGraphqlServer.port}/graphql`
     }),
     cache: new InMemoryCache()
   });
@@ -57,4 +58,5 @@ export async function runBenchmark(
       })
     );
   }
+  process.exit(0);
 }
