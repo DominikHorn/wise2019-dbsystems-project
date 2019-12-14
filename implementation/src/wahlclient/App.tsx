@@ -11,7 +11,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import config from "../../config.client.json";
 import { isDevelopmentEnv } from "../shared/util";
 import { PageComponent } from "./ui/PageComponent";
-import { readToken } from "./util/token";
+import { readToken } from "../client-graphql/token.js";
 
 // Connection to ApolloServer
 const uploadLink = createUploadLink({
