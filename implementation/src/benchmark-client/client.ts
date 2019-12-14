@@ -42,7 +42,7 @@ export async function runBenchmark(
     const query = workloadMix.reduce(
       (prev, curr) =>
         prev.acc + curr.frequency > rand
-          ? { acc: 0, res: curr }
+          ? { acc: -1, res: curr }
           : { acc: prev.acc + curr.frequency, res: prev.res },
       { acc: 0, res: null }
     ).res;
