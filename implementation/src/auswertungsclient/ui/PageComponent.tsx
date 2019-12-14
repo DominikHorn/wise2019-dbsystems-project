@@ -55,7 +55,7 @@ export interface IState {
 const COLUMN_COUNT = 12;
 const WIDGET_DIMENSIONS = {
   w: 6,
-  h: 8,
+  h: 10,
   minW: 4,
   minH: 4
 };
