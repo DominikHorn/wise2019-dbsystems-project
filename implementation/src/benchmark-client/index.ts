@@ -1,39 +1,35 @@
 import "babel-polyfill";
-import { InMemoryCache } from "apollo-cache-inmemory";
-import { ApolloClient } from "apollo-client";
-import { ApolloLink } from "apollo-link";
-import { setContext } from "apollo-link-context";
-import { createUploadLink } from "apollo-upload-client";
-// @ts-ignore This works though typescript doesn't accept that fact
-import config from "../../config.client.json";
-import { readToken } from "../client-graphql/token";
+import { runBenchmark } from "./client";
+const {
+  Worker,
+  isMainThread,
+  parentPort,
+  workerData
+} = require("worker_threads");
 
-// Inject token into headers
-const link = setContext((_: any, { headers }) => ({
-  headers: {
-    ...headers,
-    authorization: readToken()
+let WORK_NUM = 0;
+function spawnWorker() {
+  WORK_NUM++;
+  return new Promise((resolve, reject) => {
+    const worker = new Worker(__filename, {
+      workerData: WORK_NUM
+    });
+    worker.on("message", resolve);
+    worker.on("error", reject);
+    worker.on("exit", (code: number) => {
+      if (code !== 0)
+        reject(new Error(`Worker stopped with exit code ${code}`));
+    });
+  });
+}
+
+if (isMainThread) {
+  console.log("Scheduler successfully started up");
+  for (let i = 0; i < 2; i++) {
+    spawnWorker();
   }
-}));
-
-const client = new ApolloClient({
-  link,
-  cache: new InMemoryCache(),
-  // NOTE: we must keep all three defaultOptions (query, mutate, watchQuery)
-  // set or else defaultOptions wont apply to any of them
-  defaultOptions: {
-    query: {
-      errorPolicy: "all",
-      fetchPolicy: "cache-and-network"
-    },
-    mutate: {
-      errorPolicy: "none"
-    },
-    watchQuery: {
-      errorPolicy: "all",
-      fetchPolicy: "cache-and-network"
-    }
-  }
-});
-
-console.log("Started up successfully :)");
+} else {
+  const workerNumber = workerData;
+  console.log(`Worker thread (${workerNumber}) started up!`);
+  runBenchmark(`wrk ${workerNumber}`);
+}

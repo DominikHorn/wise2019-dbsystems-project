@@ -25,7 +25,7 @@ module.exports = {
   entry,
   plugins,
   devtool: false,
-  mode: nodeEnv,
+  mode: "production",
   name: NAME,
   target: "node",
   output: {
@@ -38,14 +38,16 @@ module.exports = {
       ".web-loader.js",
       ".loader.js",
       ".ts",
-      ".js"
+      ".tsx",
+      ".js",
+      ".jsx"
     ],
     modules: [path.resolve(__dirname, "node_modules")]
   },
   module: {
     rules: [
       {
-        test: /\.(j|t)s$/,
+        test: /\.(j|t)sx?$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
