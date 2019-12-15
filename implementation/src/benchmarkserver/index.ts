@@ -18,6 +18,7 @@ import clientConfig from "../../config.client.json";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { IWahl } from "../shared/sharedTypes";
 import { startServer } from "./graphql/server";
+import { STIMMKREIS_IDS } from "./stimmkreise";
 
 type WorkloadMix = {
   opts: QueryOptions<any>;
@@ -27,7 +28,7 @@ type WorkloadMix = {
 
 let WORK_NUM = 0;
 function spawnWorker(
-  baseWorkloadMix: WorkloadMix[],
+  calculateWorkloadMix: () => WorkloadMix[],
   timeout: number,
   exitCallback: (workerID: string, code: number) => void = (_, code) => {
     if (code !== 0) throw new Error(`Worker stopped with exit code ${code}`);
@@ -46,7 +47,7 @@ function spawnWorker(
     workerData: {
       workerID,
       sleepTime,
-      workloadMix: baseWorkloadMix
+      workloadMix: calculateWorkloadMix()
     }
   });
   worker.on("message", m => messageCallback(workerID, m));
@@ -82,7 +83,10 @@ function calculateWorkloadMix(allWahlen: IWahl[]): WorkloadMix[] {
         opts: {
           query: query_q3,
           variables: {
-            wahlid: wahl.id
+            wahlid: wahl.id,
+            vglwahlid: allWahlen.find(w => w.id !== wahl.id),
+            stimmkreisid:
+              STIMMKREIS_IDS[Math.floor(Math.random() * STIMMKREIS_IDS.length)]
           }
         },
         frequency: 0.25 / allWahlen.length,
@@ -169,8 +173,6 @@ if (isMainThread) {
           return;
         }
 
-        const baseWorkloadMix: WorkloadMix[] = calculateWorkloadMix(allWahlen);
-
         startServer({
           Query: {
             getBenchmarkResults: () => {
@@ -210,7 +212,7 @@ if (isMainThread) {
             ) => {
               for (let i = 0; i < args.amount; i++) {
                 const w = spawnWorker(
-                  baseWorkloadMix,
+                  () => calculateWorkloadMix(allWahlen),
                   args.timeout,
                   (workerID, code) => {
                     if (code !== 0)

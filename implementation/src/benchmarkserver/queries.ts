@@ -30,7 +30,11 @@ export const query_q2 = query_q1;
 
 // TODO: add remaining queries once they are added
 export const query_q3 = gql`
-  query getWahlbeteiligungQuery($wahlid: Int!) {
+  query getWahlbeteiligungQuery(
+    $wahlid: Int!
+    $vglwahlid: Int!
+    $stimmkreisid: Int!
+  ) {
     getWahlbeteiligung(wahlid: $wahlid) {
       wahl {
         id
@@ -41,6 +45,32 @@ export const query_q3 = gql`
         name
       }
       wahlbeteiligung
+    }
+    getDirektmandat(wahlid: $wahlid, stimmkreisid: $stimmkreisid) {
+      kandidat {
+        id
+        name
+        partei {
+          id
+          name
+        }
+      }
+      stimmkreis {
+        id
+        name
+      }
+    }
+    getStimmentwicklung(
+      wahlid: $wahlid
+      vglwahlid: $vglwahlid
+      stimmkreisid: $stimmkreisid
+    ) {
+      partei {
+        id
+        name
+      }
+      vorher
+      nachher
     }
   }
 `;
