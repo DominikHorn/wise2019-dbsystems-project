@@ -12,6 +12,16 @@ function convertHRTime(hrtime: [number, number]) {
   };
 }
 
+const chartColors = [
+  "#003366",
+  "#006699",
+  "#4cabce",
+  "#e0934f",
+  "#b0631f",
+  "#e0c84f",
+  "#a947cc"
+];
+
 const queryIds = [
   "Q1",
   "Q2",
@@ -51,10 +61,12 @@ function getSeriesXAxisData(
         })
     )
   );
+  if (min === Infinity) return [];
 
   let arr = [];
-  for (let i = max - 10; i < max; i++) {
-    arr.push({ sec: i - min, min, max });
+  const delta = max - min;
+  for (let i = delta - 10 > 0 ? delta - 10 : 0; i < delta; i++) {
+    arr.push({ sec: i, min, max });
   }
   return arr;
 }
@@ -91,9 +103,10 @@ function getBarSeriesData(
 type SeriesSeriesData = {
   name: string;
   type: string;
-  stack: string;
+  stack?: string;
   data: number[];
 };
+// TODO: optimize
 function getSeriesSeriesData(
   benchmarkResults: BenchmarkResult[]
 ): SeriesSeriesData[] {
@@ -101,7 +114,6 @@ function getSeriesSeriesData(
   return queryIds.map(queryID => ({
     name: queryID,
     type: "line",
-    stack: "mainstack",
     // per worker, the times from the last 10 calls
     data: timestamps.map(timestamp => {
       // Find latest query result for query with queryID before timestamp per worker and average
@@ -135,22 +147,14 @@ function getSeriesSeriesData(
       );
 
       return aggregatedTime.participating > 0
-        ? aggregatedTime.sum / aggregatedTime.participating
+        ? Math.floor(aggregatedTime.sum / aggregatedTime.participating)
         : 0;
     })
   }));
 }
 
 export const workerChartOption = (benchmarkResults: BenchmarkResult[]) => ({
-  color: [
-    "#003366",
-    "#006699",
-    "#4cabce",
-    "#e0934f",
-    "#b0631f",
-    "#e0c84f",
-    "#a947cc"
-  ],
+  color: chartColors,
   tooltip: {
     trigger: "axis",
     axisPointer: {
@@ -166,7 +170,6 @@ export const workerChartOption = (benchmarkResults: BenchmarkResult[]) => ({
     left: "top",
     top: "center",
     feature: {
-      // mark: { show: true },
       magicType: {
         show: true,
         type: ["bar", "stack", "tiled"]
@@ -191,18 +194,19 @@ export const workerChartOption = (benchmarkResults: BenchmarkResult[]) => ({
 });
 
 export const seriesChartOption = (benchmarkResults: BenchmarkResult[]) => ({
+  color: chartColors,
   tooltip: {
     trigger: "axis"
   },
   legend: {
     data: queryIds
   },
-  grid: {
-    left: "3%",
-    right: "4%",
-    bottom: "3%",
-    containLabel: true
-  },
+  // grid: {
+  //   left: "3%",
+  //   right: "4%",
+  //   bottom: "3%",
+  //   containLabel: true
+  // },
   toolbox: {
     show: true,
     orient: "vertical",

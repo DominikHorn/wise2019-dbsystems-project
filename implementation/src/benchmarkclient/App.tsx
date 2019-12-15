@@ -76,7 +76,7 @@ const AppClass = () => (
             <Button icon={"delete"}>Kill Worker</Button>
           </Col>
         </Row>
-        <Query query={benchmarkResultsQuery} pollInterval={5}>
+        <Query query={benchmarkResultsQuery} pollInterval={1000}>
           {(props: {
             data: { benchmarkResults: BenchmarkResult[] };
             loading: boolean;
