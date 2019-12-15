@@ -214,7 +214,7 @@ export const seriesChartOption = (benchmarkResults: BenchmarkResult[]) => ({
     type: "category",
     boundaryGap: false,
     data: getSeriesXAxisData(benchmarkResults).map(
-      sec => `${Math.floor(sec.sec)} sec`
+      sec => `${Math.floor(sec.sec)}`
     )
   },
   yAxis: {

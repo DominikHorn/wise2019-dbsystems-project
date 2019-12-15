@@ -11,7 +11,7 @@ import config from "../../config.client.json";
 import { isDevelopmentEnv } from "../shared/util";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
-import { Button, Col, Row, Layout, Spin } from "antd";
+import { Button, Col, Row, Layout, Spin, Input } from "antd";
 import ReactEcharts from "echarts-for-react";
 import { BenchmarkResult } from "./types";
 import {
@@ -22,6 +22,7 @@ import {
 import { workerChartOption, seriesChartOption } from "./charts";
 
 const { Header, Content } = Layout;
+const { Search } = Input;
 
 // Connection to ApolloServer
 const uploadLink = createUploadLink({
@@ -70,30 +71,40 @@ const AppClass = () => (
         <Row
           type={"flex"}
           gutter={16}
-          justify={"start"}
+          justify={"center"}
           style={{ padding: "10px" }}
         >
           <Col>
-            <Mutation mutation={startWorkersMutation} variables={{ amount: 1 }}>
+            <Mutation mutation={startWorkersMutation}>
               {(runmutation: any) => (
-                <Button
-                  icon={"plus"}
-                  onClick={() =>
+                <Search
+                  defaultValue={1}
+                  onSearch={value =>
                     runmutation({
-                      amount: 1
+                      variables: {
+                        amount: Number(value)
+                      }
                     })
                   }
-                >
-                  Add Worker
-                </Button>
+                  enterButton={
+                    <Button icon={"plus"} type={"primary"}>
+                      Add Workers
+                    </Button>
+                  }
+                  size={"large"}
+                />
               )}
             </Mutation>
           </Col>
           <Col>
             <Mutation mutation={stopWorkersMutation}>
               {(runMutation: any) => (
-                <Button icon={"delete"} onClick={() => runMutation()}>
-                  Kill Worker
+                <Button
+                  icon={"delete"}
+                  onClick={() => runMutation()}
+                  size={"large"}
+                >
+                  Kill Workers
                 </Button>
               )}
             </Mutation>

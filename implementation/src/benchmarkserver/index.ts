@@ -205,6 +205,7 @@ if (isMainThread) {
                 return false;
               }),
             startWorkers: (_: any, args: { amount: number }) => {
+              console.log("starting", args.amount, "workers");
               for (let i = 0; i < args.amount; i++) {
                 const w = spawnWorker(
                   baseWorkloadMix,
