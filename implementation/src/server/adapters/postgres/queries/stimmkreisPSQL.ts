@@ -49,23 +49,35 @@ export async function getOrCreateStimmkreis(
   );
 }
 
-export async function insertAnzahlStimmberechtigte(
+export async function insertStimmkreisInfo(
   stimmkreis_id: number,
   wahl_id: number,
-  anzahl: number,
+  anzahlWahlberechtigte: number,
+  anzahlWaehler: number,
   client?: PoolClient
 ): Promise<IDatabaseStimmkreisInfo> {
   const QUERY_STR = `
     INSERT INTO "${DatabaseSchemaGroup}".stimmkreis_wahlinfo
-    VALUES ($1, $2, $3)
+    VALUES ($1, $2, $3, $4)
     RETURNING *;`;
   if (client) {
     return client
-      .query(QUERY_STR, [stimmkreis_id, wahl_id, anzahl])
+      .query(QUERY_STR, [
+        stimmkreis_id,
+        wahl_id,
+        anzahlWahlberechtigte,
+        anzahlWaehler
+      ])
       .then(res => !!res && res.rows[0]);
   }
 
   return adapters.postgres.transaction(async client =>
-    insertAnzahlStimmberechtigte(stimmkreis_id, wahl_id, anzahl, client)
+    insertStimmkreisInfo(
+      stimmkreis_id,
+      wahl_id,
+      anzahlWahlberechtigte,
+      anzahlWaehler,
+      client
+    )
   );
 }

@@ -123,6 +123,7 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreis_wahlinfo (
 	stimmkreis_id smallint NOT NULL,
 	wahl_id smallint NOT NULL,
 	anzahlWahlberechtigte int NOT NULL DEFAULT 0,
+	anzahlWaehler int NOT NULL DEFAULT 0,
 	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE,
 	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE,
 	PRIMARY KEY (stimmkreis_id, wahl_id)
