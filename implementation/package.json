@@ -17,6 +17,7 @@
     "start": "cross-env NODE_ENV=development yarn run clean && npm-run-all --parallel start:wahlclient start:auswertungsclient start:server",
     "start:wahlclient": "cross-env NODE_ENV=development webpack-dev-server --progress --config webpack.wahlclient.config.js",
     "start:auswertungsclient": "cross-env NODE_ENV=development webpack-dev-server --progress --config webpack.auswertungsclient.config.js",
+    "start:benchclient": "cross-env NODE_ENV=development webpack-dev-server --progress --config webpack.benchmark-client.config.js",
     "start:server": "cross-env NODE_ENV=development yarn run watch:server",
     "start:benchserver": "cross-env NODE_ENV=development webpack --progress --config webpack.benchmark-server.config.js",
     "watch:server": "webpack --progress --config webpack.server.config.js --watch",
