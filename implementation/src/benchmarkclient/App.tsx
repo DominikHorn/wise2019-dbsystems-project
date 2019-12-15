@@ -11,7 +11,7 @@ import config from "../../config.client.json";
 import { isDevelopmentEnv } from "../shared/util";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
-import { Button, Col, Row, Layout, Spin, Input } from "antd";
+import { Button, Col, Row, Layout, Spin, Input, message } from "antd";
 import ReactEcharts from "echarts-for-react";
 import { BenchmarkResult } from "./types";
 import {
@@ -78,13 +78,19 @@ const AppClass = () => (
             <Mutation mutation={startWorkersMutation}>
               {(runmutation: any) => (
                 <Search
-                  defaultValue={1}
+                  defaultValue={"1,1000"}
                   onSearch={value =>
-                    runmutation({
-                      variables: {
-                        amount: Number(value)
-                      }
-                    })
+                    value.split(",").length == 2
+                      ? runmutation({
+                          variables: {
+                            amount: Number(value.split(",")[0]),
+                            timeout: Number(value.split(",")[1])
+                          }
+                        })
+                      : message.error({
+                          message:
+                            "Value must be of shape <worker_amount>,<timeout_ms>"
+                        })
                   }
                   enterButton={
                     <Button icon={"plus"} type={"primary"}>

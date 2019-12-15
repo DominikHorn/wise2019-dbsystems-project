@@ -25,10 +25,10 @@ type WorkloadMix = {
   frequency: number;
 };
 
-const SLEEP_BASE = 1000;
 let WORK_NUM = 0;
 function spawnWorker(
   baseWorkloadMix: WorkloadMix[],
+  timeout: number,
   exitCallback: (workerID: string, code: number) => void = (_, code) => {
     if (code !== 0) throw new Error(`Worker stopped with exit code ${code}`);
     console.log("Worker", workerID, "exited cleanly");
@@ -40,7 +40,7 @@ function spawnWorker(
 ) {
   const workerID = `${WORK_NUM++}`;
   // Interval [0.8 t, 1.2 t]
-  const sleepTime = (Math.random() / 2.5 + 0.8) * SLEEP_BASE;
+  const sleepTime = (Math.random() / 2.5 + 0.8) * timeout;
 
   const worker = new Worker(__filename, {
     workerData: {
@@ -204,11 +204,14 @@ if (isMainThread) {
                 }
                 return false;
               }),
-            startWorkers: (_: any, args: { amount: number }) => {
-              console.log("starting", args.amount, "workers");
+            startWorkers: (
+              _: any,
+              args: { amount: number; timeout: number }
+            ) => {
               for (let i = 0; i < args.amount; i++) {
                 const w = spawnWorker(
                   baseWorkloadMix,
+                  args.timeout,
                   (workerID, code) => {
                     if (code !== 0)
                       throw new Error(`Worker stopped with exit code ${code}`);

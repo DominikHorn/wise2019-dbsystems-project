@@ -4,7 +4,7 @@ type Query {
 
 type Mutation {
   stopWorkers: [Boolean]
-  startWorkers(amount: Int!): Boolean
+  startWorkers(amount: Int!, timeout: Int!): Boolean
 }
 
 type BenchmarkResult {

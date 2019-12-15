@@ -28,7 +28,7 @@ export const stopWorkersMutation = gql`
 `;
 
 export const startWorkersMutation = gql`
-  mutation stopWorkersMutation($amount: Int!) {
-    startWorkers(amount: $amount)
+  mutation stopWorkersMutation($amount: Int!, $timeout: Int!) {
+    startWorkers(amount: $amount, timeout: $timeout)
   }
 `;
