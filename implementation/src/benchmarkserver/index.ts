@@ -212,7 +212,7 @@ if (isMainThread) {
                     if (code !== 0)
                       throw new Error(`Worker stopped with exit code ${code}`);
                     console.log("Worker", workerID, "exited cleanly");
-                    workers[workerID] = null;
+                    delete workers[workerID];
                   },
                   (workerId, message) => {
                     workers[workerId].queryStats[message.queryID] = (
