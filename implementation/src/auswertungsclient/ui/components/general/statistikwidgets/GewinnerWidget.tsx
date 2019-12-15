@@ -1,41 +1,23 @@
-import { registerMap } from "echarts";
 import * as React from "react";
 import { compose } from "react-apollo";
 import {
   withAllWahlenQuery,
   IGetAllWahlenQueryHocProps
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
-import SK_JSON from "../../../../geojson/stimmkreise.geojson";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
 import { WahlSelector } from "../dataselectors/WahlSelector";
 import { IWahl } from "../../../../../shared/sharedTypes";
-import { Row, Col } from "antd";
-import { BooleanSelector } from "../dataselectors/BooleanSelector";
 import { GewinnerGeoChart } from "./GewinnerGeoChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
-
-// import RB_JSON from "../../../../geojson/regierungsbezirke.geojson";
-// registerMap("Regierungsbezirke", RB_JSON as Object);
-// const regierungsbezirk_data = [
-//   { name: "Oberbayern", value: 0 },
-//   { name: "Niederbayern", value: 0 },
-//   { name: "Oberpfalz", value: 0 },
-//   { name: "Oberfranken", value: 0 },
-//   { name: "Mittelfranken", value: 0 },
-//   { name: "Unterfranken", value: 0 },
-//   { name: "Schwaben", value: 1 }
-// ];
-
-registerMap("Stimmkreise", SK_JSON as Object);
-
-export interface IGewinnerWidgetProps extends IStatistikWidgetProps {}
-
-interface IProps extends IGewinnerWidgetProps, IGetAllWahlenQueryHocProps {}
 
 interface IState {
   readonly selectedWahl?: IWahl;
   readonly erststimmen: boolean;
 }
+
+export interface IGewinnerWidgetProps extends IStatistikWidgetProps<IState> {}
+
+interface IProps extends IGewinnerWidgetProps, IGetAllWahlenQueryHocProps {}
 
 class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
@@ -46,14 +28,27 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
   }
 
   private onSelectWahl = (selectedWahl: IWahl) =>
-    this.setState({ selectedWahl });
+    this.props.setRoutableState
+      ? this.props.setRoutableState({ selectedWahl })
+      : this.setState({ selectedWahl });
 
   private onSelectErststimmen = (erststimmen: boolean) =>
-    this.setState({ erststimmen });
+    this.props.setRoutableState
+      ? this.props.setRoutableState({ erststimmen })
+      : this.setState({ erststimmen });
 
   render() {
-    const { allWahlenData } = this.props;
-    const { selectedWahl, erststimmen } = this.state;
+    const { allWahlenData, routableState } = this.props;
+    let selectedWahl,
+      erststimmen = null;
+    if (routableState) {
+      selectedWahl = routableState.selectedWahl;
+      erststimmen = routableState.erststimmen || true;
+    } else {
+      selectedWahl = this.state.selectedWahl;
+      erststimmen = this.state.erststimmen;
+    }
+
     return (
       <StatistikWidget
         {...this.props}
@@ -80,7 +75,6 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
             </span>
           </>
         }
-        // titleHeight={"85px"}
       >
         {selectedWahl ? (
           <GewinnerGeoChart

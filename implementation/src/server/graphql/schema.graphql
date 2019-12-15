@@ -8,6 +8,15 @@ type Query {
   getStimmkreisWinner(wahlid: Int!, erststimmen: Boolean!): [StimmkreisWinner]!
   getUeberhangMandate(wahlid: Int!): [UeberhangMandat]!
   getKnappsteKandidaten(wahlid: Int!, amountPerPartei: Int): [KnapperKandidat]!
+  getWahlbeteiligung(wahlid: Int!): [Wahlbeteiligung]!
+  getDirektmandat(wahlid: Int!, stimmkreisid: Int!): Mandat!
+  getStimmentwicklung(
+    wahlid: Int!
+    vglwahlid: Int!
+    stimmkreisid: Int!
+  ): [Stimmentwicklung]!
+  # getAbsoluteAnzahl(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
+  # getProzentualenAnteil(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
 }
 
 type Mutation {
@@ -26,6 +35,7 @@ type Wahl {
 
 type Mandat {
   kandidat: Kandidat!
+  stimmkreis: Stimmkreis
   direktmandat: Boolean!
 }
 
@@ -41,8 +51,8 @@ type Partei {
 }
 
 type Stimmkreis {
-  id: Int!
-  name: String!
+  id: Int
+  name: String
 }
 
 type StimmkreisWinner {
@@ -72,3 +82,23 @@ type KnapperKandidat {
   gewinner: Boolean!
   platz: Int!
 }
+
+type Wahlbeteiligung {
+  wahl: Wahl!
+  stimmkreis: Stimmkreis!
+  wahlbeteiligung: Float!
+}
+
+type Stimmentwicklung {
+  partei: Partei!
+  vorher: Int!
+  nachher: Int!
+}
+
+# type StimmAnteil {
+#   wahl: Wahl!
+#   stimmkreis: Stimmkreis!
+#   partei: Partei!
+#   anzahl: Int!
+#   prozentual: Boolean!
+# }

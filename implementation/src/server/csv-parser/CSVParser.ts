@@ -14,7 +14,7 @@ import {
 } from "../adapters/postgres/queries/stimmenPSQL";
 import {
   getOrCreateStimmkreis,
-  insertAnzahlStimmberechtigte
+  insertStimmkreisInfo
 } from "../adapters/postgres/queries/stimmkreisPSQL";
 import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
 import {
@@ -38,11 +38,10 @@ enum CSV_KEYS {
 }
 enum INFO_CSV_KEYS {
   stimmkreisID = "Schlüsselnummer",
+  waehler = "Wähler",
   stimmberechtigte = "Stimmberechtigte",
   ungueltige_erstimmen = "ungueltige Erststimmen 2018",
   ungueltige_zweitstimmen = "ungueltige Zweitstimmen 2018"
-  //ungueltige_erstimmen = "gültige Erststimmen insgesamt 2018",
-  //ungueltige_zweitstimmen = "gültige Zweitstimmen insgesamt 2018"
 }
 
 async function parseCrawledCSV(
@@ -216,33 +215,30 @@ async function parseInfoCSV(
   wahl: IDatabaseWahl,
   aggregiert: boolean
 ) {
-  console.log("column: " + INFO_CSV_KEYS.ungueltige_erstimmen);
-  console.log("column: " + INFO_CSV_KEYS.ungueltige_zweitstimmen);
   for (const row of result.data) {
     const stimmkreis_id = row[INFO_CSV_KEYS.stimmkreisID];
     const anzahlWahlberechtigte = row[INFO_CSV_KEYS.stimmberechtigte];
-    //TODO: ungueltige Stimmen für 2013 einlesen LG
+    const anzahlWaehler = row[INFO_CSV_KEYS.waehler];
+    // TODO: ungueltige Stimmen für 2013 einlesen LG
     const erstvoteAmountStr = row[INFO_CSV_KEYS.ungueltige_erstimmen];
     const zweitvoteAmountStr = row[INFO_CSV_KEYS.ungueltige_zweitstimmen];
     const erstvoteAmount = Number(erstvoteAmountStr);
     const zweitvoteAmount = Number(zweitvoteAmountStr);
 
-    console.log("anzahl erstimmen: " + erstvoteAmount);
-    console.log("anzahl zweitstimmen: " + zweitvoteAmount);
-
     let ungueltigeEinzelErstVotes: VoteType[] = [];
-    let ungueltigeAggregiertErstVotes: VoteType[] = []; //TODO 2013
+    let ungueltigeAggregiertErstVotes: VoteType[] = []; // TODO: 2013
     let ungueltigeEinzelZweitVotes: VoteType[] = [];
-    let ungueltigeAggregiertZweitVotes: VoteType[] = []; //TODO 2013
+    let ungueltigeAggregiertZweitVotes: VoteType[] = []; // TODO: 2013
 
-    await insertAnzahlStimmberechtigte(
+    await insertStimmkreisInfo(
       stimmkreis_id,
       wahl.id,
       anzahlWahlberechtigte,
+      anzahlWaehler,
       client
     );
-    //TODO aggregiert korrekt anpassen!!! LG
-    //insert ungueltige erstimmen
+    // TODO: aggregiert korrekt anpassen!!! LG
+    // insert ungueltige erstimmen
     if (aggregiert) {
       ungueltigeAggregiertErstVotes.push({
         values: [stimmkreis_id, wahl.id, erstvoteAmount],
@@ -272,7 +268,7 @@ async function parseInfoCSV(
       );
       ungueltigeEinzelErstVotes = [];
     }
-    //insert ungueltige zweitstimmen
+    // insert ungueltige zweitstimmen
     if (aggregiert) {
       ungueltigeAggregiertZweitVotes.push({
         values: [stimmkreis_id, wahl.id, zweitvoteAmount],

@@ -10,14 +10,16 @@ import { WahlSelector } from "../dataselectors/WahlSelector";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
 import { UeberhangMandatChart } from "./UeberhangmandatChart";
 
-export interface IUeberhangmandateWidgetProps extends IStatistikWidgetProps {}
+interface IState {
+  readonly selectedWahl?: IWahl;
+}
+
+export interface IUeberhangmandateWidgetProps
+  extends IStatistikWidgetProps<IState> {}
 
 interface IProps
   extends IUeberhangmandateWidgetProps,
     IGetAllWahlenQueryHocProps {}
-interface IState {
-  readonly selectedWahl?: IWahl;
-}
 
 class UeberhangmandateWidgetComponent extends React.PureComponent<
   IProps,
@@ -27,13 +29,20 @@ class UeberhangmandateWidgetComponent extends React.PureComponent<
     super(props);
     this.state = {};
   }
-
   private onSelectWahl = (selectedWahl: IWahl) =>
-    this.setState({ selectedWahl });
+    this.props.setRoutableState
+      ? this.props.setRoutableState({ selectedWahl })
+      : this.setState({ selectedWahl });
 
   render() {
-    const { selectedWahl } = this.state;
-    const { allWahlenData } = this.props;
+    const { allWahlenData, routableState } = this.props;
+    let selectedWahl = null;
+    if (routableState) {
+      selectedWahl = routableState.selectedWahl;
+    } else {
+      selectedWahl = this.state.selectedWahl;
+    }
+
     return (
       <StatistikWidget
         {...this.props}

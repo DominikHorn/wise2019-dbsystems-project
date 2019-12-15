@@ -1,10 +1,14 @@
 {
-  "serverConfig": {
+  "applicationServerConfig": {
     "hostname": "localhost",
     "port": "4000",
     "ssl": false,
     "sslKeypath": "./ssl/key.pem",
     "sslCertpath": "./ssl/cert.pem"
+  },
+  "benchmarkServerConfig": {
+    "hostname": "localhost",
+    "port": "4001"
   },
   "postgresConfig": {
     "user": "postgres",

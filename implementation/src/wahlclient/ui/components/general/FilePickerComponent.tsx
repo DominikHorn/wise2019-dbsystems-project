@@ -84,6 +84,7 @@ export class FilePickerComponent extends React.PureComponent<
             accept={accept}
             multiple={multiple}
             showUploadList={false}
+            // @ts-ignore
             customRequest={(params: { onSuccess: (message: string) => void }) =>
               setTimeout(() => params.onSuccess("ok"))
             }

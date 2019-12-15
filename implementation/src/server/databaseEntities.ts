@@ -41,6 +41,7 @@ export interface IDatabaseStimmkreisInfo extends IDatabaseEntity {
   readonly stimmkreis_id: number;
   readonly wahl_id: number;
   readonly anzahlWahlberechtigte: number;
+  readonly anzahlWaehler: number;
 }
 
 export interface IDatabaseDirektkandidat extends IDatabaseEntity {
