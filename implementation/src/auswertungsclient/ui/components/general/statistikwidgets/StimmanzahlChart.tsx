@@ -70,7 +70,7 @@ const StimmenanteilChartWithQueries = compose(
   withStimmenanteilQuery<IStimmenanteilChartProps>(
     props => props.wahl.id,
     props => props.stimmkreis.id,
-    props => props.einzelstimmen
+    props => 0
   )
 )(StimmenanteilChartComponent);
 

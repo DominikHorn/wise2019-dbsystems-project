@@ -34,12 +34,14 @@ const getStimmenanteilTypedHoc = createTypedGraphqlHoc<
 
 export const withStimmenanteilQuery = <TProps = {}>(
   getWahlId: (props: TProps) => number,
+  getVGLWahlId: (props: TProps) => number,
   getStimmkreisId: (props: TProps) => number
 ) =>
   getStimmenanteilTypedHoc<TProps, IGetStimmenanteilQueryHocProps>({
     options: props => ({
       variables: {
         wahlid: getWahlId(props),
+        vglWahlId: getVGLWahlId(props),
         stimmkreisid: getStimmkreisId(props)
       }
     }),

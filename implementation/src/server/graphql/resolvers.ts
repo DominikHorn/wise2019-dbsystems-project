@@ -10,9 +10,7 @@ import {
   getKnappsteKandidaten,
   computeWahlbeteiligung,
   getDirektmandat,
-  computeEntwicklungDerStimmmen,
-  computeAbsolutenAnteil,
-  computeProzentualenAnteil
+  computeEntwicklungDerStimmmen
 } from "../adapters/postgres/queries/electionPSQL";
 
 export interface IContext {

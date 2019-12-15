@@ -84,7 +84,7 @@ function calculateWorkloadMix(allWahlen: IWahl[]): WorkloadMix[] {
           query: query_q3,
           variables: {
             wahlid: wahl.id,
-            vglwahlid: allWahlen.find(w => w.id !== wahl.id),
+            vglwahlid: allWahlen.find(w => w.id !== wahl.id).id,
             stimmkreisid:
               STIMMKREIS_IDS[Math.floor(Math.random() * STIMMKREIS_IDS.length)]
           }

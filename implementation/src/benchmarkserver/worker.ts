@@ -49,12 +49,16 @@ export async function runBenchmark(
     await timeQuery({
       ...query.opts,
       fetchPolicy: "network-only"
-    }).then(hrtime =>
-      parentPort.postMessage({
-        queryID: query.id,
-        hrtime
-      })
-    );
+    })
+      .then(hrtime =>
+        parentPort.postMessage({
+          queryID: query.id,
+          hrtime
+        })
+      )
+      .catch(error =>
+        console.error("worker", workerID, "received error from apollo:", error)
+      );
   }
   process.exit(0);
 }
