@@ -11,7 +11,9 @@ import {
   IKnapperKandidat,
   IWahlbeteiligung,
   IAnteil,
-  IStimmenEntwicklung
+  IStimmenEntwicklung,
+  IQ7,
+  IKandidat
 } from "../../../../shared/sharedTypes";
 import { EParteiName } from "../../../../shared/enums";
 
@@ -213,6 +215,78 @@ export async function computeEntwicklungDerStimmmen(
   einzel: boolean
 ): Promise<IStimmenEntwicklung[]> {
   if (einzel) {
+    const res: {
+      partei_id: number;
+      partei_name: string;
+      vorher: number;
+      nachher: number;
+    }[] = await adapters.postgres.query(
+      `with aggregiert_listengebundene_stimmen as (
+        SELECT lgs.wahl_id, lgs.stimmkreis_id, lgs.partei_id, sum(anzahl) as anzahl
+      FROM (
+        (
+          SELECT egls.wahl_id, egls.stimmkreis_id, egls.partei_id, count(*) as anzahl
+          FROM "${DatabaseSchemaGroup}".einzel_gueltige_listengebundene_stimmen egls
+          WHERE egls.stimmkreis_id = $3
+          GROUP BY egls.stimmkreis_id, egls.wahl_id, egls.partei_id
+        )
+        UNION ALL
+        (
+          SELECT agls.wahl_id, agls.stimmkreis_id, agls.partei_id, agls.anzahl
+          FROM "${DatabaseSchemaGroup}".aggregiert_gueltige_listengebundene_stimmen agls
+            WHERE agls.stimmkreis_id = $3
+        )
+      ) lgs
+      GROUP BY lgs.wahl_id, lgs.stimmkreis_id, lgs.partei_id
+    ), aggregiert_kandidatgebundene_stimmen as(
+        SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, sum(anzahl) as anzahl
+      FROM (
+        (
+          SELECT egks.wahl_id, egks.stimmkreis_id, egks.kandidat_id, count(*) as anzahl
+          FROM "${DatabaseSchemaGroup}".einzel_gueltige_kandidatgebundene_stimmen egks
+          WHERE egks.stimmkreis_id = $3
+          GROUP BY egks.stimmkreis_id, egks.wahl_id, egks.kandidat_id
+        )
+        UNION ALL
+        (
+          SELECT agks.wahl_id, agks.stimmkreis_id, agks.kandidat_id, agks.anzahl
+          FROM "${DatabaseSchemaGroup}".aggregiert_gueltige_kandidatgebundene_stimmen agks
+            WHERE agks.stimmkreis_id = $3
+        )
+      ) kgs
+        JOIN "${DatabaseSchemaGroup}".kandidaten k
+        ON k.id = kgs.kandidat_id
+      GROUP BY kgs.wahl_id, kgs.stimmkreis_id, k.partei_id
+    ), gesamtstimmen as(
+        SELECT als.wahl_id, als.partei_id, sum(als.anzahl) + sum(aks.anzahl) as anzahl
+        FROM aggregiert_listengebundene_stimmen als
+        JOIN aggregiert_kandidatgebundene_stimmen aks
+        ON als.wahl_id = aks.wahl_id AND als.stimmkreis_id = aks.stimmkreis_id AND als.partei_id = aks.partei_id
+        GROUP BY als.wahl_id, als.partei_id
+    ), entwicklung as(
+        SELECT g1.partei_id, g1.anzahl as vorher, g2.anzahl as nachher
+               FROM gesamtstimmen  g1
+               JOIN gesamtstimmen g2
+               ON g2.partei_id = g1.partei_id AND g2.wahl_id = $1 AND g1.wahl_id = $2
+    
+    )
+    SELECT e.partei_id as partei_id, 
+          p.name as partei_name, 
+          e.vorher as vorher, 
+          e.nachher as nachher
+    FROM entwicklung e, "${DatabaseSchemaGroup}".parteien p
+    WHERE p.id = e.partei_id;
+      `,
+      [wahl_id, vgl_wahl_id, stimmkreis_id]
+    );
+    return res.map(resobj => ({
+      partei: {
+        id: resobj.partei_id,
+        name: resobj.partei_name as EParteiName
+      },
+      vorher: resobj.vorher,
+      nachher: resobj.nachher
+    }));
   } else {
     const res: {
       partei_id: number;

@@ -38,16 +38,24 @@ export const resolvers: { [key: string]: any } = {
     ) => getKnappsteKandidaten(args.wahlid, args.amountPerPartei),
     getWahlbeteiligung: (_: any, args: { wahlid: number }) =>
       computeWahlbeteiligung(args.wahlid, false),
-    getDirektmandat: (_: any, args: { wahlid: number; stimmkreisid: number }) =>
-      getDirektmandat(args.wahlid, args.stimmkreisid),
+    getDirektmandat: (
+      _: any,
+      args: { wahlid: number; stimmkreisid: number; einzel: boolean }
+    ) => getDirektmandat(args.wahlid, args.stimmkreisid, args.einzel),
     getStimmentwicklung: (
       _: any,
-      args: { wahlid: number; vglwahlid: number; stimmkreisid: number }
+      args: {
+        wahlid: number;
+        vglwahlid: number;
+        stimmkreisid: number;
+        einzel: boolean;
+      }
     ) =>
       computeEntwicklungDerStimmmen(
         args.wahlid,
         args.vglwahlid,
-        args.stimmkreisid
+        args.stimmkreisid,
+        args.einzel
       ),
     getAbsoluteAnzahl: (
       _: any,

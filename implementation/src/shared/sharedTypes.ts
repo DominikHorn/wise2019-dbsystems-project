@@ -76,3 +76,11 @@ export interface IStimmenEntwicklung {
   readonly vorher: number;
   readonly nachher: number;
 }
+
+export interface IQ7 {
+  wahlbeteiligung: IWahlbeteiligung;
+  direktmandat: IMandat;
+  prozentualerAnteil: IAnteil;
+  absoluteAnzahl: IAnteil;
+  entwicklung: IStimmenEntwicklung;
+}

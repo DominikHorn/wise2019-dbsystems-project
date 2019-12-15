@@ -21,7 +21,7 @@ INSERT INTO "landtagswahlen".wahlen (wahldatum)
 	FROM (
 		SELECT date('2018-10-14')
 		UNION
-		SELECT date('2018-09-15')
+		SELECT date('2013-09-15')
 	) a
 	WHERE NOT EXISTS (SELECT * FROM "landtagswahlen".wahlen);
 
