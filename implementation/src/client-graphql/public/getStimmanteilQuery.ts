@@ -1,19 +1,13 @@
 import gql from "graphql-tag";
 import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
-import { IStimmenEntwicklung, IAnteil } from "../../shared/sharedTypes";
+import { IAnteil } from "../../shared/sharedTypes";
 import { DataValue } from "react-apollo";
-import { getStimmkreisForId } from "../../server/adapters/postgres/queries/stimmkreisPSQL";
 
 const getStimmenanteilQuery = gql`
-  query getStimmenanteilQuery(
-    $wahlid: Int!
-    $stimmkreisid: Int!
-    $einzel: boolean!
-  ) {
-    stimmanzahl: getStimmanzahl(
+  query getStimmenanteilQuery($wahlid: Int!, $stimmkreisid: Int!) {
+    stimmanzahl: getProzentualenAnteil(
       wahlid: $wahlid
       stimmkreisid: $stimmkreisid
-      einzel: $einzel
     )
   }
 `;
@@ -24,7 +18,6 @@ interface IGetStimmenanteilQueryResponse extends IGraphqlType {
 interface IGetStimmenanteilQueryVariables {
   readonly wahlid: number;
   readonly stimmkreisid: number;
-  readonly einzel: boolean;
 }
 
 export interface IGetStimmenanteilQueryHocProps {
@@ -41,15 +34,13 @@ const getStimmenanteilTypedHoc = createTypedGraphqlHoc<
 
 export const withStimmenanteilQuery = <TProps = {}>(
   getWahlId: (props: TProps) => number,
-  getStimmkreisId: (props: TProps) => number,
-  getEinzel: (props: TProps) => boolean
+  getStimmkreisId: (props: TProps) => number
 ) =>
   getStimmenanteilTypedHoc<TProps, IGetStimmenanteilQueryHocProps>({
     options: props => ({
       variables: {
         wahlid: getWahlId(props),
-        stimmkreisid: getStimmkreisId(props),
-        einzel: getEinzel(props)
+        stimmkreisid: getStimmkreisId(props)
       }
     }),
     props: ({ data }) => ({
