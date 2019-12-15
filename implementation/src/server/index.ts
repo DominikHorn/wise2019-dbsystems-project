@@ -101,11 +101,11 @@ awaitAdapters.then(() => {
 
   // Create and start actual server
   let server;
-  if (config.serverConfig.ssl) {
+  if (config.applicationServerConfig.ssl) {
     server = https.createServer(
       {
-        key: fs.readFileSync(config.serverConfig.sslKeypath),
-        cert: fs.readFileSync(config.serverConfig.sslCertpath)
+        key: fs.readFileSync(config.applicationServerConfig.sslKeypath),
+        cert: fs.readFileSync(config.applicationServerConfig.sslCertpath)
       },
       app
     );
@@ -116,14 +116,16 @@ awaitAdapters.then(() => {
   // Start apollo server
   server.listen(
     {
-      port: config.serverConfig.port,
-      hostname: config.serverConfig.hostname
+      port: config.applicationServerConfig.port,
+      hostname: config.applicationServerConfig.hostname
     },
     () => {
       console.log(
-        `🚀  Server ready at http${config.serverConfig.ssl ? "s" : ""}://${
-          config.serverConfig.hostname
-        }:${config.serverConfig.port}`
+        `🚀  Server ready at http${
+          config.applicationServerConfig.ssl ? "s" : ""
+        }://${config.applicationServerConfig.hostname}:${
+          config.applicationServerConfig.port
+        }`
       );
     }
   );

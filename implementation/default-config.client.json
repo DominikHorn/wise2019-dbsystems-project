@@ -1,7 +1,12 @@
 {
-  "graphqlServer": {
+  "applicationGraphqlServer": {
     "protocol": "https",
     "host": "localhost",
     "port": 4000
+  },
+  "benchmarkGraphqlServer": {
+    "protocol": "https",
+    "host": "localhost",
+    "port": 4001
   }
 }
