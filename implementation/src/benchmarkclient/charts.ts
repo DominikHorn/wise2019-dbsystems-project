@@ -26,8 +26,8 @@ const queryIds = [
   "Q1",
   "Q2",
   "Q3",
-  "Q4 - erststimmen = false",
-  "Q4 - erststimmen = true",
+  "Q4 (erststimmen)",
+  "Q4 (zweitstimmen)",
   "Q5",
   "Q6"
 ];

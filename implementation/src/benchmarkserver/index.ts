@@ -101,7 +101,7 @@ function calculateWorkloadMix(allWahlen: IWahl[]): WorkloadMix[] {
           }
         },
         frequency: 0.05 / allWahlen.length,
-        id: "Q4 - erststimmen = false"
+        id: "Q4 (erststimmen)"
       },
       {
         opts: {
@@ -112,7 +112,7 @@ function calculateWorkloadMix(allWahlen: IWahl[]): WorkloadMix[] {
           }
         },
         frequency: 0.05 / allWahlen.length,
-        id: "Q4 - erststimmen = true"
+        id: "Q4 (zweitstimmen)"
       },
       {
         opts: {
