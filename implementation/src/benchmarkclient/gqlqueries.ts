@@ -20,3 +20,15 @@ export const benchmarkResultsQuery = gql`
     }
   }
 `;
+
+export const stopWorkersMutation = gql`
+  mutation stopWorkersMutation {
+    stopWorkers
+  }
+`;
+
+export const startWorkersMutation = gql`
+  mutation stopWorkersMutation($amount: Int!) {
+    startWorkers(amount: $amount)
+  }
+`;

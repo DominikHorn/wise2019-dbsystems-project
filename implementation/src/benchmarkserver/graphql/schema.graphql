@@ -3,7 +3,7 @@ type Query {
 }
 
 type Mutation {
-  stopWorkers(workerIDs: [Int]!): [Boolean]
+  stopWorkers: [Boolean]
   startWorkers(amount: Int!): Boolean
 }
 

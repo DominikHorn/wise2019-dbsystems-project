@@ -201,12 +201,6 @@ export const seriesChartOption = (benchmarkResults: BenchmarkResult[]) => ({
   legend: {
     data: queryIds
   },
-  // grid: {
-  //   left: "3%",
-  //   right: "4%",
-  //   bottom: "3%",
-  //   containLabel: true
-  // },
   toolbox: {
     show: true,
     orient: "vertical",

@@ -4,7 +4,7 @@ import { ApolloLink } from "apollo-link";
 import { setContext } from "apollo-link-context";
 import { createUploadLink } from "apollo-upload-client";
 import * as React from "react";
-import { ApolloProvider, Query } from "react-apollo";
+import { ApolloProvider, Query, Mutation } from "react-apollo";
 import { hot } from "react-hot-loader";
 // @ts-ignore This works though typescript doesn't accept that fact
 import config from "../../config.client.json";
@@ -14,7 +14,11 @@ import "../../node_modules/react-resizable/css/styles.css";
 import { Button, Col, Row, Layout, Spin } from "antd";
 import ReactEcharts from "echarts-for-react";
 import { BenchmarkResult } from "./types";
-import { benchmarkResultsQuery } from "./gqlqueries";
+import {
+  benchmarkResultsQuery,
+  startWorkersMutation,
+  stopWorkersMutation
+} from "./gqlqueries";
 import { workerChartOption, seriesChartOption } from "./charts";
 
 const { Header, Content } = Layout;
@@ -70,10 +74,29 @@ const AppClass = () => (
           style={{ padding: "10px" }}
         >
           <Col>
-            <Button icon={"plus"}>Add Worker</Button>
+            <Mutation mutation={startWorkersMutation} variables={{ amount: 1 }}>
+              {(runmutation: any) => (
+                <Button
+                  icon={"plus"}
+                  onClick={() =>
+                    runmutation({
+                      amount: 1
+                    })
+                  }
+                >
+                  Add Worker
+                </Button>
+              )}
+            </Mutation>
           </Col>
           <Col>
-            <Button icon={"delete"}>Kill Worker</Button>
+            <Mutation mutation={stopWorkersMutation}>
+              {(runMutation: any) => (
+                <Button icon={"delete"} onClick={() => runMutation()}>
+                  Kill Worker
+                </Button>
+              )}
+            </Mutation>
           </Col>
         </Row>
         <Query query={benchmarkResultsQuery} pollInterval={1000}>

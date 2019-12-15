@@ -195,8 +195,8 @@ if (isMainThread) {
             }
           },
           Mutation: {
-            stopWorkers: (_: any, args: { workerIDs: number[] }) =>
-              args.workerIDs.map(workerID => {
+            stopWorkers: () =>
+              Object.keys(workers).map(workerID => {
                 const w = workers[workerID];
                 if (w) {
                   w.worker.postMessage(WorkerMessages.TERMINATE);
