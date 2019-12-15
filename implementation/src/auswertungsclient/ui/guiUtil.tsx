@@ -28,7 +28,7 @@ export function getParteiColor(parteiname: EParteiName): string {
  * drop.
  * @param event MouseEvent from React
  */
-export function eatEvent(event: React.MouseEvent) {
+export function eatEvent(event: React.MouseEvent | React.UIEvent) {
   event.preventDefault();
   event.stopPropagation();
 }

@@ -44,7 +44,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
     },
     toolbox: {
       feature: {
-        saveAsImage: {},
+        saveAsImage: { title: "Als Bild speichern" },
         magicType: {
           type: ["stack", "tiled"]
         },
