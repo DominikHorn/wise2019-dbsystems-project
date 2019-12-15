@@ -4,15 +4,18 @@ import { ApolloLink } from "apollo-link";
 import { setContext } from "apollo-link-context";
 import { createUploadLink } from "apollo-upload-client";
 import * as React from "react";
-import { ApolloProvider } from "react-apollo";
+import { ApolloProvider, Query } from "react-apollo";
 import { hot } from "react-hot-loader";
 // @ts-ignore This works though typescript doesn't accept that fact
 import config from "../../config.client.json";
 import { isDevelopmentEnv } from "../shared/util";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
-import { Button, Col, Row, Layout } from "antd";
+import { Button, Col, Row, Layout, Spin } from "antd";
 import ReactEcharts from "echarts-for-react";
+import { BenchmarkResult } from "./types";
+import { QUERY_DATA } from "./tmp";
+import gql from "graphql-tag";
 
 const { Header, Content, Footer } = Layout;
 
@@ -47,8 +50,89 @@ const client = new ApolloClient({
   }
 });
 
-const workerChartOption = {
-  color: ["#003366", "#006699", "#4cabce", "#e5323e"],
+function convertHRTime(hrtime: [number, number]) {
+  const nanoseconds = hrtime[0] * 1e9 + hrtime[1];
+  const milliseconds = nanoseconds / 1e6;
+  const seconds = nanoseconds / 1e9;
+
+  return {
+    seconds,
+    milliseconds,
+    nanoseconds
+  };
+}
+
+const benchmarkResultsQuery = gql`
+  query benchmarkResultsQuery {
+    benchmarkResults: getBenchmarkResults {
+      workerID
+      queryResults {
+        queryID
+        results {
+          timestamp {
+            hrfirst
+            hrsecond
+          }
+          delta {
+            hrfirst
+            hrsecond
+          }
+        }
+      }
+    }
+  }
+`;
+
+const queryIds = [
+  "Q1",
+  "Q2",
+  "Q3",
+  "Q4 - erststimmen = false",
+  "Q4 - erststimmen = true",
+  "Q5",
+  "Q6"
+];
+function getBarXAxisData(benchmarkResults: BenchmarkResult[]): string[] {
+  return benchmarkResults.map(dt => `W${dt.workerID}`);
+}
+
+type SeriesData = {
+  name: string;
+  type: string;
+  barGap: number;
+  data: number[];
+};
+function getBarSeriesData(benchmarkResults: BenchmarkResult[]): SeriesData[] {
+  return queryIds.map(queryID => {
+    return {
+      name: queryID,
+      type: "bar",
+      barGap: 0,
+      data: benchmarkResults.map(worker => {
+        const queryRes = worker.queryResults.find(qs => qs.queryID === queryID);
+        if (!queryRes) return 0;
+        return (
+          queryRes.results.length > 0 &&
+          convertHRTime([
+            queryRes.results[queryRes.results.length - 1].delta.hrfirst,
+            queryRes.results[queryRes.results.length - 1].delta.hrsecond
+          ]).milliseconds
+        );
+      })
+    };
+  });
+}
+
+const workerChartOption = (benchmarkResults: BenchmarkResult[]) => ({
+  color: [
+    "#003366",
+    "#006699",
+    "#4cabce",
+    "#e0934f",
+    "#b0631f",
+    "#e0c84f",
+    "#a947cc"
+  ],
   tooltip: {
     trigger: "axis",
     axisPointer: {
@@ -56,22 +140,20 @@ const workerChartOption = {
     }
   },
   legend: {
-    data: ["Forest", "Steppe", "Desert", "Wetland"]
+    data: queryIds
   },
   toolbox: {
     show: true,
     orient: "vertical",
-    left: "right",
+    left: "top",
     top: "center",
     feature: {
       mark: { show: true },
-      dataView: { show: true, readOnly: false },
       magicType: {
         show: true,
-        type: ["line", "bar", "stack", "tiled"]
+        type: ["bar", "stack", "tiled"]
       },
-      restore: { show: true },
-      saveAsImage: { show: true }
+      saveAsImage: { show: true, title: "Als Bild speichern" }
     }
   },
   calculable: true,
@@ -79,7 +161,7 @@ const workerChartOption = {
     {
       type: "category",
       axisTick: { show: false },
-      data: ["2012", "2013", "2014", "2015", "2016"]
+      data: getBarXAxisData(benchmarkResults)
     }
   ],
   yAxis: [
@@ -87,30 +169,8 @@ const workerChartOption = {
       type: "value"
     }
   ],
-  series: [
-    {
-      name: "Forest",
-      type: "bar",
-      barGap: 0,
-      data: [320, 332, 301, 334, 390]
-    },
-    {
-      name: "Steppe",
-      type: "bar",
-      data: [220, 182, 191, 234, 290]
-    },
-    {
-      name: "Desert",
-      type: "bar",
-      data: [150, 232, 201, 154, 190]
-    },
-    {
-      name: "Wetland",
-      type: "bar",
-      data: [98, 77, 101, 99, 40]
-    }
-  ]
-};
+  series: getBarSeriesData(benchmarkResults)
+});
 
 const seriesChartOption = {
   title: {
@@ -201,7 +261,25 @@ const AppClass = () => (
             <Button icon={"delete"}>Kill Worker</Button>
           </Col>
         </Row>
-        <ReactEcharts option={workerChartOption} />
+        <Query query={benchmarkResultsQuery} pollInterval={1}>
+          {(props: {
+            data: { benchmarkResults: BenchmarkResult[] };
+            loading: boolean;
+            error?: Error;
+          }) => {
+            if (props.error)
+              return (
+                <div style={{ color: "red" }}>{`ERROR: ${props.error}`}</div>
+              );
+            if (props.loading && !props.data.benchmarkResults) return <Spin />;
+
+            return (
+              <ReactEcharts
+                option={workerChartOption(props.data.benchmarkResults)}
+              />
+            );
+          }}
+        </Query>
         <ReactEcharts option={seriesChartOption} />
       </Content>
     </Layout>
