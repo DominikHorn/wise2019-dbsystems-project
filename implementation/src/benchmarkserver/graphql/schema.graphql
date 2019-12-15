@@ -1,0 +1,28 @@
+type Query {
+  getBenchmarkResults: [BenchmarkResult]
+}
+
+type Mutation {
+  stopWorkers: [Boolean]
+  startWorkers(amount: Int!): Boolean
+}
+
+type BenchmarkResult {
+  workerID: String
+  queryResults: [QueryOverallResult]
+}
+
+type QueryOverallResult {
+  queryID: String
+  results: [QuerySingleResult]
+}
+
+type QuerySingleResult {
+  timestamp: Timestamp
+  delta: Timestamp
+}
+
+type Timestamp {
+  hrfirst: Int
+  hrsecond: Int
+}
