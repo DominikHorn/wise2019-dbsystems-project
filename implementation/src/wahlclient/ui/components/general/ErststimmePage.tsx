@@ -5,6 +5,7 @@ import { RouteComponentProps } from "react-router";
 import "./ErststimmePage.css";
 import GridGenerator from "./GridGenerator";
 import { EParteiName } from "../../../../shared/enums";
+import { CandidateCards } from "./CandidateCardsComponent";
 
 interface IState {
   readonly selectedCandidat?: IKandidat;
@@ -37,20 +38,6 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
   ];
 
   private renderCards(candidats: IKandidat[]) {
-    // const countHor: number = 5;
-    // let countRest: number;
-    // let countVer: number = 0;
-    // let remLength = candidats.length;
-    // let i: number;
-    // for (i = 0; i <= candidats.length; i++) {
-    //   if (remLength >= countHor) {
-    //     countVer++;
-    //     length -= countHor;
-    //   } else {
-    //     countRest = remLength;
-    //   }
-    // }
-    // return true;
     return candidats.map(candidat => (
       <Col span={6}>
         <Card className={"candidat-card"}>
@@ -68,7 +55,7 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
     return (
       <Card title={"Erststimme"} style={{ minHeight: "100%" }}>
         <GridGenerator cols={numOfCols}>
-          {this.renderCards(this.candidatesAr)}
+          <CandidateCards candidates={this.candidatesAr}></CandidateCards>
         </GridGenerator>
         <Row type={"flex"} justify={"end"}>
           <Col>
@@ -89,6 +76,7 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
 export const ErstimmePage = ErststimmePageComponent;
 
 {
+  //{this.renderCards(this.candidatesAr)}
   /* <Card title={"Erststimme"} style={{ minHeight: "100%" }}>
         <Row gutter={8}>
           <Col span={6}>
