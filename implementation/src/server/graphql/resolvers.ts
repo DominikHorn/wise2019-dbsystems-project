@@ -16,7 +16,8 @@ import { Resolver } from "../../shared/graphql.types";
 import {
   getIsBlocked,
   setDataBlocked,
-  withVerifyIsAdmin
+  withVerifyIsAdmin,
+  withVerifyIsNotBlocked
 } from "../adapters/postgres/adminPSQL";
 
 export interface IContext {
@@ -32,20 +33,35 @@ export const resolvers: Resolver = {
   },
   Query: {
     getAllWahlen,
-    getMandate: (_, args) => getMandate(args.wahlid),
+    getMandate: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () => getMandate(args.wahlid)),
     getStimmkreisWinner: (_, args) =>
-      computeWinnerParties(args.wahlid, args.erststimmen),
-    getUeberhangMandate: (_, args) => getUeberhangmandate(args.wahlid),
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        computeWinnerParties(args.wahlid, args.erststimmen)
+      ),
+    getUeberhangMandate: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getUeberhangmandate(args.wahlid)
+      ),
     getKnappsteKandidaten: (_, args) =>
-      getKnappsteKandidaten(args.wahlid, args.amountPerPartei),
-    getWahlbeteiligung: (_, args) => computeWahlbeteiligung(args.wahlid),
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getKnappsteKandidaten(args.wahlid, args.amountPerPartei)
+      ),
+    getWahlbeteiligung: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        computeWahlbeteiligung(args.wahlid)
+      ),
     getDirektmandat: (_, args) =>
-      getDirektmandat(args.wahlid, args.stimmkreisid),
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getDirektmandat(args.wahlid, args.stimmkreisid)
+      ),
     getStimmentwicklung: (_, args) =>
-      computeEntwicklungDerStimmmen(
-        args.wahlid,
-        args.vglwahlid,
-        args.stimmkreisid
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        computeEntwicklungDerStimmmen(
+          args.wahlid,
+          args.vglwahlid,
+          args.stimmkreisid
+        )
       )
   },
   Mutation: {

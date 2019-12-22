@@ -1,15 +1,15 @@
+import { AuthenticationError } from "apollo-server-express";
 import { PoolClient } from "pg";
 import * as config from "../../../../config.server.json";
 import { MutationToSetDataBlockedArgs } from "../../../shared/graphql.types";
 import { DatabaseSchemaGroup } from "../../databaseEntities";
 import { adapters } from "../adapterUtil";
-import { AuthenticationError } from "apollo-server-express";
 
 enum AuthTables {
   DATA_BLOCKED = "datablocked"
 }
 
-export function withVerifyIsAdmin<TArgs, TReturn>(
+export function withVerifyIsAdmin<TReturn>(
   auth: string,
   fun: () => TReturn
 ): TReturn {
@@ -18,6 +18,18 @@ export function withVerifyIsAdmin<TArgs, TReturn>(
   }
 
   throw new AuthenticationError("Invalid Wahlleiter Auth");
+}
+
+export async function withVerifyIsNotBlocked<TReturn>(
+  wahlid: number,
+  fun: () => Promise<TReturn>
+): Promise<TReturn> {
+  const isBlocked = await getIsBlocked(wahlid);
+  if (!isBlocked) {
+    return fun();
+  }
+
+  throw new Error("Election result fetching is blocked for this election");
 }
 
 export async function setDataBlocked(
