@@ -42,3 +42,4 @@ usecase.*
 
 # Implementation specific files
 implementation/postgres/start_postgres.sh
+graphql.types.ts
