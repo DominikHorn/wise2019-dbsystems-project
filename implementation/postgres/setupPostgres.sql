@@ -126,7 +126,7 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreise (
 CREATE TABLE IF NOT EXISTS "landtagswahlen".wahlhelfertoken (
 	wahl_id smallint NOT NULL,
 	stimmkreis_id smallint NOT NULL,
-	token varchar(80) NOT NULL,
+	token varchar(80) NOT NULL UNIQUE,
 	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE,
 	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE,
 	PRIMARY KEY (wahl_id, stimmkreis_id)
