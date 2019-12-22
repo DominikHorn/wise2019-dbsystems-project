@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
-import { IWahl } from "../../shared/sharedTypes";
+import { Wahl } from "../../shared/graphql.types";
 import { DataValue } from "react-apollo";
 
 const getAllWahlenQuery = gql`
@@ -13,7 +13,7 @@ const getAllWahlenQuery = gql`
 `;
 
 interface IGetAllWahlenQueryResponse extends IGraphqlType {
-  readonly allWahlen: IWahl[];
+  readonly allWahlen: Wahl[];
 }
 
 interface IGetAllWahlenQueryVariables {}

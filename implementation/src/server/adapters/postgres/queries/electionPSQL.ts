@@ -1,19 +1,17 @@
 import { adapters } from "../../adapterUtil";
 import {
   DatabaseSchemaGroup,
-  IDatabaseStimmkreisWinner,
-  IDatabaseWahlbeteiligung
+  IDatabaseStimmkreisWinner
 } from "../../../databaseEntities";
 import {
-  IMandat,
-  IStimmkreisWinner,
-  IUeberhangMandat,
-  IKnapperKandidat,
-  IWahlbeteiligung,
-  IAnteil,
-  IStimmenEntwicklung
-} from "../../../../shared/sharedTypes";
-import { EParteiName } from "../../../../shared/enums";
+  Wahlbeteiligung,
+  Stimmentwicklung,
+  ParteiName,
+  Mandat,
+  StimmkreisWinner,
+  UeberhangMandat,
+  KnapperKandidat
+} from "../../../../shared/graphql.types";
 
 type MaterialViews =
   | "kandidatgebundene_gueltige_stimmen"
@@ -64,7 +62,7 @@ export async function computeQ7(
   wahlid: number,
   stimmkreisids: [number, number, number, number, number],
   vorg_wahlid: number
-): Promise<IWahlbeteiligung[]> {
+): Promise<Wahlbeteiligung[]> {
   const res: {
     wahl_id: number;
     wahldatum: Date;
@@ -253,7 +251,7 @@ ON w.id = wb.wahl_id
 
 export async function computeWahlbeteiligung(
   wahlid: number
-): Promise<IWahlbeteiligung[]> {
+): Promise<Wahlbeteiligung[]> {
   const res: {
     wahl_id: number;
     wahldatum: Date;
@@ -344,10 +342,10 @@ export async function computeEntwicklungDerStimmmen(
   wahl_id: number,
   vgl_wahl_id: number,
   stimmkreis_id: number
-): Promise<IStimmenEntwicklung[]> {
+): Promise<Stimmentwicklung[]> {
   const res: {
     partei_id: number;
-    partei_name: string;
+    partei_name: ParteiName;
     vorher: number;
     nachher: number;
   }[] = await adapters.postgres.query(
@@ -385,7 +383,7 @@ export async function computeEntwicklungDerStimmmen(
   return res.map(resobj => ({
     partei: {
       id: resobj.partei_id,
-      name: resobj.partei_name as EParteiName
+      name: resobj.partei_name
     },
     vorher: resobj.vorher,
     nachher: resobj.nachher
@@ -396,7 +394,7 @@ export async function computeEntwicklungDerStimmmen(
 export async function getDirektmandat(
   wahlid: number,
   stimmkreisid: number
-): Promise<IMandat> {
+): Promise<Mandat> {
   const direktmandatView: MaterialViews = "gewonnene_direktmandate";
   const res: {
     kandidat_id: number;
@@ -433,7 +431,7 @@ export async function getDirektmandat(
       name: resobj.kandidat_name,
       partei: {
         id: resobj.partei_id,
-        name: resobj.partei_name as EParteiName
+        name: resobj.partei_name as ParteiName
       }
     },
     direktmandat: true
@@ -551,7 +549,7 @@ enum EWinnerPartyViews {
 export async function computeWinnerParties(
   wahlid: number,
   erststimmen: boolean
-): Promise<IStimmkreisWinner[]> {
+): Promise<StimmkreisWinner[]> {
   let data: IDatabaseStimmkreisWinner[] = [];
   data = await adapters.postgres.query(
     `
@@ -579,20 +577,20 @@ export async function computeWinnerParties(
     },
     partei: {
       id: skwinner.partei_id,
-      name: skwinner.partei_name as EParteiName
+      name: skwinner.partei_name
     },
     anzahl: skwinner.anzahl
   }));
 }
 
-export async function getMandate(wahlid: number): Promise<IMandat[]> {
+export async function getMandate(wahlid: number): Promise<Mandat[]> {
   const res: {
     kandidat_id: number;
     kandidat_name: string;
     stimmkreis_id?: number;
     stimmkreis_name?: string;
     partei_id: number;
-    partei_name: string;
+    partei_name: ParteiName;
     direktmandat: boolean;
   }[] = await adapters.postgres.query(
     `
@@ -638,7 +636,7 @@ export async function getMandate(wahlid: number): Promise<IMandat[]> {
       name: resobj.kandidat_name,
       partei: {
         id: resobj.partei_id,
-        name: resobj.partei_name as EParteiName
+        name: resobj.partei_name
       }
     },
     direktmandat: resobj.direktmandat
@@ -647,14 +645,14 @@ export async function getMandate(wahlid: number): Promise<IMandat[]> {
 
 export async function getUeberhangmandate(
   wahlid: number
-): Promise<IUeberhangMandat[]> {
+): Promise<UeberhangMandat[]> {
   const res: {
     wahl_id: number;
     wahldatum: Date;
     regierungsbezirk_id: number;
     regierungsbezirk_name: string;
     partei_id: number;
-    partei_name: string;
+    partei_name: ParteiName;
     ueberhang: number;
     ausgleich: number;
     zustehend: number;
@@ -710,7 +708,7 @@ export async function getUeberhangmandate(
     },
     partei: {
       id: row.partei_id,
-      name: row.partei_name as EParteiName
+      name: row.partei_name
     },
     ueberhang: row.ueberhang,
     ausgleich: row.ausgleich,
@@ -721,7 +719,7 @@ export async function getUeberhangmandate(
 export async function getKnappsteKandidaten(
   wahlid: number,
   amountPerPartei: number = 10
-): Promise<IKnapperKandidat[]> {
+): Promise<KnapperKandidat[]> {
   const res: {
     wahl_id: number;
     wahldatum: Date;
@@ -730,7 +728,7 @@ export async function getKnappsteKandidaten(
     kandidat_id: number;
     kandidat_name: string;
     partei_id: number;
-    partei_name: string;
+    partei_name: ParteiName;
     differenz: number;
     gewinner: boolean;
     platz: number;
@@ -862,7 +860,7 @@ export async function getKnappsteKandidaten(
       name: row.kandidat_name,
       partei: {
         id: row.partei_id,
-        name: row.partei_name as EParteiName
+        name: row.partei_name
       }
     },
     differenz: row.differenz,

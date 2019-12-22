@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IWahl, IStimmkreis } from "../../../../../shared/sharedTypes";
+import { Wahl, Stimmkreis } from "../../../../../shared/graphql.types";
 import ReactEcharts from "echarts-for-react";
 import {
   IGetStimmenanteilQueryHocProps,
@@ -8,8 +8,8 @@ import {
 import { compose } from "react-apollo";
 
 export interface IStimmenanteilChartProps {
-  readonly wahl: IWahl;
-  readonly stimmkreis: IStimmkreis;
+  readonly wahl: Wahl;
+  readonly stimmkreis: Stimmkreis;
   readonly einzelstimmen: boolean;
 }
 

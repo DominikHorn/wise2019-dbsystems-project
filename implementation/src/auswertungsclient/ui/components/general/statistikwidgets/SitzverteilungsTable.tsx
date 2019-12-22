@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IMandat, IWahl } from "../../../../../shared/sharedTypes";
+import { Mandat, Wahl } from "../../../../../shared/graphql.types";
 import {
   IGetMandateQueryHocProps,
   withMandateQuery
@@ -13,7 +13,7 @@ type SitzverteilungsTableRow = {
   anzahl: number;
 };
 
-function aggregateMandate(mandate: IMandat[]): SitzverteilungsTableRow[] {
+function aggregateMandate(mandate: Mandat[]): SitzverteilungsTableRow[] {
   const parteiAggr: {
     [parteiname: string]: number;
   } = {};
@@ -50,7 +50,7 @@ const columns: ColumnProps<SitzverteilungsTableRow>[] = [
 ];
 
 export interface ISitzverteilungsTableProps {
-  readonly wahl: IWahl;
+  readonly wahl: Wahl;
 }
 
 interface IProps extends ISitzverteilungsTableProps, IGetMandateQueryHocProps {}

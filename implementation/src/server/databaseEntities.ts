@@ -1,4 +1,4 @@
-import { EParteiName } from "../shared/enums";
+import { ParteiName } from "../shared/graphql.types";
 
 /**
  * Schema group name
@@ -22,7 +22,7 @@ export interface IDatabaseRegierungsbezirk extends IDatabaseEntity {
 
 export interface IDatabasePartei extends IDatabaseEntity {
   readonly id: number;
-  readonly name: EParteiName;
+  readonly name: ParteiName;
 }
 
 export interface IDatabaseKandidat extends IDatabaseEntity {
@@ -69,7 +69,7 @@ export interface IDatabaseStimmkreisWinner extends IDatabaseEntity {
   readonly stimmkreis_id: number;
   readonly stimmkreis_name: string;
   readonly partei_id: number;
-  readonly partei_name: string;
+  readonly partei_name: ParteiName;
   readonly anzahl: number;
 }
 

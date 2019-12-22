@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import { DataValue } from "react-apollo";
-import { IStimmkreisWinner } from "../../shared/sharedTypes";
+import { StimmkreisWinner } from "../../shared/graphql.types";
 import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
 
 const getStimmkreisWinnerQuery = gql`
@@ -23,7 +23,7 @@ const getStimmkreisWinnerQuery = gql`
 `;
 
 interface IGetStimmkreisWinnerQueryResponse {
-  readonly stimmkreisWinner: IStimmkreisWinner[];
+  readonly stimmkreisWinner: StimmkreisWinner[];
 }
 
 interface IGetStimmkreisWinnerQueryVariables {

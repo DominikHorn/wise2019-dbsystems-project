@@ -5,26 +5,26 @@ import {
   IGetKnappsteKandidatenQueryHocProps,
   withKnappsteKandidatenQuery
 } from "../../../../../client-graphql/public/getKnappsteKandidatenQuery";
-import {
-  IWahl,
-  IKnapperKandidat,
-  IKandidat
-} from "../../../../../shared/sharedTypes";
 import { compose } from "react-apollo";
 import { eatEvent, getParteiColor } from "../../../guiUtil";
-import { EParteiName } from "../../../../../shared/enums";
 import { renderCenteredLoading } from "../../../../../wahlclient/ui/guiUtil";
 import { sleep } from "../../../../../shared/util";
+import {
+  KnapperKandidat,
+  Kandidat,
+  Wahl
+} from "../../../../../shared/graphql.types";
+import { getHumanReadableParteiName } from "../../../../../shared/sharedTypes";
 
 type ChartDataType = {
   name: string;
-  value: [EParteiName, number, number];
-  kandidat: IKandidat;
+  value: [string, number, number];
+  kandidat: Kandidat;
   differenz: number;
   gewinner: boolean;
   itemStyle?: any;
 };
-function getOption(knappsteKandidaten: IKnapperKandidat[]) {
+function getOption(knappsteKandidaten: KnapperKandidat[]) {
   const partyMap: { [parteiName: number]: string } = {};
   const place = [];
   for (let i = 1; i <= AMOUNT_PER_PARTY; i++) {
@@ -50,7 +50,7 @@ function getOption(knappsteKandidaten: IKnapperKandidat[]) {
         differenz: knappeKandidat.differenz,
         gewinner: knappeKandidat.gewinner,
         value: [
-          knappeKandidat.kandidat.partei.name,
+          getHumanReadableParteiName(knappeKandidat.kandidat.partei.name),
           knappeKandidat.platz,
           knappeKandidat.differenz
         ]
@@ -146,7 +146,7 @@ function getOption(knappsteKandidaten: IKnapperKandidat[]) {
 const AMOUNT_PER_PARTY = 10;
 
 export interface IKnappsteKandidatenChartProps {
-  readonly wahl: IWahl;
+  readonly wahl: Wahl;
 }
 
 interface IProps

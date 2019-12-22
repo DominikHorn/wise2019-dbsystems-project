@@ -4,7 +4,7 @@ import {
   withAllWahlenQuery
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
-import { IWahl } from "../../../../../shared/sharedTypes";
+import { Wahl } from "../../../../../shared/graphql.types";
 import { compose } from "react-apollo";
 import { WahlSelector } from "../dataselectors/WahlSelector";
 import { WahlbeteiligungChart } from "./WahlbeteiligungChart";
@@ -15,7 +15,7 @@ import { StimmentwicklungChart } from "./StimmentwicklungChart";
 import { renderCenteredLoading } from "../../../guiUtil";
 
 interface IState {
-  readonly selectedWahl?: IWahl;
+  readonly selectedWahl?: Wahl;
 }
 
 export interface IStimmkreisInfoWidgetProps
@@ -34,14 +34,14 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
     this.state = {};
   }
 
-  private onSelectWahl = (selectedWahl: IWahl) =>
+  private onSelectWahl = (selectedWahl: Wahl) =>
     this.props.setRoutableState
       ? this.props.setRoutableState({ selectedWahl })
       : this.setState({ selectedWahl });
 
   render() {
     const { allWahlenData, routableState } = this.props;
-    let selectedWahl: IWahl = null;
+    let selectedWahl: Wahl = null;
     if (routableState) {
       selectedWahl = routableState.selectedWahl;
     } else {

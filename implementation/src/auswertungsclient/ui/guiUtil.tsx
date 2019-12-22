@@ -2,21 +2,21 @@ import { Alert, Col, Divider, Icon, Row, Spin, Tooltip } from "antd";
 import { AlertProps } from "antd/lib/alert";
 import * as React from "react";
 import "./guiUtil.css";
-import { EParteiName } from "../../shared/enums";
+import { ParteiName } from "../../shared/graphql.types";
 
 export const PARTEI_COLORS: { [parteiname: string]: string } = {
-  [EParteiName.CSU]: "#212121",
-  [EParteiName.SPD]: "#e65949",
-  [EParteiName.FREIE_WAEHLER]: "#d99241",
-  [EParteiName.GRUENE]: "#3c9e2b",
-  [EParteiName.FDP]: "#ccc12b",
-  [EParteiName.DIE_LINKE]: "#ad0c00",
-  [EParteiName.BAYERN_PARTEI]: "#ddccdd",
-  [EParteiName.V_PARTEI]: "#c22fbd",
-  [EParteiName.AFD]: "#5084cc"
+  [ParteiName.CSU]: "#212121",
+  [ParteiName.SPD]: "#e65949",
+  [ParteiName.FREIE_WAEHLER]: "#d99241",
+  [ParteiName.GRUENE]: "#3c9e2b",
+  [ParteiName.FDP]: "#ccc12b",
+  [ParteiName.DIE_LINKE]: "#ad0c00",
+  [ParteiName.BAYERN_PARTEI]: "#ddccdd",
+  [ParteiName.V_PARTEI]: "#c22fbd",
+  [ParteiName.AFD]: "#5084cc"
 };
 
-export function getParteiColor(parteiname: EParteiName): string {
+export function getParteiColor(parteiname: ParteiName): string {
   return PARTEI_COLORS[parteiname] || "#8c40c2";
 }
 

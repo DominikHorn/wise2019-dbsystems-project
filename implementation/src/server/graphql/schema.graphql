@@ -15,8 +15,6 @@ type Query {
     vglwahlid: Int!
     stimmkreisid: Int!
   ): [Stimmentwicklung]!
-  # getAbsoluteAnzahl(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
-  # getProzentualenAnteil(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
 }
 
 type Mutation {
@@ -47,7 +45,7 @@ type Kandidat {
 
 type Partei {
   id: Int!
-  name: String!
+  name: ParteiName!
 }
 
 type Stimmkreis {
@@ -95,10 +93,23 @@ type Stimmentwicklung {
   nachher: Int!
 }
 
-# type StimmAnteil {
-#   wahl: Wahl!
-#   stimmkreis: Stimmkreis!
-#   partei: Partei!
-#   anzahl: Int!
-#   prozentual: Boolean!
-# }
+enum ParteiName {
+  CSU
+  SPD
+  FREIE_WAEHLER
+  GRUENE
+  FDP
+  DIE_LINKE
+  BAYERN_PARTEI
+  OEDP
+  PIRATEN
+  DIE_FRANKEN
+  AFD
+  LKR
+  MUT
+  DIE_HUMANISTEN
+  DIE_PARTEI
+  GESUNDHEITSFORSCHUNG
+  TIERSCHUTZPARTEI
+  V_PARTEI
+}

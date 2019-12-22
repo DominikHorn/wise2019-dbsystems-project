@@ -3,21 +3,25 @@ import {
   IGetStimmkreisWinnerHocProps,
   withStimmkreisWinnerQuery
 } from "../../../../../client-graphql/public/getStimmkreisWinnerQuery";
-import { EParteiName } from "../../../../../shared/enums";
 import {
   PARTEI_COLORS,
   renderCenteredLoading,
   eatEvent
 } from "../../../guiUtil";
 import ReactEcharts from "echarts-for-react";
-import { IStimmkreisWinner, IWahl } from "../../../../../shared/sharedTypes";
 import { compose } from "react-apollo";
 import { BooleanSelector } from "../dataselectors/BooleanSelector";
+import {
+  Wahl,
+  StimmkreisWinner,
+  ParteiName
+} from "../../../../../shared/graphql.types";
+import { getHumanReadableParteiName } from "../../../../../shared/sharedTypes";
 
 export interface IGewinnerGeoChartProps {
   readonly erststimmen: boolean;
   readonly onErststimmenChanged: (newValue: boolean) => void;
-  readonly wahl: IWahl;
+  readonly wahl: Wahl;
 }
 
 interface IProps extends IGewinnerGeoChartProps, IGetStimmkreisWinnerHocProps {}
@@ -27,7 +31,7 @@ interface IProps extends IGewinnerGeoChartProps, IGetStimmkreisWinnerHocProps {}
  * @param queryData
  */
 function mapToChartData(
-  queryData: IStimmkreisWinner[]
+  queryData: StimmkreisWinner[]
 ): { name: string; value: number }[] {
   return queryData.map(winner => ({
     name: `${winner.stimmkreis.name}`,
@@ -57,9 +61,9 @@ const GewinnerGeoChartComponent = (props: IProps) => (
               showDelay: 0,
               transitionDuration: 0.2,
               formatter: (params: any) =>
-                `${params.name}<br/>${
-                  Object.values(EParteiName)[params.value]
-                }<br/>Stimmen: ${params.data.stimmanzahl}`
+                `${params.name}<br/>${getHumanReadableParteiName(
+                  Object.values(ParteiName)[params.value]
+                )}<br/>Stimmen: ${params.data.stimmanzahl}`
             },
             visualMap: {
               show: false,

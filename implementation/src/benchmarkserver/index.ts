@@ -16,9 +16,9 @@ import { createHttpLink } from "apollo-link-http";
 // @ts-ignore this works though tsc can't know that
 import clientConfig from "../../config.client.json";
 import { InMemoryCache } from "apollo-cache-inmemory";
-import { IWahl } from "../shared/sharedTypes";
 import { startServer } from "./graphql/server";
 import { STIMMKREIS_IDS } from "./stimmkreise";
+import { Wahl } from "../shared/graphql.types";
 
 type WorkloadMix = {
   opts: QueryOptions<any>;
@@ -56,9 +56,9 @@ function spawnWorker(
   return { worker, id: workerID };
 }
 
-function calculateWorkloadMix(allWahlen: IWahl[]): WorkloadMix[] {
+function calculateWorkloadMix(allWahlen: Wahl[]): WorkloadMix[] {
   return allWahlen
-    .flatMap((wahl: IWahl) => [
+    .flatMap((wahl: Wahl) => [
       {
         opts: {
           query: query_q1,

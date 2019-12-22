@@ -1,9 +1,9 @@
 import * as React from "react";
 import {
-  IWahl,
-  IWahlbeteiligung,
-  IStimmkreis
-} from "../../../../../shared/sharedTypes";
+  Wahl,
+  Wahlbeteiligung,
+  Stimmkreis
+} from "../../../../../shared/graphql.types";
 import {
   IGetWahlbeteiligungQueryHocProps,
   withWahlbeteiligungQuery
@@ -14,15 +14,15 @@ import { renderCenteredLoading } from "../../../../../wahlclient/ui/guiUtil";
 import { eatEvent } from "../../../guiUtil";
 
 export interface IWahlbeteiligungChartProps {
-  readonly wahl: IWahl;
-  readonly onStimmkreisSelect?: (selected: IStimmkreis) => void;
+  readonly wahl: Wahl;
+  readonly onStimmkreisSelect?: (selected: Stimmkreis) => void;
 }
 
 interface IProps
   extends IWahlbeteiligungChartProps,
     IGetWahlbeteiligungQueryHocProps {}
 
-function mapToChartData(wahlbeteiligung: IWahlbeteiligung[]) {
+function mapToChartData(wahlbeteiligung: Wahlbeteiligung[]) {
   let min = 100;
   let max = 0;
   const data = wahlbeteiligung.map(w => {

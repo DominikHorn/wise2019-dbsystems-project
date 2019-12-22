@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import { DataValue } from "react-apollo";
-import { IMandat } from "../../shared/sharedTypes";
+import { Mandat } from "../../shared/graphql.types";
 import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
 
 const getMandateQuery = gql`
@@ -20,7 +20,7 @@ const getMandateQuery = gql`
 `;
 
 interface IGetMandateQueryResponse extends IGraphqlType {
-  readonly mandate?: IMandat[];
+  readonly mandate?: Mandat[];
 }
 
 interface IGetMandateQueryVariables {

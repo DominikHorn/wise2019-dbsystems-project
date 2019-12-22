@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import { DataValue } from "react-apollo";
-import { IUeberhangMandat } from "../../shared/sharedTypes";
+import { UeberhangMandat } from "../../shared/graphql.types";
 import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
 
 const getUeberhangmandateQuery = gql`
@@ -22,7 +22,7 @@ const getUeberhangmandateQuery = gql`
 `;
 
 interface IGetUeberhangmandateResponse extends IGraphqlType {
-  readonly ueberhangmandate?: IUeberhangMandat[];
+  readonly ueberhangmandate?: UeberhangMandat[];
 }
 
 interface IGetUeberhangmandateVariables {

@@ -1,6 +1,6 @@
 import * as React from "react";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
-import { IWahl } from "../../../../../shared/sharedTypes";
+import { Wahl } from "../../../../../shared/graphql.types";
 import {
   IGetAllWahlenQueryHocProps,
   withAllWahlenQuery
@@ -11,7 +11,7 @@ import { KnappsteKandidatenChart } from "./KnappsteKandidatenChart";
 import { WahlSelector } from "../dataselectors/WahlSelector";
 
 interface IState {
-  readonly selectedWahl?: IWahl;
+  readonly selectedWahl?: Wahl;
 }
 export interface IKnappsteKandidatenWidgetProps
   extends IStatistikWidgetProps<IState> {}
@@ -28,7 +28,7 @@ class KnappsteKandidatenWidgetComponent extends React.PureComponent<
     this.state = {};
   }
 
-  private onSelectWahl = (selectedWahl: IWahl) =>
+  private onSelectWahl = (selectedWahl: Wahl) =>
     this.props.setRoutableState
       ? this.props.setRoutableState({ selectedWahl })
       : this.setState({ selectedWahl });

@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
 import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
-import { IKnapperKandidat } from "../../shared/sharedTypes";
+import { KnapperKandidat } from "../../shared/graphql.types";
 import { DataValue } from "react-apollo";
 
 const getKnappsteKandidatenQuery = gql`
@@ -33,7 +33,7 @@ const getKnappsteKandidatenQuery = gql`
 `;
 
 interface IGetKnappsteKandidatenQueryResponse extends IGraphqlType {
-  readonly knappsteKandidaten?: IKnapperKandidat[];
+  readonly knappsteKandidaten?: KnapperKandidat[];
 }
 
 interface IGetKnappsteKandidatenQueryVariables {

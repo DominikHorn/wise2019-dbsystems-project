@@ -1,5 +1,5 @@
 import gql from "graphql-tag";
-import { IWahlbeteiligung } from "../../shared/sharedTypes";
+import { Wahlbeteiligung } from "../../shared/graphql.types";
 import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
 import { DataValue } from "react-apollo";
 
@@ -20,7 +20,7 @@ const getWahlbeteiligungQuery = gql`
 `;
 
 interface IGetWahlbeteiligungQueryResponse extends IGraphqlType {
-  wahlbeteiligung?: IWahlbeteiligung[];
+  wahlbeteiligung?: Wahlbeteiligung[];
 }
 
 interface IGetWahlbeteiligungQueryVariables {
