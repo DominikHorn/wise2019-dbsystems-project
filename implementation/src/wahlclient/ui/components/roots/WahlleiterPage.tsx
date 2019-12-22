@@ -41,6 +41,11 @@ import {
   ISetDataBlockedMutationHOCProps,
   withSetDataBlockedMutation
 } from "../../../../client-graphql/wahlleiter/setDataBlockedMutation";
+import { WahlhelferToken } from "../../../../shared/graphql.types";
+import {
+  withGenerateWahlhelferTokensMutation,
+  IGenerateWahlhelferTokensHOCProps
+} from "../../../../client-graphql/wahlleiter/generateWahlhelferTokensMutation";
 
 const { Password } = Input;
 
@@ -52,6 +57,7 @@ interface IProps
   extends IWahlleiterPageProps,
     FormComponentProps,
     ISetDataBlockedMutationHOCProps,
+    IGenerateWahlhelferTokensHOCProps,
     IImportCSVDataMutationHocProps,
     IComputeElectionResultsMutationHocProps,
     IGetAllWahlenQueryHocProps {}
@@ -61,6 +67,7 @@ interface IState {
   modalVisible: boolean;
   voteComputationLoading: boolean;
   uploadLoading: boolean;
+  wahlhelferTokens?: WahlhelferToken[];
 }
 
 class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
@@ -73,6 +80,14 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
       uploadLoading: false
     };
   }
+
+  private onGenerateWahlhelferTokens = () => {
+    this.props
+      .generateWahlhelferTokens({ wahlleiterAuth: this.state.wahlleiterAuth })
+      .then(res =>
+        this.setState({ wahlhelferTokens: res && res.data.wahlhelferTokens })
+      );
+  };
 
   private onComputeElectionResults = () => {
     this.setState({ voteComputationLoading: true });
@@ -295,6 +310,43 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
     </Row>
   );
 
+  private renderWahlhelferTokenTable = () => (
+    <Row type={"flex"} justify={"center"} style={{ marginTop: "15px" }}>
+      <Col>
+        <Table
+          size={"small"}
+          pagination={false}
+          rowKey={"token"}
+          columns={[
+            {
+              title: "ID",
+              key: "id",
+              dataIndex: "wahl.id"
+            },
+            {
+              title: "Datum",
+              key: "datum",
+              render: props => props.wahl.wahldatum.toLocaleDateString()
+            },
+            {
+              title: "Stimmkreis",
+              key: "stimmkreis",
+              width: 200,
+              dataIndex: "stimmkreis.name"
+            },
+            {
+              title: "Token",
+              key: "token",
+              width: 475,
+              dataIndex: "token"
+            }
+          ]}
+          dataSource={this.state.wahlhelferTokens || []}
+        />
+      </Col>
+    </Row>
+  );
+
   private renderAdminActions = () => (
     <Row type={"flex"} gutter={16} justify={"center"}>
       <Col>
@@ -316,14 +368,8 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
           </Col>
           <Col>{this.renderUploadModal(this.props.form.getFieldDecorator)}</Col>
           <Col>
-            <Button
-              type={"primary"}
-              style={{ float: "right" }}
-              onClick={() => {
-                message.error("Unimplemented");
-              }}
-            >
-              Stimmen korrigieren
+            <Button type={"primary"} onClick={this.onGenerateWahlhelferTokens}>
+              Wahlhelfer Token generieren
             </Button>
           </Col>
         </>
@@ -332,7 +378,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
   );
 
   render() {
-    const { wahlleiterAuth } = this.state;
+    const { wahlleiterAuth, wahlhelferTokens } = this.state;
     return (
       <Card
         title={"WahlleiterIn Funktionen"}
@@ -341,6 +387,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
       >
         {this.renderAdminActions()}
         {!!wahlleiterAuth && this.renderWahlenTable()}
+        {!!wahlhelferTokens && this.renderWahlhelferTokenTable()}
       </Card>
     );
   }
@@ -348,6 +395,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
 
 const WahlleiterPageComponentWithGraphQL = compose(
   withSetDataBlockedMutation<IWahlleiterPageProps>(),
+  withGenerateWahlhelferTokensMutation<IWahlleiterPageProps>(),
   withImportCSVDataMutation<IWahlleiterPageProps>(),
   withComputeElectionResultsMutation<IWahlleiterPageProps>(),
   withAllWahlenQuery<IWahlleiterPageProps>()
