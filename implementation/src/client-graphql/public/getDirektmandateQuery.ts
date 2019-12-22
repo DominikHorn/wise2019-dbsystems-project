@@ -1,11 +1,14 @@
 import gql from "graphql-tag";
 import { DataValue } from "react-apollo";
-import { Mandat } from "../../shared/graphql.types";
-import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
+import { Mandat, QueryToGetDirektmandatArgs } from "../../shared/graphql.types";
+import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const getDirektmandatQuery = gql`
-  query getDirektmandatQuery($wahlid: Int!) {
-    direktmandat: getDirektmandat(wahlid: $wahlid) {
+  query getDirektmandatQuery($wahlid: Int!, $stimmkreisId: Int!) {
+    direktmandat: getDirektmandat(
+      wahlid: $wahlid
+      stimmkreisId: $stimmkreisId
+    ) {
       kandidat {
         id
         name
@@ -19,33 +22,31 @@ const getDirektmandatQuery = gql`
   }
 `;
 
-interface IGetDirektmandatQueryResponse extends IGraphqlType {
+interface IGetDirektmandatQueryResponse {
   readonly direktmandat?: Mandat;
-}
-
-interface IGetDirektmandatQueryVariables {
-  readonly wahlid: number;
 }
 
 export interface IGetDirektmandatQueryHocProps {
   readonly direktmandatData: DataValue<
     IGetDirektmandatQueryResponse,
-    IGetDirektmandatQueryVariables
+    QueryToGetDirektmandatArgs
   >;
 }
 
 const getDirektmandatTypedHoc = createTypedGraphqlHoc<
   IGetDirektmandatQueryResponse,
-  IGetDirektmandatQueryVariables
+  QueryToGetDirektmandatArgs
 >(getDirektmandatQuery);
 
 export const withDirektmandatQuery = <TProps = {}>(
-  getWahlId: (props: TProps) => number
+  getWahlId: (props: TProps) => number,
+  getStimmkreisId: (props: TProps) => number
 ) =>
   getDirektmandatTypedHoc<TProps, IGetDirektmandatQueryHocProps>({
     options: props => ({
       variables: {
-        wahlid: getWahlId(props)
+        wahlid: getWahlId(props),
+        stimmkreisid: getStimmkreisId(props)
       }
     }),
     props: ({ data }) => ({

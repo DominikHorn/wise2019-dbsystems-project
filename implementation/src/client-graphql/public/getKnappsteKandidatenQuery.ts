@@ -1,7 +1,10 @@
 import gql from "graphql-tag";
-import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
-import { KnapperKandidat } from "../../shared/graphql.types";
 import { DataValue } from "react-apollo";
+import {
+  KnapperKandidat,
+  QueryToGetKnappsteKandidatenArgs
+} from "../../shared/graphql.types";
+import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const getKnappsteKandidatenQuery = gql`
   query knappsteKandidatenQuery($wahlid: Int!, $amountPerPartei: Int) {
@@ -32,25 +35,20 @@ const getKnappsteKandidatenQuery = gql`
   }
 `;
 
-interface IGetKnappsteKandidatenQueryResponse extends IGraphqlType {
+interface IGetKnappsteKandidatenQueryResponse {
   readonly knappsteKandidaten?: KnapperKandidat[];
-}
-
-interface IGetKnappsteKandidatenQueryVariables {
-  readonly wahlid: number;
-  readonly amountPerPartei: number;
 }
 
 export interface IGetKnappsteKandidatenQueryHocProps {
   readonly knappsteKandidatenData: DataValue<
     IGetKnappsteKandidatenQueryResponse,
-    IGetKnappsteKandidatenQueryVariables
+    QueryToGetKnappsteKandidatenArgs
   >;
 }
 
 const knappsteKandidatenTypedHoc = createTypedGraphqlHoc<
   IGetKnappsteKandidatenQueryResponse,
-  IGetKnappsteKandidatenQueryVariables
+  QueryToGetKnappsteKandidatenArgs
 >(getKnappsteKandidatenQuery);
 
 export const withKnappsteKandidatenQuery = <TProps = {}>(

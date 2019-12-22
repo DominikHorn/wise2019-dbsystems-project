@@ -1,7 +1,10 @@
 import gql from "graphql-tag";
-import { Wahlbeteiligung } from "../../shared/graphql.types";
-import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
 import { DataValue } from "react-apollo";
+import {
+  QueryToGetWahlbeteiligungArgs,
+  Wahlbeteiligung
+} from "../../shared/graphql.types";
+import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const getWahlbeteiligungQuery = gql`
   query getWahlbeteiligungQuery($wahlid: Int!) {
@@ -19,24 +22,20 @@ const getWahlbeteiligungQuery = gql`
   }
 `;
 
-interface IGetWahlbeteiligungQueryResponse extends IGraphqlType {
+interface IGetWahlbeteiligungQueryResponse {
   wahlbeteiligung?: Wahlbeteiligung[];
-}
-
-interface IGetWahlbeteiligungQueryVariables {
-  readonly wahlid: number;
 }
 
 export interface IGetWahlbeteiligungQueryHocProps {
   readonly wahlbeteiligungData: DataValue<
     IGetWahlbeteiligungQueryResponse,
-    IGetWahlbeteiligungQueryVariables
+    QueryToGetWahlbeteiligungArgs
   >;
 }
 
 const getWahlbeteiligungTypedHoc = createTypedGraphqlHoc<
   IGetWahlbeteiligungQueryResponse,
-  IGetWahlbeteiligungQueryVariables
+  QueryToGetWahlbeteiligungArgs
 >(getWahlbeteiligungQuery);
 
 export const withWahlbeteiligungQuery = <TProps = {}>(

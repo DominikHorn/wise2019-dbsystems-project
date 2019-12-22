@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
-import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
-import { Wahl } from "../../shared/graphql.types";
 import { DataValue } from "react-apollo";
+import { Wahl } from "../../shared/graphql.types";
+import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const getAllWahlenQuery = gql`
   query getAllWahlenQuery {
@@ -13,22 +13,17 @@ const getAllWahlenQuery = gql`
   }
 `;
 
-interface IGetAllWahlenQueryResponse extends IGraphqlType {
+interface IGetAllWahlenQueryResponse {
   readonly allWahlen: Wahl[];
 }
 
-interface IGetAllWahlenQueryVariables {}
-
 export interface IGetAllWahlenQueryHocProps {
-  readonly allWahlenData: DataValue<
-    IGetAllWahlenQueryResponse,
-    IGetAllWahlenQueryVariables
-  >;
+  readonly allWahlenData: DataValue<IGetAllWahlenQueryResponse, {}>;
 }
 
 const getAllWahlenTypedHoc = createTypedGraphqlHoc<
   IGetAllWahlenQueryResponse,
-  IGetAllWahlenQueryVariables
+  {}
 >(getAllWahlenQuery);
 
 export const withAllWahlenQuery = <TProps = {}>() =>
