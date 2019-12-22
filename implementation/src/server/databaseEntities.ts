@@ -31,6 +31,12 @@ export interface IDatabaseKandidat extends IDatabaseEntity {
   readonly name: string;
 }
 
+export interface IDatabaseWahlhelferToken extends IDatabaseEntity {
+  readonly wahl_id: number;
+  readonly stimmkreis_id: number;
+  readonly token: string;
+}
+
 export interface IDatabaseStimmkreis extends IDatabaseEntity {
   readonly id: number;
   readonly name: string;

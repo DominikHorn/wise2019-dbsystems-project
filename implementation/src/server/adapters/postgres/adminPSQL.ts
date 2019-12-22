@@ -2,12 +2,16 @@ import { AuthenticationError } from "apollo-server-express";
 import { PoolClient } from "pg";
 import * as config from "../../../../config.server.json";
 import {
-  MutationToSetDataBlockedArgs,
   MutationToGenerateWahlhelferTokensArgs,
+  MutationToSetDataBlockedArgs,
   WahlhelferToken
 } from "../../../shared/graphql.types";
-import { DatabaseSchemaGroup } from "../../databaseEntities";
+import {
+  DatabaseSchemaGroup,
+  IDatabaseWahlhelferToken
+} from "../../databaseEntities";
 import { adapters } from "../adapterUtil";
+import { getAllStimmkreise } from "./stimmkreisPSQL";
 
 enum AuthTables {
   DATA_BLOCKED = "datablocked",
@@ -85,6 +89,91 @@ export async function getIsBlocked(
 export async function generateWahlhelferToken(
   args: MutationToGenerateWahlhelferTokensArgs
 ): Promise<WahlhelferToken[]> {
-  // TODO
-  return [];
+  return adapters.postgres.transaction(async client => {
+    const tokens: IDatabaseWahlhelferToken[] = await getAllStimmkreise(
+      client
+    ).then(sks =>
+      sks.map(sk => ({
+        wahl_id: args.wahlid,
+        stimmkreis_id: sk.id,
+        token:
+          Math.random()
+            .toString(36)
+            .substring(2, 12) +
+          Math.random()
+            .toString(36)
+            .substring(2, 12) +
+          Math.random()
+            .toString(36)
+            .substring(2, 12) +
+          Math.random()
+            .toString(36)
+            .substring(2, 12) +
+          Math.random()
+            .toString(36)
+            .substring(2, 12) +
+          Math.random()
+            .toString(36)
+            .substring(2, 12) +
+          Math.random()
+            .toString(36)
+            .substring(2, 12) +
+          Math.random()
+            .toString(36)
+            .substring(2, 12)
+      }))
+    );
+    await client.query(
+      `DELETE FROM "${DatabaseSchemaGroup}".wahlhelfertoken WHERE wahl_id = $1`,
+      [args.wahlid]
+    );
+    await client
+      .query<IDatabaseWahlhelferToken>(
+        `
+          INSERT INTO "${DatabaseSchemaGroup}".wahlhelfertoken (wahl_id, stimmkreis_id, token)
+          VALUES ${tokens
+            .map((_, i) => `($${3 * i + 1}, $${3 * i + 2}, $${3 * i + 3})`)
+            .join(", ")}
+          RETURNING *
+          `,
+        tokens.flatMap(wtk => [wtk.wahl_id, wtk.stimmkreis_id, wtk.token])
+      )
+      .then(res => !!res && res.rows);
+
+    return client
+      .query<
+        IDatabaseWahlhelferToken & {
+          wahldatum: Date;
+          stimmkreis_name: string;
+        }
+      >(
+        `
+        SELECT wtk.wahl_id, 
+               w.wahldatum as wahldatum,
+               wtk.stimmkreis_id,
+               sk.name as stimmkreis_name,
+               wtk.token
+        FROM "${DatabaseSchemaGroup}".wahlhelfertoken wtk
+          JOIN "${DatabaseSchemaGroup}".wahlen w ON w.id = wtk.wahl_id
+          JOIN "${DatabaseSchemaGroup}".stimmkreise sk ON sk.id = wtk.stimmkreis_id
+        WHERE wtk.wahl_id = $1
+        `,
+        [args.wahlid]
+      )
+      .then(
+        res =>
+          !!res &&
+          res.rows.map(row => ({
+            wahl: {
+              id: row.wahl_id,
+              wahldatum: row.wahldatum
+            },
+            stimmkreis: {
+              id: row.stimmkreis_id,
+              name: row.stimmkreis_name
+            },
+            token: row.token
+          }))
+      );
+  });
 }

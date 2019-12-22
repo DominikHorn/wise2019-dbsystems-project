@@ -5,6 +5,21 @@ import {
   IDatabaseStimmkreisInfo
 } from "../../databaseEntities";
 import { adapters } from "../adapterUtil";
+import { Stimmkreis } from "../../../shared/graphql.types";
+
+export async function getAllStimmkreise(
+  client?: PoolClient
+): Promise<Stimmkreis[]> {
+  const QUERY = `
+    SELECT *
+    FROM "${DatabaseSchemaGroup}".stimmkreise
+  `;
+  if (client) {
+    return client.query(QUERY).then(res => !!res && res.rows);
+  }
+
+  return adapters.postgres.query<Stimmkreis>(QUERY);
+}
 
 export async function getStimmkreisForId(
   id: number,
