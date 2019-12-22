@@ -1,12 +1,17 @@
 import { AuthenticationError } from "apollo-server-express";
 import { PoolClient } from "pg";
 import * as config from "../../../../config.server.json";
-import { MutationToSetDataBlockedArgs } from "../../../shared/graphql.types";
+import {
+  MutationToSetDataBlockedArgs,
+  MutationToGenerateWahlhelferTokensArgs,
+  WahlhelferToken
+} from "../../../shared/graphql.types";
 import { DatabaseSchemaGroup } from "../../databaseEntities";
 import { adapters } from "../adapterUtil";
 
 enum AuthTables {
-  DATA_BLOCKED = "datablocked"
+  DATA_BLOCKED = "datablocked",
+  WAHLHELFER_TOKEN = "wahlhelfertoken"
 }
 
 export function withVerifyIsAdmin<TReturn>(
@@ -75,4 +80,11 @@ export async function getIsBlocked(
   return adapters.postgres
     .query<TRes>(QUERY, [wahlid])
     .then(res => res && res[0] && res[0].blocked);
+}
+
+export async function generateWahlhelferToken(
+  args: MutationToGenerateWahlhelferTokensArgs
+): Promise<WahlhelferToken[]> {
+  // TODO
+  return [];
 }

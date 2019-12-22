@@ -25,21 +25,15 @@ type Mutation {
     aggregiert: Boolean!
   ): Boolean
   computeElectionResults(wahlleiterAuth: String!): Boolean
-  # generateWahlhelferTokens(
-  #   wahlleiterAuth: String
-  #   wahlid: Int!
-  # ): [WahlToken]!
+  generateWahlhelferTokens(
+    wahlleiterAuth: String
+    wahlid: Int!
+  ): [WahlhelferToken!]!
   setDataBlocked(
     wahlleiterAuth: String!
     wahlid: Int!
     blocked: Boolean!
   ): Boolean
-}
-
-type WahlToken {
-  wahl: Wahl!
-  stimmkreis: Stimmkreis!
-  token: String!
 }
 
 type Wahl {
@@ -108,6 +102,12 @@ type Stimmentwicklung {
   partei: Partei!
   vorher: Int!
   nachher: Int!
+}
+
+type WahlhelferToken {
+  wahl: Wahl!
+  stimmkreis: Stimmkreis!
+  token: String!
 }
 
 enum ParteiName {

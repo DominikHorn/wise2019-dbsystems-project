@@ -20,7 +20,8 @@ import {
   getIsBlocked,
   setDataBlocked,
   withVerifyIsAdmin,
-  withVerifyIsNotBlocked
+  withVerifyIsNotBlocked,
+  generateWahlhelferToken
 } from "../adapters/postgres/adminPSQL";
 
 export interface IContext {
@@ -83,6 +84,10 @@ export const resolvers: Resolver = {
       ),
     computeElectionResults: (_, args) =>
       withVerifyIsAdmin(args.wahlleiterAuth, computeElectionResults),
+    generateWahlhelferTokens: (_, args) =>
+      withVerifyIsAdmin(args.wahlleiterAuth, () =>
+        generateWahlhelferToken(args)
+      ),
     setDataBlocked: (_, args) =>
       withVerifyIsAdmin(args.wahlleiterAuth, () => setDataBlocked(args))
   }
