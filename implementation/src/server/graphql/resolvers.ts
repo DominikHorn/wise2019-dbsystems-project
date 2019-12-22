@@ -13,7 +13,11 @@ import {
   computeEntwicklungDerStimmmen
 } from "../adapters/postgres/electionPSQL";
 import { Resolver } from "../../shared/graphql.types";
-import { getIsBlocked, setDataBlocked } from "../adapters/postgres/adminPSQL";
+import {
+  getIsBlocked,
+  setDataBlocked,
+  withVerifyIsAdmin
+} from "../adapters/postgres/adminPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -58,24 +62,19 @@ export const resolvers: Resolver = {
       )
   },
   Mutation: {
-    importCSVData: async (
-      _: any,
-      args: {
-        files: Promise<GraphQLFileUpload>[];
-        wahldatum: Date;
-        aggregiert: boolean;
-      }
-    ) =>
-      await Promise.all(
-        args.files.map(wahlfile =>
-          wahlfile.then(
-            file => (
-              console.log(file), parseCSV(file, args.wahldatum, args.aggregiert)
+    importCSVData: (_, args) =>
+      withVerifyIsAdmin(args.wahlleiterAuth, () =>
+        Promise.all(
+          args.files.map(wahlfile =>
+            wahlfile.then((file: any) =>
+              parseCSV(file, args.wahldatum, args.aggregiert)
             )
           )
-        )
-      ).then(() => true),
-    computeElectionResults,
-    setDataBlocked: (_, args) => setDataBlocked(args)
+        ).then(() => true)
+      ),
+    computeElectionResults: (_, args) =>
+      withVerifyIsAdmin(args.wahlleiterAuth, computeElectionResults),
+    setDataBlocked: (_, args) =>
+      withVerifyIsAdmin(args.wahlleiterAuth, () => setDataBlocked(args))
   }
 };

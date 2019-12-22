@@ -9,9 +9,12 @@ enum AuthTables {
   DATA_BLOCKED = "datablocked"
 }
 
-export function verifyIsAdmin(auth: string): boolean {
+export function withVerifyIsAdmin<TArgs, TReturn>(
+  auth: string,
+  fun: () => TReturn
+): TReturn {
   if (config.wahlleiterConfig.password === auth) {
-    return true;
+    return fun();
   }
 
   throw new AuthenticationError("Invalid Wahlleiter Auth");
@@ -20,8 +23,6 @@ export function verifyIsAdmin(auth: string): boolean {
 export async function setDataBlocked(
   args: MutationToSetDataBlockedArgs
 ): Promise<boolean> {
-  if (!verifyIsAdmin(args.wahlleiterAuth)) return false;
-
   if (args.blocked) {
     return adapters.postgres
       .query(

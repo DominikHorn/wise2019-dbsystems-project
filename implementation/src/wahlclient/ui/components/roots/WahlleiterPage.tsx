@@ -67,7 +67,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      wahlleiterAuth: null,
+      wahlleiterAuth: "",
       modalVisible: false,
       voteComputationLoading: false,
       uploadLoading: false
@@ -77,7 +77,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
   private onComputeElectionResults = () => {
     this.setState({ voteComputationLoading: true });
     this.props
-      .computeElectionResults({})
+      .computeElectionResults({ wahlleiterAuth: this.state.wahlleiterAuth })
       .then(res => {
         this.setState({ voteComputationLoading: false });
         if (res && res.data.success) {
@@ -103,6 +103,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
         this.setState({ uploadLoading: true });
         this.props
           .importCSVData({
+            wahlleiterAuth: this.state.wahlleiterAuth,
             files: values.files.map((f: UploadFile) => f.originFileObj),
             wahldatum: values.wahldatum.add(2, "hours").toDate(),
             aggregiert: values.save_aggr
@@ -275,10 +276,13 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
                       .setDataBlocked({
                         blocked: val,
                         wahlid: props.id,
-                        wahlleiterAuth: this.state.wahlleiterAuth || ""
+                        wahlleiterAuth: this.state.wahlleiterAuth
                       })
                       .then(_ => this.props.allWahlenData.refetch())
-                      .then(() => {}, err => message.error(err.toString()))
+                      .then(
+                        () => {},
+                        err => message.error(err.toString())
+                      )
                   }
                 />
               )

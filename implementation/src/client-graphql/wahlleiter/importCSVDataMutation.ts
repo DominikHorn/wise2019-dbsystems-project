@@ -4,11 +4,13 @@ import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
 
 const importCSVDataMutation = gql`
   mutation importCSVDataMutation(
+    $wahlleiterAuth: String!
     $files: [Upload]!
     $wahldatum: Date!
     $aggregiert: Boolean!
   ) {
     success: importCSVData(
+      wahlleiterAuth: $wahlleiterAuth
       files: $files
       wahldatum: $wahldatum
       aggregiert: $aggregiert
@@ -21,6 +23,7 @@ interface IImportCSVDataMutationResponse extends IGraphqlType {
 }
 
 export interface IImportCSVDataMutationVariables {
+  readonly wahlleiterAuth: string;
   readonly files: File[];
   readonly wahldatum: Date;
   readonly aggregiert: boolean;

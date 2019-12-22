@@ -3,8 +3,8 @@ import { FetchResult } from "react-apollo";
 import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const computeElectionResultsMutation = gql`
-  mutation computeElectionResultsMutation {
-    success: computeElectionResults
+  mutation computeElectionResultsMutation($wahlleiterAuth: String!) {
+    success: computeElectionResults(wahlleiterAuth: $$wahlleiterAuth)
   }
 `;
 
@@ -12,7 +12,9 @@ interface IComputeElectionResultsMutationResponse {
   readonly success?: boolean;
 }
 
-export interface IComputeElectionResultsMutationVariables {}
+export interface IComputeElectionResultsMutationVariables {
+  readonly wahlleiterAuth: string;
+}
 
 export interface IComputeElectionResultsMutationHocProps {
   readonly computeElectionResults: (
