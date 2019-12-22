@@ -1,5 +1,8 @@
 import { GraphQLDateTime } from "graphql-iso-date";
-import { GraphQLFileUpload } from "../../shared/sharedTypes";
+import {
+  GraphQLFileUpload,
+  getGraphqlReadableParteiName
+} from "../../shared/sharedTypes";
 import { getAllWahlen } from "../adapters/postgres/wahlenPSQL";
 import { parseCSV } from "../csv-parser/CSVParser";
 import {
@@ -30,6 +33,9 @@ export const resolvers: Resolver = {
   Date: GraphQLDateTime,
   Wahl: {
     dataBlocked: w => getIsBlocked(w.id)
+  },
+  Partei: {
+    name: p => getGraphqlReadableParteiName(p.name)
   },
   Query: {
     getAllWahlen,
