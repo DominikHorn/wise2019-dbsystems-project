@@ -5,15 +5,12 @@ import {
 } from "../../shared/graphql.types";
 import { FetchResult } from "apollo-link";
 import { createTypedGraphqlHoc } from "../typedGraphql";
+import { WahlSelector } from "../../auswertungsclient/ui/components/general/dataselectors/WahlSelector";
 
 const generateWahlhelferTokensGQL = gql`
-  mutation generateWahlhelferTokensMutation(
-    $wahlleiterAuth: String!
-    $wahlid: Int!
-  ) {
+  mutation generateWahlhelferTokensMutation($wahlleiterAuth: String!) {
     wahlhelferTokens: generateWahlhelferTokens(
       wahlleiterAuth: $wahlleiterAuth
-      wahlid: $wahlid
     ) {
       wahl {
         id
@@ -48,6 +45,24 @@ export const withGenerateWahlhelferTokensMutation = <TProps = {}>() =>
     props: ({ mutate }) => ({
       generateWahlhelferTokens: (
         variables: MutationToGenerateWahlhelferTokensArgs
-      ) => mutate({ variables })
+      ) =>
+        mutate({ variables }).then(
+          res =>
+            res && {
+              ...res,
+              data: {
+                ...res.data,
+                wahlhelferTokens: (res.data.wahlhelferTokens || []).map(
+                  token => ({
+                    ...token,
+                    wahl: {
+                      ...token.wahl,
+                      wahldatum: new Date(token.wahl.wahldatum)
+                    }
+                  })
+                )
+              }
+            }
+        )
     })
   });

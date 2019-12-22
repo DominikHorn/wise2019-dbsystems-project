@@ -25,10 +25,7 @@ type Mutation {
     aggregiert: Boolean!
   ): Boolean
   computeElectionResults(wahlleiterAuth: String!): Boolean
-  generateWahlhelferTokens(
-    wahlleiterAuth: String!
-    wahlid: Int!
-  ): [WahlhelferToken!]!
+  generateWahlhelferTokens(wahlleiterAuth: String!): [WahlhelferToken!]!
   setDataBlocked(
     wahlleiterAuth: String!
     wahlid: Int!

@@ -90,11 +90,20 @@ export async function generateWahlhelferToken(
   args: MutationToGenerateWahlhelferTokensArgs
 ): Promise<WahlhelferToken[]> {
   return adapters.postgres.transaction(async client => {
+    const wahlid = await client
+      .query(
+        `
+      SELECT id as wahlid
+      FROM "${DatabaseSchemaGroup}".wahlen
+      WHERE wahldatum = (SELECT max(wahldatum) FROM "${DatabaseSchemaGroup}".wahlen)
+    `
+      )
+      .then(res => !!res && res.rows[0].wahlid);
     const tokens: IDatabaseWahlhelferToken[] = await getAllStimmkreise(
       client
     ).then(sks =>
       sks.map(sk => ({
-        wahl_id: args.wahlid,
+        wahl_id: wahlid,
         stimmkreis_id: sk.id,
         token:
           Math.random()
@@ -125,7 +134,7 @@ export async function generateWahlhelferToken(
     );
     await client.query(
       `DELETE FROM "${DatabaseSchemaGroup}".wahlhelfertoken WHERE wahl_id = $1`,
-      [args.wahlid]
+      [wahlid]
     );
     await client
       .query<IDatabaseWahlhelferToken>(
@@ -158,7 +167,7 @@ export async function generateWahlhelferToken(
           JOIN "${DatabaseSchemaGroup}".stimmkreise sk ON sk.id = wtk.stimmkreis_id
         WHERE wtk.wahl_id = $1
         `,
-        [args.wahlid]
+        [wahlid]
       )
       .then(
         res =>
@@ -166,7 +175,7 @@ export async function generateWahlhelferToken(
           res.rows.map(row => ({
             wahl: {
               id: row.wahl_id,
-              wahldatum: row.wahldatum
+              wahldatum: new Date(row.wahldatum.getTime() + 1000 * 60 * 60)
             },
             stimmkreis: {
               id: row.stimmkreis_id,
