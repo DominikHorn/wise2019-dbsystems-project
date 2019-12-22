@@ -1,6 +1,6 @@
 import { GraphQLDateTime } from "graphql-iso-date";
 import { GraphQLFileUpload } from "../../shared/sharedTypes";
-import { getWahlen } from "../adapters/postgres/queries/wahlenPSQL";
+import { getAllWahlen } from "../adapters/postgres/queries/wahlenPSQL";
 import { parseCSV } from "../csv-parser/CSVParser";
 import {
   computeElectionResults,
@@ -12,6 +12,7 @@ import {
   getDirektmandat,
   computeEntwicklungDerStimmmen
 } from "../adapters/postgres/queries/electionPSQL";
+import { Query, Resolver } from "../../shared/graphql.types";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -19,10 +20,10 @@ export interface IContext {
   readonly authToken: string;
 }
 
-export const resolvers: { [key: string]: any } = {
+export const resolvers: Resolver = {
   Date: GraphQLDateTime,
   Query: {
-    getAllWahlen: () => getWahlen(),
+    getAllWahlen,
     getMandate: (_: any, args: { wahlid: number }) => getMandate(args.wahlid),
     getStimmkreisWinner: (
       _: any,
@@ -51,14 +52,6 @@ export const resolvers: { [key: string]: any } = {
         args.vglwahlid,
         args.stimmkreisid
       )
-    // getAbsoluteAnzahl: (
-    //   _: any,
-    //   args: { wahlid: number; stimmkreisid: number }
-    // ) => computeAbsolutenAnteil(args.wahlid, args.stimmkreisid),
-    // getProzentualenAnteil: (
-    //   _: any,
-    //   args: { wahlid: number; stimmkreisid: number }
-    // ) => computeProzentualenAnteil(args.wahlid, args.stimmkreisid)
   },
   Mutation: {
     importCSVData: async (

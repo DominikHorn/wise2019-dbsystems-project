@@ -24,6 +24,16 @@ type Mutation {
     aggregiert: Boolean!
   ): Boolean
   computeElectionResults: Boolean
+  generateWahlhelferTokens(
+    wahlid: Int!
+    wahlleiterPassword: String
+  ): [WahlToken]!
+}
+
+type WahlToken {
+  wahl: Wahl!
+  stimmkreis: Stimmkreis!
+  token: String!
 }
 
 type Wahl {

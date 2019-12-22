@@ -1,8 +1,9 @@
 import { adapters } from "../../adapterUtil";
 import { IDatabaseWahl, DatabaseSchemaGroup } from "../../../databaseEntities";
 import { PoolClient } from "pg";
+import { Wahl } from "../../../../shared/graphql.types";
 
-export const getWahlen = async (): Promise<IDatabaseWahl[]> =>
+export const getAllWahlen = async (): Promise<Wahl[]> =>
   adapters.postgres
     .query<IDatabaseWahl>(
       `
