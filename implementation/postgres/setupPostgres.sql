@@ -25,6 +25,11 @@ INSERT INTO "landtagswahlen".wahlen (wahldatum)
 	) a
 	WHERE NOT EXISTS (SELECT * FROM "landtagswahlen".wahlen);
 
+CREATE TABLE IF NOT EXISTS "landtagswahlen".datablocked (
+	wahl_id smallint NOT NULL UNIQUE,
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS "landtagswahlen".regierungsbezirke (
 	id smallint NOT NULL PRIMARY KEY,
 	"name" varchar(80) NOT NULL

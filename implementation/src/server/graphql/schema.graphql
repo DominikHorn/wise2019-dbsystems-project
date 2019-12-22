@@ -24,10 +24,15 @@ type Mutation {
     aggregiert: Boolean!
   ): Boolean
   computeElectionResults: Boolean
-  generateWahlhelferTokens(
+  # generateWahlhelferTokens(
+  #   wahlleiterAuth: String
+  #   wahlid: Int!
+  # ): [WahlToken]!
+  setDataBlocked(
+    wahlleiterAuth: String!
     wahlid: Int!
-    wahlleiterPassword: String
-  ): [WahlToken]!
+    blocked: Boolean!
+  ): Boolean
 }
 
 type WahlToken {
@@ -39,6 +44,7 @@ type WahlToken {
 type Wahl {
   id: Int!
   wahldatum: Date!
+  dataBlocked: Boolean
 }
 
 type Mandat {

@@ -1,8 +1,8 @@
-import { adapters } from "../../adapterUtil";
+import { adapters } from "../adapterUtil";
 import {
   DatabaseSchemaGroup,
   IDatabaseStimmkreisWinner
-} from "../../../databaseEntities";
+} from "../../databaseEntities";
 import {
   Wahlbeteiligung,
   Stimmentwicklung,
@@ -11,7 +11,7 @@ import {
   StimmkreisWinner,
   UeberhangMandat,
   KnapperKandidat
-} from "../../../../shared/graphql.types";
+} from "../../../shared/graphql.types";
 
 type MaterialViews =
   | "kandidatgebundene_gueltige_stimmen"

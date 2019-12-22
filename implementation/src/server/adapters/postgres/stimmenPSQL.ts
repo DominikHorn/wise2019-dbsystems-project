@@ -2,8 +2,8 @@ import { PoolClient } from "pg";
 import {
   DatabaseSchemaGroup,
   IDatabaseKandidatVote
-} from "../../../databaseEntities";
-import { adapters } from "../../adapterUtil";
+} from "../../databaseEntities";
+import { adapters } from "../adapterUtil";
 
 export type VoteFields =
   | "stimmkreis_id"

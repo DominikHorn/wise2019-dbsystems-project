@@ -3,8 +3,8 @@ import {
   DatabaseSchemaGroup,
   IDatabaseKandidat,
   IDatabaseDirektkandidat
-} from "../../../databaseEntities";
-import { adapters } from "../../adapterUtil";
+} from "../../databaseEntities";
+import { adapters } from "../adapterUtil";
 
 let cachedKandidatForParteiIdAndName: (
   parteiId: number,

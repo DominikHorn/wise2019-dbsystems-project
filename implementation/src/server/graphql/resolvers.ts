@@ -1,6 +1,6 @@
 import { GraphQLDateTime } from "graphql-iso-date";
 import { GraphQLFileUpload } from "../../shared/sharedTypes";
-import { getAllWahlen } from "../adapters/postgres/queries/wahlenPSQL";
+import { getAllWahlen } from "../adapters/postgres/wahlenPSQL";
 import { parseCSV } from "../csv-parser/CSVParser";
 import {
   computeElectionResults,
@@ -11,8 +11,9 @@ import {
   computeWahlbeteiligung,
   getDirektmandat,
   computeEntwicklungDerStimmmen
-} from "../adapters/postgres/queries/electionPSQL";
-import { Query, Resolver } from "../../shared/graphql.types";
+} from "../adapters/postgres/electionPSQL";
+import { Resolver } from "../../shared/graphql.types";
+import { getIsBlocked, setDataBlocked } from "../adapters/postgres/adminPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -22,6 +23,9 @@ export interface IContext {
 
 export const resolvers: Resolver = {
   Date: GraphQLDateTime,
+  Wahl: {
+    dataBlocked: w => getIsBlocked(w.id)
+  },
   Query: {
     getAllWahlen,
     getMandate: (_: any, args: { wahlid: number }) => getMandate(args.wahlid),
@@ -71,6 +75,7 @@ export const resolvers: Resolver = {
           )
         )
       ).then(() => true),
-    computeElectionResults: computeElectionResults
+    computeElectionResults,
+    setDataBlocked: (_, args) => setDataBlocked(args)
   }
 };

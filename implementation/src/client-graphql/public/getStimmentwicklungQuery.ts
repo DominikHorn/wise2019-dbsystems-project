@@ -2,7 +2,7 @@ import gql from "graphql-tag";
 import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
 import { Stimmentwicklung } from "../../shared/graphql.types";
 import { DataValue } from "react-apollo";
-import { getStimmkreisForId } from "../../server/adapters/postgres/queries/stimmkreisPSQL";
+import { getStimmkreisForId } from "../../server/adapters/postgres/stimmkreisPSQL";
 
 const getStimmentwicklungQuery = gql`
   query getStimmentwicklungQuery(

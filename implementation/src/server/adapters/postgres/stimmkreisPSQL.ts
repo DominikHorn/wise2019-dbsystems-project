@@ -3,8 +3,8 @@ import {
   DatabaseSchemaGroup,
   IDatabaseStimmkreis,
   IDatabaseStimmkreisInfo
-} from "../../../databaseEntities";
-import { adapters } from "../../adapterUtil";
+} from "../../databaseEntities";
+import { adapters } from "../adapterUtil";
 
 export async function getStimmkreisForId(
   id: number,
