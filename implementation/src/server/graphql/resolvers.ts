@@ -32,29 +32,16 @@ export const resolvers: Resolver = {
   },
   Query: {
     getAllWahlen,
-    getMandate: (_: any, args: { wahlid: number }) => getMandate(args.wahlid),
-    getStimmkreisWinner: (
-      _: any,
-      args: { wahlid: number; erststimmen: boolean }
-    ) => computeWinnerParties(args.wahlid, args.erststimmen),
-    getUeberhangMandate: (_: any, args: { wahlid: number }) =>
-      getUeberhangmandate(args.wahlid),
-    getKnappsteKandidaten: (
-      _: any,
-      args: { wahlid: number; amountPerPartei?: number }
-    ) => getKnappsteKandidaten(args.wahlid, args.amountPerPartei),
-    getWahlbeteiligung: (_: any, args: { wahlid: number }) =>
-      computeWahlbeteiligung(args.wahlid),
-    getDirektmandat: (_: any, args: { wahlid: number; stimmkreisid: number }) =>
+    getMandate: (_, args) => getMandate(args.wahlid),
+    getStimmkreisWinner: (_, args) =>
+      computeWinnerParties(args.wahlid, args.erststimmen),
+    getUeberhangMandate: (_, args) => getUeberhangmandate(args.wahlid),
+    getKnappsteKandidaten: (_, args) =>
+      getKnappsteKandidaten(args.wahlid, args.amountPerPartei),
+    getWahlbeteiligung: (_, args) => computeWahlbeteiligung(args.wahlid),
+    getDirektmandat: (_, args) =>
       getDirektmandat(args.wahlid, args.stimmkreisid),
-    getStimmentwicklung: (
-      _: any,
-      args: {
-        wahlid: number;
-        vglwahlid: number;
-        stimmkreisid: number;
-      }
-    ) =>
+    getStimmentwicklung: (_, args) =>
       computeEntwicklungDerStimmmen(
         args.wahlid,
         args.vglwahlid,
