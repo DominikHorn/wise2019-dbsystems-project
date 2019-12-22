@@ -303,31 +303,36 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
           onChange={i => this.setState({ wahlleiterAuth: i.target.value })}
         />
       </Col>
-      <Col>
-        <Button
-          type={"primary"}
-          onClick={this.onComputeElectionResults}
-          loading={this.state.voteComputationLoading}
-        >
-          Ergebnisse berechnen
-        </Button>
-      </Col>
-      <Col>{this.renderUploadModal(this.props.form.getFieldDecorator)}</Col>
-      <Col>
-        <Button
-          type={"primary"}
-          style={{ float: "right" }}
-          onClick={() => {
-            message.error("Unimplemented");
-          }}
-        >
-          Stimmen korrigieren
-        </Button>
-      </Col>
+      {!!this.state.wahlleiterAuth && (
+        <>
+          <Col>
+            <Button
+              type={"primary"}
+              onClick={this.onComputeElectionResults}
+              loading={this.state.voteComputationLoading}
+            >
+              Ergebnisse berechnen
+            </Button>
+          </Col>
+          <Col>{this.renderUploadModal(this.props.form.getFieldDecorator)}</Col>
+          <Col>
+            <Button
+              type={"primary"}
+              style={{ float: "right" }}
+              onClick={() => {
+                message.error("Unimplemented");
+              }}
+            >
+              Stimmen korrigieren
+            </Button>
+          </Col>
+        </>
+      )}
     </Row>
   );
 
   render() {
+    const { wahlleiterAuth } = this.state;
     return (
       <Card
         title={"WahlleiterIn Funktionen"}
@@ -335,7 +340,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
         hoverable={true}
       >
         {this.renderAdminActions()}
-        {this.renderWahlenTable()}
+        {!!wahlleiterAuth && this.renderWahlenTable()}
       </Card>
     );
   }
