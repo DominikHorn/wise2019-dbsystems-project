@@ -5,7 +5,7 @@ import { MutationToComputeElectionResultsArgs } from "../../shared/graphql.types
 
 const computeElectionResultsMutation = gql`
   mutation computeElectionResultsMutation($wahlleiterAuth: String!) {
-    success: computeElectionResults(wahlleiterAuth: $$wahlleiterAuth)
+    success: computeElectionResults(wahlleiterAuth: $wahlleiterAuth)
   }
 `;
 
