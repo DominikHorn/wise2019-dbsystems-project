@@ -8,6 +8,7 @@ const getAllWahlenQuery = gql`
     allWahlen: getAllWahlen {
       id
       wahldatum
+      dataBlocked
     }
   }
 `;
