@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
 import { DataValue } from "react-apollo";
-import { IKandidat } from "../../shared/sharedTypes";
+import { Kandidat } from "../../shared/graphql.types";
 
 const getAllDirektKandidatenQuery = gql`
   query allDirektKandidatenQuery($wahlid: Int!, $stimmkreisid: Int!) {
@@ -22,7 +22,7 @@ const getAllDirektKandidatenQuery = gql`
 `;
 
 interface IGetAllDirektKandidatenQueryResponse extends IGraphqlType {
-  readonly direktKandidaten?: IKandidat[];
+  readonly direktKandidaten?: Kandidat[];
 }
 
 interface IGetGetAllDirektKandidatenQueryVariables {

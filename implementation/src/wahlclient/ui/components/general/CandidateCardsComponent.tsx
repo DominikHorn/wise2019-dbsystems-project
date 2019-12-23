@@ -1,9 +1,9 @@
 import * as React from "react";
-import { IKandidat } from "../../../../shared/sharedTypes";
+import { Kandidat } from "../../../../shared/graphql.types";
 import { Card } from "antd";
 
 export interface ICandidateCardProps {
-  readonly candidates: IKandidat[];
+  readonly candidates: Kandidat[];
 }
 
 interface IProps extends ICandidateCardProps {}

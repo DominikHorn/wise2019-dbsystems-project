@@ -6,13 +6,17 @@ import {
   IGetAllDirektKandidatenQueryHocProps,
   withDirektKandidatenQuery
 } from "../../../../client-graphql/wahlen/getAllKandidatenQuery";
-import { EParteiName } from "../../../../shared/enums";
-import { IKandidat, IStimmkreis, IWahl } from "../../../../shared/sharedTypes";
 import "./ErststimmePage.css";
 import GridGenerator from "./GridGenerator";
+import {
+  Kandidat,
+  Wahl,
+  Stimmkreis,
+  ParteiName
+} from "../../../../shared/graphql.types";
 
 interface IState {
-  readonly selectedCandidat?: IKandidat;
+  readonly selectedCandidat?: Kandidat;
   readonly clickedCommit?: boolean;
   checkboxes: Array<boolean>;
   stimmeUngueltig: boolean;
@@ -20,8 +24,8 @@ interface IState {
 
 interface ErststimmePageProps {
   routeProps: RouteComponentProps<any>;
-  readonly wahl: IWahl;
-  readonly stimmkreis: IStimmkreis;
+  readonly wahl: Wahl;
+  readonly stimmkreis: Stimmkreis;
 }
 
 export interface IProps
@@ -39,16 +43,16 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
     };
   }
 
-  candidatesAr: IKandidat[] = [
-    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: EParteiName.CSU } }
+  candidatesAr: Kandidat[] = [
+    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: ParteiName.CSU } },
+    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: ParteiName.CSU } },
+    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: ParteiName.CSU } },
+    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: ParteiName.CSU } },
+    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: ParteiName.CSU } },
+    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: ParteiName.CSU } },
+    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: ParteiName.CSU } },
+    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: ParteiName.CSU } },
+    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: ParteiName.CSU } }
   ];
 
   onChange(e: React.ChangeEvent<HTMLInputElement>, changedIndex: number) {
