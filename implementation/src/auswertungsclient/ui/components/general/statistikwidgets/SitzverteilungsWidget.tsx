@@ -5,7 +5,7 @@ import {
   withAllWahlenQuery
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
 import { IGetMandateQueryHocProps } from "../../../../../client-graphql/public/getMandateQuery";
-import { IWahl } from "../../../../../shared/sharedTypes";
+import { Wahl } from "../../../../../shared/graphql.types";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
 import { WahlSelector } from "../dataselectors/WahlSelector";
@@ -13,7 +13,7 @@ import { SitzverteilungsChart } from "./SitzverteilungsChart";
 import { SitzverteilungsTable } from "./SitzverteilungsTable";
 
 interface IState {
-  selectedWahl?: IWahl;
+  selectedWahl?: Wahl;
 }
 export interface ISitzverteilungsWidgetProps
   extends IStatistikWidgetProps<IState> {
@@ -34,7 +34,7 @@ class SitzverteilungsWidgetComponent extends React.PureComponent<
     this.state = {};
   }
 
-  private onSelectWahl = (selectedWahl: IWahl) =>
+  private onSelectWahl = (selectedWahl: Wahl) =>
     this.props.setRoutableState
       ? this.props.setRoutableState({ selectedWahl })
       : this.setState({ selectedWahl });

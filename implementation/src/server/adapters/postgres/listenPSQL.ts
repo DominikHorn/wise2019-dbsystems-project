@@ -1,9 +1,6 @@
 import { PoolClient } from "pg";
-import {
-  DatabaseSchemaGroup,
-  IDatabaseListen
-} from "../../../databaseEntities";
-import { adapters } from "../../adapterUtil";
+import { DatabaseSchemaGroup, IDatabaseListen } from "../../databaseEntities";
+import { adapters } from "../adapterUtil";
 
 export async function insertListeneintrag(
   kandidat_id: number,

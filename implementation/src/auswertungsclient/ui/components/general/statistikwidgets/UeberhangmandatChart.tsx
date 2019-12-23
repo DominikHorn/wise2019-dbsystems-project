@@ -4,7 +4,6 @@ import {
   withUeberhangmandateQuery
 } from "../../../../../client-graphql/public/getUeberhangmandateQuery";
 import { compose } from "react-apollo";
-import { IWahl, IUeberhangMandat } from "../../../../../shared/sharedTypes";
 import ReactEcharts from "echarts-for-react";
 import {
   renderCenteredLoading,
@@ -12,10 +11,14 @@ import {
   eatEvent
 } from "../../../guiUtil";
 import { sleep } from "../../../../../shared/util";
-import { EParteiName } from "../../../../../shared/enums";
+import {
+  Wahl,
+  UeberhangMandat,
+  ParteiName
+} from "../../../../../shared/graphql.types";
 
 export interface IUeberhangmandatChartProps {
-  readonly wahl: IWahl;
+  readonly wahl: Wahl;
 }
 
 interface IProps
@@ -77,7 +80,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
   }
 
   private aggregateChartData = (
-    ueberhangmandate: IUeberhangMandat[]
+    ueberhangmandate: UeberhangMandat[]
   ): {
     xAxisLabels: string[];
     series: {
@@ -147,7 +150,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
           partei: { id: partei_id, name: res.data[partei_id].parteiname },
           itemStyle: category === EMandatCategory.ZUSTEHENDEMANDATE && {
             color: getParteiColor(
-              Object.values(EParteiName)[Number(partei_id) - 1]
+              Object.values(ParteiName)[Number(partei_id) - 1]
             )
           }
         }))

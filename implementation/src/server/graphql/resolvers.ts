@@ -1,6 +1,9 @@
 import { GraphQLDateTime } from "graphql-iso-date";
-import { GraphQLFileUpload } from "../../shared/sharedTypes";
-import { getWahlen } from "../adapters/postgres/queries/wahlenPSQL";
+import {
+  GraphQLFileUpload,
+  getGraphqlReadableParteiName
+} from "../../shared/sharedTypes";
+import { getAllWahlen } from "../adapters/postgres/wahlenPSQL";
 import { parseCSV } from "../csv-parser/CSVParser";
 import {
   computeElectionResults,
@@ -11,7 +14,15 @@ import {
   computeWahlbeteiligung,
   getDirektmandat,
   computeEntwicklungDerStimmmen
-} from "../adapters/postgres/queries/electionPSQL";
+} from "../adapters/postgres/electionPSQL";
+import { Resolver } from "../../shared/graphql.types";
+import {
+  getIsBlocked,
+  setDataBlocked,
+  withVerifyIsAdmin,
+  withVerifyIsNotBlocked,
+  generateWahlhelferToken
+} from "../adapters/postgres/adminPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -19,65 +30,65 @@ export interface IContext {
   readonly authToken: string;
 }
 
-export const resolvers: { [key: string]: any } = {
+export const resolvers: Resolver = {
   Date: GraphQLDateTime,
+  Wahl: {
+    dataBlocked: w => getIsBlocked(w.id)
+  },
+  Partei: {
+    name: p => getGraphqlReadableParteiName(p.name)
+  },
   Query: {
-    getAllWahlen: () => getWahlen(),
-    getMandate: (_: any, args: { wahlid: number }) => getMandate(args.wahlid),
-    getStimmkreisWinner: (
-      _: any,
-      args: { wahlid: number; erststimmen: boolean }
-    ) => computeWinnerParties(args.wahlid, args.erststimmen),
-    getUeberhangMandate: (_: any, args: { wahlid: number }) =>
-      getUeberhangmandate(args.wahlid),
-    getKnappsteKandidaten: (
-      _: any,
-      args: { wahlid: number; amountPerPartei?: number }
-    ) => getKnappsteKandidaten(args.wahlid, args.amountPerPartei),
-    getWahlbeteiligung: (_: any, args: { wahlid: number }) =>
-      computeWahlbeteiligung(args.wahlid),
-    getDirektmandat: (_: any, args: { wahlid: number; stimmkreisid: number }) =>
-      getDirektmandat(args.wahlid, args.stimmkreisid),
-    getStimmentwicklung: (
-      _: any,
-      args: {
-        wahlid: number;
-        vglwahlid: number;
-        stimmkreisid: number;
-      }
-    ) =>
-      computeEntwicklungDerStimmmen(
-        args.wahlid,
-        args.vglwahlid,
-        args.stimmkreisid
+    getAllWahlen,
+    getMandate: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () => getMandate(args.wahlid)),
+    getStimmkreisWinner: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        computeWinnerParties(args.wahlid, args.erststimmen)
+      ),
+    getUeberhangMandate: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getUeberhangmandate(args.wahlid)
+      ),
+    getKnappsteKandidaten: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getKnappsteKandidaten(args.wahlid, args.amountPerPartei)
+      ),
+    getWahlbeteiligung: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        computeWahlbeteiligung(args.wahlid)
+      ),
+    getDirektmandat: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getDirektmandat(args.wahlid, args.stimmkreisid)
+      ),
+    getStimmentwicklung: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        computeEntwicklungDerStimmmen(
+          args.wahlid,
+          args.vglwahlid,
+          args.stimmkreisid
+        )
       )
-    // getAbsoluteAnzahl: (
-    //   _: any,
-    //   args: { wahlid: number; stimmkreisid: number }
-    // ) => computeAbsolutenAnteil(args.wahlid, args.stimmkreisid),
-    // getProzentualenAnteil: (
-    //   _: any,
-    //   args: { wahlid: number; stimmkreisid: number }
-    // ) => computeProzentualenAnteil(args.wahlid, args.stimmkreisid)
   },
   Mutation: {
-    importCSVData: async (
-      _: any,
-      args: {
-        files: Promise<GraphQLFileUpload>[];
-        wahldatum: Date;
-        aggregiert: boolean;
-      }
-    ) =>
-      await Promise.all(
-        args.files.map(wahlfile =>
-          wahlfile.then(
-            file => (
-              console.log(file), parseCSV(file, args.wahldatum, args.aggregiert)
+    importCSVData: (_, args) =>
+      withVerifyIsAdmin(args.wahlleiterAuth, () =>
+        Promise.all(
+          args.files.map(wahlfile =>
+            wahlfile.then((file: any) =>
+              parseCSV(file, args.wahldatum, args.aggregiert)
             )
           )
-        )
-      ).then(() => true),
-    computeElectionResults: computeElectionResults
+        ).then(() => true)
+      ),
+    computeElectionResults: (_, args) =>
+      withVerifyIsAdmin(args.wahlleiterAuth, computeElectionResults),
+    generateWahlhelferTokens: (_, args) =>
+      withVerifyIsAdmin(args.wahlleiterAuth, () =>
+        generateWahlhelferToken(args)
+      ),
+    setDataBlocked: (_, args) =>
+      withVerifyIsAdmin(args.wahlleiterAuth, () => setDataBlocked(args))
   }
 };

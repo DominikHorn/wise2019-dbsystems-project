@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IPartei, IWahl, IMandat } from "../../../../shared/sharedTypes";
+import { Partei, Wahl, Mandat } from "../../../../shared/graphql.types";
 import { Tag, Table, Row, Col } from "antd";
 import {
   withMandateQuery,
@@ -44,7 +44,7 @@ const columns = [
     key: "partei",
     dataIndex: "kandidat.partei",
     width: 100,
-    render: (partei: IPartei) => (
+    render: (partei: Partei) => (
       <Row type={"flex"} justify={"center"}>
         <Col>
           <Tag color={getParteiColor(partei.name)} key={partei.id}>
@@ -57,8 +57,8 @@ const columns = [
 ];
 
 export interface IMandatListeProps {
-  readonly wahl: IWahl;
-  readonly tableProps?: TableProps<IMandat>;
+  readonly wahl: Wahl;
+  readonly tableProps?: TableProps<Mandat>;
   readonly omitIdColumn?: boolean;
 }
 

@@ -5,24 +5,21 @@ import { adapters } from "../adapters/adapterUtil";
 import {
   insertDirektkandidat,
   getOrCreateKandidatForParteiIdAndName
-} from "../adapters/postgres/queries/kandidatPSQL";
-import { getOrCreateParteiForIdAndName } from "../adapters/postgres/queries/parteiPSQL";
-import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/queries/regierungsbezirkePSQL";
-import {
-  VoteType,
-  insertVotes
-} from "../adapters/postgres/queries/stimmenPSQL";
+} from "../adapters/postgres/kandidatPSQL";
+import { getOrCreateParteiForIdAndName } from "../adapters/postgres/parteiPSQL";
+import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/regierungsbezirkePSQL";
+import { VoteType, insertVotes } from "../adapters/postgres/stimmenPSQL";
 import {
   getOrCreateStimmkreis,
   insertStimmkreisInfo
-} from "../adapters/postgres/queries/stimmkreisPSQL";
-import { getOrCreateWahlForDatum } from "../adapters/postgres/queries/wahlenPSQL";
+} from "../adapters/postgres/stimmkreisPSQL";
+import { getOrCreateWahlForDatum } from "../adapters/postgres/wahlenPSQL";
 import {
   IDatabaseKandidat,
   IDatabaseStimmkreis,
   IDatabaseWahl
 } from "../databaseEntities";
-import { insertListeneintrag } from "../adapters/postgres/queries/listenPSQL";
+import { insertListeneintrag } from "../adapters/postgres/listenPSQL";
 
 enum CSV_KEYS {
   regierungsbezirkID = "regierungsbezirk-id",

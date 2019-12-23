@@ -1,8 +1,10 @@
 import gql from "graphql-tag";
-import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
-import { IStimmenEntwicklung } from "../../shared/sharedTypes";
 import { DataValue } from "react-apollo";
-import { getStimmkreisForId } from "../../server/adapters/postgres/queries/stimmkreisPSQL";
+import {
+  Stimmentwicklung,
+  QueryToGetStimmentwicklungArgs
+} from "../../shared/graphql.types";
+import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const getStimmentwicklungQuery = gql`
   query getStimmentwicklungQuery(
@@ -25,26 +27,20 @@ const getStimmentwicklungQuery = gql`
   }
 `;
 
-interface IGetStimmentwicklungQueryResponse extends IGraphqlType {
-  readonly stimmentwicklung?: IStimmenEntwicklung[];
-}
-
-interface IGetStimmentwicklungQueryVariables {
-  readonly wahlid: number;
-  readonly vglwahlid: number;
-  readonly stimmkreisid: number;
+interface IGetStimmentwicklungQueryResponse {
+  readonly stimmentwicklung?: Stimmentwicklung[];
 }
 
 export interface IGetStimmentwicklungQueryHocProps {
   readonly stimmentwicklungData?: DataValue<
     IGetStimmentwicklungQueryResponse,
-    IGetStimmentwicklungQueryVariables
+    QueryToGetStimmentwicklungArgs
   >;
 }
 
 const getStimmentwicklungTypedHoc = createTypedGraphqlHoc<
   IGetStimmentwicklungQueryResponse,
-  IGetStimmentwicklungQueryVariables
+  QueryToGetStimmentwicklungArgs
 >(getStimmentwicklungQuery);
 
 export const withStimmentwicklungQuery = <TProps = {}>(

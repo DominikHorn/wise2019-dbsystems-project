@@ -1,10 +1,11 @@
 import gql from "graphql-tag";
 import { FetchResult } from "react-apollo";
 import { createTypedGraphqlHoc } from "../typedGraphql";
+import { MutationToComputeElectionResultsArgs } from "../../shared/graphql.types";
 
 const computeElectionResultsMutation = gql`
-  mutation computeElectionResultsMutation {
-    success: computeElectionResults
+  mutation computeElectionResultsMutation($wahlleiterAuth: String!) {
+    success: computeElectionResults(wahlleiterAuth: $wahlleiterAuth)
   }
 `;
 
@@ -12,17 +13,15 @@ interface IComputeElectionResultsMutationResponse {
   readonly success?: boolean;
 }
 
-export interface IComputeElectionResultsMutationVariables {}
-
 export interface IComputeElectionResultsMutationHocProps {
   readonly computeElectionResults: (
-    variables: IComputeElectionResultsMutationVariables
+    variables: MutationToComputeElectionResultsArgs
   ) => Promise<void | FetchResult<IComputeElectionResultsMutationResponse>>;
 }
 
 const computeElectionResultsTypedHoc = createTypedGraphqlHoc<
   IComputeElectionResultsMutationResponse,
-  IComputeElectionResultsMutationVariables
+  MutationToComputeElectionResultsArgs
 >(computeElectionResultsMutation);
 
 export const withComputeElectionResultsMutation = <TProps = {}>() =>
@@ -32,7 +31,7 @@ export const withComputeElectionResultsMutation = <TProps = {}>() =>
   >({
     props: ({ mutate }) => ({
       computeElectionResults: (
-        variables: IComputeElectionResultsMutationVariables
+        variables: MutationToComputeElectionResultsArgs
       ) => mutate({ variables })
     })
   });

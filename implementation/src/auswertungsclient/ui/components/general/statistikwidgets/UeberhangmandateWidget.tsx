@@ -4,14 +4,14 @@ import {
   IGetAllWahlenQueryHocProps,
   withAllWahlenQuery
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
-import { IWahl } from "../../../../../shared/sharedTypes";
+import { Wahl } from "../../../../../shared/graphql.types";
 import { renderInfo } from "../../../guiUtil";
 import { WahlSelector } from "../dataselectors/WahlSelector";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
 import { UeberhangMandatChart } from "./UeberhangmandatChart";
 
 interface IState {
-  readonly selectedWahl?: IWahl;
+  readonly selectedWahl?: Wahl;
 }
 
 export interface IUeberhangmandateWidgetProps
@@ -29,7 +29,7 @@ class UeberhangmandateWidgetComponent extends React.PureComponent<
     super(props);
     this.state = {};
   }
-  private onSelectWahl = (selectedWahl: IWahl) =>
+  private onSelectWahl = (selectedWahl: Wahl) =>
     this.props.setRoutableState
       ? this.props.setRoutableState({ selectedWahl })
       : this.setState({ selectedWahl });

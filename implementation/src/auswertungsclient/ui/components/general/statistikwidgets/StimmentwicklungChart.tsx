@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IWahl, IStimmkreis } from "../../../../../shared/sharedTypes";
+import { Wahl, Stimmkreis } from "../../../../../shared/graphql.types";
 import {
   IGetStimmentwicklungQueryHocProps,
   withStimmentwicklungQuery
@@ -8,9 +8,9 @@ import { compose } from "react-apollo";
 import ReactEcharts from "echarts-for-react";
 
 export interface IStimmentwicklungChartProps {
-  readonly wahl: IWahl;
-  readonly vglwahl: IWahl;
-  readonly stimmkreis: IStimmkreis;
+  readonly wahl: Wahl;
+  readonly vglwahl: Wahl;
+  readonly stimmkreis: Stimmkreis;
 }
 
 interface IProps

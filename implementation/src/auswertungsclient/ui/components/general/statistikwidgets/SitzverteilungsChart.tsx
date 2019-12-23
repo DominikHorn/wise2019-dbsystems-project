@@ -5,15 +5,15 @@ import {
   IGetMandateQueryHocProps,
   withMandateQuery
 } from "../../../../../client-graphql/public/getMandateQuery";
-import { EParteiName } from "../../../../../shared/enums";
-import { IMandat, IWahl } from "../../../../../shared/sharedTypes";
 import { getParteiColor, eatEvent } from "../../../guiUtil";
 import { sleep } from "../../../../../shared/util";
 import { Spin } from "antd";
 import { renderCenteredLoading } from "../../../../../wahlclient/ui/guiUtil";
+import { Mandat, ParteiName, Wahl } from "../../../../../shared/graphql.types";
+import { getHumanReadableParteiName } from "../../../../../shared/sharedTypes";
 
 function aggregateMandate(
-  mandate: IMandat[]
+  mandate: Mandat[]
 ): {
   value: number;
   name: string;
@@ -29,9 +29,9 @@ function aggregateMandate(
   });
 
   return Object.keys(parteiAggr)
-    .map((parteiname: EParteiName) => ({
+    .map((parteiname: ParteiName) => ({
       value: parteiAggr[parteiname],
-      name: parteiname,
+      name: getHumanReadableParteiName(parteiname),
       itemStyle: { color: getParteiColor(parteiname) }
     }))
     .sort((a, b) => {
@@ -42,7 +42,7 @@ function aggregateMandate(
 }
 
 export interface ISitzverteilungsChartProps {
-  readonly wahl: IWahl;
+  readonly wahl: Wahl;
 }
 
 interface IProps extends ISitzverteilungsChartProps, IGetMandateQueryHocProps {}

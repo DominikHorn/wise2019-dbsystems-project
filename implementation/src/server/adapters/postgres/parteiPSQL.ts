@@ -1,9 +1,6 @@
 import { PoolClient } from "pg";
-import {
-  DatabaseSchemaGroup,
-  IDatabasePartei
-} from "../../../databaseEntities";
-import { adapters } from "../../adapterUtil";
+import { DatabaseSchemaGroup, IDatabasePartei } from "../../databaseEntities";
+import { adapters } from "../adapterUtil";
 
 let cachedParteiForId: (
   id: number,

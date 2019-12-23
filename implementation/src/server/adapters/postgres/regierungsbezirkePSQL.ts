@@ -1,9 +1,9 @@
-import { adapters } from "../../adapterUtil";
+import { adapters } from "../adapterUtil";
 import { PoolClient } from "pg";
 import {
   IDatabaseRegierungsbezirk,
   DatabaseSchemaGroup
-} from "../../../databaseEntities";
+} from "../../databaseEntities";
 
 const REGIERUNGSBEZIRKE: { [key: number]: string } = {
   901: "Oberbayern",

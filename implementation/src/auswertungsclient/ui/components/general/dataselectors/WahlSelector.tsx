@@ -1,13 +1,13 @@
 import * as React from "react";
 import { Select, Spin } from "antd";
-import { IWahl } from "../../../../../shared/sharedTypes";
+import { Wahl } from "../../../../../shared/graphql.types";
 import { renderCenteredLoading } from "../../../guiUtil";
 
 export interface IWahlSelectorProps {
-  readonly selectableWahlen?: IWahl[];
+  readonly selectableWahlen?: Wahl[];
   readonly displayLoading?: boolean;
-  readonly selectedWahl?: IWahl;
-  readonly onSelectWahl?: (wahl: IWahl) => void;
+  readonly selectedWahl?: Wahl;
+  readonly onSelectWahl?: (wahl: Wahl) => void;
   readonly style?: React.CSSProperties;
   readonly size?: "small" | "default" | "large";
   readonly selectDefaultWahl?: boolean;

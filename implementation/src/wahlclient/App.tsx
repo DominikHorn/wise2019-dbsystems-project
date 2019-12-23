@@ -26,19 +26,7 @@ const authLink = setContext((_: any, { headers }) => ({
   }
 }));
 
-const link = ApolloLink.from([
-  // onError(({ graphQLErrors, networkError }) => {
-  //   if (graphQLErrors)
-  //     graphQLErrors.map(({ message, locations, path }) =>
-  //       console.error(
-  //         `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-  //       )
-  //     );
-  //   if (networkError) console.error(`[Network error]: ${networkError}`);
-  // }),
-  authLink,
-  uploadLink
-]);
+const link = ApolloLink.from([authLink, uploadLink]);
 
 const client = new ApolloClient({
   link,
@@ -67,7 +55,7 @@ const AppClass = () => (
         render={props => (
           <PageComponent
             title={"E-Voting-System"}
-            subtitle={"Bayrische Landtagswahlen"}
+            subtitle={"Bayerische Landtagswahlen"}
             client={client}
             routeProps={props}
           />
