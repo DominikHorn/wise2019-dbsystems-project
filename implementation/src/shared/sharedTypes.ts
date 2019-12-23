@@ -1,11 +1,10 @@
 import { ReadStream } from "fs";
 import { IDatabaseAnteil } from "../server/databaseEntities";
 import {
-  Wahlbeteiligung,
   Mandat,
-  Stimmentwicklung,
   ParteiName,
-  Partei
+  Stimmentwicklung,
+  Wahlbeteiligung
 } from "./graphql.types";
 
 export const getGraphqlReadableParteiName = (parteiName: string): ParteiName =>
@@ -20,6 +19,7 @@ export const getGraphqlReadableParteiName = (parteiName: string): ParteiName =>
     AfD: ParteiName.AFD,
     mut: ParteiName.MUT,
     "Die Humanisten": ParteiName.DIE_HUMANISTEN,
+    "Die Partei": ParteiName.DIE_PARTEI,
     Gesundheitsforschung: ParteiName.GESUNDHEITSFORSCHUNG,
     Tierschutzpartei: ParteiName.TIERSCHUTZPARTEI,
     "V-Partei": ParteiName.V_PARTEI

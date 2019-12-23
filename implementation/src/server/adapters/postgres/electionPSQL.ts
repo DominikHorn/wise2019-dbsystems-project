@@ -12,6 +12,7 @@ import {
   UeberhangMandat,
   KnapperKandidat
 } from "../../../shared/graphql.types";
+import { getGraphqlReadableParteiName } from "../../../shared/sharedTypes";
 
 type MaterialViews =
   | "kandidatgebundene_gueltige_stimmen"
@@ -860,7 +861,7 @@ export async function getKnappsteKandidaten(
       name: row.kandidat_name,
       partei: {
         id: row.partei_id,
-        name: row.partei_name
+        name: getGraphqlReadableParteiName(row.partei_name)
       }
     },
     differenz: row.differenz,

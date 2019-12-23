@@ -13,7 +13,7 @@ import { isDevelopmentEnv } from "../shared/util";
 import { PageComponent } from "./ui/PageComponent";
 import "../../node_modules/react-grid-layout/css/styles.css";
 import "../../node_modules/react-resizable/css/styles.css";
-import { readToken } from "../client-graphql/token.js";
+import { readToken } from "../client-graphql/token";
 
 // Connection to ApolloServer
 const uploadLink = createUploadLink({

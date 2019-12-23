@@ -3,6 +3,7 @@ import { AlertProps } from "antd/lib/alert";
 import * as React from "react";
 import "./guiUtil.css";
 import { ParteiName } from "../../shared/graphql.types";
+import { getGraphqlReadableParteiName } from "../../shared/sharedTypes";
 
 export const PARTEI_COLORS: { [parteiname: string]: string } = {
   [ParteiName.CSU]: "#212121",
@@ -17,7 +18,11 @@ export const PARTEI_COLORS: { [parteiname: string]: string } = {
 };
 
 export function getParteiColor(parteiname: ParteiName): string {
-  return PARTEI_COLORS[parteiname] || "#8c40c2";
+  return (
+    PARTEI_COLORS[parteiname] ||
+    PARTEI_COLORS[getGraphqlReadableParteiName(parteiname)] ||
+    "#8c40c2"
+  );
 }
 
 /**
