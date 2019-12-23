@@ -97,6 +97,7 @@ export const TOPLEVEL_ROUTES: IMenuRoute[] = [
     render: (props: RouteComponentProps<any>) => (
       <ErstimmePage
         routeProps={props}
+        wahl={{ id: 2, wahldatum: new Date() }}
         stimmkreis={{ id: 101, name: "München-Mitte" }}
       />
     )
@@ -111,6 +112,7 @@ export const WAEHLEN_SUBLEVEL_ROUTES: IWaehlenSubRoute[] = [
     render: (props: RouteComponentProps<any>) => (
       <ErstimmePage
         routeProps={props}
+        wahl={{ id: 2, wahldatum: new Date() }}
         stimmkreis={{ id: 101, name: "München-Mitte" }}
       />
     )

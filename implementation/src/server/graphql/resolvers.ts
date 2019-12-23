@@ -12,6 +12,7 @@ import {
   getDirektmandat,
   computeEntwicklungDerStimmmen
 } from "../adapters/postgres/queries/electionPSQL";
+import { getAllDirektKandidaten } from "../adapters/postgres/queries/kandidatPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -50,7 +51,11 @@ export const resolvers: { [key: string]: any } = {
         args.wahlid,
         args.vglwahlid,
         args.stimmkreisid
-      )
+      ),
+    getAllDirektKandidaten: (
+      _: any,
+      args: { wahlid: number; stimmkreisid: number }
+    ) => getAllDirektKandidaten(args.wahlid, args.stimmkreisid)
     // getAbsoluteAnzahl: (
     //   _: any,
     //   args: { wahlid: number; stimmkreisid: number }
