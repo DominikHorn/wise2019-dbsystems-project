@@ -3,8 +3,10 @@ import {
   DatabaseSchemaGroup,
   IDatabaseKandidat,
   IDatabaseDirektkandidat
-} from "../../../databaseEntities";
-import { adapters } from "../../adapterUtil";
+} from "../../databaseEntities";
+import { adapters } from "../adapterUtil";
+import { Kandidat, ParteiName } from "../../../shared/graphql.types";
+import { getGraphqlReadableParteiName } from "../../../shared/sharedTypes";
 
 let cachedKandidatForParteiIdAndName: (
   parteiId: number,
@@ -91,4 +93,38 @@ export async function insertDirektkandidat(
   return adapters.postgres.transaction(async client =>
     insertDirektkandidat(stimmkreis_id, wahl_id, direktkandidat_id, client)
   );
+}
+
+export async function getAllDirektKandidaten(
+  wahlid: number,
+  stimmkreisid: number
+): Promise<Kandidat[]> {
+  const res: {
+    partei_id: number;
+    partei_name: ParteiName;
+    kandidat_id: number;
+    kandidat_name: string;
+  }[] = await adapters.postgres.query(
+    `
+    SELECT k.partei_id, p.name, k.name, k.id
+    FROM "${DatabaseSchemaGroup}".direktkandidaten dk
+      JOIN "${DatabaseSchemaGroup}".kandidaten k
+        ON dk.direktkandidat_id = k.id
+      JOIN "${DatabaseSchemaGroup}".parteien p
+        ON p.id = k.partei_id
+      JOIN "${DatabaseSchemaGroup}".stimmkreise sk
+        ON dk.stimmkreis_id = sk.id
+    WHERE dk.stimmkreis_id = $2 AND dk.wahl_id = $1;
+`,
+    [wahlid, stimmkreisid]
+  );
+
+  return res.map(resobj => ({
+    id: resobj.kandidat_id,
+    name: resobj.kandidat_name,
+    partei: {
+      id: resobj.partei_id,
+      name: getGraphqlReadableParteiName(resobj.partei_name)
+    }
+  }));
 }

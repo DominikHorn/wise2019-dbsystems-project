@@ -1,33 +1,29 @@
 import gql from "graphql-tag";
-import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
-import { IWahl } from "../../shared/sharedTypes";
 import { DataValue } from "react-apollo";
+import { Wahl } from "../../shared/graphql.types";
+import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const getAllWahlenQuery = gql`
   query getAllWahlenQuery {
     allWahlen: getAllWahlen {
       id
       wahldatum
+      dataBlocked
     }
   }
 `;
 
-interface IGetAllWahlenQueryResponse extends IGraphqlType {
-  readonly allWahlen: IWahl[];
+interface IGetAllWahlenQueryResponse {
+  readonly allWahlen: Wahl[];
 }
 
-interface IGetAllWahlenQueryVariables {}
-
 export interface IGetAllWahlenQueryHocProps {
-  readonly allWahlenData: DataValue<
-    IGetAllWahlenQueryResponse,
-    IGetAllWahlenQueryVariables
-  >;
+  readonly allWahlenData: DataValue<IGetAllWahlenQueryResponse, {}>;
 }
 
 const getAllWahlenTypedHoc = createTypedGraphqlHoc<
   IGetAllWahlenQueryResponse,
-  IGetAllWahlenQueryVariables
+  {}
 >(getAllWahlenQuery);
 
 export const withAllWahlenQuery = <TProps = {}>() =>

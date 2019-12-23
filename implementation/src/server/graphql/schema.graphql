@@ -15,22 +15,29 @@ type Query {
     vglwahlid: Int!
     stimmkreisid: Int!
   ): [Stimmentwicklung]!
-  # getAbsoluteAnzahl(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
-  # getProzentualenAnteil(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
+  getAllDirektKandidaten(wahlid: Int!, stimmkreisid: Int!): [Kandidat]!
 }
 
 type Mutation {
   importCSVData(
+    wahlleiterAuth: String!
     files: [Upload]!
     wahldatum: Date!
     aggregiert: Boolean!
   ): Boolean
-  computeElectionResults: Boolean
+  computeElectionResults(wahlleiterAuth: String!): Boolean
+  generateWahlhelferTokens(wahlleiterAuth: String!): [WahlhelferToken!]!
+  setDataBlocked(
+    wahlleiterAuth: String!
+    wahlid: Int!
+    blocked: Boolean!
+  ): Boolean
 }
 
 type Wahl {
   id: Int!
   wahldatum: Date!
+  dataBlocked: Boolean
 }
 
 type Mandat {
@@ -47,7 +54,7 @@ type Kandidat {
 
 type Partei {
   id: Int!
-  name: String!
+  name: ParteiName!
 }
 
 type Stimmkreis {
@@ -95,10 +102,29 @@ type Stimmentwicklung {
   nachher: Int!
 }
 
-# type StimmAnteil {
-#   wahl: Wahl!
-#   stimmkreis: Stimmkreis!
-#   partei: Partei!
-#   anzahl: Int!
-#   prozentual: Boolean!
-# }
+type WahlhelferToken {
+  wahl: Wahl!
+  stimmkreis: Stimmkreis!
+  token: String!
+}
+
+enum ParteiName {
+  CSU
+  SPD
+  FREIE_WAEHLER
+  GRUENE
+  FDP
+  DIE_LINKE
+  BAYERN_PARTEI
+  OEDP
+  PIRATEN
+  DIE_FRANKEN
+  AFD
+  LKR
+  MUT
+  DIE_HUMANISTEN
+  DIE_PARTEI
+  GESUNDHEITSFORSCHUNG
+  TIERSCHUTZPARTEI
+  V_PARTEI
+}

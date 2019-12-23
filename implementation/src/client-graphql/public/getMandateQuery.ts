@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 import { DataValue } from "react-apollo";
-import { IMandat } from "../../shared/sharedTypes";
-import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
+import { Mandat, QueryToGetMandateArgs } from "../../shared/graphql.types";
+import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const getMandateQuery = gql`
   query getMandateQuery($wahlid: Int!) {
@@ -19,24 +19,20 @@ const getMandateQuery = gql`
   }
 `;
 
-interface IGetMandateQueryResponse extends IGraphqlType {
-  readonly mandate?: IMandat[];
-}
-
-interface IGetMandateQueryVariables {
-  readonly wahlid: number;
+interface IGetMandateQueryResponse {
+  readonly mandate?: Mandat[];
 }
 
 export interface IGetMandateQueryHocProps {
   readonly mandateData: DataValue<
     IGetMandateQueryResponse,
-    IGetMandateQueryVariables
+    QueryToGetMandateArgs
   >;
 }
 
 const getMandateTypedHoc = createTypedGraphqlHoc<
   IGetMandateQueryResponse,
-  IGetMandateQueryVariables
+  QueryToGetMandateArgs
 >(getMandateQuery);
 
 export const withMandateQuery = <TProps = {}>(

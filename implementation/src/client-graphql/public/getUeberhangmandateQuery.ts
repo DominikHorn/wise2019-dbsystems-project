@@ -1,7 +1,10 @@
 import gql from "graphql-tag";
 import { DataValue } from "react-apollo";
-import { IUeberhangMandat } from "../../shared/sharedTypes";
-import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
+import {
+  QueryToGetUeberhangMandateArgs,
+  UeberhangMandat
+} from "../../shared/graphql.types";
+import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const getUeberhangmandateQuery = gql`
   query getUeberhangmandateQuery($wahlid: Int!) {
@@ -21,24 +24,20 @@ const getUeberhangmandateQuery = gql`
   }
 `;
 
-interface IGetUeberhangmandateResponse extends IGraphqlType {
-  readonly ueberhangmandate?: IUeberhangMandat[];
-}
-
-interface IGetUeberhangmandateVariables {
-  readonly wahlid: number;
+interface IGetUeberhangmandateResponse {
+  readonly ueberhangmandate?: UeberhangMandat[];
 }
 
 export interface IGetUeberhangmandateQueryHocProps {
   readonly ueberhangmandateData: DataValue<
     IGetUeberhangmandateResponse,
-    IGetUeberhangmandateVariables
+    QueryToGetUeberhangMandateArgs
   >;
 }
 
 const getUeberhangmandateTypedHoc = createTypedGraphqlHoc<
   IGetUeberhangmandateResponse,
-  IGetUeberhangmandateVariables
+  QueryToGetUeberhangMandateArgs
 >(getUeberhangmandateQuery);
 
 export const withUeberhangmandateQuery = <TProps = {}>(

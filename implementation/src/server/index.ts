@@ -4,7 +4,11 @@ const environment = process.env.NODE_ENV;
 //   console.log = function() {};
 // }
 
-import { ApolloServer, makeExecutableSchema } from "apollo-server-express";
+import {
+  ApolloServer,
+  makeExecutableSchema,
+  IResolvers
+} from "apollo-server-express";
 import * as cors from "cors";
 import * as express from "express";
 import * as fallback from "express-history-api-fallback";
@@ -63,7 +67,7 @@ awaitAdapters.then(() => {
   const typeDefs = schemaFile.loc.source.body;
   const schema = makeExecutableSchema({
     typeDefs,
-    resolvers
+    resolvers: resolvers as IResolvers<any, any>
   });
 
   // Setup apollo server

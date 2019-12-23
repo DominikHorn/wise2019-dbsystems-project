@@ -1,8 +1,8 @@
 stages:
-- pre-build
-- build
-#- post-build
-- deploy
+  - pre-build
+  - build
+  #- post-build
+  - deploy
 
 variables:
   # When editing also change build artifact paths
@@ -12,52 +12,67 @@ variables:
   PFLICHTENHEFT_FILE: "specification/Pflichtenheft/Pflichtenheft.pdf"
   BUILDS_WIKI_SLUG: "Home"
 
+build-project:
+  stage: build
+  script:
+    # Prevent interactive installations, i.e., force all apt-get installs into headless mode and update apt
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update -y
+    # Remove all currently installed nodejs versions
+    - apt autoremove -y nodejs
+    # Install n to install correct nodejs version
+    - git clone https://github.com/tj/n.git; cd n; make install; cd ..; rm -rf n;
+    - n 12
+    - cd implementation
+    - mv default-config.client.json config.client.json
+    - mv default-config.server.json config.server.json
+    - npm install
+    - npm run build
+
 build-mdj-pdfs:
   stage: pre-build
   script:
-  # Prevent interactive installations, i.e., force all apt-get installs into headless mode and update apt
-  - export DEBIAN_FRONTEND=noninteractive
-  - apt-get update -y
-  # Remove all currently installed nodejs versions
-  - apt autoremove -y nodejs
-  # Install n to upgrade to latest nodejs version
-  - git clone https://github.com/tj/n.git; cd n; make install; cd ..; rm -rf n;
-  - n 8
-  - node --version
-  - npm --version
-  # Dependencies of Canvas tool required to install mdgen
-  - apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
-  # Install mdgen and generate pdf model output
-  - npm install mdgen
-  - node node_modules/mdgen/bin/mdgen.js pdf -m specification/model.mdj -o $UML_MODEL_FILE
-  - node node_modules/mdgen/bin/mdgen.js pdf -m specification/usecases.mdj -o $USECASES_FILE
+    # Prevent interactive installations, i.e., force all apt-get installs into headless mode and update apt
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update -y
+    # Remove all currently installed nodejs versions
+    - apt autoremove -y nodejs
+    # Install n to install correct nodejs version (mdgen specifically requires nodejs 8)
+    - git clone https://github.com/tj/n.git; cd n; make install; cd ..; rm -rf n;
+    - n 8
+    # Dependencies of Canvas tool required to install mdgen
+    - apt-get install -y build-essential libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+    # Install mdgen and generate pdf model output
+    - npm install mdgen
+    - node node_modules/mdgen/bin/mdgen.js pdf -m specification/model.mdj -o $UML_MODEL_FILE
+    - node node_modules/mdgen/bin/mdgen.js pdf -m specification/usecases.mdj -o $USECASES_FILE
   artifacts:
     paths:
-    # When editing also change variables
-    - specification/model.pdf
-    - specification/usecases.pdf
+      # When editing also change variables
+      - specification/model.pdf
+      - specification/usecases.pdf
 
 build-lastenheft-pdf:
   stage: build
   dependencies:
-  - build-mdj-pdfs
+    - build-mdj-pdfs
   script:
-  # Prevent interactive installations, i.e., force all apt-get installs into headless mode
-  - export DEBIAN_FRONTEND=noninteractive
-  - apt-get update -y
-  # Install all required latex tools and dependencies
-  - apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-lang-german texlive-latex-extra
-  # generate Lastenheft pdf
-  - cd specification/Lastenheft
-  - make
+    # Prevent interactive installations, i.e., force all apt-get installs into headless mode
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update -y
+    # Install all required latex tools and dependencies
+    - apt-get install -y texlive-latex-base texlive-fonts-recommended texlive-lang-german texlive-latex-extra
+    # generate Lastenheft pdf
+    - cd specification/Lastenheft
+    - make
   artifacts:
     paths:
-    # When editing also change variables
-    - specification/Lastenheft/Lastenheft.pdf
-    
+      # When editing also change variables
+      - specification/Lastenheft/Lastenheft.pdf
+
 build-pflichtenheft-pdf:
-    stage: build
-    script:
+  stage: build
+  script:
     # Prevent interactive installations, i.e., force all apt-get installs into headless mode
     - export DEBIAN_FRONTEND=noninteractive
     - apt-get update -y
@@ -66,42 +81,42 @@ build-pflichtenheft-pdf:
     # generate Pflichtenheft pdf
     - cd specification/Pflichtenheft
     - make
-    artifacts:
-      paths:
+  artifacts:
+    paths:
       # When editing also change variables
       - specification/Pflichtenheft/Pflichtenheft.pdf
 
 deploy-artifacts-to-wiki:
   stage: deploy
   only:
-  - master
+    - master
   dependencies:
-  - build-mdj-pdfs
-  - build-lastenheft-pdf
-  - build-pflichtenheft-pdf
+    - build-mdj-pdfs
+    - build-lastenheft-pdf
+    - build-pflichtenheft-pdf
   script:
-  # Configure global vars + install jq for parsing curl json responses
-  - "NOW=$(date +\"%d_%m_%Y\")"
-  - export DEBIAN_FRONTEND=noninteractive
-  - apt-get update -y
-  - apt-get install -y jq
-  # Exit when any command fails
-  - set -e
-  # Prepare all files for uploading to wiki/uploads
-  - UPLOAD_FILE_ENDING=$(echo $NOW)_$(echo $CI_COMMIT_SHA)
-  - LASTENHEFT_UPLOAD_FILE=Lastenheft_$UPLOAD_FILE_ENDING.pdf
-  - PFLICHTENHEFT_UPLOAD_FILE=Pflichtenheft_$UPLOAD_FILE_ENDING.pdf
-  - MODEL_UPLOAD_FILE=UML_Model_$UPLOAD_FILE_ENDING.pdf
-  - USECASES_UPLOAD_FILE=Usecases_$UPLOAD_FILE_ENDING.pdf
-  - cp $LASTENHEFT_FILE $LASTENHEFT_UPLOAD_FILE
-  - cp $PFLICHTENHEFT_FILE $PFLICHTENHEFT_UPLOAD_FILE
-  - cp $UML_MODEL_FILE $MODEL_UPLOAD_FILE
-  - cp $USECASES_FILE $USECASES_UPLOAD_FILE
-  # Upload specification files + fetch uploads/... url from response
-  - "LASTENHEFT_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$LASTENHEFT_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
-  - "PFLICHTENHEFT_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$PFLICHTENHEFT_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
-  - "MODEL_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$MODEL_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
-  - "USECASES_UPLOAD_URL=$(curl --request POST --header  \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" --form \"file=@$USECASES_UPLOAD_FILE\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r \".link.url\")"
-  # Get contents of builds wiki page, append new table row and push to server
-  - "BUILDS_WIKI_CONTENT=$(curl --header \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/$BUILDS_WIKI_SLUG | jq -r \".content\")"
-  - "curl --request PUT --data \"content=$(sed -e 's/^\"//' -e 's/\"$//' <<<\"$BUILDS_WIKI_CONTENT\")\r\n| $(date +\"%d.%m.%Y\") | $CI_COMMIT_SHA | [Lastenheft.pdf]($LASTENHEFT_UPLOAD_URL) | [Pflichtenheft.pdf]($PFLICHTENHEFT_UPLOAD_URL) | [UML-Model.pdf]($MODEL_UPLOAD_URL) | [Usecases.pdf]($USECASES_UPLOAD_URL)|\" --header \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/$BUILDS_WIKI_SLUG"
+    # Configure global vars + install jq for parsing curl json responses
+    - 'NOW=$(date +"%d_%m_%Y")'
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update -y
+    - apt-get install -y jq
+    # Exit when any command fails
+    - set -e
+    # Prepare all files for uploading to wiki/uploads
+    - UPLOAD_FILE_ENDING=$(echo $NOW)_$(echo $CI_COMMIT_SHA)
+    - LASTENHEFT_UPLOAD_FILE=Lastenheft_$UPLOAD_FILE_ENDING.pdf
+    - PFLICHTENHEFT_UPLOAD_FILE=Pflichtenheft_$UPLOAD_FILE_ENDING.pdf
+    - MODEL_UPLOAD_FILE=UML_Model_$UPLOAD_FILE_ENDING.pdf
+    - USECASES_UPLOAD_FILE=Usecases_$UPLOAD_FILE_ENDING.pdf
+    - cp $LASTENHEFT_FILE $LASTENHEFT_UPLOAD_FILE
+    - cp $PFLICHTENHEFT_FILE $PFLICHTENHEFT_UPLOAD_FILE
+    - cp $UML_MODEL_FILE $MODEL_UPLOAD_FILE
+    - cp $USECASES_FILE $USECASES_UPLOAD_FILE
+    # Upload specification files + fetch uploads/... url from response
+    - 'LASTENHEFT_UPLOAD_URL=$(curl --request POST --header  "PRIVATE-TOKEN: $DEPLOY_TOKEN" --form "file=@$LASTENHEFT_UPLOAD_FILE" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r ".link.url")'
+    - 'PFLICHTENHEFT_UPLOAD_URL=$(curl --request POST --header  "PRIVATE-TOKEN: $DEPLOY_TOKEN" --form "file=@$PFLICHTENHEFT_UPLOAD_FILE" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r ".link.url")'
+    - 'MODEL_UPLOAD_URL=$(curl --request POST --header  "PRIVATE-TOKEN: $DEPLOY_TOKEN" --form "file=@$MODEL_UPLOAD_FILE" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r ".link.url")'
+    - 'USECASES_UPLOAD_URL=$(curl --request POST --header  "PRIVATE-TOKEN: $DEPLOY_TOKEN" --form "file=@$USECASES_UPLOAD_FILE" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/attachments | jq -r ".link.url")'
+    # Get contents of builds wiki page, append new table row and push to server
+    - 'BUILDS_WIKI_CONTENT=$(curl --header "PRIVATE-TOKEN: $DEPLOY_TOKEN" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/$BUILDS_WIKI_SLUG | jq -r ".content")'
+    - "curl --request PUT --data \"content=$(sed -e 's/^\"//' -e 's/\"$//' <<<\"$BUILDS_WIKI_CONTENT\")\r\n| $(date +\"%d.%m.%Y\") | $CI_COMMIT_SHA | [Lastenheft.pdf]($LASTENHEFT_UPLOAD_URL) | [Pflichtenheft.pdf]($PFLICHTENHEFT_UPLOAD_URL) | [UML-Model.pdf]($MODEL_UPLOAD_URL) | [Usecases.pdf]($USECASES_UPLOAD_URL)|\" --header \"PRIVATE-TOKEN: $DEPLOY_TOKEN\" $CI_API_V4_URL/projects/$CI_PROJECT_ID/wikis/$BUILDS_WIKI_SLUG"

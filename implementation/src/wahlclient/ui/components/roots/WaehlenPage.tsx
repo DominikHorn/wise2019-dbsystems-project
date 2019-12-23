@@ -1,6 +1,8 @@
 import { Button, Card, Col, message, Row } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
+import { ErstimmePage } from "../general/ErststimmePage";
+import { IStimmkreis } from "../../../../shared/sharedTypes";
 
 export interface IWaehlenPageProps {
   routeProps: RouteComponentProps<any>;

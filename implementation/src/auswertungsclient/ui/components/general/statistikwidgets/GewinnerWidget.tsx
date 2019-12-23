@@ -6,12 +6,12 @@ import {
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
 import { WahlSelector } from "../dataselectors/WahlSelector";
-import { IWahl } from "../../../../../shared/sharedTypes";
 import { GewinnerGeoChart } from "./GewinnerGeoChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
+import { Wahl } from "../../../../../shared/graphql.types";
 
 interface IState {
-  readonly selectedWahl?: IWahl;
+  readonly selectedWahl?: Wahl;
   readonly erststimmen: boolean;
 }
 
@@ -27,7 +27,7 @@ class GewinnerWidgetComponent extends React.PureComponent<IProps, IState> {
     };
   }
 
-  private onSelectWahl = (selectedWahl: IWahl) =>
+  private onSelectWahl = (selectedWahl: Wahl) =>
     this.props.setRoutableState
       ? this.props.setRoutableState({ selectedWahl })
       : this.setState({ selectedWahl });

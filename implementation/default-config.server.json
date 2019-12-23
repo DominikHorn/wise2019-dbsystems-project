@@ -17,5 +17,7 @@
     "password": "",
     "port": 5432
   },
-  "passwordSaltRounds": 10
+  "wahlleiterConfig": {
+    "password": "admin123"
+  }
 }

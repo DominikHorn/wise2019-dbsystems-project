@@ -1,5 +1,5 @@
 import * as React from "react";
-import { IWahl } from "../../../../../shared/sharedTypes";
+import { Wahl } from "../../../../../shared/graphql.types";
 import { compose } from "react-apollo";
 import {
   IGetAllWahlenQueryHocProps,
@@ -11,7 +11,7 @@ import { MandatListe } from "../MandatListe";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 
 interface IState {
-  readonly selectedWahl?: IWahl;
+  readonly selectedWahl?: Wahl;
 }
 
 export interface IMandatListeWidgetProps
@@ -24,7 +24,7 @@ class MandatListeWidgetComponent extends React.PureComponent<IProps, IState> {
     this.state = {};
   }
 
-  private onSelectWahl = (selectedWahl: IWahl) =>
+  private onSelectWahl = (selectedWahl: Wahl) =>
     this.props.setRoutableState
       ? this.props.setRoutableState({ selectedWahl })
       : this.setState({ selectedWahl });

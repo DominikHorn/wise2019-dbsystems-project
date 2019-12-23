@@ -1,7 +1,10 @@
 import gql from "graphql-tag";
 import { DataValue } from "react-apollo";
-import { IStimmkreisWinner } from "../../shared/sharedTypes";
-import { createTypedGraphqlHoc, IGraphqlType } from "../typedGraphql";
+import {
+  QueryToGetStimmkreisWinnerArgs,
+  StimmkreisWinner
+} from "../../shared/graphql.types";
+import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const getStimmkreisWinnerQuery = gql`
   query getStimmkreisWinnerQuery($wahlid: Int!, $erststimmen: Boolean!) {
@@ -23,24 +26,18 @@ const getStimmkreisWinnerQuery = gql`
 `;
 
 interface IGetStimmkreisWinnerQueryResponse {
-  readonly stimmkreisWinner: IStimmkreisWinner[];
+  readonly stimmkreisWinner: StimmkreisWinner[];
 }
-
-interface IGetStimmkreisWinnerQueryVariables {
-  readonly wahlid: number;
-  readonly erststimmen: boolean;
-}
-
 export interface IGetStimmkreisWinnerHocProps {
   readonly stimmkreisWinnerData: DataValue<
     IGetStimmkreisWinnerQueryResponse,
-    IGetStimmkreisWinnerQueryVariables
+    QueryToGetStimmkreisWinnerArgs
   >;
 }
 
 const getStimmkreisWinnerTypedHoc = createTypedGraphqlHoc<
   IGetStimmkreisWinnerQueryResponse,
-  IGetStimmkreisWinnerQueryVariables
+  QueryToGetStimmkreisWinnerArgs
 >(getStimmkreisWinnerQuery);
 
 export const withStimmkreisWinnerQuery = <TProps = {}>(
