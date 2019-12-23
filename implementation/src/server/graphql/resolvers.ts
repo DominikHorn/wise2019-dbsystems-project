@@ -23,6 +23,7 @@ import {
   withVerifyIsNotBlocked,
   generateWahlhelferToken
 } from "../adapters/postgres/adminPSQL";
+import { getAllDirektKandidaten } from "../adapters/postgres/kandidatPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -69,7 +70,9 @@ export const resolvers: Resolver = {
           args.vglwahlid,
           args.stimmkreisid
         )
-      )
+      ),
+    getAllDirektKandidaten: (_, args) =>
+      getAllDirektKandidaten(args.wahlid, args.stimmkreisid)
   },
   Mutation: {
     importCSVData: (_, args) =>

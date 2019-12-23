@@ -39,6 +39,7 @@
     "@types/bcrypt": "^3.0.0",
     "@types/echarts": "^4.4.1",
     "@types/graphql-iso-date": "^3.3.3",
+    "@types/lodash": "^4.14.149",
     "@types/memoize-one": "^4.1.1",
     "@types/node": "^11.12.2",
     "@types/papaparse": "^5.0.1",
@@ -101,6 +102,7 @@
     "react": "^16.8.6",
     "react-apollo": "2.5.3",
     "react-dom": "^16.8.6",
+    "react-flexbox-grid": "^2.1.2",
     "react-grid-layout": "^0.17.1",
     "react-router-dom": "^5.0.0",
     "utf-8-validate": "^5.0.2"
