@@ -69,7 +69,7 @@ const AppClass = () => (
         render={props => (
           <PageComponent
             title={"Auswertungssystem"}
-            subtitle={"Bayrische Landtagswahlen"}
+            subtitle={"Bayerische Landtagswahlen"}
             client={client}
             routeProps={props}
           />
