@@ -6,21 +6,23 @@ import {
   IGetAllDirektKandidatenQueryHocProps,
   withDirektKandidatenQuery
 } from "../../../../client-graphql/wahlen/getAllKandidatenQuery";
+import { Kandidat, Stimmkreis, Wahl } from "../../../../shared/graphql.types";
 import "./ErststimmePage.css";
 import GridGenerator from "./GridGenerator";
-import { Kandidat, Wahl, Stimmkreis } from "../../../../shared/graphql.types";
 
 interface IState {
   readonly selectedCandidat?: Kandidat;
   readonly clickedCommit?: boolean;
-  checkboxes: Array<boolean>;
-  stimmeUngueltig: boolean;
+  readonly checkboxes: Array<boolean>;
+  readonly stimmeUngueltig: boolean;
 }
 
 interface ErststimmePageProps {
-  routeProps: RouteComponentProps<any>;
+  readonly routeProps: RouteComponentProps<any>;
   readonly wahl: Wahl;
   readonly stimmkreis: Stimmkreis;
+  readonly onChangeErststimmeAbgg: any;
+  readonly onChangeDirektkandidat: any;
 }
 
 export interface IProps
@@ -81,8 +83,29 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
     </Card>
   );
 
+  private commitValidVote() {
+    //debugger;
+    console.log("committing valid vote");
+    //commiting a valid vote hands over the selected candidate to the WaehlenPage
+    let i: number;
+    for (i = 0; i < this.state.checkboxes.length; i++) {
+      if (this.state.checkboxes[i]) {
+        this.props.onChangeErststimmeAbgg(this.state.checkboxes[i]);
+        this.props.onChangeDirektkandidat(this.candidatesAr[i]);
+        break;
+      }
+    }
+  }
+
+  //to commit an unvalid vote means that a vote was committed but the candidate is undifined
+  private commitUnvalidVote() {
+    this.props.onChangeErststimmeAbgg(this.state.stimmeUngueltig);
+    //console.log("committing unvalid vote");
+  }
+
   render() {
-    console.log(this.props.direktKandidatenData.direktKandidaten);
+    //console.log(this.props.direktKandidatenData.direktKandidaten);
+    //console.log("Hallo!");
     if (this.state.stimmeUngueltig) {
       return (
         <Card title={"Erststimme"} style={{ minHeight: "100%" }}>
@@ -92,7 +115,7 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
               <Checkbox
                 onClick={() =>
                   this.setState((state, props) => ({
-                    stimmeUngueltig: !state.stimmeUngueltig
+                    stimmeUngueltig: !this.state.stimmeUngueltig
                   }))
                 }
               ></Checkbox>{" "}
@@ -102,7 +125,13 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
 
           <Row type={"flex"} justify={"end"}>
             <Col>
-              <Button>Weiter</Button>
+              <Button
+                onClick={() => {
+                  this.commitUnvalidVote();
+                }}
+              >
+                Weiter
+              </Button>
             </Col>
           </Row>
         </Card>
@@ -129,7 +158,13 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
 
           <Row type={"flex"} justify={"end"}>
             <Col>
-              <Button>Weiter</Button>
+              <Button
+                onClick={() => {
+                  this.commitValidVote();
+                }}
+              >
+                Weiter
+              </Button>
             </Col>
           </Row>
         </Card>
@@ -138,14 +173,14 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
   }
 }
 
-const ErstimmePageWithQueries = compose(
+const ErststimmePageWithQueries = compose(
   withDirektKandidatenQuery<ErststimmePageProps>(
     props => props.wahl.id,
     props => props.stimmkreis.id
   )
 )(ErststimmePageComponent);
 
-export const ErstimmePage = ErstimmePageWithQueries as React.ComponentType<
+export const ErststimmePage = ErststimmePageWithQueries as React.ComponentType<
   ErststimmePageProps
 >;
 

@@ -8,7 +8,6 @@ import {
 import { WaehlenPage } from "./components/roots/WaehlenPage";
 import { WahlhelferPage } from "./components/roots/WahlhelferPage";
 import { WahlleiterPage } from "./components/roots/WahlleiterPage";
-import { ErstimmePage } from "./components/general/ErststimmePage";
 
 export interface IRouteProps {
   readonly path: string;
@@ -87,34 +86,6 @@ export const TOPLEVEL_ROUTES: IMenuRoute[] = [
     path: `${RouteBasepaths.wahlleiter}/`,
     render: (props: RouteComponentProps<any>) => (
       <WahlleiterPage routeProps={props} />
-    )
-  },
-  {
-    menuKey: "erstimme",
-    menuTitle: "Erststimme",
-    menuIconIdentifier: "user",
-    path: `${RouteWaehlenPaths.erststimme}/`,
-    render: (props: RouteComponentProps<any>) => (
-      <ErstimmePage
-        //routeProps={props}
-        wahl={{ id: 2, wahldatum: new Date() }}
-        stimmkreis={{ id: 101, name: "München-Mitte" }}
-      />
-    )
-  }
-];
-
-export const WAEHLEN_SUBLEVEL_ROUTES: IWaehlenSubRoute[] = [
-  {
-    title: "Erststimme",
-    key: "erstimme",
-    path: `${RouteWaehlenPaths.erststimme}/`,
-    render: (props: RouteComponentProps<any>) => (
-      <ErstimmePage
-        //routeProps={props}
-        wahl={{ id: 2, wahldatum: new Date() }}
-        stimmkreis={{ id: 101, name: "München-Mitte" }}
-      />
     )
   }
 ];
