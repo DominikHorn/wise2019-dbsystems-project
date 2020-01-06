@@ -1,95 +1,230 @@
 import { Button, Card, Checkbox, Col, Row } from "antd";
 import * as React from "react";
 import { compose } from "react-apollo";
-import { RouteComponentProps } from "react-router";
 import {
   IGetAllDirektKandidatenQueryHocProps,
   withDirektKandidatenQuery
 } from "../../../../client-graphql/wahlen/getAllKandidatenQuery";
 import { EParteiName } from "../../../../shared/enums";
-import { IKandidat, IStimmkreis, IWahl } from "../../../../shared/sharedTypes";
-import "./ErststimmePage.css";
-import GridGenerator from "./GridGenerator";
+import {
+  IKandidat,
+  IListenKandidat,
+  IPartei,
+  IStimmkreis,
+  IWahl
+} from "../../../../shared/sharedTypes";
 
 interface IState {
   readonly selectedCandidat?: IKandidat;
   readonly clickedCommit?: boolean;
   checkboxes: Array<boolean>;
   stimmeUngueltig: boolean;
+  checked: {
+    kandidat: number;
+    partei: number;
+  };
 }
 
 interface ZweitstimmePageProps {
-  //routeProps: RouteComponentProps<any>;
   readonly wahl: IWahl;
   readonly stimmkreis: IStimmkreis;
   onChangeErststimmeAbgg: any;
   onChangeDirektkandidat: any;
+  //readonly lists: IListenKandidat[];
 }
 
 export interface IProps
   extends ZweitstimmePageProps,
     IGetAllDirektKandidatenQueryHocProps {}
 
+function mapData(list: IListenKandidat[]) {
+  return list.reduce(
+    (data: { [parteiID: number]: IListenKandidat[] }, listenKandidat) => ({
+      ...data,
+      [listenKandidat.kandidat.partei.id]: (
+        data[listenKandidat.kandidat.partei.id] || []
+      ).concat(listenKandidat)
+    }),
+    {}
+  );
+}
+
 class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
+
     //debugger;
     this.state = {
       //this.props.candidatesAr.length
       checkboxes: new Array(this.candidatesAr.length).fill(false, 0),
-      stimmeUngueltig: false
+      stimmeUngueltig: false,
+      checked: {
+        kandidat: null,
+        partei: null
+      }
     };
   }
 
-  candidatesAr: IKandidat[] = [
-    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: EParteiName.CSU } },
-    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: EParteiName.CSU } }
+  candidatesAr: IListenKandidat[] = [
+    {
+      listenplatz: 1,
+      kandidat: {
+        id: 1,
+        name: "Kandidat Name1",
+        partei: { id: 1, name: EParteiName.CSU }
+      }
+    },
+    {
+      listenplatz: 2,
+      kandidat: {
+        id: 2,
+        name: "Kandidat Name2",
+        partei: { id: 1, name: EParteiName.CSU }
+      }
+    },
+    {
+      listenplatz: 3,
+      kandidat: {
+        id: 3,
+        name: "Kandidat Name3",
+        partei: { id: 1, name: EParteiName.CSU }
+      }
+    },
+    {
+      listenplatz: 4,
+      kandidat: {
+        id: 4,
+        name: "Kandidat Name4",
+        partei: { id: 1, name: EParteiName.CSU }
+      }
+    },
+    {
+      listenplatz: 1,
+      kandidat: {
+        id: 1,
+        name: "Kandidat Name1",
+        partei: { id: 2, name: EParteiName.SPD }
+      }
+    },
+    {
+      listenplatz: 2,
+      kandidat: {
+        id: 2,
+        name: "Kandidat Name2",
+        partei: { id: 2, name: EParteiName.SPD }
+      }
+    },
+    {
+      listenplatz: 3,
+      kandidat: {
+        id: 3,
+        name: "Kandidat Name3",
+        partei: { id: 2, name: EParteiName.SPD }
+      }
+    },
+    {
+      listenplatz: 4,
+      kandidat: {
+        id: 4,
+        name: "Kandidat Name4",
+        partei: { id: 2, name: EParteiName.SPD }
+      }
+    },
+    {
+      listenplatz: 5,
+      kandidat: {
+        id: 5,
+        name: "Kandidat Name5",
+        partei: { id: 2, name: EParteiName.SPD }
+      }
+    },
+    {
+      listenplatz: 6,
+      kandidat: {
+        id: 6,
+        name: "Kandidat Name6",
+        partei: { id: 2, name: EParteiName.SPD }
+      }
+    },
+    {
+      listenplatz: 1,
+      kandidat: {
+        id: 1,
+        name: "Kandidat Name1",
+        partei: { id: 4, name: EParteiName.GRUENE }
+      }
+    },
+    {
+      listenplatz: 2,
+      kandidat: {
+        id: 2,
+        name: "Kandidat Name2",
+        partei: { id: 4, name: EParteiName.GRUENE }
+      }
+    },
+    {
+      listenplatz: 3,
+      kandidat: {
+        id: 3,
+        name: "Kandidat Name3",
+        partei: { id: 4, name: EParteiName.GRUENE }
+      }
+    },
+    {
+      listenplatz: 4,
+      kandidat: {
+        id: 4,
+        name: "Kandidat Name4",
+        partei: { id: 4, name: EParteiName.GRUENE }
+      }
+    }
   ];
 
-  onChange(e: React.ChangeEvent<HTMLInputElement>, changedIndex: number) {
-    // it is a good habit to extract things from event variable
-    const { checked } = e.target;
+  data: { [parteiid: number]: IListenKandidat[] } = mapData(this.candidatesAr);
 
-    this.setState(state => ({
-      // this lets you unselect all.
-      // but selected can be only one at a time
-      checkboxes: state.checkboxes.map((_, i) =>
-        i === changedIndex ? checked : false
-      )
-    }));
+  private renderParteiListenCard(
+    partei: IPartei,
+    kandidaten: IListenKandidat[]
+  ) {
+    //debugger;
+    console.log("Rendering all cards");
+    return (
+      <Card style={{ width: "250px", borderColor: "#365592" }}>
+        <Checkbox
+          checked={this.state.checked.partei === partei.id}
+          onClick={() =>
+            this.setState({
+              checked: { kandidat: null, partei: partei.id }
+            })
+          }
+          style={{ fontWeight: "bold", fontSize: "large" }}
+        >
+          {partei.name}
+        </Checkbox>
+        {kandidaten.map(kandidat => (
+          <div>
+            <Checkbox
+              checked={this.state.checked.kandidat == kandidat.kandidat.id}
+              onClick={() =>
+                this.setState({
+                  checked: { kandidat: kandidat.kandidat.id, partei: null }
+                })
+              }
+            >
+              {kandidat.listenplatz + ".    " + kandidat.kandidat.name}
+            </Checkbox>
+          </div>
+        ))}
+      </Card>
+    );
   }
 
-  private renderCard = (item: boolean, i: number) => (
-    <Card className={"candidat-card"}>
-      <p>
-        <input
-          key={i}
-          type="checkbox"
-          checked={item}
-          onChange={
-            e =>
-              this.onChange(e, i) /* notice passing an index. we will use it */
-          }
-        />
-        {this.candidatesAr[i].partei.name}
-      </p>
-      <p>{this.candidatesAr[i].name}</p>
-    </Card>
-  );
-
   render() {
-    console.log(this.props.direktKandidatenData.direktKandidaten);
+    console.log("Data: " + this.data);
     if (this.state.stimmeUngueltig) {
       return (
         <Card title={"Zweitstimme"} style={{ minHeight: "100%" }}>
-          <p>Stimme is auf ungültig gesetzt worden</p>
+          <p>Stimme ist auf ungültig gesetzt worden</p>
           <Row type={"flex"} justify={"end"}>
             <Col>
               <Checkbox
@@ -111,12 +246,8 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
         </Card>
       );
     } else {
-      const numOfCols = 4;
       return (
         <Card title={"Zweitstimme"} style={{ minHeight: "100%" }}>
-          <GridGenerator cols={numOfCols}>
-            {this.state.checkboxes.map((item, i) => this.renderCard(item, i))}
-          </GridGenerator>
           <Row type={"flex"} justify={"end"}>
             <Col>
               <Checkbox
@@ -129,10 +260,26 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
               Stimme ungültig machen
             </Col>
           </Row>
-
           <Row type={"flex"} justify={"end"}>
             <Col>
               <Button>Weiter</Button>
+            </Col>
+          </Row>
+          {/* <GridGenerator cols={4}>
+            {Object.keys(this.data).map(parteiid => {
+              //just hand over the party of the first candidate as they are already sorted according to their parties
+              this.renderParteiListenCards(
+                this.data[+parteiid][0].kandidat.partei,
+                this.data[+parteiid]
+              );
+            })}
+          </GridGenerator> */}
+          <Row type={"flex"}>
+            <Col>
+              {this.renderParteiListenCard(
+                this.data[1][0].kandidat.partei,
+                this.data[1]
+              )}
             </Col>
           </Row>
         </Card>

@@ -6,6 +6,7 @@ export interface GraphQLFileUpload {
   createReadStream: () => ReadStream;
 }
 
+// TODO: obsolete?
 export interface IAnteil extends IDatabaseAnteil {}
 
 export interface IQ7 {
