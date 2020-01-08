@@ -17,11 +17,14 @@ import {
 interface IState {
   readonly selectedCandidat?: IKandidat;
   readonly clickedCommit?: boolean;
-  checkboxes: Array<boolean>;
   stimmeUngueltig: boolean;
   checked: {
     kandidat: number;
     partei: number;
+  };
+  chosen: {
+    kandidat: IKandidat;
+    partei: IPartei;
   };
 }
 
@@ -29,7 +32,7 @@ interface ZweitstimmePageProps {
   readonly wahl: IWahl;
   readonly stimmkreis: IStimmkreis;
   onChangeErststimmeAbgg: any;
-  onChangeDirektkandidat: any;
+  onChangeZweitStimme: any;
   //readonly lists: IListenKandidat[];
 }
 
@@ -55,10 +58,12 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
 
     //debugger;
     this.state = {
-      //this.props.candidatesAr.length
-      checkboxes: new Array(this.candidatesAr.length).fill(false, 0),
       stimmeUngueltig: false,
       checked: {
+        kandidat: null,
+        partei: null
+      },
+      chosen: {
         kandidat: null,
         partei: null
       }
@@ -187,36 +192,61 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
     kandidaten: IListenKandidat[]
   ) {
     //debugger;
-    console.log("Rendering all cards");
+    //console.log("Rendering all cards");
     return (
-      <Card style={{ width: "250px", borderColor: "#365592" }}>
-        <Checkbox
-          checked={this.state.checked.partei === partei.id}
-          onClick={() =>
-            this.setState({
-              checked: { kandidat: null, partei: partei.id }
-            })
-          }
-          style={{ fontWeight: "bold", fontSize: "large" }}
-        >
-          {partei.name}
-        </Checkbox>
-        {kandidaten.map(kandidat => (
-          <div>
-            <Checkbox
-              checked={this.state.checked.kandidat == kandidat.kandidat.id}
-              onClick={() =>
-                this.setState({
-                  checked: { kandidat: kandidat.kandidat.id, partei: null }
-                })
-              }
-            >
-              {kandidat.listenplatz + ".    " + kandidat.kandidat.name}
-            </Checkbox>
-          </div>
-        ))}
-      </Card>
+      <Col style={{ padding: "5px" }}>
+        <Card style={{ width: "250px", borderColor: "#365592" }}>
+          <Checkbox
+            checked={this.state.checked.partei === partei.id}
+            onClick={() =>
+              this.setState({
+                checked: { kandidat: null, partei: partei.id },
+                chosen: {
+                  kandidat: null,
+                  partei: partei
+                }
+              })
+            }
+            style={{ fontWeight: "bold", fontSize: "large" }}
+          >
+            {partei.name}
+          </Checkbox>
+          {kandidaten.map(kandidat => (
+            <div>
+              <Checkbox
+                checked={this.state.checked.kandidat == kandidat.kandidat.id}
+                onClick={() =>
+                  this.setState({
+                    checked: {
+                      kandidat: kandidat.kandidat.id,
+                      partei: null
+                    },
+                    chosen: {
+                      kandidat: kandidat.kandidat,
+                      partei: null
+                    }
+                  })
+                }
+              >
+                {kandidat.listenplatz + ".    " + kandidat.kandidat.name}
+              </Checkbox>
+            </div>
+          ))}
+        </Card>
+      </Col>
     );
+  }
+
+  //to commit an unvalid vote means that a vote was committed but the candidate is undefined
+  private commitUnvalidVote() {
+    this.props.onChangeErststimmeAbgg(this.state.stimmeUngueltig);
+    //console.log("committing unvalid vote");
+  }
+
+  private commitValidVote() {
+    //commiting a valid vote hands over the selected candidate to the WaehlenPage
+    this.props.onChangeErststimmeAbgg(true);
+    this.props.onChangeZweitStimme(this.state.chosen);
   }
 
   render() {
@@ -229,7 +259,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
             <Col>
               <Checkbox
                 onClick={() =>
-                  this.setState((state, props) => ({
+                  this.setState(state => ({
                     stimmeUngueltig: !state.stimmeUngueltig
                   }))
                 }
@@ -240,17 +270,32 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
 
           <Row type={"flex"} justify={"end"}>
             <Col>
-              <Button>Weiter</Button>
+              <Button
+                onClick={() => {
+                  this.commitUnvalidVote();
+                }}
+              >
+                Weiter
+              </Button>
             </Col>
           </Row>
         </Card>
       );
     } else {
+      let parteiid2: number;
+      console.log("Dieses Objekt wird übergeben: ");
+      console.log(
+        Object.keys(this.data).map(
+          parteiid => this.data[+parteiid][0].kandidat.partei
+        )
+      );
+      console.log("ParteiID: " + parteiid2);
       return (
         <Card title={"Zweitstimme"} style={{ minHeight: "100%" }}>
           <Row type={"flex"} justify={"end"}>
             <Col>
               <Checkbox
+                checked={this.state.stimmeUngueltig}
                 onClick={() =>
                   this.setState((state, props) => ({
                     stimmeUngueltig: !state.stimmeUngueltig
@@ -262,25 +307,23 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
           </Row>
           <Row type={"flex"} justify={"end"}>
             <Col>
-              <Button>Weiter</Button>
+              <Button
+                onClick={() => {
+                  this.commitValidVote();
+                }}
+              >
+                Weiter
+              </Button>
             </Col>
           </Row>
-          {/* <GridGenerator cols={4}>
-            {Object.keys(this.data).map(parteiid => {
+          <Row type={"flex"}>
+            {Object.keys(this.data).map(parteiid =>
               //just hand over the party of the first candidate as they are already sorted according to their parties
-              this.renderParteiListenCards(
+              this.renderParteiListenCard(
                 this.data[+parteiid][0].kandidat.partei,
                 this.data[+parteiid]
-              );
-            })}
-          </GridGenerator> */}
-          <Row type={"flex"}>
-            <Col>
-              {this.renderParteiListenCard(
-                this.data[1][0].kandidat.partei,
-                this.data[1]
-              )}
-            </Col>
+              )
+            )}
           </Row>
         </Card>
       );

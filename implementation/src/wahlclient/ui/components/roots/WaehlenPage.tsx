@@ -3,7 +3,7 @@ import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import { ErststimmePage } from "../general/ErststimmePage";
 import { ZweitstimmePage } from "../general/ZweitstimmePage";
-import { Kandidat } from "../../../../shared/graphql.types";
+import { Kandidat, Partei } from "../../../../shared/graphql.types";
 
 export interface IWaehlenPageProps {
   routeProps: RouteComponentProps<any>;
@@ -18,7 +18,10 @@ interface IState {
   zweitstimme_abgg: boolean;
   //the candidates that where selected by the user (stay undefined if the vote is set unvalid)
   selectedDirektkandidat?: Kandidat;
-  selectedListenKandidat?: Kandidat;
+  selectedZweitstimme?: {
+    kandidat: Kandidat;
+    partei: Partei;
+  };
 }
 
 const LOREM_IPSUM = `
@@ -90,11 +93,9 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
       routeProps={this.props.routeProps}
       wahl={{ id: 2, wahldatum: new Date() }}
       stimmkreis={{ id: 101, name: "München-Mitte" }}
-      //so that the ErststimmePage can hand up the information that a vote was committed by the user
       onChangeErststimmeAbgg={(newValue: boolean) =>
         this.setState({ erststimme_abgg: newValue })
       }
-      //so that the ErststimmePage can hand up the selected candidate
       onChangeDirektkandidat={(candidate: Kandidat) =>
         this.setState({ selectedDirektkandidat: candidate })
       }
@@ -105,13 +106,11 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
     <ZweitstimmePage
       wahl={{ id: 2, wahldatum: new Date() }}
       stimmkreis={{ id: 101, name: "München-Mitte" }}
-      //so that the ErststimmePage can hand up the information that a vote was committed by the user
       onChangeErststimmeAbgg={(newValue: boolean) =>
         this.setState({ zweitstimme_abgg: newValue })
       }
-      //so that the ZweitstimmePage can hand up the selected candidate
-      onChangeDirektkandidat={(candidate: Kandidat) =>
-        this.setState({ selectedListenKandidat: candidate })
+      onChangeZweitStimme={(chosen: { kandidat: Kandidat; partei: Partei }) =>
+        this.setState({ selectedZweitstimme: chosen })
       }
     />
   );
@@ -122,9 +121,13 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
       return this.renderRechtsbelehrung();
     } else if (!this.state.erststimme_abgg) {
       return this.renderErststimme();
-    } else {
+    } else if (!this.state.zweitstimme_abgg) {
       console.log(this.state.selectedDirektkandidat);
       return this.renderZweitstimme();
+    } else {
+      console.log("Stimmen abgeben:");
+      console.log(this.state.selectedDirektkandidat);
+      console.log(this.state.selectedZweitstimme);
     }
   }
 }
