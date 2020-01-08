@@ -84,22 +84,27 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
   );
 
   private commitValidVote() {
-    //debugger;
-    console.log("committing valid vote");
     //commiting a valid vote hands over the selected candidate to the WaehlenPage
     let i: number;
     for (i = 0; i < this.state.checkboxes.length; i++) {
       if (this.state.checkboxes[i]) {
         this.props.onChangeErststimmeAbgg(this.state.checkboxes[i]);
-        this.props.onChangeDirektkandidat(this.candidatesAr[i]);
+        this.props.onChangeDirektkandidat({
+          kandidat: this.candidatesAr[i],
+          ungueltig: false
+        });
         break;
       }
     }
   }
 
-  //to commit an unvalid vote means that a vote was committed but the candidate is undifined
-  private commitUnvalidVote() {
+  //to commit an unvalid vote means that a vote was committed but the candidate is undefined
+  private commitInvalidVote() {
     this.props.onChangeErststimmeAbgg(this.state.stimmeUngueltig);
+    this.props.onChangeDirektkandidat({
+      kandidat: null,
+      ungueltig: true
+    });
     //console.log("committing unvalid vote");
   }
 
@@ -126,8 +131,9 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
           <Row type={"flex"} justify={"end"}>
             <Col>
               <Button
+                type={"primary"}
                 onClick={() => {
-                  this.commitUnvalidVote();
+                  this.commitInvalidVote();
                 }}
               >
                 Weiter
@@ -159,6 +165,7 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
           <Row type={"flex"} justify={"end"}>
             <Col>
               <Button
+                type={"primary"}
                 onClick={() => {
                   this.commitValidVote();
                 }}

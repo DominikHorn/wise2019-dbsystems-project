@@ -3,7 +3,8 @@ import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import { ErststimmePage } from "../general/ErststimmePage";
 import { ZweitstimmePage } from "../general/ZweitstimmePage";
-import { Kandidat, Partei } from "../../../../shared/graphql.types";
+import { Kandidat, Partei, Stimmkreis } from "../../../../shared/graphql.types";
+import { StimmAbgabePage } from "../general/StimmAngabePage";
 
 export interface IWaehlenPageProps {
   routeProps: RouteComponentProps<any>;
@@ -17,15 +18,17 @@ interface IState {
   erststimme_abgg: boolean;
   zweitstimme_abgg: boolean;
   //the candidates that where selected by the user (stay undefined if the vote is set unvalid)
-  selectedErststimme?: {
+  selectedErststimme: {
     kandidat: Kandidat;
     ungueltig: boolean;
   };
-  selectedZweitstimme?: {
+  selectedZweitstimme: {
     kandidat: Kandidat;
     partei: Partei;
     ungueltig: boolean;
   };
+  commitVote: boolean;
+  committed: boolean;
 }
 
 const LOREM_IPSUM = `
@@ -51,7 +54,18 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
     this.state = {
       rechtsbelehrung: false,
       erststimme_abgg: false,
-      zweitstimme_abgg: false
+      zweitstimme_abgg: false,
+      commitVote: false,
+      committed: false,
+      selectedErststimme: {
+        kandidat: null,
+        ungueltig: false
+      },
+      selectedZweitstimme: {
+        kandidat: null,
+        partei: null,
+        ungueltig: false
+      }
     };
   }
   private renderRechtsbelehrung = () => (
@@ -131,10 +145,31 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
     } else if (!this.state.zweitstimme_abgg) {
       console.log(this.state.selectedErststimme);
       return this.renderZweitstimme();
-    } else {
+    } else if (!this.state.committed) {
       console.log("Stimmen abgeben:");
       console.log(this.state.selectedErststimme);
       console.log(this.state.selectedZweitstimme);
+      return (
+        <StimmAbgabePage
+          erststimme={this.state.selectedErststimme}
+          zweitstimme={this.state.selectedZweitstimme}
+          onClickCommit={(commit: boolean) =>
+            this.setState({ commitVote: commit })
+          }
+          committedVote={false}
+        />
+      );
+    } else {
+      return (
+        <StimmAbgabePage
+          erststimme={this.state.selectedErststimme}
+          zweitstimme={this.state.selectedZweitstimme}
+          onClickCommit={(commit: boolean) =>
+            this.setState({ commitVote: commit })
+          }
+          committedVote={true}
+        />
+      );
     }
   }
 }

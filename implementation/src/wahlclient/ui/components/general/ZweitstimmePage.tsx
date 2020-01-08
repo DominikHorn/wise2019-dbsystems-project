@@ -284,6 +284,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
           <Row type={"flex"} justify={"end"}>
             <Col>
               <Button
+                type={"primary"}
                 onClick={() => {
                   this.commitInvalidVote();
                 }}
@@ -313,6 +314,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
           <Row type={"flex"} justify={"end"}>
             <Col>
               <Button
+                type={"primary"}
                 onClick={() => {
                   this.commitValidVote();
                 }}
