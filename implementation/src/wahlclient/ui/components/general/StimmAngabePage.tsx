@@ -15,6 +15,7 @@ export interface IProps {
     ungueltig: boolean;
   };
   onClickCommit: any;
+  onClickBack: any;
   committedVote: boolean;
 }
 
@@ -83,6 +84,7 @@ export class StimmAbgabePage extends React.PureComponent<IProps, IState> {
         <Row>{this.renderErststimme()}</Row>
         <Row>{this.renderZweitstimme()}</Row>
         <Row type={"flex"} justify={"end"}>
+          <Button onClick={() => this.props.onClickBack()}>Zurück</Button>
           <Button type={"primary"} onClick={this.props.onClickCommit(true)}>
             Stimme abgeben
           </Button>

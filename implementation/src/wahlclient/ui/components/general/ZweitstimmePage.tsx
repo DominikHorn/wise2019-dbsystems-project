@@ -1,4 +1,4 @@
-import { Button, Card, Checkbox, Col, Row } from "antd";
+import { Button, Card, Checkbox, Col, Row, message } from "antd";
 import * as React from "react";
 import { compose } from "react-apollo";
 import {
@@ -34,7 +34,7 @@ interface ZweitstimmePageProps {
   readonly stimmkreis: IStimmkreis;
   onChangeZweitstimmeAbgg: any;
   onChangeZweitStimme: any;
-  //readonly lists: IListenKandidat[];
+  onChangeBack: any;
 }
 
 export interface IProps
@@ -241,6 +241,17 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
     );
   }
 
+  private onClickBack() {
+    this.props.onChangeZweitstimmeAbgg(false);
+    this.props.onChangeZweitStimme({
+      kandidat: null,
+      partei: null,
+      ungueltig: false
+    });
+    //true because we want to go back -> logik in waehlenPage
+    this.props.onChangeBack(true);
+  }
+
   //to commit an unvalid vote means that a vote was committed but the candidate is undefined
   private commitInvalidVote() {
     this.props.onChangeZweitstimmeAbgg(this.state.stimmeUngueltig);
@@ -252,13 +263,25 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       partei: null,
       ungueltig: true
     });
-    console.log("committing invalid vote");
+    //console.log("Stimme ungültig: " + this.state.stimmeUngueltig);
+    //console.log("committing invalid vote");
   }
 
   private commitValidVote() {
-    //commiting a valid vote hands over the selected candidate to the WaehlenPage
-    this.props.onChangeZweitstimmeAbgg(true);
-    this.props.onChangeZweitStimme(this.state.chosen);
+    //if the voter did not choose any candidate/ party yet, they are not allowed to commit the vote
+    if (
+      !(
+        this.state.chosen.kandidat === null && this.state.chosen.partei === null
+      )
+    ) {
+      //commiting a valid vote hands over the selected candidate to the WaehlenPage
+      this.props.onChangeZweitstimmeAbgg(true);
+      this.props.onChangeZweitStimme(this.state.chosen);
+    } else {
+      message.error(
+        "Bitte wählen Sie einen Kandidaten oder eine Partei oder markieren Sie Ihre Stimme als ungültig"
+      );
+    }
   }
 
   render() {
@@ -282,6 +305,9 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
           </Row>
 
           <Row type={"flex"} justify={"end"}>
+            <Col>
+              <Button onClick={() => this.onClickBack()}>Zurück</Button>
+            </Col>
             <Col>
               <Button
                 type={"primary"}
@@ -312,6 +338,9 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
             </Col>
           </Row>
           <Row type={"flex"} justify={"end"}>
+            <Col>
+              <Button onClick={() => this.onClickBack()}>Zurück</Button>
+            </Col>
             <Col>
               <Button
                 type={"primary"}

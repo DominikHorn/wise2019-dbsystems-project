@@ -18,11 +18,11 @@ interface IState {
 }
 
 interface ErststimmePageProps {
-  readonly routeProps: RouteComponentProps<any>;
   readonly wahl: Wahl;
   readonly stimmkreis: Stimmkreis;
   readonly onChangeErststimmeAbgg: any;
   readonly onChangeDirektkandidat: any;
+  readonly onChangeBack: any;
 }
 
 export interface IProps
@@ -98,6 +98,13 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
     }
   }
 
+  private onClickBack() {
+    this.props.onChangeErststimmeAbgg(false);
+    this.props.onChangeDirektkandidat({ kandidat: null, ungueltig: false });
+    //true because we want to go back -> logik in waehlenPage
+    this.props.onChangeBack(true);
+  }
+
   //to commit an unvalid vote means that a vote was committed but the candidate is undefined
   private commitInvalidVote() {
     this.props.onChangeErststimmeAbgg(this.state.stimmeUngueltig);
@@ -130,6 +137,9 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
 
           <Row type={"flex"} justify={"end"}>
             <Col>
+              <Button onClick={() => this.onClickBack()}>Zurück</Button>
+            </Col>
+            <Col>
               <Button
                 type={"primary"}
                 onClick={() => {
@@ -161,7 +171,9 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
               Stimme ungültig machen
             </Col>
           </Row>
-
+          <Col>
+            <Button onClick={() => this.onClickBack()}>Zurück</Button>
+          </Col>
           <Row type={"flex"} justify={"end"}>
             <Col>
               <Button

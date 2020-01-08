@@ -118,6 +118,9 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
         kandidat: Kandidat;
         ungueltig: boolean;
       }) => this.setState({ selectedErststimme: chosen })}
+      onChangeBack={(back: boolean) =>
+        this.setState({ rechtsbelehrung: !back })
+      }
     />
   );
 
@@ -133,6 +136,9 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
         partei: Partei;
         ungueltig: boolean;
       }) => this.setState({ selectedZweitstimme: chosen })}
+      onChangeBack={(back: boolean) =>
+        this.setState({ erststimme_abgg: !back })
+      }
     />
   );
 
@@ -143,12 +149,14 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
     } else if (!this.state.erststimme_abgg) {
       return this.renderErststimme();
     } else if (!this.state.zweitstimme_abgg) {
-      console.log(this.state.selectedErststimme);
+      console.log("Zweitstimme abgegeben:" + this.state.zweitstimme_abgg);
+      //console.log(this.state.selectedErststimme);
       return this.renderZweitstimme();
     } else if (!this.state.committed) {
-      console.log("Stimmen abgeben:");
-      console.log(this.state.selectedErststimme);
-      console.log(this.state.selectedZweitstimme);
+      console.log("Ich bin hier angekommen!");
+      // console.log("Stimmen abgeben:");
+      // console.log(this.state.selectedErststimme);
+      // console.log(this.state.selectedZweitstimme);
       return (
         <StimmAbgabePage
           erststimme={this.state.selectedErststimme}
@@ -156,6 +164,7 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
           onClickCommit={(commit: boolean) =>
             this.setState({ commitVote: commit })
           }
+          onClickBack={() => this.setState({ zweitstimme_abgg: false })}
           committedVote={false}
         />
       );
@@ -167,6 +176,7 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
           onClickCommit={(commit: boolean) =>
             this.setState({ commitVote: commit })
           }
+          onClickBack={null}
           committedVote={true}
         />
       );
