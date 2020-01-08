@@ -17,10 +17,14 @@ interface IState {
   erststimme_abgg: boolean;
   zweitstimme_abgg: boolean;
   //the candidates that where selected by the user (stay undefined if the vote is set unvalid)
-  selectedDirektkandidat?: Kandidat;
+  selectedErststimme?: {
+    kandidat: Kandidat;
+    ungueltig: boolean;
+  };
   selectedZweitstimme?: {
     kandidat: Kandidat;
     partei: Partei;
+    ungueltig: boolean;
   };
 }
 
@@ -96,9 +100,10 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
       onChangeErststimmeAbgg={(newValue: boolean) =>
         this.setState({ erststimme_abgg: newValue })
       }
-      onChangeDirektkandidat={(candidate: Kandidat) =>
-        this.setState({ selectedDirektkandidat: candidate })
-      }
+      onChangeDirektkandidat={(chosen: {
+        kandidat: Kandidat;
+        ungueltig: boolean;
+      }) => this.setState({ selectedErststimme: chosen })}
     />
   );
 
@@ -106,12 +111,14 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
     <ZweitstimmePage
       wahl={{ id: 2, wahldatum: new Date() }}
       stimmkreis={{ id: 101, name: "München-Mitte" }}
-      onChangeErststimmeAbgg={(newValue: boolean) =>
+      onChangeZweitstimmeAbgg={(newValue: boolean) =>
         this.setState({ zweitstimme_abgg: newValue })
       }
-      onChangeZweitStimme={(chosen: { kandidat: Kandidat; partei: Partei }) =>
-        this.setState({ selectedZweitstimme: chosen })
-      }
+      onChangeZweitStimme={(chosen: {
+        kandidat: Kandidat;
+        partei: Partei;
+        ungueltig: boolean;
+      }) => this.setState({ selectedZweitstimme: chosen })}
     />
   );
 
@@ -122,11 +129,11 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
     } else if (!this.state.erststimme_abgg) {
       return this.renderErststimme();
     } else if (!this.state.zweitstimme_abgg) {
-      console.log(this.state.selectedDirektkandidat);
+      console.log(this.state.selectedErststimme);
       return this.renderZweitstimme();
     } else {
       console.log("Stimmen abgeben:");
-      console.log(this.state.selectedDirektkandidat);
+      console.log(this.state.selectedErststimme);
       console.log(this.state.selectedZweitstimme);
     }
   }

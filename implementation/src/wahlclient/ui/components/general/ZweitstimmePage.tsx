@@ -25,13 +25,14 @@ interface IState {
   chosen: {
     kandidat: IKandidat;
     partei: IPartei;
+    ungueltig: boolean;
   };
 }
 
 interface ZweitstimmePageProps {
   readonly wahl: IWahl;
   readonly stimmkreis: IStimmkreis;
-  onChangeErststimmeAbgg: any;
+  onChangeZweitstimmeAbgg: any;
   onChangeZweitStimme: any;
   //readonly lists: IListenKandidat[];
 }
@@ -65,7 +66,8 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       },
       chosen: {
         kandidat: null,
-        partei: null
+        partei: null,
+        ungueltig: false
       }
     };
   }
@@ -203,7 +205,8 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
                 checked: { kandidat: null, partei: partei.id },
                 chosen: {
                   kandidat: null,
-                  partei: partei
+                  partei: partei,
+                  ungueltig: false
                 }
               })
             }
@@ -223,7 +226,8 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
                     },
                     chosen: {
                       kandidat: kandidat.kandidat,
-                      partei: null
+                      partei: null,
+                      ungueltig: false
                     }
                   })
                 }
@@ -238,14 +242,22 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
   }
 
   //to commit an unvalid vote means that a vote was committed but the candidate is undefined
-  private commitUnvalidVote() {
-    this.props.onChangeErststimmeAbgg(this.state.stimmeUngueltig);
-    //console.log("committing unvalid vote");
+  private commitInvalidVote() {
+    this.props.onChangeZweitstimmeAbgg(this.state.stimmeUngueltig);
+    // this.setState({
+    //   chosen: { kandidat: null, partei: null, ungueltig: true }
+    // });
+    this.props.onChangeZweitStimme({
+      kandidat: null,
+      partei: null,
+      ungueltig: true
+    });
+    console.log("committing invalid vote");
   }
 
   private commitValidVote() {
     //commiting a valid vote hands over the selected candidate to the WaehlenPage
-    this.props.onChangeErststimmeAbgg(true);
+    this.props.onChangeZweitstimmeAbgg(true);
     this.props.onChangeZweitStimme(this.state.chosen);
   }
 
@@ -258,6 +270,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
           <Row type={"flex"} justify={"end"}>
             <Col>
               <Checkbox
+                checked={this.state.stimmeUngueltig}
                 onClick={() =>
                   this.setState(state => ({
                     stimmeUngueltig: !state.stimmeUngueltig
@@ -272,7 +285,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
             <Col>
               <Button
                 onClick={() => {
-                  this.commitUnvalidVote();
+                  this.commitInvalidVote();
                 }}
               >
                 Weiter
@@ -282,14 +295,6 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
         </Card>
       );
     } else {
-      let parteiid2: number;
-      console.log("Dieses Objekt wird übergeben: ");
-      console.log(
-        Object.keys(this.data).map(
-          parteiid => this.data[+parteiid][0].kandidat.partei
-        )
-      );
-      console.log("ParteiID: " + parteiid2);
       return (
         <Card title={"Zweitstimme"} style={{ minHeight: "100%" }}>
           <Row type={"flex"} justify={"end"}>
