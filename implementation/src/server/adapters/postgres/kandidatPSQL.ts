@@ -36,19 +36,21 @@ export async function getKandidatForName(
         .query<IDatabaseKandidat>(QUERY_STR, ARGS)
         .then(res => res && res[0]);
 
-  cachedKandidatForParteiIdAndName = (
-    parteiIdParam,
-    nameParam,
-    clientParam
-  ) => {
-    if (
-      parteiId === parteiIdParam &&
-      name === nameParam &&
-      client === clientParam
-    )
-      return dbRes;
-    return null;
-  };
+  if (dbRes) {
+    cachedKandidatForParteiIdAndName = (
+      parteiIdParam,
+      nameParam,
+      clientParam
+    ) => {
+      if (
+        parteiId === parteiIdParam &&
+        name === nameParam &&
+        client === clientParam
+      )
+        return dbRes;
+      return null;
+    };
+  }
   return dbRes;
 }
 

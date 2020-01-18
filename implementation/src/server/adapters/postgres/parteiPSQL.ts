@@ -27,10 +27,12 @@ export async function getParteiForId(
         .query<IDatabasePartei>(QUERY_STR, ARGS)
         .then(res => res && res[0]);
 
-  cachedParteiForId = (idParam, clientParam) => {
-    if (id === idParam && client === clientParam) return dbRes;
-    return null;
-  };
+  if (dbRes) {
+    cachedParteiForId = (idParam, clientParam) => {
+      if (id === idParam && client === clientParam) return dbRes;
+      return null;
+    };
+  }
   return dbRes;
 }
 

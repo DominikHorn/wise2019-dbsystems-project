@@ -40,10 +40,12 @@ export const getRegierungsbezirkForId = async (
         .query<IDatabaseRegierungsbezirk>(QUERY_STR, [id])
         .then(res => res && res[0]);
 
-  cachedRegierungsbezirkForId = (idParam, clientParam) => {
-    if (id === idParam && client === clientParam) return dbRes;
-    return null;
-  };
+  if (dbRes) {
+    cachedRegierungsbezirkForId = (idParam, clientParam) => {
+      if (id === idParam && client === clientParam) return dbRes;
+      return null;
+    };
+  }
   return dbRes;
 };
 

@@ -89,6 +89,7 @@
     "bufferutil": "^4.0.1",
     "cors": "^2.8.5",
     "cross-fetch": "^3.0.4",
+    "csv-writer": "^1.6.0",
     "echarts": "^4.5.0",
     "echarts-for-react": "^2.0.15-beta.1",
     "echarts-gl": "^1.1.1",

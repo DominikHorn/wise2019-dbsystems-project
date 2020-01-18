@@ -24,6 +24,7 @@ import {
   generateWahlhelferToken
 } from "../adapters/postgres/adminPSQL";
 import { getAllDirektKandidaten } from "../adapters/postgres/kandidatPSQL";
+import { adapters } from "../adapters/adapterUtil";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -77,13 +78,27 @@ export const resolvers: Resolver = {
   Mutation: {
     importCSVData: (_, args) =>
       withVerifyIsAdmin(args.wahlleiterAuth, () =>
-        Promise.all(
-          args.files.map(wahlfile =>
-            wahlfile.then((file: any) =>
-              parseCSV(file, args.wahldatum, args.aggregiert)
-            )
-          )
-        ).then(() => true)
+        adapters.postgres.transaction(async client => {
+          const files = await Promise.all(args.files).catch(
+            err => `ERROR: files could not be awaited: ${err}`
+          );
+          console.warn("DEBUG:", files);
+          console.log("CSV-Import: Received all files");
+
+          for (const file of files) {
+            const readStream = file.createReadStream();
+
+            console.log("CSV-Import: Processing", file.filename);
+            const res = await parseCSV(
+              readStream,
+              args.wahldatum,
+              args.aggregiert,
+              client
+            );
+            if (!res) return false;
+          }
+          return true;
+        })
       ),
     computeElectionResults: (_, args) =>
       withVerifyIsAdmin(args.wahlleiterAuth, computeElectionResults),
