@@ -5,8 +5,7 @@ import {
   IDatabaseDirektkandidat
 } from "../../databaseEntities";
 import { adapters } from "../adapterUtil";
-import { Kandidat, ParteiName } from "../../../shared/graphql.types";
-import { getGraphqlReadableParteiName } from "../../../shared/sharedTypes";
+import { Kandidat } from "../../../shared/graphql.types";
 
 let cachedKandidatForParteiIdAndName: (
   parteiId: number,
@@ -96,7 +95,7 @@ export async function getAllDirektKandidaten(
 ): Promise<Kandidat[]> {
   const res: {
     partei_id: number;
-    partei_name: ParteiName;
+    partei_name: string;
     kandidat_id: number;
     kandidat_name: string;
   }[] = await adapters.postgres.query(
@@ -119,7 +118,7 @@ export async function getAllDirektKandidaten(
     name: resobj.kandidat_name,
     partei: {
       id: resobj.partei_id,
-      name: getGraphqlReadableParteiName(resobj.partei_name)
+      name: resobj.partei_name
     }
   }));
 }

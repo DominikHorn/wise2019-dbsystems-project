@@ -11,12 +11,7 @@ import {
 import ReactEcharts from "echarts-for-react";
 import { compose } from "react-apollo";
 import { BooleanSelector } from "../dataselectors/BooleanSelector";
-import {
-  Wahl,
-  StimmkreisWinner,
-  ParteiName
-} from "../../../../../shared/graphql.types";
-import { getHumanReadableParteiName } from "../../../../../shared/sharedTypes";
+import { Wahl, StimmkreisWinner } from "../../../../../shared/graphql.types";
 
 export interface IGewinnerGeoChartProps {
   readonly erststimmen: boolean;
@@ -63,9 +58,7 @@ const GewinnerGeoChartComponent = (props: IProps) => (
               showDelay: 0,
               transitionDuration: 0.2,
               formatter: (params: any) =>
-                `${params.name}<br/>${getHumanReadableParteiName(
-                  Object.values(ParteiName)[params.value]
-                )}<br/>Stimmen: ${params.data.stimmanzahl}`
+                `${params.name}<br/>${params.value}<br/>Stimmen: ${params.data.stimmanzahl}`
             },
             visualMap: {
               show: false,

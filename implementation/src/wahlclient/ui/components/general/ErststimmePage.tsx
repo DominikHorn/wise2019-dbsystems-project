@@ -8,12 +8,7 @@ import {
 } from "../../../../client-graphql/wahlen/getAllKandidatenQuery";
 import "./ErststimmePage.css";
 import GridGenerator from "./GridGenerator";
-import {
-  Kandidat,
-  Wahl,
-  Stimmkreis,
-  ParteiName
-} from "../../../../shared/graphql.types";
+import { Kandidat, Wahl, Stimmkreis } from "../../../../shared/graphql.types";
 
 interface IState {
   readonly selectedCandidat?: Kandidat;
@@ -44,15 +39,15 @@ class ErststimmePageComponent extends React.PureComponent<IProps, IState> {
   }
 
   candidatesAr: Kandidat[] = [
-    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: ParteiName.CSU } },
-    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: ParteiName.CSU } },
-    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: ParteiName.CSU } },
-    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: ParteiName.CSU } },
-    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: ParteiName.CSU } },
-    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: ParteiName.CSU } },
-    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: ParteiName.CSU } },
-    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: ParteiName.CSU } },
-    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: ParteiName.CSU } }
+    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: "CSU" } },
+    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: "CSU" } },
+    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: "CSU" } },
+    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: "CSU" } },
+    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: "CSU" } },
+    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: "CSU" } },
+    { id: 1, name: "Kandidat Name1", partei: { id: 1, name: "CSU" } },
+    { id: 1, name: "Kandidat Name2", partei: { id: 1, name: "CSU" } },
+    { id: 1, name: "Kandidat Name3", partei: { id: 1, name: "CSU" } }
   ];
 
   onChange(e: React.ChangeEvent<HTMLInputElement>, changedIndex: number) {

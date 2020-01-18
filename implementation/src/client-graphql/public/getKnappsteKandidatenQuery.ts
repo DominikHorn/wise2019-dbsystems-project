@@ -2,11 +2,9 @@ import gql from "graphql-tag";
 import { DataValue } from "react-apollo";
 import {
   KnapperKandidat,
-  QueryToGetKnappsteKandidatenArgs,
-  ParteiName
+  QueryToGetKnappsteKandidatenArgs
 } from "../../shared/graphql.types";
 import { createTypedGraphqlHoc } from "../typedGraphql";
-import { getHumanReadableParteiName } from "../../shared/sharedTypes";
 
 const getKnappsteKandidatenQuery = gql`
   query knappsteKandidatenQuery($wahlid: Int!, $amountPerPartei: Int) {
@@ -65,22 +63,6 @@ export const withKnappsteKandidatenQuery = <TProps = {}>(
       }
     }),
     props: ({ data }) => ({
-      knappsteKandidatenData: {
-        ...data,
-        knappsteKandidaten:
-          data.knappsteKandidaten &&
-          data.knappsteKandidaten.map(kk => ({
-            ...kk,
-            kandidat: {
-              ...kk.kandidat,
-              partei: {
-                ...kk.kandidat.partei,
-                name: getHumanReadableParteiName(
-                  kk.kandidat.partei.name
-                ) as ParteiName
-              }
-            }
-          }))
-      }
+      knappsteKandidatenData: data
     })
   });

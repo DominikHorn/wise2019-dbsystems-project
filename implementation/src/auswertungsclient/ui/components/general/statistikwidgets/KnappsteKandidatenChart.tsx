@@ -14,7 +14,6 @@ import {
   Kandidat,
   Wahl
 } from "../../../../../shared/graphql.types";
-import { getHumanReadableParteiName } from "../../../../../shared/sharedTypes";
 
 type ChartDataType = {
   name: string;
@@ -25,7 +24,7 @@ type ChartDataType = {
   itemStyle?: any;
 };
 function getOption(knappsteKandidaten: KnapperKandidat[]) {
-  const partyMap: { [parteiName: number]: string } = {};
+  const partyMap: { [id: number]: string } = {};
   const place = [];
   for (let i = 1; i <= AMOUNT_PER_PARTY; i++) {
     place.push(`${i}. Platz`);
@@ -50,7 +49,7 @@ function getOption(knappsteKandidaten: KnapperKandidat[]) {
         differenz: knappeKandidat.differenz,
         gewinner: knappeKandidat.gewinner,
         value: [
-          getHumanReadableParteiName(knappeKandidat.kandidat.partei.name),
+          knappeKandidat.kandidat.partei.name,
           knappeKandidat.platz,
           knappeKandidat.differenz
         ]

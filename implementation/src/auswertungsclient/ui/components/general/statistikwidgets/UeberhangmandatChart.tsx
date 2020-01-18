@@ -11,11 +11,7 @@ import {
   eatEvent
 } from "../../../guiUtil";
 import { sleep } from "../../../../../shared/util";
-import {
-  Wahl,
-  UeberhangMandat,
-  ParteiName
-} from "../../../../../shared/graphql.types";
+import { Wahl, UeberhangMandat } from "../../../../../shared/graphql.types";
 
 export interface IUeberhangmandatChartProps {
   readonly wahl: Wahl;
@@ -149,9 +145,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
           value: res.data[partei_id][category][key],
           partei: { id: partei_id, name: res.data[partei_id].parteiname },
           itemStyle: category === EMandatCategory.ZUSTEHENDEMANDATE && {
-            color: getParteiColor(
-              Object.values(ParteiName)[Number(partei_id) - 1]
-            )
+            color: getParteiColor(res.data[partei_id].parteiname)
           }
         }))
     });

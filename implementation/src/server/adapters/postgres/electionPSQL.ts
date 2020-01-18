@@ -6,15 +6,14 @@ import {
 import {
   Wahlbeteiligung,
   Stimmentwicklung,
-  ParteiName,
   Mandat,
   StimmkreisWinner,
   UeberhangMandat,
   KnapperKandidat
 } from "../../../shared/graphql.types";
-import { getGraphqlReadableParteiName } from "../../../shared/sharedTypes";
 
 type MaterialViews =
+  | "direktmandat_anzahl"
   | "kandidatgebundene_gueltige_stimmen"
   | "listengebundene_gueltige_stimmen"
   | "ungueltige_erststimmen"
@@ -50,6 +49,7 @@ type Views = "gesamtstimmen_pro_partei";
 const GESAMTSTIMMEN_PRO_PARTEI_VIEW: Views = "gesamtstimmen_pro_partei";
 
 const refreshOrder: MaterialViews[] = [
+  "direktmandat_anzahl",
   "kandidatgebundene_gueltige_stimmen",
   "listengebundene_gueltige_stimmen",
   "ungueltige_erststimmen",
@@ -346,7 +346,7 @@ export async function computeEntwicklungDerStimmmen(
 ): Promise<Stimmentwicklung[]> {
   const res: {
     partei_id: number;
-    partei_name: ParteiName;
+    partei_name: string;
     vorher: number;
     nachher: number;
   }[] = await adapters.postgres.query(
@@ -432,7 +432,7 @@ export async function getDirektmandat(
       name: resobj.kandidat_name,
       partei: {
         id: resobj.partei_id,
-        name: resobj.partei_name as ParteiName
+        name: resobj.partei_name
       }
     },
     direktmandat: true
@@ -500,7 +500,7 @@ export async function getMandate(wahlid: number): Promise<Mandat[]> {
     stimmkreis_id?: number;
     stimmkreis_name?: string;
     partei_id: number;
-    partei_name: ParteiName;
+    partei_name: string;
     direktmandat: boolean;
   }[] = await adapters.postgres.query(
     `
@@ -562,7 +562,7 @@ export async function getUeberhangmandate(
     regierungsbezirk_id: number;
     regierungsbezirk_name: string;
     partei_id: number;
-    partei_name: ParteiName;
+    partei_name: string;
     ueberhang: number;
     ausgleich: number;
     zustehend: number;
@@ -638,7 +638,7 @@ export async function getKnappsteKandidaten(
     kandidat_id: number;
     kandidat_name: string;
     partei_id: number;
-    partei_name: ParteiName;
+    partei_name: string;
     differenz: number;
     gewinner: boolean;
     platz: number;
@@ -770,7 +770,7 @@ export async function getKnappsteKandidaten(
       name: row.kandidat_name,
       partei: {
         id: row.partei_id,
-        name: getGraphqlReadableParteiName(row.partei_name)
+        name: row.partei_name
       }
     },
     differenz: row.differenz,
