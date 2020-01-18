@@ -1,24 +1,10 @@
 import scrapy
-
-PARTEIEN = [str(i) for i in range(1, 13)]
-PARTEI_NAMEN = [
-    'CSU',
-    'SPD',
-    'Freie Wähler',
-    'Grüne',
-    'FDP',
-    'Die Linke',
-    'ÖDP',
-    'REP',
-    'Bayern Partei',
-    'BüSo',
-    'Die Freiheit',
-    'Piraten',
-]
+from parteien import PARTEIEN
 
 def build_url(regierungsbezirkId, partyId, pageIndex):
-    return "http://www.landtagswahl2013.bayern.de/tabz1{}{:0>2}{}.html".format(regierungsbezirkId, partyId, pageIndex)
-
+    url = "http://www.landtagswahl2013.bayern.de/tabz1{}{:0>2}{}.html".format(regierungsbezirkId, partyId, pageIndex)
+    print('Requesting:', url)
+    return url
 
 # Function for obtaining a table cell's content
 def extract_cell_content(cells):
@@ -26,7 +12,7 @@ def extract_cell_content(cells):
 
 
 class Landtagswahlen2018Spider(scrapy.Spider):
-    pt_ind = 0
+    pt_ind = 1
 
     name = "LW2018Spider"
     start_urls = []
@@ -37,13 +23,13 @@ class Landtagswahlen2018Spider(scrapy.Spider):
 
     def __init__(self, regierungsbezirkId, **kwargs):
         self.start_urls = [
-            build_url(regierungsbezirkId, PARTEIEN[0], 1)
+            build_url(regierungsbezirkId, self.pt_ind, 1)
         ]
         self.regierungsbezirkId = regierungsbezirkId
         super().__init__(**kwargs)
 
     def parse(self, response):
-        # Assume we hit 404 because no more pages exist => return content collected so far
+        # Simply try next party index
         if response.status == 404:
             for resulting_row in response.meta.get('result', []):
                 yield resulting_row
@@ -52,7 +38,7 @@ class Landtagswahlen2018Spider(scrapy.Spider):
             if len(PARTEIEN) == self.pt_ind:
                 return
 
-            yield scrapy.Request(build_url(self.regierungsbezirkId, PARTEIEN[self.pt_ind], 1), meta={
+            yield scrapy.Request(build_url(self.regierungsbezirkId, self.pt_ind, 1), meta={
                 'column_names': response.meta.get('column_names', None),
                 'result': response.meta.get('result', None),
                 'page_index': 1
@@ -63,7 +49,7 @@ class Landtagswahlen2018Spider(scrapy.Spider):
         tablearr = response.xpath('.//table')
         if len(tablearr) != 2:
             print("ERROR: expected two tables on page but received " + str(len(tablearr)))
-            exit(-1)
+            return
         table = tablearr[0]
 
         # Extract column names from header, building on previous requests
@@ -78,8 +64,10 @@ class Landtagswahlen2018Spider(scrapy.Spider):
                     extract_cell_content(header_cols[8:])
                 )
             )
-        partyName = new_column_keys[-1]
+        parteiName = new_column_keys[-1]
         del new_column_keys[-1]
+
+        partei = [p for p in PARTEIEN if p.name2013 == parteiName][0]
 
         column_names = response.meta.get('column_names', None)
         if column_names is None:
@@ -94,7 +82,7 @@ class Landtagswahlen2018Spider(scrapy.Spider):
         if next_page_index is None:
             next_page_index = 1
         next_page_index = next_page_index + 1
-        next_url = build_url(self.regierungsbezirkId, PARTEIEN[self.pt_ind], next_page_index)
+        next_url = build_url(self.regierungsbezirkId, self.pt_ind, next_page_index)
 
         # Extract rows from table
         new_result = []
@@ -109,8 +97,8 @@ class Landtagswahlen2018Spider(scrapy.Spider):
                 # Single row in dictionary format
                 new_row_content = {**{
                     "regierungsbezirk-id": self.regierungsbezirkId,
-                    "partei-id": PARTEIEN[self.pt_ind],
-                    "partei-name": PARTEI_NAMEN[self.pt_ind] # EVTL extrahierten Parteinamen nehmen?
+                    "partei-id": partei.id, 
+                    "partei-name": partei.name
                     }, 
                     **{ new_column_keys[i]:cell_content[i] for i in range(0,len(new_column_keys)) }}
 
@@ -126,8 +114,8 @@ class Landtagswahlen2018Spider(scrapy.Spider):
                 special_row_keys = new_column_keys[1:2] + new_column_keys[4:]
                 new_row_content = {**{
                     "regierungsbezirk-id": self.regierungsbezirkId,
-                    "partei-id": PARTEIEN[self.pt_ind],
-                    "partei-name": PARTEI_NAMEN[self.pt_ind] # EVTL extrahierten Parteinamen nehmen?
+                    "partei-id": partei.id,
+                    "partei-name": partei.name
                     }, 
                     **{ special_row_keys[i]:cell_content[i] for i in range(0,len(special_row_keys)) }} 
 
