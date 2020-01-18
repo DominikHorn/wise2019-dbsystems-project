@@ -94,7 +94,10 @@ export function setupApollo() {
   );
 }
 
+// @ts-ignore this is actually not correct as hot is injected by webpack
 if (module.hot) {
+  // @ts-ignore this is actually not correct as hot is injected by webpack
   module.hot.accept();
+  // @ts-ignore this is actually not correct as hot is injected by webpack
   module.hot.dispose(() => console.log("Module disposed"));
 }
