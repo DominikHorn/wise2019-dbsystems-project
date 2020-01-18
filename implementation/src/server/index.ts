@@ -1,5 +1,4 @@
 import { adapters, gracefullyShutdownAdapters } from "./adapters/adapterUtil";
-import { setupApollo } from "./setupApollo";
 
 // List of all exit signals that we intercept
 const exitSignals: NodeJS.Signals[] = [
@@ -41,4 +40,6 @@ const awaitAdapters = Promise.all(
     })
   )
 );
-awaitAdapters.then(setupApollo);
+awaitAdapters.then(() => {
+  require("./apollo");
+});
