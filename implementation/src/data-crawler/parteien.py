@@ -15,7 +15,7 @@ PARTEIEN = [
   Partei(8, 'ÖDP', 'ÖDP'),
   Partei(9, 'PIRATEN', 'Piraten'),
   Partei(10, 'DIE FRANKEN', 'Die Franken'),
-  Partei(11, 'AFD', 'Afd'),
+  Partei(11, 'AFD', 'AfD'),
   Partei(12, 'LKR', 'LKR'),
   Partei(13, 'MUT', 'mut'),
   Partei(14, 'DIE HUMANISTEN', 'Die Humanisten'),
