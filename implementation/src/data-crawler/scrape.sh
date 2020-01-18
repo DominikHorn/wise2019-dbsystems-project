@@ -7,9 +7,9 @@ rm wahl2013*
 
 for rb in "${REGIERUNGS_BEZIRKE[@]}"
 do
-    scrapy runspider -a regierungsbezirkId=$rb crawler2018.py -o wahl2018_$(echo $rb).csv -t csv &
+    scrapy runspider -a regierungsbezirkId=$rb crawler2018.py -o wahl2018_$(echo $rb).csv -t csv -s LOG_ENABLED=false &
     pids[${i}]=$!
-    scrapy runspider -a regierungsbezirkId=$rb crawler2013.py -o wahl2013_$(echo $rb).csv -t csv &
+    scrapy runspider -a regierungsbezirkId=$rb crawler2013.py -o wahl2013_$(echo $rb).csv -t csv -s LOG_ENABLED=false &
     pids[${i}]=$!
 done
 

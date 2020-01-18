@@ -10,26 +10,16 @@ export async function insertListeneintrag(
   client?: PoolClient
 ): Promise<IDatabaseListen> {
   const QUERY_STR = `
-        INSERT INTO "${DatabaseSchemaGroup}".listen
-        VALUES ($1, $2, $3, $4)
-        RETURNING *;`;
-  if (client) {
-    return client
-      .query(QUERY_STR, [
-        kandidat_id,
-        wahl_id,
-        regierungsbezirk_id,
-        initialerListenplatz
-      ])
-      .then(res => !!res && res.rows[0]);
-  }
-  return adapters.postgres.transaction(async client =>
-    insertListeneintrag(
-      kandidat_id,
-      wahl_id,
-      regierungsbezirk_id,
-      initialerListenplatz,
-      client
-    )
-  );
+    INSERT INTO "${DatabaseSchemaGroup}".listen
+    VALUES ($1, $2, $3, $4)
+    RETURNING *;`;
+  const ARGS = [
+    kandidat_id,
+    wahl_id,
+    regierungsbezirk_id,
+    initialerListenplatz
+  ];
+  return client
+    ? client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : adapters.postgres.query(QUERY_STR, ARGS).then(res => res && res[0]);
 }

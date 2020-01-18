@@ -1,5 +1,5 @@
 import { parse, ParseResult } from "papaparse";
-import { PoolClient } from "pg";
+import { PoolClient, Pool } from "pg";
 import { GraphQLFileUpload } from "../../shared/sharedTypes";
 import { adapters } from "../adapters/adapterUtil";
 import {
@@ -8,7 +8,11 @@ import {
 } from "../adapters/postgres/kandidatPSQL";
 import { getOrCreateParteiForIdAndName } from "../adapters/postgres/parteiPSQL";
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/regierungsbezirkePSQL";
-import { VoteType, insertVotes } from "../adapters/postgres/stimmenPSQL";
+import {
+  VoteType,
+  bulkInsertVotes,
+  deferVotesConstraints
+} from "../adapters/postgres/stimmenPSQL";
 import {
   getOrCreateStimmkreis,
   insertStimmkreisInfo
@@ -17,9 +21,11 @@ import { getOrCreateWahlForDatum } from "../adapters/postgres/wahlenPSQL";
 import {
   IDatabaseKandidat,
   IDatabaseStimmkreis,
-  IDatabaseWahl
+  IDatabaseWahl,
+  DatabaseSchemaGroup
 } from "../databaseEntities";
 import { insertListeneintrag } from "../adapters/postgres/listenPSQL";
+import { ReadStream } from "fs";
 
 enum CSV_KEYS {
   regierungsbezirkID = "regierungsbezirk-id",
@@ -43,18 +49,66 @@ enum INFO_CSV_KEYS {
 
 async function parseCrawledCSV(
   result: ParseResult,
-  client: PoolClient,
   wahl: IDatabaseWahl,
-  aggregiert: boolean
+  aggregiert: boolean,
+  client?: PoolClient
 ) {
+  if (!aggregiert && client) {
+    // Remove indices and foreign key constraints
+    deferVotesConstraints(client);
+  }
+
   const stimmkreisCache: {
     [stimmkreisid: number]: IDatabaseStimmkreis;
   } = {};
 
   let kandidatEinzelVotes: VoteType[] = [];
   let kandidatAggregiertVotes: VoteType[] = [];
+  const sendInsertVotesRequest = async () => {
+    if (kandidatEinzelVotes.length > 0) {
+      await bulkInsertVotes(
+        ["stimmkreis_id", "kandidat_id", "wahl_id"],
+        "einzel_gueltige_kandidatgebundene_stimmen",
+        kandidatEinzelVotes,
+        client
+      );
+      kandidatEinzelVotes = [];
+    }
+    if (kandidatAggregiertVotes.length > 0) {
+      await bulkInsertVotes(
+        ["stimmkreis_id", "kandidat_id", "wahl_id", "anzahl"],
+        "aggregiert_gueltige_kandidatgebundene_stimmen",
+        kandidatAggregiertVotes,
+        client
+      );
+      kandidatAggregiertVotes = [];
+    }
+  };
 
-  let index = 0;
+  let listenEinzelVotes: VoteType[] = [];
+  let listenAggregiertVotes: VoteType[] = [];
+  const sendInsertListVotesRequest = async () => {
+    if (listenEinzelVotes.length > 0) {
+      await bulkInsertVotes(
+        ["stimmkreis_id", "wahl_id", "partei_id"],
+        "einzel_gueltige_listengebundene_stimmen",
+        listenEinzelVotes,
+        client
+      );
+      listenEinzelVotes = [];
+    }
+    if (listenAggregiertVotes.length > 0) {
+      await bulkInsertVotes(
+        ["stimmkreis_id", "wahl_id", "partei_id", "anzahl"],
+        "aggregiert_gueltige_listengebundene_stimmen",
+        listenAggregiertVotes,
+        client
+      );
+      listenAggregiertVotes = [];
+    }
+  };
+
+  console.log(`CSV-Parser: parsing ${result.data.length} rows`);
   for (const row of result.data) {
     let kandidat: IDatabaseKandidat = null;
     // Special case, row with zweitstimmen for liste
@@ -63,8 +117,6 @@ async function parseCrawledCSV(
         row[CSV_KEYS.kandidatName] ==
         "Zweitstimmen ohne Kennzeichnung eines Bewerbers"
       ) {
-        let listenEinzelVotes: VoteType[] = [];
-        let listenAggregiertVotes: VoteType[] = [];
         for (const columnKey of Object.keys(row)) {
           if ((Object.values(CSV_KEYS) as string[]).includes(columnKey))
             continue;
@@ -89,25 +141,6 @@ async function parseCrawledCSV(
             });
           }
         }
-
-        if (listenEinzelVotes.length > 0) {
-          await insertVotes(
-            ["stimmkreis_id", "wahl_id", "partei_id"],
-            "einzel_gueltige_listengebundene_stimmen",
-            listenEinzelVotes,
-            client
-          );
-          listenEinzelVotes = [];
-        }
-        if (listenAggregiertVotes.length > 0) {
-          await insertVotes(
-            ["stimmkreis_id", "wahl_id", "partei_id", "anzahl"],
-            "aggregiert_gueltige_listengebundene_stimmen",
-            listenAggregiertVotes,
-            client
-          );
-          listenAggregiertVotes = [];
-        }
       }
       continue;
     }
@@ -118,18 +151,9 @@ async function parseCrawledCSV(
     const kandidatName = row[CSV_KEYS.kandidatName];
     const initialerListenplatz =
       row[CSV_KEYS.stimmzettelListenPlatz] || row[CSV_KEYS.kandidatNr];
-    console.log(
-      `processing row[${index++}]:`,
-      regierungsbezirkId,
-      parteiId,
-      parteiName,
-      kandidatName,
-      initialerListenplatz
-    );
 
     await getOrCreateRegierungsbezirkForId(regierungsbezirkId, client);
     await getOrCreateParteiForIdAndName(parteiId, parteiName, client);
-    // TODO: getOrInsertKandidat with birth id (from henrik)
     kandidat = await getOrCreateKandidatForParteiIdAndName(
       parteiId,
       kandidatName,
@@ -185,47 +209,32 @@ async function parseCrawledCSV(
         });
       }
     }
-    if (kandidatEinzelVotes.length > 0) {
-      await insertVotes(
-        ["stimmkreis_id", "kandidat_id", "wahl_id"],
-        "einzel_gueltige_kandidatgebundene_stimmen",
-        kandidatEinzelVotes,
-        client
-      );
-      kandidatEinzelVotes = [];
-    }
-    if (kandidatAggregiertVotes.length > 0) {
-      await insertVotes(
-        ["stimmkreis_id", "kandidat_id", "wahl_id", "anzahl"],
-        "aggregiert_gueltige_kandidatgebundene_stimmen",
-        kandidatAggregiertVotes,
-        client
-      );
-      kandidatAggregiertVotes = [];
-    }
   }
+  console.log("CSV-Parser: done parsing rows");
+
+  await sendInsertVotesRequest();
+  await sendInsertListVotesRequest();
 }
 
 async function parseInfoCSV(
   result: ParseResult,
-  client: PoolClient,
   wahl: IDatabaseWahl,
-  aggregiert: boolean
+  aggregiert: boolean,
+  client?: PoolClient
 ) {
   for (const row of result.data) {
     const stimmkreis_id = row[INFO_CSV_KEYS.stimmkreisID];
     const anzahlWahlberechtigte = row[INFO_CSV_KEYS.stimmberechtigte];
     const anzahlWaehler = row[INFO_CSV_KEYS.waehler];
-    // TODO: ungueltige Stimmen für 2013 einlesen LG
     const erstvoteAmountStr = row[INFO_CSV_KEYS.ungueltige_erstimmen];
     const zweitvoteAmountStr = row[INFO_CSV_KEYS.ungueltige_zweitstimmen];
     const erstvoteAmount = Number(erstvoteAmountStr);
     const zweitvoteAmount = Number(zweitvoteAmountStr);
 
     let ungueltigeEinzelErstVotes: VoteType[] = [];
-    let ungueltigeAggregiertErstVotes: VoteType[] = []; // TODO: 2013
+    let ungueltigeAggregiertErstVotes: VoteType[] = [];
     let ungueltigeEinzelZweitVotes: VoteType[] = [];
-    let ungueltigeAggregiertZweitVotes: VoteType[] = []; // TODO: 2013
+    let ungueltigeAggregiertZweitVotes: VoteType[] = [];
 
     await insertStimmkreisInfo(
       stimmkreis_id,
@@ -234,7 +243,6 @@ async function parseInfoCSV(
       anzahlWaehler,
       client
     );
-    // TODO: aggregiert korrekt anpassen!!! LG
     // insert ungueltige erstimmen
     if (aggregiert) {
       ungueltigeAggregiertErstVotes.push({
@@ -248,7 +256,7 @@ async function parseInfoCSV(
       });
     }
     if (ungueltigeAggregiertErstVotes.length > 0) {
-      await insertVotes(
+      await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id", "anzahl"],
         "aggregiert_ungueltige_erststimmen",
         ungueltigeAggregiertErstVotes,
@@ -257,7 +265,7 @@ async function parseInfoCSV(
       ungueltigeAggregiertErstVotes = [];
     }
     if (ungueltigeEinzelErstVotes.length > 0) {
-      await insertVotes(
+      await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id"],
         "einzel_ungueltige_erststimmen",
         ungueltigeEinzelErstVotes,
@@ -278,7 +286,7 @@ async function parseInfoCSV(
       });
     }
     if (ungueltigeAggregiertZweitVotes.length > 0) {
-      await insertVotes(
+      await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id", "anzahl"],
         "aggregiert_ungueltige_zweitstimmen",
         ungueltigeAggregiertZweitVotes,
@@ -287,7 +295,7 @@ async function parseInfoCSV(
       ungueltigeAggregiertZweitVotes = [];
     }
     if (ungueltigeEinzelZweitVotes.length > 0) {
-      await insertVotes(
+      await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id"],
         "einzel_ungueltige_zweitstimmen",
         ungueltigeEinzelZweitVotes,
@@ -299,12 +307,13 @@ async function parseInfoCSV(
 }
 
 export const parseCSV = async (
-  csvFile: GraphQLFileUpload,
+  csvReadStream: ReadStream,
   wahldatum: Date,
-  aggregiert: boolean
+  aggregiert: boolean,
+  client?: PoolClient
 ): Promise<boolean> =>
   new Promise((resolve, reject) =>
-    parse(csvFile.createReadStream(), {
+    parse(csvReadStream, {
       dynamicTyping: (field: string | number) => {
         switch (field) {
           case CSV_KEYS.regierungsbezirkID:
@@ -320,28 +329,27 @@ export const parseCSV = async (
         return false;
       },
       header: true,
-      complete: (result: ParseResult) =>
-        adapters.postgres.transaction(async (client: PoolClient) => {
-          // Attempt to find wahl for wahldatum; Create if none exists
-          const wahl = await getOrCreateWahlForDatum(wahldatum, client);
-          try {
-            if (!result.meta.fields) {
-              reject("CSV Does not appear to contain columns");
-              return;
-            }
-            if (result.meta.fields[0] == INFO_CSV_KEYS.stimmkreisID) {
-              // Special info pdf
-              await parseInfoCSV(result, client, wahl, aggregiert);
-            } else {
-              // Crawled format
-              await parseCrawledCSV(result, client, wahl, aggregiert);
-            }
-          } catch (error) {
-            console.error(error);
-            reject(error);
+      complete: async (result: ParseResult) => {
+        // Attempt to find wahl for wahldatum; Create if none exists
+        const wahl = await getOrCreateWahlForDatum(wahldatum, client);
+        try {
+          if (!result.meta.fields) {
+            reject("CSV Does not appear to contain columns");
+            return;
           }
+          if (result.meta.fields[0] == INFO_CSV_KEYS.stimmkreisID) {
+            // Special info pdf
+            await parseInfoCSV(result, wahl, aggregiert, client);
+          } else {
+            // Crawled format
+            await parseCrawledCSV(result, wahl, aggregiert, client);
+          }
+        } catch (error) {
+          console.error(error);
+          reject(error);
+        }
 
-          resolve(true);
-        })
+        resolve(true);
+      }
     })
   );

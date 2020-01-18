@@ -114,104 +114,123 @@ regierungsbezirk-id,partei-id,partei-name,Nr.,Name,PL.- Nr.2),G3),Gesamtstimmen,
 904,6,Die Linke,,Erststimmen insgesamt,,,11262,,1092,1210,1390,1527,1101,1955,1002,1985
 904,6,Die Linke,,Zweitstimmen insgesamt,,,11093,11093,1009,1383,1297,1585,1079,1871,1026,1843
 904,6,Die Linke,,Gesamtstimmen,,,22355,11093,2101,2593,2687,3112,2180,3826,2028,3828
-904,7,ÖDP,1,"Eichler, Martin",2,,1665,1136,529*,174,199,135,262,107,114,145
-904,7,ÖDP,2,"Klumpers, Dr.Ing. Klaus",4,,1030,240,99,24,33,790*,26,16,31,11
-904,7,ÖDP,3,"Müller, Thomas",1,,1669,288,44,30,37,66,23,24,1381*,64
-904,7,ÖDP,4,"Batz, Susanne",3,,1301,570,176,731*,67,59,95,57,64,52
-904,7,ÖDP,5,"Runge, Bernd",8,,533,35,2,5,498*,7,7,5,7,2
-904,7,ÖDP,6,"Hiltner, Dr. Peter",5,,934,271,21,33,70,33,34,663*,17,63
-904,7,ÖDP,7,"Bittermann, Ehrenfried",7,,611,50,1,4,8,6,2,11,18,561*
-904,7,ÖDP,8,"Kuchenreuther, Roger",6,,809,323,154,62,32,17,486*,16,22,20
-904,7,ÖDP,9,"Kolb, Michael",10,,301,301,3,14,9,47,5,7,210,6
-904,7,ÖDP,10,"Och, Tanja",12,,214,214,10,10,16,7,5,23,24,119
-904,7,ÖDP,11,"Koppe, Bernd",13,,203,203,4,3,159,7,7,5,4,14
-904,7,ÖDP,12,"Duppel, Ralf",14,,201,201,3,1,4,6,8,160,2,17
-904,7,ÖDP,13,"Grimm, Raphael",11,,275,275,39,111,29,17,22,20,24,13
-904,7,ÖDP,14,"Böhm, Hanna",16,,168,168,10,15,17,12,10,10,13,81
-904,7,ÖDP,15,"Rädlein, Heidi",9,,448,448,8,16,19,340,9,18,23,15
-904,7,ÖDP,16,"Deuerling, Hans",15,,182,182,32,109,5,8,10,5,7,6
-904,7,ÖDP,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,40,40,1,2,8,10,,4,5,10
-904,7,ÖDP,,Erststimmen insgesamt,,,5639,,529,731,498,790,486,663,1381,561
-904,7,ÖDP,,Zweitstimmen insgesamt,,,4945,4945,607,613,712,777,525,488,585,638
-904,7,ÖDP,,Gesamtstimmen,,,10584,4945,1136,1344,1210,1567,1011,1151,1966,1199
-904,8,REP,1,"Meyer, Gerd",1,,2683,1971,223,226,712*,190,306,336,243,447
-904,8,REP,2,"Herr, Bärbel",4,,844,525,89,184,145,18,31,27,319*,31
-904,8,REP,3,"Grüner, Bruno",7,,668,446,12,9,157,222*,227,16,10,15
-904,8,REP,4,"Herr, Gerd",3,,1031,344,687*,170,34,20,36,27,45,12
-904,8,REP,5,"Lorenz, Joseph",2,,1657,939,538,718*,89,33,96,65,64,54
-904,8,REP,6,"Scharf, Detlef",8,,655,97,5,3,25,6,9,558*,10,39
-904,8,REP,7,"Baier, Lorenz",6,,773,108,29,13,38,3,665*,5,6,14
-904,8,REP,8,"Krause, Rainer",5,,784,233,11,10,98,9,26,71,8,551*
-904,8,REP,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,32,32,2,3,3,4,8,1,6,5
-904,8,REP,,Erststimmen insgesamt,,,4432,,687,718,712,222,665,558,319,551
-904,8,REP,,Zweitstimmen insgesamt,,,4695,4695,909,618,589,283,739,548,392,617
-904,8,REP,,Gesamtstimmen,,,9127,4695,1596,1336,1301,505,1404,1106,711,1168
-904,9,Bayern Partei,1,"Michaelis, Axel",1,,2909,1808,1101*,317,202,199,303,183,284,320
-904,9,Bayern Partei,2,"Hühnlein, Johannes",3,,2021,875,303,47,34,284,58,48,1146*,101
-904,9,Bayern Partei,3,"Döring, Dietmar",4,,1550,876,102,70,55,389,41,674*,153,66
-904,9,Bayern Partei,4,"Diem, Sven",8,,1132,479,153,64,64,31,653*,56,56,55
-904,9,Bayern Partei,5,"Breu, Winfried",5,,1409,741,179,668*,34,50,50,26,344,58
-904,9,Bayern Partei,6,"Schwede, Hermann",7,,1145,143,25,11,18,1002*,20,12,33,24
-904,9,Bayern Partei,7,"Bestehorn, Harald",2,,2617,1432,206,165,261,131,205,267,197,1185*
-904,9,Bayern Partei,8,"Blankenburg, Moroni",6,,1366,696,47,25,670*,14,40,97,34,439
-904,9,Bayern Partei,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,46,46,3,4,7,11,3,6,6,6
-904,9,Bayern Partei,,Erststimmen insgesamt,,,7099,,1101,668,670,1002,653,674,1146,1185
-904,9,Bayern Partei,,Zweitstimmen insgesamt,,,7096,7096,1018,703,675,1109,720,695,1107,1069
-904,9,Bayern Partei,,Gesamtstimmen,,,14195,7096,2119,1371,1345,2111,1373,1369,2253,2254
-904,10,BüSo,1,"Gerbig, Matthias",1,,1503,1005,279,498*,118,146,98,99,135,130
-904,10,BüSo,2,"Kießling, Thomas",2,,1166,475,34,119,39,46,25,691*,54,158
-904,10,BüSo,3,"Hummel, Melanie",5,,689,298,57,116,21,20,391*,24,26,34
-904,10,BüSo,4,"Dempert, Martin",3,,1129,148,981*,36,22,17,19,20,14,20
-904,10,BüSo,5,"Schneider, ThomasMichael",7,,591,134,11,11,10,457*,5,11,61,25
-904,10,BüSo,6,"Roppelt, Markus",4,,804,337,14,8,258,12,29,10,6,467*
-904,10,BüSo,7,"Braun, Adrian",8,,428,38,11,7,390*,4,3,2,4,7
-904,10,BüSo,8,"Sedlmeyer, Gunther",6,,626,182,90,27,4,19,10,15,444*,17
-904,10,BüSo,9,"Dotzler, Thomas",14,,218,218,36,120,10,17,10,5,14,6
-904,10,BüSo,10,"Ehret, Alfred",12,,230,230,22,8,11,14,150,6,11,8
-904,10,BüSo,11,"Heinrich, Thomas",9,,364,364,5,2,3,6,4,299,7,38
-904,10,BüSo,12,"HertrichMorgeneier, Hannelore",15,,174,174,2,1,2,5,4,129,5,26
-904,10,BüSo,13,"Keilholz, Gerhard",11,,252,252,30,8,34,9,143,7,5,16
-904,10,BüSo,14,"Schrepfer, Thomas",10,,300,300,81,97,20,24,10,11,41,16
-904,10,BüSo,15,"Suck, Frank",16,,164,164,80,11,8,16,17,13,10,9
-904,10,BüSo,16,"Wagner, Jürgen",13,,229,229,78,76,9,20,10,4,21,11
-904,10,BüSo,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,30,30,4,3,3,5,6,2,2,5
-904,10,BüSo,,Erststimmen insgesamt,,,4319,,981,498,390,457,391,691,444,467
-904,10,BüSo,,Zweitstimmen insgesamt,,,4578,4578,834,650,572,380,543,657,416,526
-904,10,BüSo,,Gesamtstimmen,,,8897,4578,1815,1148,962,837,934,1348,860,993
-904,11,Die Freiheit,1,"Gerstner, Maria",1,,1731,435,72,47,88,53,66,48,1296*,61
-904,11,Die Freiheit,2,"Zenk, Christine",2,,660,660,288,68,33,15,95,20,123,18
-904,11,Die Freiheit,3,"Köstner, Petra",3,,538,538,22,13,35,27,12,34,354,41
-904,11,Die Freiheit,4,"Bauer, Maria",6,,354,354,18,14,5,5,277,5,21,9
-904,11,Die Freiheit,5,"Alt, Verena",8,,318,318,20,9,31,21,16,18,161,42
-904,11,Die Freiheit,6,"Heinlein, Barbara",4,,364,364,16,9,21,29,14,28,210,37
-904,11,Die Freiheit,7,"Popp, Ute",7,,338,338,80,109,22,16,26,31,27,27
-904,11,Die Freiheit,8,"Schnappauf, Hedwig",9,,242,242,2,4,8,11,4,5,204,4
-904,11,Die Freiheit,9,"Förster, Hannelore",12,,188,188,6,6,6,136,8,10,10,6
-904,11,Die Freiheit,10,"MüllerTrunk, Petra",5,,355,355,67,129,29,26,34,32,17,21
-904,11,Die Freiheit,11,"Schmidt, Beate",16,,104,104,2,2,7,,5,6,82,
-904,11,Die Freiheit,12,"Heubach, Heidemarie",11,,191,191,4,3,8,6,6,123,2,39
-904,11,Die Freiheit,13,"Petersam, Gabriele",14,,157,157,3,3,4,4,3,4,126,10
-904,11,Die Freiheit,14,"Schulze, Rosl",15,,143,143,2,2,7,9,,8,106,9
-904,11,Die Freiheit,15,"Karsuntke, Ulrike",10,,220,220,14,14,18,51,16,27,63,17
-904,11,Die Freiheit,16,"Weschenfelder, Stefanie",13,,161,161,6,11,15,13,3,11,84,18
-904,11,Die Freiheit,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,24,24,1,3,3,2,,3,9,3
-904,11,Die Freiheit,,Erststimmen insgesamt,,,1296,,,,,,,,1296,
-904,11,Die Freiheit,,Zweitstimmen insgesamt,,,4792,4792,623,446,340,424,585,413,1599,362
-904,11,Die Freiheit,,Gesamtstimmen,,,6088,4792,623,446,340,424,585,413,2895,362
-904,12,Piraten,1,"Fuchs, Heike",1,,5814,2803,355,272,433,344,325,3011*,389,685
-904,12,Piraten,2,"Metzner, Uwe",3,,3265,1720,703,1545*,104,79,130,509,119,76
-904,12,Piraten,3,"Hoffmann, Holger",4,,3106,633,63,76,2473*,91,86,127,59,131
-904,12,Piraten,4,"Bischof, Jörg",9,,1605,289,39,35,36,1316*,42,36,67,34
-904,12,Piraten,5,"Loskarn, Peter",2,,3882,1558,2324*,538,104,116,456,114,133,97
-904,12,Piraten,6,"Ludwig, Georg Dieter",5,,2544,300,25,13,72,35,18,109,28,2244*
-904,12,Piraten,7,"Lärtz, Helmut",6,,2335,288,35,15,30,77,16,19,2047*,96
-904,12,Piraten,8,"Merkel, Andreas",8,,1966,281,56,23,42,41,1685*,34,37,48
-904,12,Piraten,9,"Fuchs, Stefan",10,,1382,1382,14,10,22,18,18,1237,15,48
-904,12,Piraten,10,"Konrad, Stefan",11,,1088,1088,46,27,36,99,27,40,687,126
-904,12,Piraten,11,"Thoma, Friedrich",13,,357,357,171,90,12,19,16,18,12,19
-904,12,Piraten,12,"Dressendörfer, Horst",7,,2005,2005,45,29,1169,44,74,151,64,429
-904,12,Piraten,13,"Behm, Hartmut",12,,717,717,21,15,16,25,20,489,68,63
-904,12,Piraten,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,139,139,18,11,19,14,17,24,18,18
-904,12,Piraten,,Erststimmen insgesamt,,,16645,,2324,1545,2473,1316,1685,3011,2047,2244
-904,12,Piraten,,Zweitstimmen insgesamt,,,13560,13560,1591,1154,2095,1002,1245,2907,1696,1870
-904,12,Piraten,,Gesamtstimmen,,,30205,13560,3915,2699,4568,2318,2930,5918,3743,4114
+904,8,ÖDP,1,"Eichler, Martin",2,,1665,1136,529*,174,199,135,262,107,114,145
+904,8,ÖDP,2,"Klumpers, Dr.Ing. Klaus",4,,1030,240,99,24,33,790*,26,16,31,11
+904,8,ÖDP,3,"Müller, Thomas",1,,1669,288,44,30,37,66,23,24,1381*,64
+904,8,ÖDP,4,"Batz, Susanne",3,,1301,570,176,731*,67,59,95,57,64,52
+904,8,ÖDP,5,"Runge, Bernd",8,,533,35,2,5,498*,7,7,5,7,2
+904,8,ÖDP,6,"Hiltner, Dr. Peter",5,,934,271,21,33,70,33,34,663*,17,63
+904,8,ÖDP,7,"Bittermann, Ehrenfried",7,,611,50,1,4,8,6,2,11,18,561*
+904,8,ÖDP,8,"Kuchenreuther, Roger",6,,809,323,154,62,32,17,486*,16,22,20
+904,8,ÖDP,9,"Kolb, Michael",10,,301,301,3,14,9,47,5,7,210,6
+904,8,ÖDP,10,"Och, Tanja",12,,214,214,10,10,16,7,5,23,24,119
+904,8,ÖDP,11,"Koppe, Bernd",13,,203,203,4,3,159,7,7,5,4,14
+904,8,ÖDP,12,"Duppel, Ralf",14,,201,201,3,1,4,6,8,160,2,17
+904,8,ÖDP,13,"Grimm, Raphael",11,,275,275,39,111,29,17,22,20,24,13
+904,8,ÖDP,14,"Böhm, Hanna",16,,168,168,10,15,17,12,10,10,13,81
+904,8,ÖDP,15,"Rädlein, Heidi",9,,448,448,8,16,19,340,9,18,23,15
+904,8,ÖDP,16,"Deuerling, Hans",15,,182,182,32,109,5,8,10,5,7,6
+904,8,ÖDP,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,40,40,1,2,8,10,,4,5,10
+904,8,ÖDP,,Erststimmen insgesamt,,,5639,,529,731,498,790,486,663,1381,561
+904,8,ÖDP,,Zweitstimmen insgesamt,,,4945,4945,607,613,712,777,525,488,585,638
+904,8,ÖDP,,Gesamtstimmen,,,10584,4945,1136,1344,1210,1567,1011,1151,1966,1199
+904,19,REP,1,"Meyer, Gerd",1,,2683,1971,223,226,712*,190,306,336,243,447
+904,19,REP,2,"Herr, Bärbel",4,,844,525,89,184,145,18,31,27,319*,31
+904,19,REP,3,"Grüner, Bruno",7,,668,446,12,9,157,222*,227,16,10,15
+904,19,REP,4,"Herr, Gerd",3,,1031,344,687*,170,34,20,36,27,45,12
+904,19,REP,5,"Lorenz, Joseph",2,,1657,939,538,718*,89,33,96,65,64,54
+904,19,REP,6,"Scharf, Detlef",8,,655,97,5,3,25,6,9,558*,10,39
+904,19,REP,7,"Baier, Lorenz",6,,773,108,29,13,38,3,665*,5,6,14
+904,19,REP,8,"Krause, Rainer",5,,784,233,11,10,98,9,26,71,8,551*
+904,19,REP,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,32,32,2,3,3,4,8,1,6,5
+904,19,REP,,Erststimmen insgesamt,,,4432,,687,718,712,222,665,558,319,551
+904,19,REP,,Zweitstimmen insgesamt,,,4695,4695,909,618,589,283,739,548,392,617
+904,19,REP,,Gesamtstimmen,,,9127,4695,1596,1336,1301,505,1404,1106,711,1168
+904,88,NPD,1,"Michaelis, Axel",1,,2909,1808,1101*,317,202,199,303,183,284,320
+904,88,NPD,2,"Hühnlein, Johannes",3,,2021,875,303,47,34,284,58,48,1146*,101
+904,88,NPD,3,"Döring, Dietmar",4,,1550,876,102,70,55,389,41,674*,153,66
+904,88,NPD,4,"Diem, Sven",8,,1132,479,153,64,64,31,653*,56,56,55
+904,88,NPD,5,"Breu, Winfried",5,,1409,741,179,668*,34,50,50,26,344,58
+904,88,NPD,6,"Schwede, Hermann",7,,1145,143,25,11,18,1002*,20,12,33,24
+904,88,NPD,7,"Bestehorn, Harald",2,,2617,1432,206,165,261,131,205,267,197,1185*
+904,88,NPD,8,"Blankenburg, Moroni",6,,1366,696,47,25,670*,14,40,97,34,439
+904,88,NPD,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,46,46,3,4,7,11,3,6,6,6
+904,88,NPD,,Erststimmen insgesamt,,,7099,,1101,668,670,1002,653,674,1146,1185
+904,88,NPD,,Zweitstimmen insgesamt,,,7096,7096,1018,703,675,1109,720,695,1107,1069
+904,88,NPD,,Gesamtstimmen,,,14195,7096,2119,1371,1345,2111,1373,1369,2253,2254
+904,7,Bayern Partei,1,"Gerbig, Matthias",1,,1503,1005,279,498*,118,146,98,99,135,130
+904,7,Bayern Partei,2,"Kießling, Thomas",2,,1166,475,34,119,39,46,25,691*,54,158
+904,7,Bayern Partei,3,"Hummel, Melanie",5,,689,298,57,116,21,20,391*,24,26,34
+904,7,Bayern Partei,4,"Dempert, Martin",3,,1129,148,981*,36,22,17,19,20,14,20
+904,7,Bayern Partei,5,"Schneider, ThomasMichael",7,,591,134,11,11,10,457*,5,11,61,25
+904,7,Bayern Partei,6,"Roppelt, Markus",4,,804,337,14,8,258,12,29,10,6,467*
+904,7,Bayern Partei,7,"Braun, Adrian",8,,428,38,11,7,390*,4,3,2,4,7
+904,7,Bayern Partei,8,"Sedlmeyer, Gunther",6,,626,182,90,27,4,19,10,15,444*,17
+904,7,Bayern Partei,9,"Dotzler, Thomas",14,,218,218,36,120,10,17,10,5,14,6
+904,7,Bayern Partei,10,"Ehret, Alfred",12,,230,230,22,8,11,14,150,6,11,8
+904,7,Bayern Partei,11,"Heinrich, Thomas",9,,364,364,5,2,3,6,4,299,7,38
+904,7,Bayern Partei,12,"HertrichMorgeneier, Hannelore",15,,174,174,2,1,2,5,4,129,5,26
+904,7,Bayern Partei,13,"Keilholz, Gerhard",11,,252,252,30,8,34,9,143,7,5,16
+904,7,Bayern Partei,14,"Schrepfer, Thomas",10,,300,300,81,97,20,24,10,11,41,16
+904,7,Bayern Partei,15,"Suck, Frank",16,,164,164,80,11,8,16,17,13,10,9
+904,7,Bayern Partei,16,"Wagner, Jürgen",13,,229,229,78,76,9,20,10,4,21,11
+904,7,Bayern Partei,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,30,30,4,3,3,5,6,2,2,5
+904,7,Bayern Partei,,Erststimmen insgesamt,,,4319,,981,498,390,457,391,691,444,467
+904,7,Bayern Partei,,Zweitstimmen insgesamt,,,4578,4578,834,650,572,380,543,657,416,526
+904,7,Bayern Partei,,Gesamtstimmen,,,8897,4578,1815,1148,962,837,934,1348,860,993
+904,22,Frauenliste,1,"Gerstner, Maria",1,,1731,435,72,47,88,53,66,48,1296*,61
+904,22,Frauenliste,2,"Zenk, Christine",2,,660,660,288,68,33,15,95,20,123,18
+904,22,Frauenliste,3,"Köstner, Petra",3,,538,538,22,13,35,27,12,34,354,41
+904,22,Frauenliste,4,"Bauer, Maria",6,,354,354,18,14,5,5,277,5,21,9
+904,22,Frauenliste,5,"Alt, Verena",8,,318,318,20,9,31,21,16,18,161,42
+904,22,Frauenliste,6,"Heinlein, Barbara",4,,364,364,16,9,21,29,14,28,210,37
+904,22,Frauenliste,7,"Popp, Ute",7,,338,338,80,109,22,16,26,31,27,27
+904,22,Frauenliste,8,"Schnappauf, Hedwig",9,,242,242,2,4,8,11,4,5,204,4
+904,22,Frauenliste,9,"Förster, Hannelore",12,,188,188,6,6,6,136,8,10,10,6
+904,22,Frauenliste,10,"MüllerTrunk, Petra",5,,355,355,67,129,29,26,34,32,17,21
+904,22,Frauenliste,11,"Schmidt, Beate",16,,104,104,2,2,7,,5,6,82,
+904,22,Frauenliste,12,"Heubach, Heidemarie",11,,191,191,4,3,8,6,6,123,2,39
+904,22,Frauenliste,13,"Petersam, Gabriele",14,,157,157,3,3,4,4,3,4,126,10
+904,22,Frauenliste,14,"Schulze, Rosl",15,,143,143,2,2,7,9,,8,106,9
+904,22,Frauenliste,15,"Karsuntke, Ulrike",10,,220,220,14,14,18,51,16,27,63,17
+904,22,Frauenliste,16,"Weschenfelder, Stefanie",13,,161,161,6,11,15,13,3,11,84,18
+904,22,Frauenliste,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,24,24,1,3,3,2,,3,9,3
+904,22,Frauenliste,,Erststimmen insgesamt,,,1296,,,,,,,,1296,
+904,22,Frauenliste,,Zweitstimmen insgesamt,,,4792,4792,623,446,340,424,585,413,1599,362
+904,22,Frauenliste,,Gesamtstimmen,,,6088,4792,623,446,340,424,585,413,2895,362
+904,10,Die Franken,1,"Fuchs, Heike",1,,5814,2803,355,272,433,344,325,3011*,389,685
+904,10,Die Franken,2,"Metzner, Uwe",3,,3265,1720,703,1545*,104,79,130,509,119,76
+904,10,Die Franken,3,"Hoffmann, Holger",4,,3106,633,63,76,2473*,91,86,127,59,131
+904,10,Die Franken,4,"Bischof, Jörg",9,,1605,289,39,35,36,1316*,42,36,67,34
+904,10,Die Franken,5,"Loskarn, Peter",2,,3882,1558,2324*,538,104,116,456,114,133,97
+904,10,Die Franken,6,"Ludwig, Georg Dieter",5,,2544,300,25,13,72,35,18,109,28,2244*
+904,10,Die Franken,7,"Lärtz, Helmut",6,,2335,288,35,15,30,77,16,19,2047*,96
+904,10,Die Franken,8,"Merkel, Andreas",8,,1966,281,56,23,42,41,1685*,34,37,48
+904,10,Die Franken,9,"Fuchs, Stefan",10,,1382,1382,14,10,22,18,18,1237,15,48
+904,10,Die Franken,10,"Konrad, Stefan",11,,1088,1088,46,27,36,99,27,40,687,126
+904,10,Die Franken,11,"Thoma, Friedrich",13,,357,357,171,90,12,19,16,18,12,19
+904,10,Die Franken,12,"Dressendörfer, Horst",7,,2005,2005,45,29,1169,44,74,151,64,429
+904,10,Die Franken,13,"Behm, Hartmut",12,,717,717,21,15,16,25,20,489,68,63
+904,10,Die Franken,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,139,139,18,11,19,14,17,24,18,18
+904,10,Die Franken,,Erststimmen insgesamt,,,16645,,2324,1545,2473,1316,1685,3011,2047,2244
+904,10,Die Franken,,Zweitstimmen insgesamt,,,13560,13560,1591,1154,2095,1002,1245,2907,1696,1870
+904,10,Die Franken,,Gesamtstimmen,,,30205,13560,3915,2699,4568,2318,2930,5918,3743,4114
+904,9,Piraten,1,"Stöcker, Benjamin",1,,4820,3386,568,1434*,609,478,542,345,397,447
+904,9,Piraten,2,"Doser, Christian",3,,1916,332,13,201,1584*,14,18,18,14,54
+904,9,Piraten,3,"Berek, Anita",8,,1320,1320,77,116,174,89,83,135,93,553
+904,9,Piraten,4,"Krudwig, Karlheinz",4,,1852,516,33,87,103,50,70,1336*,42,131
+904,9,Piraten,5,"Horn, Klaus",10,,777,777,24,31,29,18,21,560,14,80
+904,9,Piraten,6,"Betz, Stefan",5,,1767,418,49,46,46,131,40,29,1349*,77
+904,9,Piraten,7,"Mast, Kai",2,,2203,1156,1047*,461,149,110,165,75,117,79
+904,9,Piraten,8,"Zipris, Simone",11,,724,724,199,239,54,40,92,18,43,39
+904,9,Piraten,9,"Bassing, Stefan",13,,279,279,13,8,15,33,10,7,166,27
+904,9,Piraten,10,"Steinhäußer, Gunther",14,,260,260,4,5,11,3,6,206,6,19
+904,9,Piraten,11,"Hanakam, Bernhard",7,,1430,153,6,9,56,13,17,39,13,1277*
+904,9,Piraten,12,"Wahl, Benjamin",15,,250,250,12,15,158,8,19,9,9,20
+904,9,Piraten,13,"Leopold, Richard",6,,1464,262,39,61,46,28,1202*,37,20,31
+904,9,Piraten,14,"Fischer, Bernd",9,,1218,193,15,40,37,1025*,27,14,42,18
+904,9,Piraten,15,"Brozek, Marcel",12,,703,703,38,43,41,71,46,48,346,70
+904,9,Piraten,,Zweitstimmen ohne Kennzeichnung eines Bewerbers,,,78,78,16,15,5,9,8,3,11,11
+904,9,Piraten,,Erststimmen insgesamt,,,10254,,1047,1434,1584,1025,1202,1336,1349,1277
+904,9,Piraten,,Zweitstimmen insgesamt,,,10807,10807,1106,1377,1533,1095,1164,1543,1333,1656
+904,9,Piraten,,Gesamtstimmen,,,21061,10807,2153,2811,3117,2120,2366,2879,2682,2933

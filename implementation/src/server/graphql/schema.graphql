@@ -54,7 +54,7 @@ type Kandidat {
 
 type Partei {
   id: Int!
-  name: ParteiName!
+  name: String!
 }
 
 type Stimmkreis {
@@ -106,25 +106,4 @@ type WahlhelferToken {
   wahl: Wahl!
   stimmkreis: Stimmkreis!
   token: String!
-}
-
-enum ParteiName {
-  CSU
-  SPD
-  FREIE_WAEHLER
-  GRUENE
-  FDP
-  DIE_LINKE
-  BAYERN_PARTEI
-  OEDP
-  PIRATEN
-  DIE_FRANKEN
-  AFD
-  LKR
-  MUT
-  DIE_HUMANISTEN
-  DIE_PARTEI
-  GESUNDHEITSFORSCHUNG
-  TIERSCHUTZPARTEI
-  V_PARTEI
 }

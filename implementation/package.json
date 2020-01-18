@@ -22,12 +22,13 @@
     "start:server": "cross-env NODE_ENV=development yarn run watch:server",
     "start:benchserver": "cross-env NODE_ENV=development webpack --progress --config webpack.benchmark-server.config.js",
     "watch:server": "webpack --progress --config webpack.server.config.js --watch",
-    "start:postgres": "../../postgres/start_postgres.sh",
+    "start:postgres": "../../start_postgres.sh",
     "stop:postgres": "postgres/stop_postgres.sh",
     "nodemon:server": "node dist/server/server.bundle.js --watch dist/server",
     "nodemon:benchmark": "node dist/benchmarkserver/benchmark.bundle.js",
     "echarts:english": "node node_modules/echarts/build/build.js --lang en",
-    "generate:gqltypes": "graphql-schema-typescript generate-ts --typePrefix '' --output src/shared/graphql.types.ts src/server/graphql/schema.graphql"
+    "generate:gqltypes": "graphql-schema-typescript generate-ts --typePrefix '' --output src/shared/graphql.types.ts src/server/graphql/schema.graphql",
+    "scrape": "cd src/data-crawler && ./scrape.sh"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
@@ -88,6 +89,7 @@
     "bufferutil": "^4.0.1",
     "cors": "^2.8.5",
     "cross-fetch": "^3.0.4",
+    "csv-writer": "^1.6.0",
     "echarts": "^4.5.0",
     "echarts-for-react": "^2.0.15-beta.1",
     "echarts-gl": "^1.1.1",

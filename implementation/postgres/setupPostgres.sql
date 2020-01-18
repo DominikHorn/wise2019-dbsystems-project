@@ -180,10 +180,10 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_gueltige_kandidatgebundene_st
 	stimmkreis_id smallint NOT NULL,
 	wahl_id smallint NOT NULL,
 	kandidat_id int NOT NULL,
-	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE,
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE,
-	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id) ON DELETE CASCADE,
-	PRIMARY KEY (id, stimmkreis_id, kandidat_id)
+	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
+	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
+	PRIMARY KEY (id, stimmkreis_id, kandidat_id) DEFERRABLE INITIALLY IMMEDIATE
 );
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_gueltige_listengebundene_stimmen (
@@ -191,28 +191,28 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_gueltige_listengebundene_stim
 	stimmkreis_id smallint NOT NULL,
 	wahl_id smallint NOT NULL,
 	partei_id smallint NOT NULL,
-	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE,
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE,
-	FOREIGN KEY (partei_id) REFERENCES "landtagswahlen".parteien(id) ON DELETE CASCADE,
-	PRIMARY KEY (id, stimmkreis_id, partei_id)
+	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
+	FOREIGN KEY (partei_id) REFERENCES "landtagswahlen".parteien(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
+	PRIMARY KEY (id, stimmkreis_id, partei_id) DEFERRABLE INITIALLY IMMEDIATE
 );
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_ungueltige_erststimmen (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	wahl_id smallint NOT NULL,
 	stimmkreis_id smallint NOT NULL,
-	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE,
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE,
-	PRIMARY KEY (id, wahl_id, stimmkreis_id)
+	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
+	PRIMARY KEY (id, wahl_id, stimmkreis_id) DEFERRABLE INITIALLY IMMEDIATE
 );
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_ungueltige_zweitstimmen (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	wahl_id smallint NOT NULL,
 	stimmkreis_id smallint NOT NULL,
-	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE,
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE,
-	PRIMARY KEY (id, wahl_id, stimmkreis_id)
+	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
+	PRIMARY KEY (id, wahl_id, stimmkreis_id) DEFERRABLE INITIALLY IMMEDIATE
 );
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".aggregiert_gueltige_kandidatgebundene_stimmen (
