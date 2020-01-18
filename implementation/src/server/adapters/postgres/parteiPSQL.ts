@@ -4,35 +4,34 @@ import { adapters } from "../adapterUtil";
 
 let cachedParteiForId: (
   id: number,
-  client: PoolClient
+  client?: PoolClient
 ) => IDatabasePartei = () => null;
 export async function getParteiForId(
   id: number,
   client?: PoolClient
 ): Promise<IDatabasePartei | null> {
+  const res = cachedParteiForId(id, client);
+  if (res) {
+    return res;
+  }
+
   const QUERY_STR = `
     SELECT *
     FROM "${DatabaseSchemaGroup}".parteien
     WHERE id = $1`;
-  if (client) {
-    const res = cachedParteiForId(id, client);
-    if (res) {
-      return res;
-    } else {
-      const dbRes = await client
-        .query(QUERY_STR, [id])
-        .then(res => !!res && res.rows[0]);
-      cachedParteiForId = (idParam, clientParam) => {
-        if (id === idParam && client === clientParam) return dbRes;
-        return null;
-      };
-      return dbRes;
-    }
-  }
-  const parteien = await adapters.postgres.query<IDatabasePartei>(QUERY_STR, [
-    id
-  ]);
-  return !!parteien && parteien[0];
+  const ARGS = [id];
+
+  const dbRes = client
+    ? await client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : await adapters.postgres
+        .query<IDatabasePartei>(QUERY_STR, ARGS)
+        .then(res => res && res[0]);
+
+  cachedParteiForId = (idParam, clientParam) => {
+    if (id === idParam && client === clientParam) return dbRes;
+    return null;
+  };
+  return dbRes;
 }
 
 export async function getOrCreateParteiForIdAndName(
@@ -40,21 +39,18 @@ export async function getOrCreateParteiForIdAndName(
   name: string,
   client?: PoolClient
 ): Promise<IDatabasePartei> {
-  if (client) {
-    const partei = await getParteiForId(id, client);
-    if (partei) return partei;
-    return client
-      .query(
-        `
-        INSERT INTO "${DatabaseSchemaGroup}".parteien
-        VALUES ($1, $2)
-        RETURNING *;`,
-        [id, name]
-      )
-      .then(res => !!res && res.rows[0]);
-  }
+  const partei = await getParteiForId(id, client);
+  if (partei) return partei;
 
-  return adapters.postgres.transaction(async client =>
-    getOrCreateParteiForIdAndName(id, name, client)
-  );
+  const QUERY_STR = `
+    INSERT INTO "${DatabaseSchemaGroup}".parteien
+    VALUES ($1, $2)
+    RETURNING *;`;
+  const ARGS = [id, name];
+
+  return client
+    ? client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : adapters.postgres
+        .query<IDatabasePartei>(QUERY_STR, ARGS)
+        .then(res => res && res[0]);
 }

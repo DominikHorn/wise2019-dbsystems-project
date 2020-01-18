@@ -14,11 +14,9 @@ export async function getAllStimmkreise(
     SELECT *
     FROM "${DatabaseSchemaGroup}".stimmkreise
   `;
-  if (client) {
-    return client.query(QUERY).then(res => !!res && res.rows);
-  }
-
-  return adapters.postgres.query<Stimmkreis>(QUERY);
+  return client
+    ? client.query(QUERY).then(res => !!res && res.rows)
+    : adapters.postgres.query<Stimmkreis>(QUERY);
 }
 
 export async function getStimmkreisForId(
@@ -29,14 +27,13 @@ export async function getStimmkreisForId(
     SELECT *
     FROM "${DatabaseSchemaGroup}".stimmkreise
     WHERE id = $1`;
-  if (client) {
-    return client.query(QUERY_STR, [id]).then(res => !!res && res.rows[0]);
-  }
-  const stimmkreise = await adapters.postgres.query<IDatabaseStimmkreis>(
-    QUERY_STR,
-    [id]
-  );
-  return !!stimmkreise && stimmkreise[0];
+  const ARGS = [id];
+
+  return client
+    ? client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : adapters.postgres
+        .query<IDatabaseStimmkreis>(QUERY_STR, ARGS)
+        .then(res => res && res[0]);
 }
 
 export async function getOrCreateStimmkreis(
@@ -45,23 +42,18 @@ export async function getOrCreateStimmkreis(
   regierungsbezirk_id: number,
   client?: PoolClient
 ): Promise<IDatabaseStimmkreis> {
-  if (client) {
-    const stimmkreis = await getStimmkreisForId(id, client);
-    if (stimmkreis) return stimmkreis;
-    return client
-      .query(
-        `
-        INSERT INTO "${DatabaseSchemaGroup}".stimmkreise
-        VALUES ($1, $2, $3)
-        RETURNING *;`,
-        [id, name, regierungsbezirk_id]
-      )
-      .then(res => !!res && res.rows[0]);
-  }
+  const stimmkreis = await getStimmkreisForId(id, client);
+  if (stimmkreis) return stimmkreis;
 
-  return adapters.postgres.transaction(async client =>
-    getOrCreateStimmkreis(id, name, regierungsbezirk_id, client)
-  );
+  const QUERY_STR = `
+    INSERT INTO "${DatabaseSchemaGroup}".stimmkreise
+    VALUES ($1, $2, $3)
+    RETURNING *;`;
+  const ARGS = [id, name, regierungsbezirk_id];
+
+  return client
+    ? client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : adapters.postgres.query(QUERY_STR, ARGS).then(res => res && res[0]);
 }
 
 export async function insertStimmkreisInfo(
@@ -75,24 +67,9 @@ export async function insertStimmkreisInfo(
     INSERT INTO "${DatabaseSchemaGroup}".stimmkreis_wahlinfo
     VALUES ($1, $2, $3, $4)
     RETURNING *;`;
-  if (client) {
-    return client
-      .query(QUERY_STR, [
-        stimmkreis_id,
-        wahl_id,
-        anzahlWahlberechtigte,
-        anzahlWaehler
-      ])
-      .then(res => !!res && res.rows[0]);
-  }
+  const ARGS = [stimmkreis_id, wahl_id, anzahlWahlberechtigte, anzahlWaehler];
 
-  return adapters.postgres.transaction(async client =>
-    insertStimmkreisInfo(
-      stimmkreis_id,
-      wahl_id,
-      anzahlWahlberechtigte,
-      anzahlWaehler,
-      client
-    )
-  );
+  return client
+    ? client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : adapters.postgres.query(QUERY_STR, ARGS).then(res => res && res[0]);
 }

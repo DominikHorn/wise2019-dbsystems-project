@@ -11,47 +11,45 @@ import { getGraphqlReadableParteiName } from "../../../shared/sharedTypes";
 let cachedKandidatForParteiIdAndName: (
   parteiId: number,
   name: string,
-  client: PoolClient
+  client?: PoolClient
 ) => IDatabaseKandidat = () => null;
 export async function getKandidatForName(
   parteiId: number,
   name: string,
   client?: PoolClient
 ): Promise<IDatabaseKandidat | null> {
+  const res = cachedKandidatForParteiIdAndName(parteiId, name, client);
+  if (res) {
+    console.error("FOUND DUPLICATE CANDIDATE (?):", parteiId, name);
+    return res;
+  }
+
   const QUERY_STR = `
     SELECT *
     FROM "${DatabaseSchemaGroup}".kandidaten
     WHERE partei_id = $1 AND name = $2`;
-  if (client) {
-    const res = cachedKandidatForParteiIdAndName(parteiId, name, client);
-    if (res) {
-      console.error("FOUND DUPLICATE CANDIDATE (?):", parteiId, name);
-      return res;
-    } else {
-      const dbRes = await client
-        .query(QUERY_STR, [parteiId, name])
-        .then(res => !!res && res.rows[0]);
-      cachedKandidatForParteiIdAndName = (
-        parteiIdParam,
-        nameParam,
-        clientParam
-      ) => {
-        if (
-          parteiId === parteiIdParam &&
-          name === nameParam &&
-          client === clientParam
-        )
-          return dbRes;
-        return null;
-      };
+  const ARGS = [parteiId, name];
+
+  const dbRes = client
+    ? await client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : await adapters.postgres
+        .query<IDatabaseKandidat>(QUERY_STR, ARGS)
+        .then(res => res && res[0]);
+
+  cachedKandidatForParteiIdAndName = (
+    parteiIdParam,
+    nameParam,
+    clientParam
+  ) => {
+    if (
+      parteiId === parteiIdParam &&
+      name === nameParam &&
+      client === clientParam
+    )
       return dbRes;
-    }
-  }
-  const kandidaten = await adapters.postgres.query<IDatabaseKandidat>(
-    QUERY_STR,
-    [parteiId, name]
-  );
-  return !!kandidaten && kandidaten[0];
+    return null;
+  };
+  return dbRes;
 }
 
 export async function getOrCreateKandidatForParteiIdAndName(
@@ -59,20 +57,16 @@ export async function getOrCreateKandidatForParteiIdAndName(
   name: string,
   client?: PoolClient
 ): Promise<IDatabaseKandidat> {
-  if (client) {
-    const QUERY_STR = `
+  const QUERY_STR = `
     INSERT INTO "${DatabaseSchemaGroup}".kandidaten
     VALUES (DEFAULT, $1, $2)
     RETURNING *;`;
-    if (client) {
-      return client
-        .query(QUERY_STR, [parteiId, name])
-        .then(res => !!res && res.rows[0]);
-    }
-  }
-  return adapters.postgres.transaction(async client =>
-    getOrCreateKandidatForParteiIdAndName(parteiId, name, client)
-  );
+  const ARGS = [parteiId, name];
+  return client
+    ? client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : adapters.postgres
+        .query<IDatabaseKandidat>(QUERY_STR, ARGS)
+        .then(res => res && res[0]);
 }
 
 export async function insertDirektkandidat(
@@ -85,14 +79,13 @@ export async function insertDirektkandidat(
     INSERT INTO "${DatabaseSchemaGroup}".direktkandidaten
     VALUES ($1, $2, $3)
     RETURNING *;`;
-  if (client) {
-    return client
-      .query(QUERY_STR, [stimmkreis_id, wahl_id, direktkandidat_id])
-      .then(res => !!res && res.rows[0]);
-  }
-  return adapters.postgres.transaction(async client =>
-    insertDirektkandidat(stimmkreis_id, wahl_id, direktkandidat_id, client)
-  );
+  const ARGS = [stimmkreis_id, wahl_id, direktkandidat_id];
+
+  return client
+    ? client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : adapters.postgres
+        .query<IDatabaseKandidat>(QUERY_STR, ARGS)
+        .then(res => res && res[0]);
 }
 
 export async function getAllDirektKandidaten(

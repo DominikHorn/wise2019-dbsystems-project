@@ -75,15 +75,15 @@ export async function getIsBlocked(
     FROM "${DatabaseSchemaGroup}".${AuthTables.DATA_BLOCKED}
     WHERE wahl_id = $1
   `;
+  const ARGS = [wahlid];
   type TRes = { blocked: boolean };
-  if (client) {
-    return client
-      .query<TRes>(QUERY, [wahlid])
-      .then(res => res && res.rows && res.rows[0] && res.rows[0].blocked);
-  }
-  return adapters.postgres
-    .query<TRes>(QUERY, [wahlid])
-    .then(res => res && res[0] && res[0].blocked);
+  return client
+    ? client
+        .query<TRes>(QUERY, ARGS)
+        .then(res => res && res.rows && res.rows[0] && res.rows[0].blocked)
+    : adapters.postgres
+        .query<TRes>(QUERY, ARGS)
+        .then(res => res && res[0] && res[0].blocked);
 }
 
 export async function generateWahlhelferToken(

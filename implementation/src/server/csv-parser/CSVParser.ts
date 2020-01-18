@@ -43,9 +43,9 @@ enum INFO_CSV_KEYS {
 
 async function parseCrawledCSV(
   result: ParseResult,
-  client: PoolClient,
   wahl: IDatabaseWahl,
-  aggregiert: boolean
+  aggregiert: boolean,
+  client?: PoolClient
 ) {
   const stimmkreisCache: {
     [stimmkreisid: number]: IDatabaseStimmkreis;
@@ -129,7 +129,6 @@ async function parseCrawledCSV(
 
     await getOrCreateRegierungsbezirkForId(regierungsbezirkId, client);
     await getOrCreateParteiForIdAndName(parteiId, parteiName, client);
-    // TODO: getOrInsertKandidat with birth id (from henrik)
     kandidat = await getOrCreateKandidatForParteiIdAndName(
       parteiId,
       kandidatName,
@@ -208,9 +207,9 @@ async function parseCrawledCSV(
 
 async function parseInfoCSV(
   result: ParseResult,
-  client: PoolClient,
   wahl: IDatabaseWahl,
-  aggregiert: boolean
+  aggregiert: boolean,
+  client?: PoolClient
 ) {
   for (const row of result.data) {
     const stimmkreis_id = row[INFO_CSV_KEYS.stimmkreisID];
@@ -331,10 +330,10 @@ export const parseCSV = async (
             }
             if (result.meta.fields[0] == INFO_CSV_KEYS.stimmkreisID) {
               // Special info pdf
-              await parseInfoCSV(result, client, wahl, aggregiert);
+              await parseInfoCSV(result, wahl, aggregiert);
             } else {
               // Crawled format
-              await parseCrawledCSV(result, client, wahl, aggregiert);
+              await parseCrawledCSV(result, wahl, aggregiert);
             }
           } catch (error) {
             console.error(error);

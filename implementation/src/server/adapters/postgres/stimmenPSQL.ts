@@ -38,7 +38,7 @@ export async function insertVotes(
   table: VoteTables,
   votes: VoteType[],
   client?: PoolClient
-): Promise<IDatabaseKandidatVote[] | null> {
+): Promise<void> {
   const QUERY_STR = `
     INSERT INTO "${DatabaseSchemaGroup}".${table} (${fields.join(",")})
     ${votes
@@ -48,12 +48,9 @@ export async function insertVotes(
             ","
           )}) a, generate_series(1, ${vote.quantity})`
       )
-      .join("\nUNION ALL\n")}
-    RETURNING *;`;
+      .join("\nUNION ALL\n")};`;
 
   return client
-    ? client.query(QUERY_STR).then(res => !!res && res.rows[0])
-    : adapters.postgres.transaction(async client =>
-        insertVotes(fields, table, votes, client)
-      );
+    ? client.query(QUERY_STR).then(res => {})
+    : adapters.postgres.query<IDatabaseKandidatVote>(QUERY_STR).then(res => {});
 }

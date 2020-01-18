@@ -17,56 +17,52 @@ const REGIERUNGSBEZIRKE: { [key: number]: string } = {
 
 let cachedRegierungsbezirkForId: (
   id: number,
-  client: PoolClient
+  client?: PoolClient
 ) => IDatabaseRegierungsbezirk = () => null;
 export const getRegierungsbezirkForId = async (
   id: number,
   client?: PoolClient
 ): Promise<IDatabaseRegierungsbezirk | null> => {
+  const res = cachedRegierungsbezirkForId(id, client);
+  if (res) {
+    return res;
+  }
+
   const QUERY_STR = `
     SELECT *
     FROM "${DatabaseSchemaGroup}".regierungsbezirke
     WHERE id = $1;`;
-  if (client) {
-    const res = cachedRegierungsbezirkForId(id, client);
-    if (res) {
-      return res;
-    } else {
-      const dbRes = await client
-        .query(QUERY_STR, [id])
-        .then(res => !!res && res.rows[0]);
-      cachedRegierungsbezirkForId = (idParam, clientParam) => {
-        if (id === idParam && client === clientParam) return dbRes;
-        return null;
-      };
-      return dbRes;
-    }
-  }
-  const regierungsbezirke = await adapters.postgres.query<
-    IDatabaseRegierungsbezirk
-  >(QUERY_STR, [id]);
-  return !!regierungsbezirke && regierungsbezirke[0];
+  const ARGS = [id];
+
+  const dbRes = client
+    ? await client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : await adapters.postgres
+        .query<IDatabaseRegierungsbezirk>(QUERY_STR, [id])
+        .then(res => res && res[0]);
+
+  cachedRegierungsbezirkForId = (idParam, clientParam) => {
+    if (id === idParam && client === clientParam) return dbRes;
+    return null;
+  };
+  return dbRes;
 };
 
 export const getOrCreateRegierungsbezirkForId = async (
   id: number,
   client?: PoolClient
 ): Promise<IDatabaseRegierungsbezirk> => {
-  if (!!client) {
-    let regierungsbezirk = await getRegierungsbezirkForId(id, client);
-    if (regierungsbezirk) return regierungsbezirk;
-    return await client
-      .query(
-        `
+  let regierungsbezirk = await getRegierungsbezirkForId(id, client);
+  if (regierungsbezirk) return regierungsbezirk;
+
+  const QUERY_STR = `
         INSERT INTO "${DatabaseSchemaGroup}".regierungsbezirke
         VALUES ($1, $2)
-        RETURNING *;`,
-        [id, REGIERUNGSBEZIRKE[id]]
-      )
-      .then(res => !!res && res.rows[0]);
-  }
+        RETURNING *;`;
+  const ARGS = [id, REGIERUNGSBEZIRKE[id]];
 
-  return adapters.postgres.transaction(async client =>
-    getOrCreateRegierungsbezirkForId(id, client)
-  );
+  return client
+    ? await client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : await adapters.postgres
+        .query<IDatabaseRegierungsbezirk>(QUERY_STR, ARGS)
+        .then(res => res && res[0]);
 };
