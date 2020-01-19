@@ -19,7 +19,10 @@ import {
   withVerifyIsNotBlocked,
   generateWahlhelferToken
 } from "../adapters/postgres/adminPSQL";
-import { getDirektKandidaten } from "../adapters/postgres/kandidatPSQL";
+import {
+  getDirektKandidaten,
+  getListenKandidaten
+} from "../adapters/postgres/kandidatPSQL";
 import { adapters } from "../adapters/adapterUtil";
 
 export interface IContext {
@@ -66,7 +69,9 @@ export const resolvers: Resolver = {
         )
       ),
     getDirektKandidaten: (_, args) =>
-      getDirektKandidaten(args.wahlid, args.stimmkreisid)
+      getDirektKandidaten(args.wahlid, args.stimmkreisid),
+    getListenKandidaten: (_, args) =>
+      getListenKandidaten(args.wahlid, args.regierungsbezirkid)
   },
   Mutation: {
     importCSVData: (_, args) =>

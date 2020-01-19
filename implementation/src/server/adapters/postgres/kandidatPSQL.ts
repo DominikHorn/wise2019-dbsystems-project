@@ -5,7 +5,7 @@ import {
   IDatabaseDirektkandidat
 } from "../../databaseEntities";
 import { adapters } from "../adapterUtil";
-import { Kandidat } from "../../../shared/graphql.types";
+import { Kandidat, ListenKandidat } from "../../../shared/graphql.types";
 
 let cachedKandidatForParteiIdAndName: (
   parteiId: number,
@@ -123,4 +123,48 @@ export async function getDirektKandidaten(
       name: resobj.partei_name
     }
   }));
+}
+
+export async function getListenKandidaten(
+  wahlid: number,
+  regierungsbezirkid: number
+): Promise<ListenKandidat[]> {
+  type QueryResult = {
+    partei_id: number;
+    partei_name: string;
+    kandidat_id: number;
+    kandidat_name: string;
+    kandidat_platz: number;
+  };
+  return adapters.postgres
+    .query<QueryResult>(
+      `
+      SELECT l.initialerlistenplatz as kandidat_platz,
+            k.id as kandidat_id,
+            k.name as kandidat_name,
+            p.id as partei_id,
+            p.name as partei_name
+      FROM "landtagswahlen".listen l
+      JOIN "landtagswahlen".kandidaten k
+        ON k.id = l.kandidat_id
+      JOIN "landtagswahlen".parteien p
+        ON p.id = k.partei_id
+      WHERE wahl_id = $1 AND l.regierungsbezirk_id = $2;`,
+      [wahlid, regierungsbezirkid]
+    )
+    .then(
+      res =>
+        res &&
+        res.map(r => ({
+          platz: r.kandidat_platz,
+          kandidat: {
+            id: r.kandidat_id,
+            name: r.kandidat_name,
+            partei: {
+              id: r.partei_id,
+              name: r.partei_name
+            }
+          }
+        }))
+    );
 }
