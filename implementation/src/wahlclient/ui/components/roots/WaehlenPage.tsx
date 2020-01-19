@@ -154,15 +154,23 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
       />
     );
 
-  private renderZweitstimme = () => (
-    <ZweitstimmePage
-      wahl={{ id: 2, wahldatum: new Date() }}
-      stimmkreis={{ id: 101, name: "München-Mitte" }}
-      onChangeZweitstimmeAbgg={() => {}}
-      onChangeZweitStimme={() => {}}
-      onChangeBack={() => {}}
-    />
-  );
+  private renderZweitstimme = () =>
+    this.renderInTabContainer(
+      <ZweitstimmePage
+        wahl={{ id: 2, wahldatum: new Date() }}
+        stimmkreis={{ id: 101, name: "München-Mitte" }}
+        selectedKandidat={this.state.selectedZweitkandidat}
+        selectedParty={this.state.selectedZweitpartei}
+        onSelectKandidat={selectedZweitkandidat =>
+          this.setState({ selectedZweitkandidat })
+        }
+        onSelectParty={selectedZweitpartei =>
+          this.setState({ selectedZweitpartei })
+        }
+        goToNextTab={this.nextTab}
+        goToPreviousTab={this.previousTab}
+      />
+    );
 
   //if (!this.state.committed) {
   //   return (
