@@ -1,4 +1,4 @@
-import { Button, Col, Row, Tabs, message, Icon } from "antd";
+import { Button, Col, Divider, Icon, message, Row, Tabs, Card } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import { Kandidat, Partei } from "../../../../shared/graphql.types";
@@ -31,7 +31,8 @@ enum WahlTab {
   RECHTSBEHELFSBELEHRUNG = 0,
   ERSTSTIMME = 1,
   ZWEITSTIMME = 2,
-  COMMITVOTE = 3
+  CHECKVOTE = 3,
+  VOTECOMMITED = 4
 }
 
 function getWahlTabTitle(wahlTab: WahlTab) {
@@ -42,8 +43,10 @@ function getWahlTabTitle(wahlTab: WahlTab) {
       return "Erststimmabgabe";
     case WahlTab.ZWEITSTIMME:
       return "Zweitstimmabgabe";
-    case WahlTab.COMMITVOTE:
+    case WahlTab.CHECKVOTE:
       return "Bestätigung";
+    case WahlTab.VOTECOMMITED:
+      return "Stimmabgabe Beendet";
     default:
       return "Error - Unknown Tab";
   }
@@ -79,8 +82,8 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
       return;
     }
     const nextTab = this.state.activeTab + 1;
-    if (nextTab > WahlTab.COMMITVOTE) {
-      // TODO: commit data
+    if (nextTab > WahlTab.VOTECOMMITED) {
+      // TODO: actually commit data to reach this state
       return;
     }
     this.setState({
@@ -103,10 +106,11 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
       selectedErstkandidat,
       selectedZweitkandidat
     } = this.state;
+    if (this.state.activeTab === WahlTab.VOTECOMMITED) return -1;
     if (!acceptedRechtsbehelfsbelehrung) return WahlTab.RECHTSBEHELFSBELEHRUNG;
     if (selectedErstkandidat === undefined) return WahlTab.ERSTSTIMME;
     if (selectedZweitkandidat === undefined) return WahlTab.ZWEITSTIMME;
-    return WahlTab.COMMITVOTE;
+    return WahlTab.CHECKVOTE;
   };
 
   private renderInTabContainer = (component: React.ReactElement) => (
@@ -176,32 +180,73 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
       />
     );
 
-  //if (!this.state.committed) {
-  //   return (
-  //     <StimmAbgabePage
-  //       erststimme={this.state.selectedErststimme}
-  //       zweitstimme={this.state.selectedZweitstimme}
-  //       onClickCommit={(commit: boolean) =>
-  //         this.setState({ commitVote: commit })
-  //       }
-  //       onClickBack={() => this.setState({ zweitstimme_abgg: false })}
-  //       committedVote={false}
-  //     />
-  //   );
-  // } else {
-  //   return (
-  //     <StimmAbgabePage
-  //       erststimme={this.state.selectedErststimme}
-  //       zweitstimme={this.state.selectedZweitstimme}
-  //       onClickCommit={(commit: boolean) =>
-  //         this.setState({ commitVote: commit })
-  //       }
-  //       onClickBack={null}
-  //       committedVote={true}
-  //     />
-  //   );
-  // }
-  private renderCommitVote = () => <>{"TODO"}</>;
+  private renderCheckVote = () =>
+    this.renderInTabContainer(
+      <>
+        <h1>{"Bitte bestätigen Sie die Korrektheit Ihrer Stimmabgabe:"}</h1>
+        <Divider />
+        <Row type={"flex"} justify={"center"}>
+          <Col>
+            <h2>
+              {`Ihre Erststimme: ${
+                this.state.selectedErstkandidat
+                  ? `${this.state.selectedErstkandidat.name} (${this.state.selectedErstkandidat.partei.name})`
+                  : "ungültig gemacht"
+              }`}
+            </h2>
+          </Col>
+        </Row>
+        <Row style={{ marginBottom: "20px" }} type={"flex"} justify={"center"}>
+          <Col>
+            <h2>
+              {`Ihre Zweitstimme: ${
+                this.state.selectedZweitkandidat
+                  ? `${this.state.selectedZweitkandidat.name} (${this.state.selectedZweitkandidat.partei.name})`
+                  : this.state.selectedZweitpartei
+                  ? `${this.state.selectedZweitpartei.name} Liste`
+                  : "ungültig gemacht"
+              }`}
+            </h2>
+          </Col>
+        </Row>
+        <Row type={"flex"} justify={"center"} gutter={16}>
+          <Col>
+            <Button onClick={this.previousTab} icon={"left"}>
+              Zurück
+            </Button>
+          </Col>
+          <Col>
+            <Button type={"primary"} icon={"check"} onClick={this.nextTab}>
+              Stimmen Abgeben
+            </Button>
+          </Col>
+        </Row>
+      </>
+    );
+
+  private renderVoteCommited = () =>
+    this.renderInTabContainer(
+      <Row
+        type={"flex"}
+        justify={"center"}
+        align={"middle"}
+        style={{ width: "100%", height: `calc(100vh - 149px)`, color: "green" }}
+      >
+        <Col span={16}>
+          <Row type={"flex"} justify={"center"}>
+            <Col>
+              <Icon type={"check"} style={{ fontSize: "100pt" }} />
+            </Col>
+          </Row>
+          <Row>
+            <Col style={{ textAlign: "center", fontSize: "30pt" }}>
+              Ihre Stimme wurde erfolgreich abgegeben. Sie können die Wahlkabine
+              nun verlassen
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    );
 
   render() {
     const { activeTab } = this.state;
@@ -226,6 +271,7 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
             tab={getWahlTabTitle(WahlTab.RECHTSBEHELFSBELEHRUNG)}
             key={`${WahlTab.RECHTSBEHELFSBELEHRUNG}`}
             style={tabPaneStyle}
+            disabled={furthestReachableTab < WahlTab.RECHTSBEHELFSBELEHRUNG}
           >
             {this.renderRechtsbelehrung()}
           </Tabs.TabPane>
@@ -246,12 +292,20 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
             {this.renderZweitstimme()}
           </Tabs.TabPane>
           <Tabs.TabPane
-            tab={getWahlTabTitle(WahlTab.COMMITVOTE)}
-            key={`${WahlTab.COMMITVOTE}`}
+            tab={getWahlTabTitle(WahlTab.CHECKVOTE)}
+            key={`${WahlTab.CHECKVOTE}`}
             style={tabPaneStyle}
-            disabled={furthestReachableTab < WahlTab.COMMITVOTE}
+            disabled={furthestReachableTab < WahlTab.CHECKVOTE}
           >
-            {this.renderCommitVote()}
+            {this.renderCheckVote()}
+          </Tabs.TabPane>
+          <Tabs.TabPane
+            tab={getWahlTabTitle(WahlTab.VOTECOMMITED)}
+            key={`${WahlTab.VOTECOMMITED}`}
+            style={tabPaneStyle}
+            disabled={true}
+          >
+            {this.renderVoteCommited()}
           </Tabs.TabPane>
         </Tabs>
       </div>
