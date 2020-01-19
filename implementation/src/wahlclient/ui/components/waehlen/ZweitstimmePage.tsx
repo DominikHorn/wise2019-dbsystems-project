@@ -148,6 +148,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
                     Liste wählen
                   </Checkbox>
                 }
+                hoverable={true}
               >
                 <Row type={"flex"} justify={"start"} align={"middle"}>
                   {filteredParteiListenData[parteiID].map(lk => (
