@@ -46,7 +46,7 @@ interface IState {
 }
 
 type ParteiListenData = {
-  [parteiID: string]: ListenKandidat[];
+  [parteiID: number]: ListenKandidat[];
 };
 
 class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
@@ -68,7 +68,8 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       );
       const ordered: ParteiListenData = {};
       for (const key of Object.keys(unordered)) {
-        ordered[key] = unordered[key].sort((a, b) =>
+        const parteiID = Number(key);
+        ordered[parteiID] = unordered[parteiID].sort((a, b) =>
           a.platz < b.platz ? -1 : a.platz > b.platz ? 1 : 0
         );
       }
@@ -77,11 +78,11 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
   );
 
   private numCols = 3;
-  private lineHeight = 21;
   private renderParteiListen = (parteiListenData: ParteiListenData) => {
     const filteredParteiListenData = Object.keys(parteiListenData).filter(
-      parteiID => {
+      key => {
         if (!this.state.searchString) return true;
+        const parteiID = Number(key);
         if (
           parteiListenData[parteiID][0].kandidat.partei.name.match(
             new RegExp(this.state.searchString, "i")
@@ -92,11 +93,6 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
         return false;
       }
     );
-    const maxKandidatenCount = parteiListenData
-      ? Math.max(
-          ...filteredParteiListenData.map(fpid => parteiListenData[fpid].length)
-        )
-      : 0;
     const columnCount =
       filteredParteiListenData.length <= 0
         ? this.numCols
@@ -105,33 +101,55 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
 
     return (
       <Row type={"flex"} gutter={[16, 16]} justify={"start"}>
-        {filteredParteiListenData.map(parteiID => (
-          <Col key={parteiID} span={24 / columnCount}>
-            <Card
-              style={{
-                borderColor: "#365592",
-                height: "100%"
-              }}
-              title={parteiListenData[parteiID][0].kandidat.partei.name}
-            >
-              <Row type={"flex"} justify={"start"} align={"middle"}>
-                {parteiListenData[parteiID].map(lk => (
-                  <Col key={lk.kandidat.id} span={checkboxColSpan}>
-                    <Checkbox
-                      checked={
-                        this.props.selectedKandidat &&
-                        this.props.selectedKandidat.id === lk.kandidat.id
-                      }
-                      onChange={() => this.props.onSelectKandidat(lk.kandidat)}
-                    >
-                      {`${`${lk.platz}`.padStart(2, "0")}. ${lk.kandidat.name}`}
-                    </Checkbox>
-                  </Col>
-                ))}
-              </Row>
-            </Card>
-          </Col>
-        ))}
+        {filteredParteiListenData.map(key => {
+          const parteiID = Number(key);
+          return (
+            <Col key={parteiID} span={24 / columnCount}>
+              <Card
+                style={{
+                  borderColor: "#365592",
+                  height: "100%"
+                }}
+                title={parteiListenData[parteiID][0].kandidat.partei.name}
+                extra={
+                  <Checkbox
+                    checked={
+                      this.props.selectedParty &&
+                      this.props.selectedParty.id === parteiID
+                    }
+                    onChange={() =>
+                      this.props.onSelectParty(
+                        parteiListenData[parteiID][0].kandidat.partei
+                      )
+                    }
+                  >
+                    Liste wählen
+                  </Checkbox>
+                }
+              >
+                <Row type={"flex"} justify={"start"} align={"middle"}>
+                  {parteiListenData[parteiID].map(lk => (
+                    <Col key={lk.kandidat.id} span={checkboxColSpan}>
+                      <Checkbox
+                        checked={
+                          this.props.selectedKandidat &&
+                          this.props.selectedKandidat.id === lk.kandidat.id
+                        }
+                        onChange={() =>
+                          this.props.onSelectKandidat(lk.kandidat)
+                        }
+                      >
+                        {`${`${lk.platz}`.padStart(2, "0")}. ${
+                          lk.kandidat.name
+                        }`}
+                      </Checkbox>
+                    </Col>
+                  ))}
+                </Row>
+              </Card>
+            </Col>
+          );
+        })}
       </Row>
     );
   };
@@ -164,12 +182,16 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
           </Button>
         </Tooltip>
         <b>
-          {this.props.selectedKandidat === undefined
+          {this.props.selectedKandidat === undefined &&
+          this.props.selectedParty === undefined
             ? "Keine Auswahl getroffen"
             : `Aktuelle Auswahl: ${
-                this.props.selectedKandidat === null
-                  ? "Erststimme ungültig gemacht"
-                  : `${this.props.selectedKandidat.name} (${this.props.selectedKandidat.partei.name})`
+                this.props.selectedKandidat === null &&
+                this.props.selectedParty === null
+                  ? "Zweitstimme ungültig gemacht"
+                  : this.props.selectedKandidat
+                  ? `${this.props.selectedKandidat.name} (${this.props.selectedKandidat.partei.name})`
+                  : `${this.props.selectedParty.name} Liste`
               }`}
         </b>
       </Col>

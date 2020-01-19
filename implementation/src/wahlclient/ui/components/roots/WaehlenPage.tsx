@@ -162,10 +162,10 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
         selectedKandidat={this.state.selectedZweitkandidat}
         selectedParty={this.state.selectedZweitpartei}
         onSelectKandidat={selectedZweitkandidat =>
-          this.setState({ selectedZweitkandidat })
+          this.setState({ selectedZweitkandidat, selectedZweitpartei: null })
         }
         onSelectParty={selectedZweitpartei =>
-          this.setState({ selectedZweitpartei })
+          this.setState({ selectedZweitpartei, selectedZweitkandidat: null })
         }
         goToNextTab={this.nextTab}
         goToPreviousTab={this.previousTab}
