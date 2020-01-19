@@ -232,7 +232,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
           </Col>
           <Col span={16}>
             <Input.Search
-              placeholder={"Suchen Sie nach einer Partei"}
+              placeholder={"Suchen nach einer Partei oder Kandidaten"}
               value={this.state.searchString}
               onChange={e =>
                 this.setState({
