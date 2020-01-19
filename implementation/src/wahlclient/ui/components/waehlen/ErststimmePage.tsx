@@ -48,7 +48,7 @@ class ErststimmePageComponent extends React.PureComponent<IProps> {
         <Button
           style={{ marginRight: "8px" }}
           onClick={this.props.goToPreviousTab}
-          icon={"fire"}
+          icon={"left"}
         >
           Zurück
         </Button>
@@ -75,7 +75,7 @@ class ErststimmePageComponent extends React.PureComponent<IProps> {
             : `Aktuelle Auswahl: ${
                 this.props.selectedKandidat === null
                   ? "Erststimme ungültig gemacht"
-                  : this.props.selectedKandidat.name
+                  : `${this.props.selectedKandidat.name} (${this.props.selectedKandidat.partei.name})`
               }`}
         </b>
       </Col>
