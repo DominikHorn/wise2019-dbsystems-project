@@ -15,7 +15,7 @@ import { compose } from "react-apollo";
 import {
   IGetAllDirektKandidatenQueryHocProps,
   withDirektKandidatenQuery
-} from "../../../../client-graphql/wahlen/getAllKandidatenQuery";
+} from "../../../../client-graphql/wahlen/getDirektKandidatenQuery";
 import { Stimmkreis, Wahl, Kandidat } from "../../../../shared/graphql.types";
 import "./ErststimmePage.css";
 import memoize from "memoize-one";

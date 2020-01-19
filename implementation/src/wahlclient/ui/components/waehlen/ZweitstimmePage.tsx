@@ -14,7 +14,7 @@ import { compose } from "react-apollo";
 import {
   IGetAllDirektKandidatenQueryHocProps,
   withDirektKandidatenQuery
-} from "../../../../client-graphql/wahlen/getAllKandidatenQuery";
+} from "../../../../client-graphql/wahlen/getDirektKandidatenQuery";
 import {
   Kandidat,
   Partei,
