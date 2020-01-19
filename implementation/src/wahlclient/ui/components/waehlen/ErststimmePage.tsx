@@ -22,18 +22,6 @@ export interface IProps
     IGetDirektKandidatenQueryHocProps {}
 
 class ErststimmePageComponent extends React.PureComponent<IProps> {
-  private renderUngueltigBox = () => (
-    <Card
-      style={{ borderColor: "#cc3636" }}
-      hoverable={true}
-      onClick={() => this.props.onSelectKandidat(null)}
-    >
-      <Checkbox checked={this.props.selectedKandidat === null}>
-        Stimme ungültig machen
-      </Checkbox>
-    </Card>
-  );
-
   private renderKandidatBox = (kandidat: Kandidat) => (
     <Card
       className={"candidat-card"}
@@ -56,16 +44,14 @@ class ErststimmePageComponent extends React.PureComponent<IProps> {
 
   private renderPageControls = () => (
     <Row type={"flex"} justify={"start"} align={"middle"} gutter={16}>
-      <Col>
+      <Col span={16}>
         <Button
-          style={{ float: "left" }}
+          style={{ marginRight: "8px" }}
           onClick={this.props.goToPreviousTab}
-          icon={"left"}
+          icon={"fire"}
         >
           Zurück
         </Button>
-      </Col>
-      <Col>
         <Tooltip
           title={
             this.props.selectedKandidat === undefined
@@ -77,13 +63,12 @@ class ErststimmePageComponent extends React.PureComponent<IProps> {
             type={"primary"}
             disabled={this.props.selectedKandidat === undefined}
             onClick={this.props.goToNextTab}
+            style={{ marginRight: "8px" }}
           >
             Weiter
             <Icon type={"right"} />
           </Button>
         </Tooltip>
-      </Col>
-      <Col>
         <b>
           {this.props.selectedKandidat === undefined
             ? "Keine Auswahl getroffen"
@@ -93,6 +78,16 @@ class ErststimmePageComponent extends React.PureComponent<IProps> {
                   : this.props.selectedKandidat.name
               }`}
         </b>
+      </Col>
+      <Col span={8}>
+        <Button
+          type={"danger"}
+          icon={"issues-close"}
+          onClick={() => this.props.onSelectKandidat(null)}
+          style={{ float: "right" }}
+        >
+          Stimme ungültig machen
+        </Button>
       </Col>
     </Row>
   );
@@ -115,10 +110,6 @@ class ErststimmePageComponent extends React.PureComponent<IProps> {
               {this.renderKandidatBox(kandidat)}
             </Col>
           ))}
-        </Row>
-        <Divider />
-        <Row type={"flex"} justify={"start"} gutter={[16, 16]}>
-          <Col span={24 / numCols}>{this.renderUngueltigBox()}</Col>
         </Row>
       </>
     );

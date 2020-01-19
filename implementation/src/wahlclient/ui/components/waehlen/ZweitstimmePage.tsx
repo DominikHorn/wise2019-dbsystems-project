@@ -178,7 +178,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
 
   private renderPageControls = () => (
     <Row type={"flex"} justify={"start"} align={"middle"} gutter={16}>
-      <Col span={16}>
+      <Col span={12}>
         <Button
           style={{ marginRight: "8px" }}
           onClick={this.props.goToPreviousTab}
@@ -217,17 +217,30 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
               }`}
         </b>
       </Col>
-      <Col span={8}>
-        <Input.Search
-          style={{ float: "right" }}
-          placeholder={"Suchen Sie nach einer Partei"}
-          value={this.state.searchString}
-          onChange={e =>
-            this.setState({
-              searchString: e.target.value
-            })
-          }
-        />
+      <Col span={12}>
+        <Row type={"flex"} justify={"end"} gutter={16}>
+          <Col span={8}>
+            <Button
+              type={"danger"}
+              icon={"issues-close"}
+              onClick={() => this.props.onSelectKandidat(null)}
+              style={{ float: "right" }}
+            >
+              Stimme ungültig machen
+            </Button>
+          </Col>
+          <Col span={16}>
+            <Input.Search
+              placeholder={"Suchen Sie nach einer Partei"}
+              value={this.state.searchString}
+              onChange={e =>
+                this.setState({
+                  searchString: e.target.value
+                })
+              }
+            />
+          </Col>
+        </Row>
       </Col>
     </Row>
   );
