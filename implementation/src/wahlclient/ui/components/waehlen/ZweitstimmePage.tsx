@@ -77,31 +77,51 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
     }
   );
 
-  private numCols = 3;
-  private renderParteiListen = (parteiListenData: ParteiListenData) => {
-    const filteredParteiListenData = Object.keys(parteiListenData).filter(
-      key => {
-        if (!this.state.searchString) return true;
-        const parteiID = Number(key);
+  private getFilteredParteiListenData = memoize(
+    (parteiListenData: ParteiListenData, searchString?: string) => {
+      if (!searchString) return parteiListenData;
+
+      const parteiIDs = Object.keys(parteiListenData).map(Number);
+      const res: ParteiListenData = {};
+      for (const parteiID of parteiIDs) {
         if (
           parteiListenData[parteiID][0].kandidat.partei.name.match(
-            new RegExp(this.state.searchString, "i")
+            new RegExp(searchString, "i")
           )
-        )
-          return true;
+        ) {
+          res[parteiID] = parteiListenData[parteiID];
+          continue;
+        }
 
-        return false;
+        const searchStringParts = searchString.split(" ");
+        const filteredCandidates = parteiListenData[parteiID].filter(lk =>
+          searchStringParts.every(ss =>
+            lk.kandidat.name.match(new RegExp(ss, "i"))
+          )
+        );
+        if (filteredCandidates.length > 0) {
+          res[parteiID] = filteredCandidates;
+        }
       }
+
+      return res;
+    }
+  );
+
+  private numCols = 3;
+  private renderParteiListen = (parteiListenData: ParteiListenData) => {
+    const filteredParteiListenData = this.getFilteredParteiListenData(
+      parteiListenData,
+      this.state.searchString
     );
+    const partyCount = Object.keys(filteredParteiListenData).length;
     const columnCount =
-      filteredParteiListenData.length <= 0
-        ? this.numCols
-        : Math.min(this.numCols, filteredParteiListenData.length);
+      partyCount <= 0 ? this.numCols : Math.min(this.numCols, partyCount);
     const checkboxColSpan = columnCount < this.numCols ? 24 / this.numCols : 24;
 
     return (
       <Row type={"flex"} gutter={[16, 16]} justify={"start"}>
-        {filteredParteiListenData.map(key => {
+        {Object.keys(filteredParteiListenData).map(key => {
           const parteiID = Number(key);
           return (
             <Col key={parteiID} span={24 / columnCount}>
@@ -110,7 +130,9 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
                   borderColor: "#365592",
                   height: "100%"
                 }}
-                title={parteiListenData[parteiID][0].kandidat.partei.name}
+                title={
+                  filteredParteiListenData[parteiID][0].kandidat.partei.name
+                }
                 extra={
                   <Checkbox
                     checked={
@@ -119,7 +141,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
                     }
                     onChange={() =>
                       this.props.onSelectParty(
-                        parteiListenData[parteiID][0].kandidat.partei
+                        filteredParteiListenData[parteiID][0].kandidat.partei
                       )
                     }
                   >
@@ -128,7 +150,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
                 }
               >
                 <Row type={"flex"} justify={"start"} align={"middle"}>
-                  {parteiListenData[parteiID].map(lk => (
+                  {filteredParteiListenData[parteiID].map(lk => (
                     <Col key={lk.kandidat.id} span={checkboxColSpan}>
                       <Checkbox
                         checked={
