@@ -5,6 +5,7 @@ import { Kandidat, Partei } from "../../../../shared/graphql.types";
 import { ErststimmePage } from "../waehlen/ErststimmePage";
 import { ZweitstimmePage } from "../waehlen/ZweitstimmePage";
 import "./WaehlenPage.css";
+import { Rechtsbehelfsbelehrung } from "../waehlen/Rechtsbehelfsbelehrung";
 
 export interface IWaehlenPageProps {
   routeProps: RouteComponentProps<any>;
@@ -127,7 +128,11 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
   private renderRechtsbelehrung = () =>
     this.renderInTabContainer(
       <>
-        <div style={{ textAlign: "justify" }}>{LOREM_IPSUM}</div>
+        <Row type={"flex"} justify={"center"} style={{ marginBottom: "8px" }}>
+          <Col style={{ width: "100%" }}>
+            <Rechtsbehelfsbelehrung />
+          </Col>
+        </Row>
         <Row type={"flex"} gutter={16} justify={"end"}>
           <Col>
             <Button
