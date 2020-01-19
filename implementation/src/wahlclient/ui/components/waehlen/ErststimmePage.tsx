@@ -13,7 +13,7 @@ import {
 import * as React from "react";
 import { compose } from "react-apollo";
 import {
-  IGetAllDirektKandidatenQueryHocProps,
+  IGetDirektKandidatenQueryHocProps,
   withDirektKandidatenQuery
 } from "../../../../client-graphql/wahlen/getDirektKandidatenQuery";
 import { Stimmkreis, Wahl, Kandidat } from "../../../../shared/graphql.types";
@@ -32,7 +32,7 @@ interface ErststimmePageProps {
 
 export interface IProps
   extends ErststimmePageProps,
-    IGetAllDirektKandidatenQueryHocProps {}
+    IGetDirektKandidatenQueryHocProps {}
 
 class ErststimmePageComponent extends React.PureComponent<IProps> {
   private renderUngueltigBox = () => (

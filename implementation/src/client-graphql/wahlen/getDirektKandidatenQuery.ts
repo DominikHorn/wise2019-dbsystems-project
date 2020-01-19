@@ -26,7 +26,7 @@ interface IGetDirektKandidatenQueryResponse extends IGraphqlType {
   readonly direktKandidaten?: Kandidat[];
 }
 
-export interface IGetAllDirektKandidatenQueryHocProps {
+export interface IGetDirektKandidatenQueryHocProps {
   readonly direktKandidatenData: DataValue<
     IGetDirektKandidatenQueryResponse,
     QueryToGetDirektKandidatenArgs
@@ -42,7 +42,7 @@ export const withDirektKandidatenQuery = <TProps = {}>(
   getWahlId: (props: TProps) => number,
   getStimmkreisId: (props: TProps) => number
 ) =>
-  direktKandidatenTypedHoc<TProps, IGetAllDirektKandidatenQueryHocProps>({
+  direktKandidatenTypedHoc<TProps, IGetDirektKandidatenQueryHocProps>({
     options: props => ({
       variables: {
         wahlid: getWahlId(props),
