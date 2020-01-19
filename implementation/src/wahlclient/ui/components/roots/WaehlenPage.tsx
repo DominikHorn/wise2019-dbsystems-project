@@ -158,7 +158,7 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
     this.renderInTabContainer(
       <ZweitstimmePage
         wahl={{ id: 2, wahldatum: new Date() }}
-        stimmkreis={{ id: 101, name: "München-Mitte" }}
+        regierungsbezirk={{ id: 901, name: "Oberbayern" }}
         selectedKandidat={this.state.selectedZweitkandidat}
         selectedParty={this.state.selectedZweitpartei}
         onSelectKandidat={selectedZweitkandidat =>

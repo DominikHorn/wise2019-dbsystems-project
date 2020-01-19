@@ -1,24 +1,11 @@
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  Row,
-  Spin,
-  Icon,
-  message,
-  Divider,
-  Tooltip
-} from "antd";
+import { Button, Card, Checkbox, Col, Divider, Icon, Row, Tooltip } from "antd";
 import * as React from "react";
 import { compose } from "react-apollo";
 import {
   IGetDirektKandidatenQueryHocProps,
   withDirektKandidatenQuery
 } from "../../../../client-graphql/wahlen/getDirektKandidatenQuery";
-import { Stimmkreis, Wahl, Kandidat } from "../../../../shared/graphql.types";
-import "./ErststimmePage.css";
-import memoize from "memoize-one";
+import { Kandidat, Stimmkreis, Wahl } from "../../../../shared/graphql.types";
 
 interface ErststimmePageProps {
   readonly wahl: Wahl;
@@ -37,7 +24,7 @@ export interface IProps
 class ErststimmePageComponent extends React.PureComponent<IProps> {
   private renderUngueltigBox = () => (
     <Card
-      className={"ungueltig-card"}
+      style={{ borderColor: "#cc3636" }}
       hoverable={true}
       onClick={() => this.props.onSelectKandidat(null)}
     >
@@ -50,6 +37,7 @@ class ErststimmePageComponent extends React.PureComponent<IProps> {
   private renderKandidatBox = (kandidat: Kandidat) => (
     <Card
       className={"candidat-card"}
+      style={{ borderColor: "#365592" }}
       hoverable={true}
       onClick={() => this.props.onSelectKandidat(kandidat)}
     >

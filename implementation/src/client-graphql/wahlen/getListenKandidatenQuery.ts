@@ -7,8 +7,11 @@ import { DataValue } from "react-apollo";
 import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const getListKandidatenGQL = gql`
-  query getListenKandidatenQuery($wahlid: Int!, regierungsbezirkid: Int!) {
-    listenKandidaten: getListenKandidaten(wahlid: $wahlid, regierungsbezirkid: $regierungsbezirkid) {
+  query getListenKandidatenQuery($wahlid: Int!, $regierungsbezirkid: Int!) {
+    listenKandidaten: getListenKandidaten(
+      wahlid: $wahlid
+      regierungsbezirkid: $regierungsbezirkid
+    ) {
       platz
       kandidat {
         id
