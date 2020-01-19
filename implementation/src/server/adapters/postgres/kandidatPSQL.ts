@@ -89,7 +89,7 @@ export async function insertDirektkandidat(
         .then(res => res && res[0]);
 }
 
-export async function getAllDirektKandidaten(
+export async function getDirektKandidaten(
   wahlid: number,
   stimmkreisid: number
 ): Promise<Kandidat[]> {
@@ -100,7 +100,10 @@ export async function getAllDirektKandidaten(
     kandidat_name: string;
   }[] = await adapters.postgres.query(
     `
-    SELECT k.partei_id, p.name, k.name, k.id
+    SELECT k.id as kandidat_id,
+           k.name as kandidat_name, 
+           p.id as partei_id, 
+           p.name as partei_name
     FROM "${DatabaseSchemaGroup}".direktkandidaten dk
       JOIN "${DatabaseSchemaGroup}".kandidaten k
         ON dk.direktkandidat_id = k.id
@@ -108,8 +111,7 @@ export async function getAllDirektKandidaten(
         ON p.id = k.partei_id
       JOIN "${DatabaseSchemaGroup}".stimmkreise sk
         ON dk.stimmkreis_id = sk.id
-    WHERE dk.stimmkreis_id = $2 AND dk.wahl_id = $1;
-`,
+    WHERE dk.wahl_id = $1 AND dk.stimmkreis_id = $2;`,
     [wahlid, stimmkreisid]
   );
 

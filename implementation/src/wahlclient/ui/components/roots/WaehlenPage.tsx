@@ -1,10 +1,10 @@
-import { Button, Card, Col, message, Row } from "antd";
+import { Button, Col, Row, Tabs } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
-import { ErststimmePage } from "../general/ErststimmePage";
-import { ZweitstimmePage } from "../general/ZweitstimmePage";
-import { Kandidat, Partei, Stimmkreis } from "../../../../shared/graphql.types";
-import { StimmAbgabePage } from "../general/StimmAngabePage";
+import { Kandidat, Partei } from "../../../../shared/graphql.types";
+import { ErststimmePage } from "../waehlen/ErststimmePage";
+import { ZweitstimmePage } from "../waehlen/ZweitstimmePage";
+import "./WaehlenPage.css";
 
 export interface IWaehlenPageProps {
   routeProps: RouteComponentProps<any>;
@@ -13,22 +13,34 @@ export interface IWaehlenPageProps {
 interface IProps extends IWaehlenPageProps {}
 
 interface IState {
-  rechtsbelehrung: boolean;
-  //flags that shows whether first/ second vote was committed (also set if the vote was set unvalid by the user)
-  erststimme_abgg: boolean;
-  zweitstimme_abgg: boolean;
-  //the candidates that where selected by the user (stay undefined if the vote is set unvalid)
-  selectedErststimme: {
-    kandidat: Kandidat;
-    ungueltig: boolean;
-  };
-  selectedZweitstimme: {
-    kandidat: Kandidat;
-    partei: Partei;
-    ungueltig: boolean;
-  };
-  commitVote: boolean;
-  committed: boolean;
+  readonly selectedErstkandidat?: Kandidat | null;
+  readonly selectedZweitkandidat?: Kandidat | null;
+  readonly selectedZweitpartei?: Partei | null;
+
+  readonly activeTab: WahlTab;
+  readonly furthestReachedTab: WahlTab;
+}
+
+enum WahlTab {
+  RECHTSBEHELFSBELEHRUNG = 0,
+  ERSTSTIMME = 1,
+  ZWEITSTIMME = 2,
+  COMMITVOTE = 3
+}
+
+function getWahlTabTitle(wahlTab: WahlTab) {
+  switch (wahlTab) {
+    case WahlTab.RECHTSBEHELFSBELEHRUNG:
+      return "Rechtsbehelfsbelehrung";
+    case WahlTab.ERSTSTIMME:
+      return "Erststimmabgabe";
+    case WahlTab.ZWEITSTIMME:
+      return "Zweitstimmabgabe";
+    case WahlTab.COMMITVOTE:
+      return "Bestätigung";
+    default:
+      return "Error - Unknown Tab";
+  }
 }
 
 const LOREM_IPSUM = `
@@ -44,83 +56,68 @@ Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie co
 Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit.   
 `;
 
-const FACE_PALM = `
-🤦🏻‍♀️🤦🏿🤦🏽🤦🏼‍♀️🤦🏻🤦🏾‍♀️🤦🏻‍♀️🤦🏿🤦🏽🤦🏼‍♀️🤦🏻🤦🏾‍♀️🤦🏻‍♀️🤦🏿🤦🏽🤦🏼‍♀️🤦🏻🤦🏾‍♀️🤦🏻‍♀️🤦🏿🤦🏽🤦🏼‍♀️🤦🏻🤦🏾‍♀️🤦🏻‍♀️🤦🏿🤦🏽🤦🏼‍♀️🤦🏻🤦🏾‍♀️🤦🏻‍♀️🤦🏿🤦🏽🤦🏼‍♀️🤦🏻🤦🏾‍♀️
-`;
-
-class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
+export class WaehlenPage extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
-      rechtsbelehrung: false,
-      erststimme_abgg: false,
-      zweitstimme_abgg: false,
-      commitVote: false,
-      committed: false,
-      selectedErststimme: {
-        kandidat: null,
-        ungueltig: false
-      },
-      selectedZweitstimme: {
-        kandidat: null,
-        partei: null,
-        ungueltig: false
-      }
+      activeTab: WahlTab.RECHTSBEHELFSBELEHRUNG,
+      furthestReachedTab: WahlTab.RECHTSBEHELFSBELEHRUNG
     };
   }
-  private renderRechtsbelehrung = () => (
-    <Card
-      title={"Wählen - Rechtsbehelfsbelehrung"}
-      style={{ minHeight: "100%" }}
-      hoverable={true}
+
+  private nextTab = () => {
+    const nextTab = this.state.activeTab + 1;
+    if (nextTab > WahlTab.COMMITVOTE) {
+      // TODO: commit data
+      return;
+    }
+    this.setState({
+      activeTab: nextTab,
+      furthestReachedTab: nextTab
+    });
+  };
+
+  private previousTab = () => {
+    this.setState({
+      activeTab: Math.min(this.state.activeTab, WahlTab.RECHTSBEHELFSBELEHRUNG)
+    });
+  };
+
+  private renderInTabContainer = (component: React.ReactElement) => (
+    <div
+      style={{
+        height: `calc(100vh - 109px)`,
+        overflowY: "scroll"
+      }}
     >
-      <div style={{ textAlign: "justify" }}>{LOREM_IPSUM}</div>
-      <Row
-        type={"flex"}
-        gutter={16}
-        justify={"end"}
-        style={{ marginTop: "15px" }}
-      >
-        <Col>
-          <Button
-            style={{ float: "right" }}
-            onClick={() => {
-              message.info(FACE_PALM);
-            }}
-          >
-            Nö, nicht verstanden
-          </Button>
-        </Col>
-        <Col>
-          <Button
-            type={"primary"}
-            style={{ float: "right" }}
-            onClick={() => {
-              this.setState({ rechtsbelehrung: true });
-            }}
-          >
-            Zur Kenntniss genommen
-          </Button>
-        </Col>
-      </Row>
-    </Card>
+      <div style={{ margin: "20px" }}>{component}</div>
+    </div>
   );
+
+  private renderRechtsbelehrung = () =>
+    this.renderInTabContainer(
+      <>
+        <div style={{ textAlign: "justify" }}>{LOREM_IPSUM}</div>
+        <Row type={"flex"} gutter={16} justify={"end"}>
+          <Col>
+            <Button
+              type={"primary"}
+              style={{ float: "right" }}
+              onClick={this.nextTab}
+            >
+              Zur Kenntniss genommen
+            </Button>
+          </Col>
+        </Row>
+      </>
+    );
 
   private renderErststimme = () => (
     <ErststimmePage
-      routeProps={this.props.routeProps}
       wahl={{ id: 2, wahldatum: new Date() }}
       stimmkreis={{ id: 101, name: "München-Mitte" }}
-      onChangeErststimmeAbgg={(newValue: boolean) =>
-        this.setState({ erststimme_abgg: newValue })
-      }
-      onChangeDirektkandidat={(chosen: {
-        kandidat: Kandidat;
-        ungueltig: boolean;
-      }) => this.setState({ selectedErststimme: chosen })}
-      onChangeBack={(back: boolean) =>
-        this.setState({ rechtsbelehrung: !back })
-      }
+      goToNextTab={this.nextTab}
+      goToPreviousTab={this.previousTab}
     />
   );
 
@@ -128,98 +125,89 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
     <ZweitstimmePage
       wahl={{ id: 2, wahldatum: new Date() }}
       stimmkreis={{ id: 101, name: "München-Mitte" }}
-      onChangeZweitstimmeAbgg={(newValue: boolean) =>
-        this.setState({ zweitstimme_abgg: newValue })
-      }
-      onChangeZweitStimme={(chosen: {
-        kandidat: Kandidat;
-        partei: Partei;
-        ungueltig: boolean;
-      }) => this.setState({ selectedZweitstimme: chosen })}
-      onChangeBack={(back: boolean) =>
-        this.setState({ erststimme_abgg: !back })
-      }
+      onChangeZweitstimmeAbgg={() => {}}
+      onChangeZweitStimme={() => {}}
+      onChangeBack={() => {}}
     />
   );
 
+  //if (!this.state.committed) {
+  //   return (
+  //     <StimmAbgabePage
+  //       erststimme={this.state.selectedErststimme}
+  //       zweitstimme={this.state.selectedZweitstimme}
+  //       onClickCommit={(commit: boolean) =>
+  //         this.setState({ commitVote: commit })
+  //       }
+  //       onClickBack={() => this.setState({ zweitstimme_abgg: false })}
+  //       committedVote={false}
+  //     />
+  //   );
+  // } else {
+  //   return (
+  //     <StimmAbgabePage
+  //       erststimme={this.state.selectedErststimme}
+  //       zweitstimme={this.state.selectedZweitstimme}
+  //       onClickCommit={(commit: boolean) =>
+  //         this.setState({ commitVote: commit })
+  //       }
+  //       onClickBack={null}
+  //       committedVote={true}
+  //     />
+  //   );
+  // }
+  private renderCommitVote = () => <>{"TODO"}</>;
+
   render() {
-    console.log(this.state.erststimme_abgg);
-    if (!this.state.rechtsbelehrung) {
-      return this.renderRechtsbelehrung();
-    } else if (!this.state.erststimme_abgg) {
-      return this.renderErststimme();
-    } else if (!this.state.zweitstimme_abgg) {
-      console.log("Zweitstimme abgegeben:" + this.state.zweitstimme_abgg);
-      //console.log(this.state.selectedErststimme);
-      return this.renderZweitstimme();
-    } else if (!this.state.committed) {
-      console.log("Ich bin hier angekommen!");
-      // console.log("Stimmen abgeben:");
-      // console.log(this.state.selectedErststimme);
-      // console.log(this.state.selectedZweitstimme);
-      return (
-        <StimmAbgabePage
-          erststimme={this.state.selectedErststimme}
-          zweitstimme={this.state.selectedZweitstimme}
-          onClickCommit={(commit: boolean) =>
-            this.setState({ commitVote: commit })
+    const { activeTab, furthestReachedTab } = this.state;
+    const tabPaneStyle: React.CSSProperties = {
+      margin: "0px"
+    };
+
+    return (
+      <div className={"waehlen-page-container"}>
+        <Tabs
+          activeKey={`${activeTab}`}
+          onChange={activeTabKey =>
+            this.setState({
+              activeTab: Number(activeTabKey) as WahlTab
+            })
           }
-          onClickBack={() => this.setState({ zweitstimme_abgg: false })}
-          committedVote={false}
-        />
-      );
-    } else {
-      return (
-        <StimmAbgabePage
-          erststimme={this.state.selectedErststimme}
-          zweitstimme={this.state.selectedZweitstimme}
-          onClickCommit={(commit: boolean) =>
-            this.setState({ commitVote: commit })
-          }
-          onClickBack={null}
-          committedVote={true}
-        />
-      );
-    }
+          style={{ backgroundColor: "white" }}
+        >
+          <Tabs.TabPane
+            tab={getWahlTabTitle(WahlTab.RECHTSBEHELFSBELEHRUNG)}
+            key={`${WahlTab.RECHTSBEHELFSBELEHRUNG}`}
+            style={tabPaneStyle}
+          >
+            {this.renderRechtsbelehrung()}
+          </Tabs.TabPane>
+          <Tabs.TabPane
+            tab={getWahlTabTitle(WahlTab.ERSTSTIMME)}
+            key={`${WahlTab.ERSTSTIMME}`}
+            style={tabPaneStyle}
+            disabled={furthestReachedTab < WahlTab.ERSTSTIMME}
+          >
+            {this.renderErststimme()}
+          </Tabs.TabPane>
+          <Tabs.TabPane
+            tab={getWahlTabTitle(WahlTab.ZWEITSTIMME)}
+            key={`${WahlTab.ZWEITSTIMME}`}
+            style={tabPaneStyle}
+            disabled={furthestReachedTab < WahlTab.ZWEITSTIMME}
+          >
+            {this.renderZweitstimme()}
+          </Tabs.TabPane>
+          <Tabs.TabPane
+            tab={getWahlTabTitle(WahlTab.COMMITVOTE)}
+            key={`${WahlTab.COMMITVOTE}`}
+            style={tabPaneStyle}
+            disabled={furthestReachedTab < WahlTab.COMMITVOTE}
+          >
+            {this.renderCommitVote()}
+          </Tabs.TabPane>
+        </Tabs>
+      </div>
+    );
   }
 }
-
-export const WaehlenPage = WaehlenPageComponent;
-
-// export const WaehlenPage = (props: IWaehlenPageProps) => (
-//   <Card
-//     title={"Wählen - Rechtsbehelfsbelehrung"}
-//     style={{ minHeight: "100%" }}
-//     hoverable={true}
-//   >
-//     <div style={{ textAlign: "justify" }}>{LOREM_IPSUM}</div>
-//     <Row
-//       type={"flex"}
-//       gutter={16}
-//       justify={"end"}
-//       style={{ marginTop: "15px" }}
-//     >
-//       <Col>
-//         <Button
-//           style={{ float: "right" }}
-//           onClick={() => {
-//             message.info(FACE_PALM);
-//           }}
-//         >
-//           Nö, nicht verstanden
-//         </Button>
-//       </Col>
-//       <Col>
-//         <Button
-//           type={"primary"}
-//           style={{ float: "right" }}
-//           onClick={() => {
-//             message.error("Unimplemented");
-//           }}
-//         >
-//           Zur Kenntniss genommen
-//         </Button>
-//       </Col>
-//     </Row>
-//   </Card>
-// );

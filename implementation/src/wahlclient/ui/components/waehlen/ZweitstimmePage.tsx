@@ -5,17 +5,15 @@ import {
   IGetAllDirektKandidatenQueryHocProps,
   withDirektKandidatenQuery
 } from "../../../../client-graphql/wahlen/getAllKandidatenQuery";
-import { EParteiName } from "../../../../shared/enums";
 import {
-  IKandidat,
-  IListenKandidat,
-  IPartei,
-  IStimmkreis,
-  IWahl
-} from "../../../../shared/sharedTypes";
+  Kandidat,
+  Partei,
+  Wahl,
+  Stimmkreis
+} from "../../../../shared/graphql.types";
 
 interface IState {
-  readonly selectedCandidat?: IKandidat;
+  readonly selectedCandidat?: Kandidat;
   readonly clickedCommit?: boolean;
   stimmeUngueltig: boolean;
   checked: {
@@ -23,15 +21,15 @@ interface IState {
     partei: number;
   };
   chosen: {
-    kandidat: IKandidat;
-    partei: IPartei;
+    kandidat: Kandidat;
+    partei: Partei;
     ungueltig: boolean;
   };
 }
 
 interface ZweitstimmePageProps {
-  readonly wahl: IWahl;
-  readonly stimmkreis: IStimmkreis;
+  readonly wahl: Wahl;
+  readonly stimmkreis: Stimmkreis;
   onChangeZweitstimmeAbgg: any;
   onChangeZweitStimme: any;
   onChangeBack: any;
@@ -41,9 +39,11 @@ export interface IProps
   extends ZweitstimmePageProps,
     IGetAllDirektKandidatenQueryHocProps {}
 
-function mapData(list: IListenKandidat[]) {
+type ListenKandidat = { listenplatz: number; kandidat: Kandidat };
+
+function mapData(list: ListenKandidat[]) {
   return list.reduce(
-    (data: { [parteiID: number]: IListenKandidat[] }, listenKandidat) => ({
+    (data: { [parteiID: number]: ListenKandidat[] }, listenKandidat) => ({
       ...data,
       [listenKandidat.kandidat.partei.id]: (
         data[listenKandidat.kandidat.partei.id] || []
@@ -72,13 +72,13 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
     };
   }
 
-  candidatesAr: IListenKandidat[] = [
+  candidatesAr: ListenKandidat[] = [
     {
       listenplatz: 1,
       kandidat: {
         id: 1,
         name: "Kandidat Name1",
-        partei: { id: 1, name: EParteiName.CSU }
+        partei: { id: 1, name: "CSU" }
       }
     },
     {
@@ -86,7 +86,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 2,
         name: "Kandidat Name2",
-        partei: { id: 1, name: EParteiName.CSU }
+        partei: { id: 1, name: "CSU" }
       }
     },
     {
@@ -94,7 +94,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 3,
         name: "Kandidat Name3",
-        partei: { id: 1, name: EParteiName.CSU }
+        partei: { id: 1, name: "CSU" }
       }
     },
     {
@@ -102,7 +102,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 4,
         name: "Kandidat Name4",
-        partei: { id: 1, name: EParteiName.CSU }
+        partei: { id: 1, name: "CSU" }
       }
     },
     {
@@ -110,7 +110,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 1,
         name: "Kandidat Name1",
-        partei: { id: 2, name: EParteiName.SPD }
+        partei: { id: 2, name: "SPD" }
       }
     },
     {
@@ -118,7 +118,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 2,
         name: "Kandidat Name2",
-        partei: { id: 2, name: EParteiName.SPD }
+        partei: { id: 2, name: "SPD" }
       }
     },
     {
@@ -126,7 +126,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 3,
         name: "Kandidat Name3",
-        partei: { id: 2, name: EParteiName.SPD }
+        partei: { id: 2, name: "SPD" }
       }
     },
     {
@@ -134,7 +134,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 4,
         name: "Kandidat Name4",
-        partei: { id: 2, name: EParteiName.SPD }
+        partei: { id: 2, name: "SPD" }
       }
     },
     {
@@ -142,7 +142,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 5,
         name: "Kandidat Name5",
-        partei: { id: 2, name: EParteiName.SPD }
+        partei: { id: 2, name: "SPD" }
       }
     },
     {
@@ -150,7 +150,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 6,
         name: "Kandidat Name6",
-        partei: { id: 2, name: EParteiName.SPD }
+        partei: { id: 2, name: "SPD" }
       }
     },
     {
@@ -158,7 +158,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 1,
         name: "Kandidat Name1",
-        partei: { id: 4, name: EParteiName.GRUENE }
+        partei: { id: 4, name: "Grüne" }
       }
     },
     {
@@ -166,7 +166,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 2,
         name: "Kandidat Name2",
-        partei: { id: 4, name: EParteiName.GRUENE }
+        partei: { id: 4, name: "Grüne" }
       }
     },
     {
@@ -174,7 +174,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 3,
         name: "Kandidat Name3",
-        partei: { id: 4, name: EParteiName.GRUENE }
+        partei: { id: 4, name: "Grüne" }
       }
     },
     {
@@ -182,19 +182,14 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
       kandidat: {
         id: 4,
         name: "Kandidat Name4",
-        partei: { id: 4, name: EParteiName.GRUENE }
+        partei: { id: 4, name: "Grüne" }
       }
     }
   ];
 
-  data: { [parteiid: number]: IListenKandidat[] } = mapData(this.candidatesAr);
+  data: { [parteiid: number]: ListenKandidat[] } = mapData(this.candidatesAr);
 
-  private renderParteiListenCard(
-    partei: IPartei,
-    kandidaten: IListenKandidat[]
-  ) {
-    //debugger;
-    //console.log("Rendering all cards");
+  private renderParteiListenCard(partei: Partei, kandidaten: ListenKandidat[]) {
     return (
       <Col style={{ padding: "5px" }}>
         <Card style={{ width: "250px", borderColor: "#365592" }}>
@@ -255,26 +250,19 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
   //to commit an unvalid vote means that a vote was committed but the candidate is undefined
   private commitInvalidVote() {
     this.props.onChangeZweitstimmeAbgg(this.state.stimmeUngueltig);
-    // this.setState({
-    //   chosen: { kandidat: null, partei: null, ungueltig: true }
-    // });
     this.props.onChangeZweitStimme({
       kandidat: null,
       partei: null,
       ungueltig: true
     });
-    //console.log("Stimme ungültig: " + this.state.stimmeUngueltig);
-    //console.log("committing invalid vote");
   }
 
   private commitValidVote() {
-    //if the voter did not choose any candidate/ party yet, they are not allowed to commit the vote
     if (
       !(
         this.state.chosen.kandidat === null && this.state.chosen.partei === null
       )
     ) {
-      //commiting a valid vote hands over the selected candidate to the WaehlenPage
       this.props.onChangeZweitstimmeAbgg(true);
       this.props.onChangeZweitStimme(this.state.chosen);
     } else {
@@ -285,7 +273,6 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
   }
 
   render() {
-    console.log("Data: " + this.data);
     if (this.state.stimmeUngueltig) {
       return (
         <Card title={"Zweitstimme"} style={{ minHeight: "100%" }}>

@@ -1,17 +1,17 @@
 import * as React from "react";
-import { IKandidat, IPartei } from "../../../../shared/sharedTypes";
 import { Card, Button, Row, Col } from "antd";
+import { Kandidat, Partei } from "../../../../shared/graphql.types";
 
 interface IState {}
 
 export interface IProps {
   erststimme: {
-    kandidat: IKandidat;
+    kandidat: Kandidat;
     ungueltig: boolean;
   };
   zweitstimme: {
-    kandidat: IKandidat;
-    partei: IPartei;
+    kandidat: Kandidat;
+    partei: Partei;
     ungueltig: boolean;
   };
   onClickCommit: any;

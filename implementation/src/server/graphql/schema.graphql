@@ -15,7 +15,7 @@ type Query {
     vglwahlid: Int!
     stimmkreisid: Int!
   ): [Stimmentwicklung]!
-  getAllDirektKandidaten(wahlid: Int!, stimmkreisid: Int!): [Kandidat]!
+  getDirektKandidaten(wahlid: Int!, stimmkreisid: Int!): [Kandidat]!
 }
 
 type Mutation {
