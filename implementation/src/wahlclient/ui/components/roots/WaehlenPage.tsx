@@ -1,4 +1,4 @@
-import { Button, Col, Row, Tabs, message } from "antd";
+import { Button, Col, Row, Tabs, message, Icon } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import { Kandidat, Partei } from "../../../../shared/graphql.types";
@@ -136,7 +136,8 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
                 )
               }
             >
-              Zur Kenntniss genommen
+              Zur Kenntnis genommen
+              <Icon type={"right"} />
             </Button>
           </Col>
         </Row>
