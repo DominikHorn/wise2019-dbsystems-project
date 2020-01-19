@@ -1,4 +1,4 @@
-import { Button, Col, Row, Tabs } from "antd";
+import { Button, Col, Row, Tabs, message } from "antd";
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
 import { Kandidat, Partei } from "../../../../shared/graphql.types";
@@ -13,12 +13,18 @@ export interface IWaehlenPageProps {
 interface IProps extends IWaehlenPageProps {}
 
 interface IState {
+  /** Value meanings as follows:
+   *
+   * undefined: no selection made
+   * null: deliberately set stimme to ungueltig
+   * any value: this is the deliberately selected value
+   */
   readonly selectedErstkandidat?: Kandidat | null;
   readonly selectedZweitkandidat?: Kandidat | null;
   readonly selectedZweitpartei?: Partei | null;
+  readonly acceptedRechtsbehelfsbelehrung: boolean;
 
   readonly activeTab: WahlTab;
-  readonly furthestReachedTab: WahlTab;
 }
 
 enum WahlTab {
@@ -61,19 +67,24 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
     super(props);
     this.state = {
       activeTab: WahlTab.RECHTSBEHELFSBELEHRUNG,
-      furthestReachedTab: WahlTab.RECHTSBEHELFSBELEHRUNG
+      acceptedRechtsbehelfsbelehrung: false
     };
   }
 
   private nextTab = () => {
+    if (!this.state.acceptedRechtsbehelfsbelehrung) {
+      message.error(
+        "Zunächst müssen Sie die Rechtsbehelfsbelehrung lesen und akzeptieren"
+      );
+      return;
+    }
     const nextTab = this.state.activeTab + 1;
     if (nextTab > WahlTab.COMMITVOTE) {
       // TODO: commit data
       return;
     }
     this.setState({
-      activeTab: nextTab,
-      furthestReachedTab: nextTab
+      activeTab: nextTab
     });
   };
 
@@ -81,6 +92,18 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
     this.setState({
       activeTab: Math.min(this.state.activeTab, WahlTab.RECHTSBEHELFSBELEHRUNG)
     });
+  };
+
+  private getFurhtestReachableTab = () => {
+    const {
+      acceptedRechtsbehelfsbelehrung,
+      selectedErstkandidat,
+      selectedZweitkandidat
+    } = this.state;
+    if (!acceptedRechtsbehelfsbelehrung) return WahlTab.RECHTSBEHELFSBELEHRUNG;
+    if (selectedErstkandidat === undefined) return WahlTab.ERSTSTIMME;
+    if (selectedZweitkandidat === undefined) return WahlTab.ZWEITSTIMME;
+    return WahlTab.COMMITVOTE;
   };
 
   private renderInTabContainer = (component: React.ReactElement) => (
@@ -103,7 +126,12 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
             <Button
               type={"primary"}
               style={{ float: "right" }}
-              onClick={this.nextTab}
+              onClick={() =>
+                this.setState(
+                  { acceptedRechtsbehelfsbelehrung: true },
+                  this.nextTab
+                )
+              }
             >
               Zur Kenntniss genommen
             </Button>
@@ -112,14 +140,19 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
       </>
     );
 
-  private renderErststimme = () => (
-    <ErststimmePage
-      wahl={{ id: 2, wahldatum: new Date() }}
-      stimmkreis={{ id: 101, name: "München-Mitte" }}
-      goToNextTab={this.nextTab}
-      goToPreviousTab={this.previousTab}
-    />
-  );
+  private renderErststimme = () =>
+    this.renderInTabContainer(
+      <ErststimmePage
+        wahl={{ id: 2, wahldatum: new Date() }}
+        stimmkreis={{ id: 101, name: "München-Mitte" }}
+        selectedKandidat={this.state.selectedErstkandidat}
+        onSelectKandidat={selectedErstkandidat =>
+          this.setState({ selectedErstkandidat })
+        }
+        goToNextTab={this.nextTab}
+        goToPreviousTab={this.previousTab}
+      />
+    );
 
   private renderZweitstimme = () => (
     <ZweitstimmePage
@@ -159,10 +192,12 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
   private renderCommitVote = () => <>{"TODO"}</>;
 
   render() {
-    const { activeTab, furthestReachedTab } = this.state;
+    const { activeTab } = this.state;
     const tabPaneStyle: React.CSSProperties = {
       margin: "0px"
     };
+
+    const furthestReachableTab = this.getFurhtestReachableTab();
 
     return (
       <div className={"waehlen-page-container"}>
@@ -186,7 +221,7 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
             tab={getWahlTabTitle(WahlTab.ERSTSTIMME)}
             key={`${WahlTab.ERSTSTIMME}`}
             style={tabPaneStyle}
-            disabled={furthestReachedTab < WahlTab.ERSTSTIMME}
+            disabled={furthestReachableTab < WahlTab.ERSTSTIMME}
           >
             {this.renderErststimme()}
           </Tabs.TabPane>
@@ -194,7 +229,7 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
             tab={getWahlTabTitle(WahlTab.ZWEITSTIMME)}
             key={`${WahlTab.ZWEITSTIMME}`}
             style={tabPaneStyle}
-            disabled={furthestReachedTab < WahlTab.ZWEITSTIMME}
+            disabled={furthestReachableTab < WahlTab.ZWEITSTIMME}
           >
             {this.renderZweitstimme()}
           </Tabs.TabPane>
@@ -202,7 +237,7 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
             tab={getWahlTabTitle(WahlTab.COMMITVOTE)}
             key={`${WahlTab.COMMITVOTE}`}
             style={tabPaneStyle}
-            disabled={furthestReachedTab < WahlTab.COMMITVOTE}
+            disabled={furthestReachableTab < WahlTab.COMMITVOTE}
           >
             {this.renderCommitVote()}
           </Tabs.TabPane>
