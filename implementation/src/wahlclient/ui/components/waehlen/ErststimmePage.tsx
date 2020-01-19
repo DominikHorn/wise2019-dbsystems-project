@@ -55,7 +55,7 @@ class ErststimmePageComponent extends React.PureComponent<IProps> {
         <Tooltip
           title={
             this.props.selectedKandidat === undefined
-              ? "Bitte treffen Sie zuerst eine Auswahl"
+              ? "Bitte wählen Sie einen Kandidaten oder markieren Sie Ihre Stimme explizit als ungültig"
               : undefined
           }
         >

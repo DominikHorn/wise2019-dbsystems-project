@@ -190,7 +190,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
         <Tooltip
           title={
             this.props.selectedKandidat === undefined
-              ? "Bitte treffen Sie zuerst eine Auswahl"
+              ? "Bitte wählen Sie einen Kandidaten oder eine Partei oder markieren Sie Ihre Stimme explizit als ungültig"
               : undefined
           }
         >
