@@ -90,7 +90,10 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
 
   private previousTab = () => {
     this.setState({
-      activeTab: Math.min(this.state.activeTab, WahlTab.RECHTSBEHELFSBELEHRUNG)
+      activeTab: Math.max(
+        this.state.activeTab - 1,
+        WahlTab.RECHTSBEHELFSBELEHRUNG
+      )
     });
   };
 
