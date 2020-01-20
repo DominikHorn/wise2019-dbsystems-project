@@ -84,7 +84,6 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
     }
     const nextTab = this.state.activeTab + 1;
     if (nextTab > WahlTab.VOTECOMMITED) {
-      // TODO: actually commit data to reach this state
       return;
     }
     this.setState({
