@@ -376,7 +376,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
     <Row type={"flex"} gutter={16} justify={"center"} align={"middle"}>
       {!!this.state.wahlleiterAuth && (
         <>
-          <Col>
+          <Col xs={24} sm={12} md={10} lg={8} xl={6} xxl={4}>
             <Row
               type={"flex"}
               justify={"center"}
@@ -415,7 +415,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
               </Col>
             </Row>
           </Col>
-          <Col span={12}>
+          <Col xs={24} sm={12} md={14} lg={16} xl={18} xxl={20}>
             {!!this.state.wahlleiterAuth && this.renderWahlenTable()}
           </Col>
         </>
