@@ -11,7 +11,9 @@ import {
   Checkbox,
   Table,
   Switch,
-  Input
+  Input,
+  Alert,
+  Icon
 } from "antd";
 import locale from "antd/es/date-picker/locale/de_DE";
 import { FormComponentProps } from "antd/lib/form";
@@ -424,7 +426,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
   );
 
   render() {
-    const { wahlhelferTokens } = this.state;
+    const { wahlhelferTokens, wahlleiterAuth } = this.state;
     return (
       <Card
         title={"WahlleiterIn Funktionen"}
@@ -438,6 +440,17 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
           />
         }
       >
+        {!wahlleiterAuth && (
+          <Alert
+            type={"warning"}
+            message={
+              <>
+                <Icon type={"lock"} />
+                {" Bitte ein Passwort eingeben um Zutritt zu erhalten"}
+              </>
+            }
+          />
+        )}
         {this.renderAdminActions()}
         {!!wahlhelferTokens && this.renderWahlhelferTokenTable()}
       </Card>
