@@ -10,6 +10,11 @@ type Query {
   getKnappsteKandidaten(wahlid: Int!, amountPerPartei: Int): [KnapperKandidat]!
   getWahlbeteiligung(wahlid: Int!): [Wahlbeteiligung]!
   getDirektmandat(wahlid: Int!, stimmkreisid: Int!): Mandat!
+  computeEntwicklungDerStimmen(
+    wahlid: Int!
+    vglwahlid: Int!
+    stimmkreisid: Int!
+  ): [Stimmentwicklung]!
   getStimmentwicklung(
     wahlid: Int!
     vglwahlid: Int!

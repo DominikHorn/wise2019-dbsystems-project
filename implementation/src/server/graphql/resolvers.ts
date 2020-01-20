@@ -79,6 +79,12 @@ export const resolvers: Resolver = {
           args.stimmkreisid
         )
       ),
+    computeEntwicklungDerStimmen: (_, args) =>
+      computeEntwicklungDerStimmmen(
+        args.wahlid,
+        args.vglwahlid,
+        args.stimmkreisid
+      ),
     getDirektKandidaten: (_, args) =>
       getDirektKandidaten(args.wahlid, args.stimmkreisid),
     getListenKandidaten: (_, args) =>
@@ -93,7 +99,6 @@ export const resolvers: Resolver = {
     isUnlocked: (_, args) =>
       withVerifyIsWahlkabine(args.wahlkabineToken, false, async () =>
         isUnlocked(args.wahlkabineToken)
-      )
   },
   Mutation: {
     importCSVData: (_, args) =>

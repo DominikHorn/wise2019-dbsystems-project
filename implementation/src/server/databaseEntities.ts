@@ -103,5 +103,6 @@ export interface IDatabaseAnteil extends IDatabaseEntity {
 export interface IDatabaseStimmenEntwicklung extends IDatabaseEntity {
   readonly partei_id: number;
   readonly partei_name: string;
-  readonly veraenderung: number;
+  readonly vorher: number;
+  readonly nachher: number;
 }
