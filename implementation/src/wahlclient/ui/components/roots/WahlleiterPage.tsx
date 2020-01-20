@@ -434,6 +434,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
           <Password
             value={this.state.wahlleiterAuth}
             onChange={i => this.setState({ wahlleiterAuth: i.target.value })}
+            placeholder={"Bitte Passwort eingeben"}
           />
         }
       >
