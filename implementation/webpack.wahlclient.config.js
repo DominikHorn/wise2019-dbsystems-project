@@ -85,5 +85,15 @@ module.exports = {
     publicPath: "/",
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist/wahlclient")
+  },
+  node: {
+    module: "empty",
+    dgram: "empty",
+    dns: "mock",
+    fs: "empty",
+    http2: "empty",
+    net: "empty",
+    tls: "empty",
+    child_process: "empty"
   }
 };

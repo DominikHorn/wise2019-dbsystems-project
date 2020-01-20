@@ -13,7 +13,8 @@ import {
   Switch,
   Input,
   Alert,
-  Icon
+  Icon,
+  Divider
 } from "antd";
 import locale from "antd/es/date-picker/locale/de_DE";
 import { FormComponentProps } from "antd/lib/form";
@@ -48,7 +49,8 @@ import {
   withGenerateWahlhelferTokensMutation,
   IGenerateWahlhelferTokensHOCProps
 } from "../../../../client-graphql/wahlleiter/generateWahlhelferTokensMutation";
-import { QRCode } from "react-qr-svg";
+import { WahltokenPDFExporter } from "../general/WahltokenPDFExporter";
+import * as QRCode from "qrcode.react";
 
 const { Password } = Input;
 
@@ -243,11 +245,11 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
   ) => (
     <>
       <Button
-        type={"primary"}
         onClick={() =>
           this.setState({ modalVisible: !this.state.modalVisible })
         }
         style={{ width: "100%" }}
+        icon={"import"}
       >
         CSV Importieren
       </Button>
@@ -320,58 +322,70 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
   );
 
   private renderWahlhelferTokenTable = () => (
-    <Row type={"flex"} justify={"center"} style={{ marginTop: "15px" }}>
-      <Col style={{ width: "100%" }}>
-        <Table
-          size={"small"}
-          pagination={{ pageSize: 10 }}
-          rowKey={"token"}
-          columns={[
-            {
-              title: "Wahl ID",
-              key: "id",
-              dataIndex: "wahl.id",
-              width: 75
-            },
-            {
-              title: "Datum",
-              key: "datum",
-              render: props => props.wahl.wahldatum.toLocaleDateString(),
-              width: 100
-            },
-            {
-              title: "Stimmkreis",
-              key: "stimmkreis",
-              render: props =>
-                `(${props.stimmkreis.id}) ${props.stimmkreis.name}`
-            },
-            {
-              title: "Token",
-              key: "token",
-              width: 360,
-              render: props => (
-                <span style={{ fontFamily: "Courier" }}>{props.token}</span>
-              )
-            },
-            {
-              title: "QR",
-              key: "qr",
-              width: 100,
-              render: props => (
-                <QRCode
-                  bgColor={"#FFFFFF"}
-                  fgColor={"#000000"}
-                  level={"Q"}
-                  style={{ width: 75 }}
-                  value={props.token}
-                />
-              )
-            }
-          ]}
-          dataSource={this.state.wahlhelferTokens || []}
-        />
-      </Col>
-    </Row>
+    <>
+      <Divider />
+      <Row type={"flex"} justify={"center"} style={{ marginTop: "15px" }}>
+        <Col style={{ width: "100%" }}>
+          <Table
+            size={"small"}
+            pagination={{ pageSize: 10 }}
+            rowKey={"token"}
+            title={() => (
+              <Row type={"flex"} justify={"start"}>
+                <Col>
+                  <WahltokenPDFExporter
+                    wahlhelferTokens={this.state.wahlhelferTokens}
+                  />
+                </Col>
+              </Row>
+            )}
+            columns={[
+              {
+                title: "Wahl ID",
+                key: "id",
+                dataIndex: "wahl.id",
+                width: 75
+              },
+              {
+                title: "Datum",
+                key: "datum",
+                render: props => props.wahl.wahldatum.toLocaleDateString(),
+                width: 100
+              },
+              {
+                title: "Stimmkreis",
+                key: "stimmkreis",
+                render: props =>
+                  `(${props.stimmkreis.id}) ${props.stimmkreis.name}`
+              },
+              {
+                title: "Token",
+                key: "token",
+                width: 360,
+                render: props => (
+                  <span style={{ fontFamily: "Courier" }}>{props.token}</span>
+                )
+              },
+              {
+                title: "QR",
+                key: "qr",
+                width: 100,
+                render: data => (
+                  <QRCode
+                    bgColor={"#FFFFFF"}
+                    fgColor={"#000000"}
+                    level={"L"}
+                    size={64}
+                    value={data.token}
+                  />
+                )
+              }
+            ]}
+            dataSource={this.state.wahlhelferTokens || []}
+          />
+        </Col>
+      </Row>
+    </>
   );
 
   private renderAdminActions = () => (
@@ -395,10 +409,10 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
             >
               <Col style={{ width: "100%" }}>
                 <Button
-                  type={"primary"}
                   onClick={this.onComputeElectionResults}
                   loading={this.state.voteComputationLoading}
                   style={{ width: "100%" }}
+                  icon={"calculator"}
                 >
                   Ergebnisse berechnen
                 </Button>
@@ -407,10 +421,10 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
             <Row type={"flex"} justify={"center"}>
               <Col style={{ width: "100%" }}>
                 <Button
-                  type={"primary"}
                   onClick={this.onGenerateWahlhelferTokens}
                   loading={this.state.wahlhelferTokensLoading}
                   style={{ width: "100%" }}
+                  icon={"code"}
                 >
                   Wahlhelfer Token generieren
                 </Button>
@@ -427,6 +441,7 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
 
   render() {
     const { wahlhelferTokens, wahlleiterAuth } = this.state;
+
     return (
       <Card
         title={"WahlleiterIn Funktionen"}

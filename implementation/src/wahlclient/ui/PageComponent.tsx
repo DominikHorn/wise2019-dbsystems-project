@@ -1,13 +1,13 @@
-import { Col, Icon, Layout, Menu, Row } from "antd";
+import { Icon, Layout, Menu } from "antd";
 import { ApolloClient } from "apollo-client";
 import * as React from "react";
 import { hot } from "react-hot-loader";
 import { matchPath, Route, RouteComponentProps, Switch } from "react-router";
 import { Link } from "react-router-dom";
 import { isDevelopmentEnv } from "../../shared/util";
+import { withErrorBoundary } from "./components/general/ErrorBoundary";
 import "./PageComponent.css";
 import { DEFAULT_ROUTE, IRouteProps, TOPLEVEL_ROUTES } from "./routes";
-import { withErrorBoundary } from "./components/general/ErrorBoundary";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
