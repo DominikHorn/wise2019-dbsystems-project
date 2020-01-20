@@ -5,9 +5,10 @@ import ReactPDF, {
   StyleSheet,
   Text,
   View,
-  Canvas
+  Canvas,
+  Font
 } from "@react-pdf/renderer";
-import { Button } from "antd";
+import { Button, message } from "antd";
 import * as React from "react";
 import { WahlhelferToken } from "../../../../shared/graphql.types";
 import { getQRCodeAsSVGPath } from "../../util/qrcode";
@@ -44,13 +45,33 @@ const styles = StyleSheet.create({
     textAlign: "justify",
     fontFamily: "Times-Roman"
   },
-  qrrow: {
-    flexDirection: "row",
-    backgroundColor: "#E4E4E4",
-    marginBottom: 10
+  title: {
+    fontSize: 24,
+    textAlign: "center"
   },
-  qrcol: {
-    flexGrow: 1
+  watermark: {
+    marginVertical: 300,
+    marginHorizontal: 20,
+    fontSize: 14,
+    color: "grey",
+    textAlign: "justify"
+  },
+  qrcodecontainer: {
+    display: "flex",
+    alignItems: "center"
+  },
+  qrcode: {
+    margin: 12,
+    width: "82vw",
+    height: "82vw"
+  },
+  tokencode: {
+    marginHorizontal: 12,
+    padding: 10,
+    fontSize: 11,
+    fontFamily: "Courier",
+    textAlign: "justify",
+    backgroundColor: "#e9e9e9"
   }
 });
 
@@ -73,11 +94,19 @@ export class WahltokenPDFExporter extends React.PureComponent<
     };
   }
 
-  private paintQRCode = (painter: any, value: string): null => {
+  private paintQRCode = (
+    painter: any,
+    availableWidth: number,
+    availableHeight: number,
+    value: string
+  ): null => {
+    const [path, blockcnt] = getQRCodeAsSVGPath(value, "Q");
+    const scale = Math.min(availableWidth, availableHeight) / blockcnt;
+
     // Draw SVG
     painter
-      .scale(1.2)
-      .path(getQRCodeAsSVGPath(value, "Q"))
+      .scale(scale)
+      .path(path)
       .fill("black");
 
     // Quirk of ReactPDF library
@@ -96,22 +125,47 @@ export class WahltokenPDFExporter extends React.PureComponent<
             : ""
         } (Generiert am ${new Date().toLocaleDateString()})`}</Text>
 
+        <Text style={styles.watermark}>
+          Sehr geehrte(r) WahlleiterIn, bitte lassen Sie den jeweiligen
+          Zugangsberechtigten Personen die entsprechende Seite aus dem folgenden
+          Dokument zukommen.
+        </Text>
+
         {wahlhelferTokens.length > 0 ? (
           wahlhelferTokens.map((token, index) => (
-            <View break={true}>
-              <View style={styles.qrrow} key={index}>
+            <View break={true} key={index}>
+              <Text style={styles.title}>
+                {`${token.stimmkreis.id}. ${token.stimmkreis.name}`}
+              </Text>
+              <Text style={styles.text}>
+                Sehr geehrte WahlhelferInnen, Bei diesem Dokument handelt es
+                sich um ein für Sie vom Landeswahlleiter generiertes
+                Authentifizierungstoken, welches Sie benutzen können um sich als
+                WahlhelferInn zu identifizieren um im Weiteren Wahlkabinen zu
+                registrieren und individuell freizuschalten. Scannen Sie bitte
+                hierfür an Ihrem steuerungs-PC den folgenden QR-Code:
+              </Text>
+              <View style={styles.qrcodecontainer}>
                 <Canvas
-                  paint={painter => this.paintQRCode(painter, token.token)}
-                  style={{ width: "2cm", height: "2cm" }}
+                  paint={(painter, width, height) =>
+                    this.paintQRCode(painter, width, height, token.token)
+                  }
+                  style={styles.qrcode}
                 />
-                <Text
-                  style={styles.text}
-                >{`${token.stimmkreis.id}. ${token.stimmkreis.name}`}</Text>
               </View>
+              <Text
+                style={styles.tokencode}
+                hyphenationCallback={Number.MAX_SAFE_INTEGER}
+              >
+                {token.token}
+              </Text>
             </View>
           ))
         ) : (
-          <Text>Fehler</Text>
+          <Text>
+            Es wurden keine Wahlhelfertokens übergeben. Bitte wenden Sie sich an
+            eine Kompetente IT Fachkraft Ihrer Wahl
+          </Text>
         )}
 
         <Text
@@ -138,7 +192,9 @@ export class WahltokenPDFExporter extends React.PureComponent<
                 pdf(this.createDoc(this.props.wahlhelferTokens))
                   .toBlob()
                   .then(blob => {
+                    // Obtain URL
                     const url = window.URL.createObjectURL(blob);
+
                     // Open PDF in new tab
                     window.open(url, "_blank");
 
@@ -148,9 +204,11 @@ export class WahltokenPDFExporter extends React.PureComponent<
                     // link.download = `wahltoken_${new Date().toLocaleDateString()}.pdf`;
                     // link.click();
                     // setTimeout(() => window.URL.revokeObjectURL(url), 100);
-
-                    this.setState({ loading: false });
-                  }),
+                  })
+                  .catch(err => {
+                    message.error(`PDF Export fehlgeschlagen: ${err.message}`);
+                  })
+                  .finally(() => this.setState({ loading: false })),
               1
             )
           )

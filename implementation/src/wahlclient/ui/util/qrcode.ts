@@ -39,17 +39,15 @@ function convertStr(str: string): string {
   return out;
 }
 
-function generatePath(modules: Modules, margin: number = 0): string {
+function generatePath(modules: Modules): [string, number] {
   const ops: string[] = [];
-  modules.forEach(function(row, y) {
+  modules.forEach((row, y) => {
     let start: number = null;
-    row.forEach(function(cell, x) {
+    row.forEach((cell, x) => {
       if (!cell && start !== null) {
         // M0 0h7v1H0z injects the space with the move and drops the comma,
         // saving a char per operation
-        ops.push(
-          `M${start + margin} ${y + margin}h${x - start}v1H${start + margin}z`
-        );
+        ops.push(`M${start} ${y}h${x - start}v1H${start}z`);
         start = null;
         return;
       }
@@ -63,13 +61,10 @@ function generatePath(modules: Modules, margin: number = 0): string {
         }
         if (start === null) {
           // Just a single dark module.
-          ops.push(`M${x + margin},${y + margin} h1v1H${x + margin}z`);
+          ops.push(`M${x},${y} h1v1H${x}z`);
         } else {
           // Otherwise finish the current line.
-          ops.push(
-            `M${start + margin},${y + margin} h${x + 1 - start}v1H${start +
-              margin}z`
-          );
+          ops.push(`M${start},${y} h${x + 1 - start}v1H${start}z`);
         }
         return;
       }
@@ -79,13 +74,13 @@ function generatePath(modules: Modules, margin: number = 0): string {
       }
     });
   });
-  return ops.join("");
+  return [ops.join(""), modules.length];
 }
 
 export function getQRCodeAsSVGPath(
   value: string,
   level: "L" | "M" | "Q" | "H"
-) {
+): [string, number] {
   // We'll use type===-1 to force QRCode to automatically pick the best type
   const qrcode = new QRCodeImpl(-1, ErrorCorrectLevel[level]);
   qrcode.addData(convertStr(value));
@@ -102,5 +97,5 @@ export function getQRCodeAsSVGPath(
   // way faster than DOM ops.
   // For level 1, 441 nodes -> 2
   // For level 40, 31329 -> 2
-  return generatePath(cells, 0);
+  return generatePath(cells);
 }
