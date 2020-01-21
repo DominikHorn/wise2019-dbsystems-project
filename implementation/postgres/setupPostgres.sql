@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".listen (
 	kandidat_id int NOT NULL, -- Partei ergibt sich durch Kandidat
 	wahl_id smallint NOT NULL,
 	regierungsbezirk_id smallint NOT NULL,
-	-- Da wir informatiker sind muss man sich hier auf einen standard einigen => Beginn bei 1 zu zählen
+	-- Da wir informatiker sind muss man sich hier auf einen standard einigen => Beginn bei 1 zu zählen damit platz === wert
 	initialerListenplatz smallint CHECK (initialerListenplatz > 0),
 	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id) ON DELETE CASCADE,
 	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE,
@@ -114,7 +114,6 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreise (
 	id smallint NOT NULL PRIMARY KEY, -- Schluessel_Nummer in csv
 	"name" varchar(100) NOT NULL,
 	regierungsbezirk_id smallint NOT NULL,
-	-- TODO: geographische angaben für Kartenfunktion?
 	FOREIGN KEY (regierungsbezirk_id) REFERENCES "landtagswahlen".regierungsbezirke(id) ON DELETE CASCADE
 -- Unsupported in PostgreSQL
 --	CHECK (id NOT IN (
@@ -176,43 +175,39 @@ CREATE OR REPLACE VIEW "landtagswahlen".regierungsbezirk_wahlberechtigte AS (
 -- Unterscheidung zwischen erst, zweitstimmen erfolgt über "direktkandidat" relation
 -- Wenn ein Kandidat in einem Stimmkreis direktkandidat ist erhält er dort nur Erststimmen
 CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen (
-	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
 	stimmkreis_id smallint NOT NULL,
 	wahl_id smallint NOT NULL,
 	kandidat_id int NOT NULL,
 	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
 	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
-	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
-	PRIMARY KEY (id, stimmkreis_id, kandidat_id) DEFERRABLE INITIALLY IMMEDIATE
+	FOREIGN KEY (kandidat_id) REFERENCES "landtagswahlen".kandidaten(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE
 );
 
+-- This index exists to dramatically enhance aggregation performance (factor 250)
+CREATE INDEX IF NOT EXISTS egks_kandidat_stimmkreis_wahl_index
+ON "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen (stimmkreis_id, kandidat_id, wahl_id);
+
 CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_gueltige_listengebundene_stimmen (
-	id bigint NOT NULL GENERATED ALWAYS AS IDENTITY,
 	stimmkreis_id smallint NOT NULL,
 	wahl_id smallint NOT NULL,
 	partei_id smallint NOT NULL,
 	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
 	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
-	FOREIGN KEY (partei_id) REFERENCES "landtagswahlen".parteien(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
-	PRIMARY KEY (id, stimmkreis_id, partei_id) DEFERRABLE INITIALLY IMMEDIATE
+	FOREIGN KEY (partei_id) REFERENCES "landtagswahlen".parteien(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE
 );
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_ungueltige_erststimmen (
-	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	wahl_id smallint NOT NULL,
 	stimmkreis_id smallint NOT NULL,
 	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
-	PRIMARY KEY (id, wahl_id, stimmkreis_id) DEFERRABLE INITIALLY IMMEDIATE
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE
 );
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".einzel_ungueltige_zweitstimmen (
-	id int NOT NULL GENERATED ALWAYS AS IDENTITY,
 	wahl_id smallint NOT NULL,
 	stimmkreis_id smallint NOT NULL,
 	FOREIGN KEY (stimmkreis_id) REFERENCES "landtagswahlen".stimmkreise(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
-	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE,
-	PRIMARY KEY (id, wahl_id, stimmkreis_id) DEFERRABLE INITIALLY IMMEDIATE
+	FOREIGN KEY (wahl_id) REFERENCES "landtagswahlen".wahlen(id) ON DELETE CASCADE DEFERRABLE INITIALLY IMMEDIATE
 );
 
 CREATE TABLE IF NOT EXISTS "landtagswahlen".aggregiert_gueltige_kandidatgebundene_stimmen (
@@ -256,21 +251,33 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".aggregiert_ungueltige_zweitstimmen (
 );
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".kandidatgebundene_gueltige_stimmen (wahl_id, stimmkreis_id, kandidat_id, anzahl) AS (
-	SELECT kgs.wahl_id, kgs.stimmkreis_id, kgs.kandidat_id, sum(anzahl) as anzahl
-	FROM (
-		(
-			SELECT egks.wahl_id, egks.stimmkreis_id, egks.kandidat_id, count(*) as anzahl
-			FROM "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen egks
-			GROUP BY egks.stimmkreis_id, egks.wahl_id, egks.kandidat_id
-		)
-		UNION ALL
-		(
-			SELECT agks.wahl_id, agks.stimmkreis_id, agks.kandidat_id, agks.anzahl
-			FROM "landtagswahlen".aggregiert_gueltige_kandidatgebundene_stimmen agks
-		)
-	) kgs
-	GROUP BY kgs.wahl_id, kgs.stimmkreis_id, kgs.kandidat_id 
-);
+-- Allgemeinster Fall, es können Stimmen für einen Kandidaten in beiden Tabellen vorkommen
+--	with rel as ((
+--			SELECT egks.wahl_id, egks.stimmkreis_id, egks.kandidat_id, count(*) as anzahl
+--			FROM "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen egks
+--			GROUP BY egks.stimmkreis_id, egks.kandidat_id, egks.wahl_id
+--	)
+--	UNION ALL
+--	(
+--			SELECT agks.wahl_id, agks.stimmkreis_id, agks.kandidat_id, agks.anzahl
+--			FROM "landtagswahlen".aggregiert_gueltige_kandidatgebundene_stimmen agks
+--	))
+--	SELECT wahl_id, stimmkreis_id, kandidat_id, sum(anzahl) as anzahl
+--	FROM rel
+--	GROUP BY wahl_id, stimmkreis_id, kandidat_id;
+
+-- Mit der Einschränkung das Daten zu einer Wahl, Kandidaten und Stimmkreis nicht aufgeteilt werden auf die beiden Tabellen
+-- Sondern vollständig in einer enthalten sind lässt sich das Optimieren zu der wesentlich schnelleren Anfrage:
+(
+    SELECT egks.wahl_id, egks.stimmkreis_id, egks.kandidat_id, count(*) as anzahl
+    FROM "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen egks
+    GROUP BY egks.stimmkreis_id, egks.kandidat_id, egks.wahl_id
+)
+UNION ALL
+(
+    SELECT agks.wahl_id, agks.stimmkreis_id, agks.kandidat_id, agks.anzahl
+    FROM "landtagswahlen".aggregiert_gueltige_kandidatgebundene_stimmen agks
+));
 
 CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".listengebundene_gueltige_stimmen (wahl_id, stimmkreis_id, partei_id, anzahl) AS (
 	SELECT lgs.wahl_id, lgs.stimmkreis_id, lgs.partei_id, sum(anzahl) as anzahl
