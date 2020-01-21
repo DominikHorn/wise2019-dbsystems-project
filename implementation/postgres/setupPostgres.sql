@@ -371,7 +371,7 @@ CREATE OR REPLACE VIEW "landtagswahlen".gesamtstimmen_pro_partei (wahl_id, regie
 );
 
 -- Anzahl der Mandate die einer Partei in einem Regierungsbezirk zustehenden würden nach Hare-Niemeyer
-CREATE OR REPLACE FUNCTION zustehende_mandate(p_ausgleichsmandat_anzahl integer)
+CREATE OR REPLACE FUNCTION "landtagswahlen".zustehende_mandate(p_ausgleichsmandat_anzahl integer)
 	RETURNS TABLE (
 			wahl_id smallint,
 			regierungsbezirk_id smallint,
@@ -562,7 +562,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_listenmandate 
 						 z.partei_id,
 						 z.anzahl - COALESCE(agd.anzahl, 0) as anzahl,
 						 0 as zusatzmandate
-			FROM zustehende_mandate(0) z
+			FROM "landtagswahlen".zustehende_mandate(0) z
 				LEFT OUTER JOIN anzahl_gewonnene_direktmandate agd
 					ON z.wahl_id = agd.wahl_id
 						AND z.regierungsbezirk_id = agd.regierungsbezirk_id
@@ -576,7 +576,7 @@ CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".gewonnene_listenmandate 
 							 z.anzahl - COALESCE(agd.anzahl, 0) as anzahl,
 							 CAST(zlm1.zusatzmandate + 1 as int) as zusatzmandate
 				FROM listenmandate_recursive zlm1
-					JOIN zustehende_mandate(CAST(zlm1.zusatzmandate + 1 as int)) z
+					JOIN "landtagswahlen".zustehende_mandate(CAST(zlm1.zusatzmandate + 1 as int)) z
 						ON zlm1.wahl_id = z.wahl_id
 							AND zlm1.regierungsbezirk_id = z.regierungsbezirk_id
 					LEFT OUTER JOIN anzahl_gewonnene_direktmandate agd
