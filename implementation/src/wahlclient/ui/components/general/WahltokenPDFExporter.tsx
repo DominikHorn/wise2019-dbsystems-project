@@ -62,8 +62,8 @@ const styles = StyleSheet.create({
   },
   qrcode: {
     margin: 12,
-    width: "82vw",
-    height: "82vw"
+    width: "75vw",
+    height: "75vw"
   },
   tokencode: {
     marginHorizontal: 12,
