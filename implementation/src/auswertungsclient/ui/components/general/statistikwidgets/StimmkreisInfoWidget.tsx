@@ -10,7 +10,6 @@ import { WahlSelector } from "../dataselectors/WahlSelector";
 import { WahlbeteiligungChart } from "./WahlbeteiligungChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { Row, Col } from "antd";
-import { StimmentwicklungChart } from "./StimmentwicklungChart";
 import { renderCenteredLoading } from "../../../guiUtil";
 
 interface IState {

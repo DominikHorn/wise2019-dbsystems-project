@@ -1,21 +1,19 @@
 import * as React from "react";
-import { Wahl, Stimmkreis } from "../../../../../shared/graphql.types";
 import {
-  IGetStimmentwicklungQueryHocProps,
-  withStimmentwicklungQuery
-} from "../../../../../client-graphql/public/getStimmentwicklungQuery";
-import { compose } from "react-apollo";
+  Wahl,
+  Stimmkreis,
+  Stimmentwicklung
+} from "../../../../../shared/graphql.types";
 import ReactEcharts from "echarts-for-react";
 
 export interface IStimmentwicklungChartProps {
   readonly wahl: Wahl;
   readonly vglwahl: Wahl;
   readonly stimmkreis: Stimmkreis;
+  readonly data: Stimmentwicklung[];
 }
 
-interface IProps
-  extends IStimmentwicklungChartProps,
-    IGetStimmentwicklungQueryHocProps {}
+interface IProps extends IStimmentwicklungChartProps {}
 
 function getOptions() {
   return {
@@ -55,20 +53,8 @@ function getOptions() {
   };
 }
 
-const StimmentwicklungChartComponent = (props: IProps) => (
+export const StimmentwicklungChart = (props: IProps) => (
   <div style={{ width: "100%", height: "100%" }}>
     <ReactEcharts option={getOptions()} />
   </div>
 );
-
-const StimmentwicklungChartWithQueries = compose(
-  withStimmentwicklungQuery<IStimmentwicklungChartProps>(
-    props => props.wahl.id,
-    props => props.vglwahl.id,
-    props => props.stimmkreis.id
-  )
-)(StimmentwicklungChartComponent);
-
-export const StimmentwicklungChart = StimmentwicklungChartWithQueries as React.ComponentType<
-  IStimmentwicklungChartProps
->;
