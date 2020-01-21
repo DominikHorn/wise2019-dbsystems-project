@@ -434,11 +434,16 @@ export async function getDirektmandat(
  * Computes election results by refreshing materialized views
  */
 export async function computeElectionResults(): Promise<boolean> {
-  for (const viewToRefresh of refreshOrder) {
-    await adapters.postgres.query(
-      `REFRESH MATERIALIZED VIEW "${DatabaseSchemaGroup}".${viewToRefresh};`
-    );
-  }
+  console.time("compute-election-results");
+  const query = refreshOrder
+    .map(
+      viewToRefresh =>
+        `REFRESH MATERIALIZED VIEW "${DatabaseSchemaGroup}".${viewToRefresh};`
+    )
+    .join("\n");
+
+  await adapters.postgres.query(query);
+  console.timeEnd("compute-election-results");
   return true;
 }
 
