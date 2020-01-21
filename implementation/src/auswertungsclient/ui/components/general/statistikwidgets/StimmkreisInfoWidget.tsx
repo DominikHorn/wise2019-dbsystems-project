@@ -11,6 +11,7 @@ import { WahlbeteiligungChart } from "./WahlbeteiligungChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { Row, Col } from "antd";
 import { renderCenteredLoading } from "../../../guiUtil";
+import { StimmentwicklungChart } from "./StimmentwicklungChart";
 
 interface IState {
   readonly selectedWahl?: Wahl;
@@ -82,26 +83,17 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
         }
       >
         {selectedWahl ? (
-          <Row
-            type={"flex"}
-            gutter={16}
-            style={{ height: "100%", width: "100%" }}
-          >
-            <Col span={10}>
+          <Row type={"flex"} style={{ height: "100%", width: "100%" }}>
+            <Col span={8}>
               <WahlbeteiligungChart wahl={selectedWahl} />
             </Col>
-            <Col>
-              Stimmkreis: Fürstenfeldbruck Ost
-              <br />
-              Wahlbeteiligung: 78 %
-              <br />
-              Gewinner: Hans
-              <br />
+            <Col span={15}>
               {previousWahl ? (
                 <StimmentwicklungChart
                   wahl={selectedWahl}
                   vglwahl={previousWahl}
                   stimmkreis={{ id: 101, name: "test" }}
+                  data={null}
                 />
               ) : (
                 renderCenteredLoading()

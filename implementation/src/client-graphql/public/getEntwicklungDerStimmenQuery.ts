@@ -9,7 +9,7 @@ const getEntwicklungDerStimmenQuery = gql`
     $vglwahlid: Int!
     $stimmkreisid: Int!
   ) {
-    stimmanzahl: computeEntwicklungDerStimmen(
+    stimmenEntwicklung: computeEntwicklungDerStimmen(
       wahlid: $wahlid
       vglwahlid: $vglwahlid
       stimmkreisid: $stimmkreisid

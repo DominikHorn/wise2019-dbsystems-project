@@ -1,13 +1,13 @@
-import { IWahl, IStimmkreis } from "../../../../../shared/sharedTypes";
+import { Col, Row } from "antd";
 import * as React from "react";
+import { compose } from "react-apollo";
 import {
   IGetEntwicklungDerStimmenQueryHocProps,
   withEntwicklungDerStimmenQuery
 } from "../../../../../client-graphql/public/getEntwicklungDerStimmenQuery";
-import { compose } from "react-apollo";
-import { Row, Col } from "antd";
+import { IStimmkreis, IWahl } from "../../../../../shared/sharedTypes";
 import { renderCenteredLoading } from "../../../guiUtil";
-import { StimmentwicklungChartComponent } from "./StimmentwicklungChart";
+import { StimmentwicklungChart } from "./StimmentwicklungChart";
 
 export interface IStimmkreisChartsComponentProps {
   readonly wahl: IWahl;
@@ -19,39 +19,43 @@ interface IProps
   extends IStimmkreisChartsComponentProps,
     IGetEntwicklungDerStimmenQueryHocProps {}
 
-const StimmkreisChartsComponent = (props: IProps) => {
-  return (
-    <Row>
-      {props.entwicklungDerStimmenData ? (
-        <Col span={8}>
-          <Row style={{ height: "300px" }}>
-            Stimmkreis: {props.stimmkreis.name}
-            <br />
-            Wahlbeteiligung: 78 %
-            <br />
-            Gewinner: Hans
-            <br />
-          </Row>
-          <Row>
-            <br />
-            {props.vglWahl && props.wahl ? (
-              <StimmentwicklungChartComponent
-                wahl={props.wahl}
-                vglWahl={props.vglWahl}
-                data={props.entwicklungDerStimmenData.stimmenEntwicklung}
-                stimmkreis={props.stimmkreis}
-              />
-            ) : (
-              renderCenteredLoading()
-            )}
-          </Row>
-        </Col>
-      ) : (
-        renderCenteredLoading()
-      )}
-    </Row>
-  );
-};
+class StimmkreisChartsComponent extends React.PureComponent<IProps> {
+  render() {
+    //debugger;
+    console.log(this.props.entwicklungDerStimmenData.loading);
+    console.log(this.props.entwicklungDerStimmenData);
+    return (
+      <Row>
+        {this.props.entwicklungDerStimmenData ? (
+          <Col>
+            <Row style={{ height: "70px" }}>
+              Stimmkreis: {this.props.stimmkreis.name}
+              <br />
+              Wahlbeteiligung: 78 %
+              <br />
+              Gewinner: Hans
+              <br />
+            </Row>
+            <Row style={{ height: "500px" }}>
+              {this.props.vglWahl && this.props.wahl ? (
+                <StimmentwicklungChart
+                  wahl={this.props.wahl}
+                  vglWahl={this.props.vglWahl}
+                  data={this.props.entwicklungDerStimmenData.stimmenEntwicklung}
+                  stimmkreis={this.props.stimmkreis}
+                />
+              ) : (
+                renderCenteredLoading()
+              )}
+            </Row>
+          </Col>
+        ) : (
+          renderCenteredLoading()
+        )}
+      </Row>
+    );
+  }
+}
 
 const EntwicklungDerStimmenChartWithQueries = compose(
   withEntwicklungDerStimmenQuery<IStimmkreisChartsComponentProps>(
