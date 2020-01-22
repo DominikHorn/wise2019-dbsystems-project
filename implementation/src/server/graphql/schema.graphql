@@ -47,6 +47,11 @@ type Mutation {
     wahlkabineLabel: String!
   ): Boolean!
   removeWahlkabine(wahlhelferAuth: String!, wahlkabineToken: String!): Boolean!
+  setWahlkabineUnlocked(
+    wahlhelferAuth: String!
+    wahlkabineToken: String!
+    unlocked: Boolean!
+  ): Boolean!
 }
 
 type Wahl {
@@ -60,6 +65,7 @@ type Wahlkabine {
   stimmkreisid: Int
   label: String!
   token: String
+  unlocked: Boolean!
 }
 
 type Mandat {

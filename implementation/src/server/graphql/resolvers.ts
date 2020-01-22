@@ -22,7 +22,8 @@ import {
   withVerifyIsWahlhelfer,
   registerWahlkabine,
   isRegisteredWahlkabine,
-  removeWahlkabine
+  removeWahlkabine,
+  setWahlkabineUnlocked
 } from "../adapters/postgres/adminPSQL";
 import {
   getDirektKandidaten,
@@ -125,6 +126,15 @@ export const resolvers: Resolver = {
     removeWahlkabine: (_, args) =>
       withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
         removeWahlkabine(wahlid, stimmkreisid, args.wahlkabineToken)
+      ),
+    setWahlkabineUnlocked: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
+        setWahlkabineUnlocked(
+          wahlid,
+          stimmkreisid,
+          args.wahlkabineToken,
+          args.unlocked
+        )
       )
   }
 };

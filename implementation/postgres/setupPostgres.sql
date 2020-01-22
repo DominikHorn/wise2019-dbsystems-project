@@ -136,6 +136,7 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".authenticated_wahlkabinen (
 	stimmkreis_id smallint NOT NULL,
 	token varchar(80) NOT NULL UNIQUE,
 	label varchar NOT NULL,
+	unlocked boolean  NOT NULL DEFAULT False,
 	FOREIGN KEY (wahl_id, stimmkreis_id) REFERENCES "landtagswahlen".wahlhelfertoken ON DELETE CASCADE,
 	UNIQUE (wahl_id, stimmkreis_id, label),
 	PRIMARY KEY (wahl_id, stimmkreis_id, token)

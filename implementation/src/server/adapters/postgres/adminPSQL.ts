@@ -196,10 +196,11 @@ export async function getRegisteredWahlkabinen(
   type WahlkabineData = {
     label: string;
     token: string;
+    unlocked: boolean;
   };
   return adapters.postgres.query<WahlkabineData>(
     `
-    SELECT label, token
+    SELECT label, token, unlocked
     FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
     WHERE wahl_id = $1 AND stimmkreis_id = $2
   `,
@@ -252,6 +253,25 @@ export async function isRegisteredWahlkabine(
     WHERE token = $1   
   `,
       [wahlkabineToken]
+    )
+    .then(res => res && !!res[0]);
+}
+
+export async function setWahlkabineUnlocked(
+  wahlhelfer_wahlid: number,
+  wahlhelfer_stimmkreisid: number,
+  wahlkabine_token: string,
+  unlocked: boolean
+): Promise<boolean> {
+  return adapters.postgres
+    .query(
+      `
+    UPDATE "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
+    SET unlocked = $1
+    WHERE wahl_id = $2 AND stimmkreis_id = $3 AND token = $4
+    RETURNING unlocked
+  `,
+      [unlocked, wahlhelfer_wahlid, wahlhelfer_stimmkreisid, wahlkabine_token]
     )
     .then(res => res && !!res[0]);
 }
