@@ -1,19 +1,18 @@
-import { Button, Col, Divider, Icon, message, Row, Tabs, Card } from "antd";
+import { Button, Col, Divider, Icon, message, Row, Tabs } from "antd";
 import * as React from "react";
-import { RouteComponentProps } from "react-router";
 import { Kandidat, Partei } from "../../../../shared/graphql.types";
 import { ErststimmePage } from "../waehlen/ErststimmePage";
+import { Rechtsbehelfsbelehrung } from "../waehlen/Rechtsbehelfsbelehrung";
 import { ZweitstimmePage } from "../waehlen/ZweitstimmePage";
 import "./WaehlenPage.css";
-import { Rechtsbehelfsbelehrung } from "../waehlen/Rechtsbehelfsbelehrung";
 
-export interface IWaehlenPageProps {
-  routeProps: RouteComponentProps<any>;
-}
+export interface IWaehlenPageProps {}
 
 interface IProps extends IWaehlenPageProps {}
 
 interface IState {
+  // readonly wahlkabineToken?: string;
+
   /** Value meanings as follows:
    *
    * undefined: no selection made

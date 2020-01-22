@@ -1,4 +1,4 @@
-import { Icon, Layout, Menu } from "antd";
+import { Icon, Layout, Menu, Row, Col, Button } from "antd";
 import { ApolloClient } from "apollo-client";
 import * as React from "react";
 import { hot } from "react-hot-loader";
@@ -8,6 +8,7 @@ import { isDevelopmentEnv } from "../../shared/util";
 import { withErrorBoundary } from "./components/general/ErrorBoundary";
 import "./PageComponent.css";
 import { DEFAULT_ROUTE, IRouteProps, TOPLEVEL_ROUTES } from "./routes";
+import { WaehlenPage } from "./components/roots/WaehlenPage";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -29,6 +30,12 @@ interface IProps extends IPageProps {}
  */
 export interface IState {
   readonly menuCollapsed: boolean;
+
+  /**
+   * Each wahlclient can either be a wahlkabine or a setup station.
+   * Check and adjust accordingly here
+   */
+  readonly isWahlkabine?: boolean;
 }
 
 class PageComponentClass extends React.Component<IProps, IState> {
@@ -125,26 +132,76 @@ class PageComponentClass extends React.Component<IProps, IState> {
     </Content>
   );
 
-  render() {
-    const { title, subtitle } = this.props;
+  private renderAdminInterface = () => {
     const { menuCollapsed } = this.state;
-
-    // Try to obtain active menu path
     const activeMenuKey = this.getActiveMenuKey();
+
+    return (
+      <Layout className={"page-sider-content-layout"}>
+        <>
+          {this.renderSider(
+            menuCollapsed,
+            activeMenuKey,
+            this.onMenuCollapseChange
+          )}
+          {this.renderContent(menuCollapsed)}
+        </>
+      </Layout>
+    );
+  };
+
+  private renderSetupClientUI = () => (
+    <Row
+      type={"flex"}
+      justify={"center"}
+      align={"middle"}
+      style={{ width: "100vw", height: "100vh" }}
+    >
+      <Col>
+        <Row type={"flex"} justify={"center"} style={{ marginBottom: "8px" }}>
+          <Col>
+            <Button
+              type={"primary"}
+              style={{ width: "100%" }}
+              onClick={() => this.setState({ isWahlkabine: true })}
+            >
+              Einrichten als Wahlkabine
+            </Button>
+          </Col>
+        </Row>
+        <Row type={"flex"} justify={"center"}>
+          <Col>
+            <Button
+              type={"primary"}
+              style={{ width: "100%" }}
+              onClick={() => this.setState({ isWahlkabine: false })}
+            >
+              Einrichten zur Administration
+            </Button>
+          </Col>
+        </Row>
+      </Col>
+    </Row>
+  );
+
+  private renderWahlUI = () => (
+    <Content className={"page-content"} style={{ marginTop: "64px" }}>
+      <WaehlenPage />
+    </Content>
+  );
+
+  render() {
+    const { isWahlkabine } = this.state;
+    const { title, subtitle } = this.props;
 
     return (
       <Layout style={{ minHeight: "100vh" }}>
         {this.renderHeader(title, subtitle)}
-        <Layout className={"page-sider-content-layout"}>
-          <>
-            {this.renderSider(
-              menuCollapsed,
-              activeMenuKey,
-              this.onMenuCollapseChange
-            )}
-            {this.renderContent(menuCollapsed)}
-          </>
-        </Layout>
+        {isWahlkabine === undefined || isWahlkabine === null
+          ? this.renderSetupClientUI()
+          : isWahlkabine
+          ? this.renderWahlUI()
+          : this.renderAdminInterface()}
       </Layout>
     );
   }
