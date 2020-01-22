@@ -59,7 +59,11 @@ const refreshOrder: MaterialViews[] = [
 
 export async function computeQ7(
   wahlid: number,
-  stimmkreisids: [number, number, number, number, number],
+  stimmkreisid1: number,
+  stimmkreisid2: number,
+  stimmkreisid3: number,
+  stimmkreisid4: number,
+  stimmkreisid5: number,
   vorg_wahlid: number
 ): Promise<Wahlbeteiligung[]> {
   const res: {
@@ -187,7 +191,7 @@ WHERE ngd1.wahl_id = ngd2.wahl_id
   FROM "landtagswahlen".stimmkreis_wahlinfo swi
 
 ),  ergebnis as(--sk.name, e.partei_id, p.name, k.name,    e.vorher, e.nachher
-SELECT wb.wahl_id, w.wahldatum, wb.stimmkreis_id, sk.name, gps.partei_id, p.name, k.name as direktkandidat, wb.wahlbeteiligung, papp.prozentualerAnteil, gps.anzahl as absoluteAnzahl, e.vorher, e.nachher
+SELECT wb.wahl_id as wahl_id, w.wahldatum as wahldatum, wb.stimmkreis_id as stimmkreis_id, sk.name as stimmkresi_name, gps.partei_id as partei_id, p.name as partei_name, k.name as direktkandidat, wb.wahlbeteiligung as wahlbeteiligung, papp.prozentualerAnteil as prozAnteil, gps.anzahl as absAnzahl, e.vorher as vorher, e.nachher as nachher
 FROM wahlbeteiligung wb
 JOIN direktmandate dk
 ON wb.wahl_id = dk.wahl_id AND wb.stimmkreis_id = dk.stimmkreis_id
@@ -210,11 +214,11 @@ ON w.id = wb.wahl_id
  SELECT * FROM ergebnis;`,
     [
       wahlid,
-      stimmkreisids[0],
-      stimmkreisids[1],
-      stimmkreisids[2],
-      stimmkreisids[3],
-      stimmkreisids[4],
+      stimmkreisid1,
+      stimmkreisid2,
+      stimmkreisid3,
+      stimmkreisid4,
+      stimmkreisid5,
       vorg_wahlid
     ]
   );
@@ -355,8 +359,8 @@ export async function computeEntwicklungDerStimmmen(
     )
     SELECT gs1.partei_id,
           p.name as partei_name,
-          gs1.anzahl as vorher,
-          COALESCE(gs2.anzahl, 0) as nachher
+          gs1.anzahl as nachher,
+          COALESCE(gs2.anzahl, 0) as vorher
     FROM gueltige_partei_stimmen gs1
         JOIN "${DatabaseSchemaGroup}".${PARTEIEN_TABLE} p
             ON gs1.partei_id = p.id

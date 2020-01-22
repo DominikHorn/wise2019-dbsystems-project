@@ -18,6 +18,7 @@ export interface IStimmkreisChartsComponentProps {
   readonly wahl: IWahl;
   readonly vglWahl: IWahl;
   readonly stimmkreis: IStimmkreis;
+  readonly wahlbeteiligung: number;
 }
 
 interface IProps
@@ -39,7 +40,7 @@ class StimmkreisChartsComponent extends React.PureComponent<IProps> {
                 <Col span={7} style={{ height: "100%" }}>
                   Stimmkreis: {this.props.stimmkreis.name}
                   <br />
-                  Wahlbeteiligung: 78 %
+                  Wahlbeteiligung: {this.props.wahlbeteiligung} {"%"}
                   <br />
                   Gewinner:{" "}
                   {this.props.direktmandatData.direktmandat.kandidat.name}

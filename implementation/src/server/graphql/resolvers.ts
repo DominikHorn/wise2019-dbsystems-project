@@ -9,7 +9,8 @@ import {
   getKnappsteKandidaten,
   computeWahlbeteiligung,
   getDirektmandat,
-  computeEntwicklungDerStimmmen
+  computeEntwicklungDerStimmmen,
+  computeQ7
 } from "../adapters/postgres/electionPSQL";
 import { Resolver } from "../../shared/graphql.types";
 import {
@@ -36,6 +37,7 @@ import {
 import { adapters } from "../adapters/adapterUtil";
 import { castVote } from "../adapters/postgres/stimmenPSQL";
 import { getAllStimmkreiseForWahl } from "../adapters/postgres/queries/stimmkreisPSQL";
+import { argsToArgsConfig } from "graphql/type/definition";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -81,6 +83,17 @@ export const resolvers: Resolver = {
           args.vglwahlid,
           args.stimmkreisid
         )),
+    getAllStimmkreisInfos: (_, args) =>
+        withVerifyIsNotBlocked(args.wahlid, () => 
+          computeQ7(
+            args.wahlid,
+            args.stimmkreisid1,
+            args.stimmkreisid2,
+            args.stimmkreisid3,
+            args.stimmkreisid4,
+            args.stimmkreisid5,
+            args.vgl_wahl
+          )),
     getDirektKandidaten: (_, args) =>
       getDirektKandidaten(args.wahlid, args.stimmkreisid),
     getListenKandidaten: (_, args) =>

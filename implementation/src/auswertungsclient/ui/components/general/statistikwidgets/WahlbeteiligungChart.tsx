@@ -15,7 +15,10 @@ import { eatEvent } from "../../../guiUtil";
 
 export interface IWahlbeteiligungChartProps {
   readonly wahl: Wahl;
-  readonly onStimmkreisSelect?: (selected: Stimmkreis) => void;
+  readonly onStimmkreisSelect?: (
+    selected: Stimmkreis,
+    wahlbeteiligung: number
+  ) => void;
 }
 
 interface IProps
@@ -64,7 +67,10 @@ const WahlbeteiligungChartComponent = (props: IProps) => {
                   ).find(wbt => wbt.stimmkreis.name === event.batch[0].name);
                   wbtobj &&
                     props.onStimmkreisSelect &&
-                    props.onStimmkreisSelect(wbtobj.stimmkreis);
+                    props.onStimmkreisSelect(
+                      wbtobj.stimmkreis,
+                      wbtobj.wahlbeteiligung
+                    );
                 }
               }
             }}

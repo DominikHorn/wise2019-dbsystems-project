@@ -107,11 +107,14 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
               />
             </Col>
             <Col span={15} style={{ height: "100%" }}>
-              {this.state.selectedStimmkreis && previousWahl ? (
+              {this.state.selectedStimmkreis &&
+              previousWahl &&
+              this.state.wahlbeteiligung ? (
                 <StimmkreisCharts
                   wahl={selectedWahl}
                   vglWahl={previousWahl}
                   stimmkreis={this.state.selectedStimmkreis}
+                  wahlbeteiligung={this.state.wahlbeteiligung}
                 />
               ) : (
                 renderInfo("Bitte einen Stimmkreis anklicken")

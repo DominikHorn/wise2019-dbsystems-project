@@ -8,6 +8,8 @@ import * as React from "react";
 import { renderInfo } from "../../../guiUtil";
 import { WahlSelector } from "../dataselectors/WahlSelector";
 import { compose } from "react-apollo";
+import { StimmkreisSelector } from "../dataselectors/StimmkreisSelector";
+import { withAllStimmkreiseQuery } from "../../../../../client-graphql/public/getAllStimmkreiseQuery";
 
 interface IState {
   readonly selectedWahl?: IWahl;
@@ -75,7 +77,7 @@ class StimmkreisInfoQ7WidgetComponent extends React.PureComponent<
         }
       >
         {selectedWahl ? (
-          <div>Hier könnte Ihre Werbung stehen</div>
+          <StimmkreisSelector />
         ) : (
           renderInfo("Bitte eine Wahl auswählen")
         )}
