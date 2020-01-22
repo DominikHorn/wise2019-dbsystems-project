@@ -33,7 +33,7 @@ const hoc = createTypedGraphqlHoc<Response, MutationToRegisterWahlkabineArgs>(
   registerWahlkabineGQL
 );
 
-export const withRemoveWahlkabineMutation = () =>
+export const withRegisterWahlkabineMutation = () =>
   hoc<{}, MutationToRegisterWahlkabineHOCProps>({
     props: ({ mutate }) => ({
       registerWahlkabine: mutate

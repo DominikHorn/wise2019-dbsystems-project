@@ -1,8 +1,11 @@
 import * as React from "react";
 import { RouteComponentProps } from "react-router";
-import { Card, message, Button, Col, Row, Alert } from "antd";
+import { Card, message, Button, Col, Row, Alert, Table } from "antd";
 import * as QrReader from "react-qr-reader";
 import Password from "antd/lib/input/Password";
+import { compose } from "react-apollo";
+import { withRegisteredWahlkabinen } from "../../../../client-graphql/wahlkabine/getRegisteredWahlkabinenQuery";
+import { WahlkabinenTable } from "../wahlhelfer/WahlkabinenTable";
 
 export interface IWahlhelferPageProps {
   routeProps: RouteComponentProps<any>;
@@ -23,35 +26,26 @@ export class WahlhelferPage extends React.PureComponent<
   }
 
   private renderAuthenticatedWahlhelferUI = () => (
-    <Row
-      type={"flex"}
-      gutter={16}
-      justify={"center"}
-      style={{ marginTop: "15px" }}
-    >
-      <Col>
-        <Button
-          type={"primary"}
-          style={{ float: "right" }}
-          onClick={() => {
-            message.error("Unimplemented");
-          }}
-        >
-          Wählen freigeben
-        </Button>
-      </Col>
-      <Col>
-        <Button
-          type={"primary"}
-          style={{ float: "right" }}
-          onClick={() => {
-            message.error("Unimplemented");
-          }}
-        >
-          Stimmeintragung
-        </Button>
-      </Col>
-    </Row>
+    <>
+      <Row type={"flex"} gutter={[16, 16]} justify={"end"}>
+        <Col>
+          <Button disabled={true}>Wählen freigeben</Button>
+        </Col>
+        <Col>
+          <Button disabled={true}>Stimmeintragung</Button>
+        </Col>
+      </Row>
+      <Row
+        type={"flex"}
+        gutter={[16, 16]}
+        justify={"start"}
+        style={{ marginTop: "15px", marginBottom: "15px" }}
+      >
+        <Col span={24}>
+          <WahlkabinenTable wahlhelferAuth={this.state.wahlhelferToken} />
+        </Col>
+      </Row>
+    </>
   );
 
   private onQrReaderError = (qrCodeError: Error) =>
