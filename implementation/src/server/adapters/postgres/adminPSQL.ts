@@ -12,6 +12,7 @@ import {
 } from "../../databaseEntities";
 import { adapters } from "../adapterUtil";
 import { getAllStimmkreise } from "./stimmkreisPSQL";
+import { generateRandomToken } from "../../../shared/token";
 
 enum AuthTables {
   DATA_BLOCKED = "datablocked",
@@ -105,31 +106,7 @@ export async function generateWahlhelferToken(
       sks.map(sk => ({
         wahl_id: wahlid,
         stimmkreis_id: sk.id,
-        token:
-          Math.random()
-            .toString(36)
-            .substring(2, 12) +
-          Math.random()
-            .toString(36)
-            .substring(2, 12) +
-          Math.random()
-            .toString(36)
-            .substring(2, 12) +
-          Math.random()
-            .toString(36)
-            .substring(2, 12) +
-          Math.random()
-            .toString(36)
-            .substring(2, 12) +
-          Math.random()
-            .toString(36)
-            .substring(2, 12) +
-          Math.random()
-            .toString(36)
-            .substring(2, 12) +
-          Math.random()
-            .toString(36)
-            .substring(2, 12)
+        token: generateRandomToken()
       }))
     );
     await client.query(

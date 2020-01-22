@@ -164,6 +164,7 @@ class PageComponentClass extends React.Component<IProps, IState> {
               type={"primary"}
               style={{ width: "100%" }}
               onClick={() => this.setState({ isWahlkabine: true })}
+              icon={"check"}
             >
               Einrichten als Wahlkabine
             </Button>
@@ -175,6 +176,7 @@ class PageComponentClass extends React.Component<IProps, IState> {
               type={"primary"}
               style={{ width: "100%" }}
               onClick={() => this.setState({ isWahlkabine: false })}
+              icon={"dashboard"}
             >
               Einrichten zur Administration
             </Button>

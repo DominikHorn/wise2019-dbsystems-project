@@ -5,13 +5,16 @@ import { ErststimmePage } from "../waehlen/ErststimmePage";
 import { Rechtsbehelfsbelehrung } from "../waehlen/Rechtsbehelfsbelehrung";
 import { ZweitstimmePage } from "../waehlen/ZweitstimmePage";
 import "./WaehlenPage.css";
+import { generateRandomToken } from "../../../../shared/token";
+import * as QRCode from "qrcode.react";
 
 export interface IWaehlenPageProps {}
 
 interface IProps extends IWaehlenPageProps {}
 
 interface IState {
-  // readonly wahlkabineToken?: string;
+  readonly setupDone?: boolean;
+  readonly wahlkabineToken: string;
 
   /** Value meanings as follows:
    *
@@ -57,7 +60,8 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
     super(props);
     this.state = {
       activeTab: WahlTab.RECHTSBEHELFSBELEHRUNG,
-      acceptedRechtsbehelfsbelehrung: false
+      acceptedRechtsbehelfsbelehrung: false,
+      wahlkabineToken: generateRandomToken()
     };
   }
 
@@ -238,11 +242,73 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
       </Row>
     );
 
+  private renderWahlkabineSetup = () => (
+    <Row
+      type={"flex"}
+      justify={"center"}
+      align={"middle"}
+      style={{ width: "100%", height: "calc(100vh - 64px)" }}
+    >
+      <Col span={10}>
+        <Row type={"flex"} justify={"center"} style={{ marginBottom: "16px" }}>
+          <Col>
+            <div
+              style={{
+                textAlign: "justify",
+                fontSize: "12pt",
+                fontWeight: "bolder"
+              }}
+            >
+              {`Nutzen Sie den QR Code oder folgendes Token um die Wahlkabine
+          in Ihrem Stimmkreis zu registrieren: `}
+              <div
+                style={{
+                  fontFamily: "Courier New",
+                  backgroundColor: "lightGray",
+                  padding: "5px"
+                }}
+              >
+                {this.state.wahlkabineToken}
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Row type={"flex"} justify={"center"} style={{ marginBottom: "16px" }}>
+          <Col>
+            <QRCode
+              bgColor={"#f0f2f5"}
+              fgColor={"#000000"}
+              level={"H"}
+              size={512}
+              value={this.state.wahlkabineToken}
+            />
+          </Col>
+        </Row>
+
+        <Row type={"flex"} justify={"center"}>
+          <Col>
+            <Button
+              type={"primary"}
+              icon={"check-circle"}
+              onClick={() => message.error("UNIMPLEMENTED")}
+            >
+              Validieren und Weiter
+            </Button>
+          </Col>
+        </Row>
+      </Col>
+    </Row>
+  );
+
   render() {
-    const { activeTab } = this.state;
+    const { activeTab, setupDone } = this.state;
     const tabPaneStyle: React.CSSProperties = {
       margin: "0px"
     };
+
+    if (!setupDone) {
+      return this.renderWahlkabineSetup();
+    }
 
     const furthestReachableTab = this.getFurhtestReachableTab();
 
