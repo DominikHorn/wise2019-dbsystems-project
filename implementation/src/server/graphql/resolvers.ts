@@ -17,7 +17,10 @@ import {
   setDataBlocked,
   withVerifyIsAdmin,
   withVerifyIsNotBlocked,
-  generateWahlhelferToken
+  generateWahlhelferToken,
+  getRegisteredWahlkabinen,
+  withVerifyIsWahlhelfer,
+  registerWahlkabinen
 } from "../adapters/postgres/adminPSQL";
 import {
   getDirektKandidaten,
@@ -71,7 +74,9 @@ export const resolvers: Resolver = {
     getDirektKandidaten: (_, args) =>
       getDirektKandidaten(args.wahlid, args.stimmkreisid),
     getListenKandidaten: (_, args) =>
-      getListenKandidaten(args.wahlid, args.regierungsbezirkid)
+      getListenKandidaten(args.wahlid, args.regierungsbezirkid),
+    getRegisteredWahlkabinen: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, getRegisteredWahlkabinen)
   },
   Mutation: {
     importCSVData: (_, args) =>
@@ -105,6 +110,10 @@ export const resolvers: Resolver = {
         generateWahlhelferToken(args)
       ),
     setDataBlocked: (_, args) =>
-      withVerifyIsAdmin(args.wahlleiterAuth, () => setDataBlocked(args))
+      withVerifyIsAdmin(args.wahlleiterAuth, () => setDataBlocked(args)),
+    registerWahlkabine: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
+        registerWahlkabinen(wahlid, stimmkreisid, args.wahlkabineToken)
+      )
   }
 };

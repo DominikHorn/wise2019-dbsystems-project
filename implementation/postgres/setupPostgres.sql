@@ -131,6 +131,15 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".wahlhelfertoken (
 	PRIMARY KEY (wahl_id, stimmkreis_id)
 );
 
+CREATE TABLE IF NOT EXISTS "landtagswahlen".authenticated_wahlkabinen (
+	wahl_id smallint NOT NULL,
+	stimmkreis_id smallint NOT NULL,
+	token varchar(80) NOT NULL UNIQUE,
+	"label" varchar NOT NULL,
+	FOREIGN KEY (wahl_id, stimmkreis_id) REFERENCES "landtagswahlen".wahlhelfertoken ON DELETE CASCADE,
+	PRIMARY KEY (wahl_id, stimmkreis_id, token)
+);
+
 -- Hier stehen Daten die sich pro wahl ändern können
 CREATE TABLE IF NOT EXISTS "landtagswahlen".stimmkreis_wahlinfo (
 	stimmkreis_id smallint NOT NULL,

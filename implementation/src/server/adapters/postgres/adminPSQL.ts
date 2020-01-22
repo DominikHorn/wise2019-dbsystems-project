@@ -4,7 +4,8 @@ import * as config from "../../../../config.server.json";
 import {
   MutationToGenerateWahlhelferTokensArgs,
   MutationToSetDataBlockedArgs,
-  WahlhelferToken
+  WahlhelferToken,
+  Wahlkabine
 } from "../../../shared/graphql.types";
 import {
   DatabaseSchemaGroup,
@@ -16,7 +17,8 @@ import { generateRandomToken } from "../../../shared/token";
 
 enum AuthTables {
   DATA_BLOCKED = "datablocked",
-  WAHLHELFER_TOKEN = "wahlhelfertoken"
+  WAHLHELFER_TOKEN = "wahlhelfertoken",
+  WAHLKABINEN = "wahlkabinen"
 }
 
 export function withVerifyIsAdmin<TReturn>(
@@ -28,6 +30,29 @@ export function withVerifyIsAdmin<TReturn>(
   }
 
   throw new AuthenticationError("Invalid Wahlleiter Auth");
+}
+
+export async function withVerifyIsWahlhelfer<TReturn>(
+  auth: string,
+  fun: (wahlid: number, stimmkreisid: number) => TReturn
+): Promise<TReturn> {
+  type WahlhelferData = { wahl_id: number; stimmkreis_id: number };
+  const wahlhelferdata: WahlhelferData = await adapters.postgres
+    .query<WahlhelferData>(
+      `
+    SELECT wahl_id, stimmkreis_id
+    FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLHELFER_TOKEN}
+    WHERE token = $1
+  `,
+      [auth]
+    )
+    .then(res => res && res[0]);
+
+  if (!wahlhelferdata) {
+    throw new AuthenticationError("Invalid Wahlhelfer Auth");
+  } else {
+    return fun(wahlhelferdata.wahl_id, wahlhelferdata.stimmkreis_id);
+  }
 }
 
 export async function withVerifyIsNotBlocked<TReturn>(
@@ -162,4 +187,21 @@ export async function generateWahlhelferToken(
           }))
       );
   });
+}
+
+export async function getRegisteredWahlkabinen(
+  wahlhelfer_wahlid: number,
+  wahlhelfer_stimmkreisid: number
+): Promise<Wahlkabine[]> {
+  // TODO: implement
+  return [];
+}
+
+export async function registerWahlkabinen(
+  wahlhelfer_wahlid: number,
+  wahlhelfer_stimmkreisid: number,
+  wahlkabineToken: string
+): Promise<boolean> {
+  // TODO: implement
+  return false;
 }
