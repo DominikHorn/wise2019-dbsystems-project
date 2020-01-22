@@ -223,7 +223,7 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
           </Col>
           <Col>
             <Button
-              icon={"refresh"}
+              icon={"reload"}
               loading={this.props.registeredWahlkabinenData.loading}
               onClick={() => this.props.registeredWahlkabinenData.refetch()}
             >
