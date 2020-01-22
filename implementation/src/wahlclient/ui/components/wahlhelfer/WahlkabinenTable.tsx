@@ -17,7 +17,8 @@ import {
   Form,
   Alert,
   message,
-  Input
+  Input,
+  Switch
 } from "antd";
 import {
   withRemoveWahlkabineMutation,
@@ -122,6 +123,13 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
       .catch(err => {
         message.error(`Fehler beim entfernen der Wahlkabine: ${err.message}`);
       });
+  };
+
+  private setWahlkabineUnlocked = (
+    wahlkabine: Wahlkabine,
+    unlocked: boolean
+  ) => {
+    message.error("Unimplemented");
   };
 
   private renderTokenInput = () => (
@@ -229,8 +237,24 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
       columns={[
         { title: "Label", key: "label", dataIndex: "label" },
         {
-          title: "Manage",
-          key: "manage",
+          title: "Wahl freischalten",
+          key: "unlock",
+          render: wahlkabine => (
+            <Row type={"flex"} justify={"center"} align={"middle"}>
+              <Col>
+                <Switch
+                  checked={wahlkabine.unlocked}
+                  onChange={checked =>
+                    this.setWahlkabineUnlocked(wahlkabine, checked)
+                  }
+                />
+              </Col>
+            </Row>
+          )
+        },
+        {
+          title: "Löschen",
+          key: "delete",
           render: wahlkabine => (
             <Row
               type={"flex"}
