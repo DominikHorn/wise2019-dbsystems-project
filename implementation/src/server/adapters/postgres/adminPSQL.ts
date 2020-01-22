@@ -234,7 +234,7 @@ export async function removeWahlkabine(
     .query(
       `
     DELETE FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
-    WHERE wahlid = $1 AND stimmkreisid = $2 AND token = $3
+    WHERE wahl_id = $1 AND stimmkreis_id = $2 AND token = $3
   `,
       [wahlhelfer_wahlid, wahlhelfer_stimmkreisid, wahlkabineToken]
     )
