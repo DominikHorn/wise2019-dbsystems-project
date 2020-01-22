@@ -96,7 +96,7 @@ export const renderError = (
 
 export const renderRepoLink = (label: string = "gitlab repo") => (
   <a
-    href={"https://gitlab.itestra.com/horn/labeling-platfrom-bachelorarbeit/"}
+    href={"https://gitlab.db.in.tum.de/dominikhorn/wise2019-dbsystems-project/"}
     target={"_blank"}
   >
     {label}
