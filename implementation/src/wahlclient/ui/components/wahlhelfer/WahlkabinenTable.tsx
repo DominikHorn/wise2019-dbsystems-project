@@ -49,6 +49,7 @@ interface IProps
 interface IState {
   readonly modalVisible: boolean;
   readonly qrCodeError?: Error;
+  readonly registrationInProgress?: boolean;
 }
 
 class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
@@ -65,14 +66,39 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
   private onQrReaderScan = (token?: string) => {
     if (!token) return;
     message.success("Token erfolgreich ausgelesen");
-    this.props.form.setFieldsValue({ token });
+    this.props.form.setFieldsValue({ token }, () => this.registerWahlkabine());
   };
 
-  private registerWahlkabine = (e: React.FormEvent) => {
-    e.preventDefault();
+  private registerWahlkabine = (e?: React.FormEvent) => {
+    e && e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        console.log("Form values:", values);
+        this.setState(
+          { modalVisible: false, registrationInProgress: true },
+          () => {
+            this.props
+              .registerWahlkabine({
+                variables: {
+                  wahlhelferAuth: this.props.wahlhelferAuth,
+                  wahlkabineLabel: values.label,
+                  wahlkabineToken: values.token
+                }
+              })
+              .then(resp => {
+                if (!resp || resp.errors || !resp.data.success) {
+                  message.error(`Server hat die Registrierung verweigert`);
+                  return;
+                }
+                message.success(`Wahlkabine erfolgreich registriert`);
+              })
+              .catch(err => {
+                message.error(
+                  `Registrieren der Wahlkabine fehlgeschlagen: ${err.message}`
+                );
+              })
+              .finally(() => this.setState({ registrationInProgress: false }));
+          }
+        );
       }
     });
   };
@@ -159,6 +185,7 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
             <Button
               icon={"plus"}
               type={"primary"}
+              loading={this.state.registrationInProgress}
               onClick={() => this.setState({ modalVisible: true })}
             >
               Neue Wahlkabine Authorisieren
