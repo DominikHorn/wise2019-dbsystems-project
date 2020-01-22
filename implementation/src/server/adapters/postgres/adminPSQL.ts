@@ -201,13 +201,13 @@ export async function getRegisteredWahlkabinen(
     `
     SELECT label, token
     FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
-    WHERE wahlid = $1 AND stimmkreisid = $2
+    WHERE wahl_id = $1 AND stimmkreis_id = $2
   `,
     [wahlhelfer_wahlid, wahlhelfer_stimmkreisid]
   );
 }
 
-export async function registerWahlkabinen(
+export async function registerWahlkabine(
   wahlhelfer_wahlid: number,
   wahlhelfer_stimmkreisid: number,
   wahlkabineToken: string,

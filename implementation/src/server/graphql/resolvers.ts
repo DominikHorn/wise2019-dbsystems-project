@@ -20,7 +20,7 @@ import {
   generateWahlhelferToken,
   getRegisteredWahlkabinen,
   withVerifyIsWahlhelfer,
-  registerWahlkabinen,
+  registerWahlkabine,
   isRegisteredWahlkabine,
   removeWahlkabine
 } from "../adapters/postgres/adminPSQL";
@@ -115,7 +115,7 @@ export const resolvers: Resolver = {
       withVerifyIsAdmin(args.wahlleiterAuth, () => setDataBlocked(args)),
     registerWahlkabine: (_, args) =>
       withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
-        registerWahlkabinen(
+        registerWahlkabine(
           wahlid,
           stimmkreisid,
           args.wahlkabineToken,
