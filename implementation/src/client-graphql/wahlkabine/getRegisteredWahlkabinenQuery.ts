@@ -15,6 +15,7 @@ const getRegisteredWahlkabinenGQL = gql`
       stimmkreisid
       label
       token
+      unlocked
     }
   }
 `;
