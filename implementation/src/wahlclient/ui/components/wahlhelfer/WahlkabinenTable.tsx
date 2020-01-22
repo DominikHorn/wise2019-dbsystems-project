@@ -26,6 +26,7 @@ import {
 import * as QrReader from "react-qr-reader";
 import Password from "antd/lib/input/Password";
 import { FormComponentProps } from "antd/lib/form";
+import { Wahlkabine } from "../../../../shared/graphql.types";
 
 export interface IWahlkabinenTableProps {
   readonly wahlhelferAuth: string;
@@ -101,6 +102,26 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
         );
       }
     });
+  };
+
+  private removeWahlkabine = (wahlkabine: Wahlkabine) => {
+    this.props
+      .removeWahlkabine({
+        variables: {
+          wahlhelferAuth: this.props.wahlhelferAuth,
+          wahlkabineToken: wahlkabine.token
+        }
+      })
+      .then(res => {
+        if (!res || res.errors || !res.data.success) {
+          message.error("Server verweigert das Entfernen der Wahlkabine");
+          return;
+        }
+        message.success("Wahlkabine erfolgreich entfernt");
+      })
+      .catch(err => {
+        message.error(`Fehler beim entfernen der Wahlkabine: ${err.message}`);
+      });
   };
 
   private renderTokenInput = () => (
@@ -194,6 +215,7 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
         </Row>
       )}
       loading={this.props.registeredWahlkabinenData.loading}
+      rowKey={"label"}
       columns={[
         { title: "Label", key: "label", dataIndex: "label" },
         {
@@ -207,7 +229,11 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
               align={"middle"}
             >
               <Col>
-                <Button type={"danger"} icon={"delete"} />
+                <Button
+                  type={"danger"}
+                  icon={"delete"}
+                  onClick={() => this.removeWahlkabine(wahlkabine)}
+                />
               </Col>
             </Row>
           )
@@ -220,6 +246,14 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
   render() {
     const { registeredWahlkabinenData } = this.props;
     if (!registeredWahlkabinenData) return <></>;
+    if (registeredWahlkabinenData.error) {
+      return (
+        <Alert
+          type={"error"}
+          message={registeredWahlkabinenData.error.message}
+        />
+      );
+    }
 
     return (
       <>
