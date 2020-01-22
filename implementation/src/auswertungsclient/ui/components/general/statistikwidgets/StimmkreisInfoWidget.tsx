@@ -84,10 +84,10 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
       >
         {selectedWahl ? (
           <Row type={"flex"} style={{ height: "100%", width: "100%" }}>
-            <Col span={8}>
+            <Col span={8} style={{ height: "100%" }}>
               <WahlbeteiligungChart wahl={selectedWahl} />
             </Col>
-            <Col span={15}>
+            <Col span={15} style={{ height: "100%" }}>
               {previousWahl ? (
                 <StimmentwicklungChart
                   wahl={selectedWahl}

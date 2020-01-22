@@ -8,6 +8,7 @@ import {
 import { IStimmkreis, IWahl } from "../../../../../shared/sharedTypes";
 import { renderCenteredLoading } from "../../../guiUtil";
 import { StimmentwicklungChart } from "./StimmentwicklungChart";
+import { ProzAnteilChart } from "./ProzentualerAnteilStimmenChart";
 
 export interface IStimmkreisChartsComponentProps {
   readonly wahl: IWahl;
@@ -21,38 +22,42 @@ interface IProps
 
 class StimmkreisChartsComponent extends React.PureComponent<IProps> {
   render() {
-    //debugger;
-    console.log(this.props.entwicklungDerStimmenData.loading);
-    console.log(this.props.entwicklungDerStimmenData);
     return (
-      <Row>
-        {this.props.entwicklungDerStimmenData ? (
-          <Col>
-            <Row style={{ height: "70px" }}>
-              Stimmkreis: {this.props.stimmkreis.name}
-              <br />
-              Wahlbeteiligung: 78 %
-              <br />
-              Gewinner: Hans
-              <br />
-            </Row>
-            <Row style={{ height: "500px" }}>
-              {this.props.vglWahl && this.props.wahl ? (
-                <StimmentwicklungChart
+      <div style={{ height: "100%" }}>
+        {this.props.entwicklungDerStimmenData &&
+        this.props.vglWahl &&
+        this.props.wahl ? (
+          <div style={{ height: "100%" }}>
+            <Row style={{ height: "50%" }}>
+              <Col span={7} style={{ height: "100%" }}>
+                Stimmkreis: {this.props.stimmkreis.name}
+                <br />
+                Wahlbeteiligung: 78 %
+                <br />
+                Gewinner: Hans
+                <br />
+              </Col>
+              <Col span={10} style={{ height: "100%" }}>
+                <ProzAnteilChart
                   wahl={this.props.wahl}
-                  vglWahl={this.props.vglWahl}
                   data={this.props.entwicklungDerStimmenData.stimmenEntwicklung}
                   stimmkreis={this.props.stimmkreis}
                 />
-              ) : (
-                renderCenteredLoading()
-              )}
+              </Col>
             </Row>
-          </Col>
+            <Row style={{ height: "50%" }}>
+              <StimmentwicklungChart
+                wahl={this.props.wahl}
+                vglWahl={this.props.vglWahl}
+                data={this.props.entwicklungDerStimmenData.stimmenEntwicklung}
+                stimmkreis={this.props.stimmkreis}
+              />
+            </Row>
+          </div>
         ) : (
           renderCenteredLoading()
         )}
-      </Row>
+      </div>
     );
   }
 }

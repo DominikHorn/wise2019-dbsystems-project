@@ -71,12 +71,17 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
 
   private getOptions = () => ({
     toolbox: {
+      left: "15px",
+      top: "5px",
       feature: {
         saveAsImage: { title: "Als Bild speichern" }
       }
     },
     yAxis: {},
-    legend: {},
+    legend: {
+      orient: "vertical",
+      right: 10
+    },
     tooltip: {}
   });
 
@@ -86,8 +91,6 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
     if (!props.data) return;
 
     const chartData = this.aggregateChartData(props.data);
-    console.log(chartData.source);
-    console.log([...chartData.series]);
 
     sleep(100).then(() => {
       this.chart.clear();
@@ -106,11 +109,6 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
 
   private chart: any = null;
   render() {
-    if (this.props.data) {
-      const chartData = this.aggregateChartData(this.props.data);
-      console.log(chartData);
-    }
-    //debugger;
     return (
       <div onMouseDown={eatEvent} style={{ width: "100%", height: "100%" }}>
         <ReactEcharts
