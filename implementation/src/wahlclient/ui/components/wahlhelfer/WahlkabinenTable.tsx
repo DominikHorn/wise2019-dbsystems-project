@@ -213,6 +213,15 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
               Neue Wahlkabine Authorisieren
             </Button>
           </Col>
+          <Col>
+            <Button
+              icon={"refresh"}
+              loading={this.props.registeredWahlkabinenData.loading}
+              onClick={() => this.props.registeredWahlkabinenData.refetch()}
+            >
+              Refresh
+            </Button>
+          </Col>
         </Row>
       )}
       loading={this.props.registeredWahlkabinenData.loading}
