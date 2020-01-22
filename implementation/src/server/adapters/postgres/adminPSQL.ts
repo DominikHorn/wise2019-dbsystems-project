@@ -249,7 +249,7 @@ export async function isRegisteredWahlkabine(
       `
     SELECT *
     FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
-    WHERE token = $!   
+    WHERE token = $1   
   `,
       [wahlkabineToken]
     )
