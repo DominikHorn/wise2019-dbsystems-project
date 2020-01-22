@@ -21,6 +21,7 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
   private aggregateChartData = (
     stimmenEntwicklung: Stimmentwicklung[]
   ): {
+    source: any[];
     xAxisLabels: string[];
     series: {
       name: string; //Name der Partei -> wirklich Sinn dieses labels? Wo taucht das ueberhaupt auf?
@@ -28,15 +29,18 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
       data: { vorher: number; nachher: number }; //anzahl Stimmen aus previous bzw gewaehlter wahl
     }[];
   } => {
+    //TODO: Jahreszahlen richtig einbinden -> wie Zugriff auf year bei date?
+    const sourceBegin = [["partei", "2013", "2018"]];
     const res = stimmenEntwicklung.reduce(
       (prev, curr) => ({
+        source: {
+          ...(prev.source || {}),
+          [curr.partei.id]: [curr.partei.name, curr.vorher, curr.nachher]
+        },
         series: {
           ...(prev.series || {}),
           [curr.partei.id]: {
-            name: curr.partei.name,
-            type: "bar",
-            barGap: 0,
-            data: [curr.vorher, curr.nachher]
+            type: "bar"
           }
         },
         xAxisLabels: {
@@ -45,10 +49,13 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
         }
       }),
 
-      { series: {}, xAxisLabels: {} } as { [key: string]: any }
+      { source: {}, series: {}, xAxisLabels: {} } as { [key: string]: any }
     );
 
     return {
+      source: sourceBegin.concat(
+        Object.keys(res.source).map(key => res.source[key])
+      ),
       xAxisLabels: Object.keys(res.xAxisLabels).map(
         key => res.xAxisLabels[key]
       ),
@@ -62,26 +69,15 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
     }
   }
 
-  private getOptions = (props: IProps) => ({
-    color: ["#003366", "#006699"],
-    animate: true,
-    animationEasing: "bounceInOut",
+  private getOptions = () => ({
     toolbox: {
       feature: {
         saveAsImage: { title: "Als Bild speichern" }
       }
     },
-    yAxis: {
-      // interval: 5,
-      type: "value"
-    },
-    // grid: {
-    //   left: 100
-    // },
-    legend: {
-      data: [props.vglwahl.wahldatum, props.wahl.wahldatum]
-    }
-    // tooltip: {},
+    yAxis: {},
+    legend: {},
+    tooltip: {}
   });
 
   private updateChartData = (props: IProps) => {
@@ -90,19 +86,20 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
     if (!props.data) return;
 
     const chartData = this.aggregateChartData(props.data);
-    console.log(chartData.series);
-    // return chartData;
+    console.log(chartData.source);
+    console.log([...chartData.series]);
 
     sleep(100).then(() => {
       this.chart.clear();
       this.chart.setOption({
-        ...this.getOptions(props),
-        xAxis: {
-          data: chartData.xAxisLabels,
-          type: "category",
-          axisLabel: { rotate: -45 }
+        ...this.getOptions(),
+        dataset: {
+          source: chartData.source
         },
-        series: chartData.series
+        xAxis: { type: "category", axisLabel: { rotate: -45 } },
+        // Declare several bar series, each will be mapped
+        // to a column of dataset.source by default.
+        series: [{ type: "bar" }, { type: "bar" }]
       });
     });
   };
