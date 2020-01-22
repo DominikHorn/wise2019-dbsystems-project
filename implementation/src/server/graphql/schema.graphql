@@ -59,6 +59,7 @@ type Wahlkabine {
   wahlid: Int
   stimmkreisid: Int
   label: String!
+  token: String
 }
 
 type Mandat {
