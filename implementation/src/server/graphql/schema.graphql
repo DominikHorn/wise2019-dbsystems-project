@@ -4,6 +4,7 @@ scalar Date
 
 type Query {
   getAllWahlen: [Wahl]!
+  getAllStimmkreise(wahlid: Int!): [Stimmkreis]!
   getMandate(wahlid: Int!): [Mandat]!
   getStimmkreisWinner(wahlid: Int!, erststimmen: Boolean!): [StimmkreisWinner]!
   getUeberhangMandate(wahlid: Int!): [UeberhangMandat]!

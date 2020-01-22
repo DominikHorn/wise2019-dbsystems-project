@@ -24,7 +24,12 @@ import { GewinnerWidget } from "./components/general/statistikwidgets/GewinnerWi
 import { UeberhangmandateWidget } from "./components/general/statistikwidgets/UeberhangmandateWidget";
 import { KnappsteKandidatenWidget } from "./components/general/statistikwidgets/KnappsteKandidatenWidget";
 import { renderError } from "../../wahlclient/ui/guiUtil";
+<<<<<<< HEAD
 import { AltersverteilungsWidget } from "./components/general/statistikwidgets/AltersverteilungsWidget";
+import { StimmkreisInfoQ7Widget } from "./components/general/statistikwidgets/StimmkreisinfoQ7Widget";
+=======
+import { StimmkreisInfoQ7Widget } from "./components/general/statistikwidgets/StimmkreisinfoQ7Widget";
+>>>>>>> 0b4f4ec... Add new query to get all stimmkreise for one specific election
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -374,6 +379,13 @@ class PageComponentClass extends React.Component<IProps, IState> {
             key={setting.layout.i}
             removeWidget={removeWidget}
           />
+        ) : setting.type === WidgetType.STIMMKREIS_INFO_Q7 ? (
+          <StimmkreisInfoQ7Widget
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
+            key={setting.layout.i}
+            removeWidget={removeWidget}
+          />
         ) : setting.type === WidgetType.ALTERSVERTEILUNG ? (
           <AltersverteilungsWidget
             routableState={setting.routableState}
@@ -381,7 +393,7 @@ class PageComponentClass extends React.Component<IProps, IState> {
             key={setting.layout.i}
             removeWidget={removeWidget}
           />
-        ) : (
+        ): (
           renderError("Unkown Widget type")
         )}
       </div>

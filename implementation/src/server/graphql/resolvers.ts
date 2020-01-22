@@ -35,6 +35,7 @@ import {
 } from "../adapters/postgres/kandidatPSQL";
 import { adapters } from "../adapters/adapterUtil";
 import { castVote } from "../adapters/postgres/stimmenPSQL";
+import { getAllStimmkreiseForWahl } from "../adapters/postgres/queries/stimmkreisPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -49,6 +50,8 @@ export const resolvers: Resolver = {
   },
   Query: {
     getAllWahlen,
+    getAllStimmkreise: (_: any, args: { wahlid: number }) =>
+      getAllStimmkreiseForWahl(args.wahlid),
     getMandate: (_, args) =>
       withVerifyIsNotBlocked(args.wahlid, () => getMandate(args.wahlid)),
     getStimmkreisWinner: (_, args) =>
@@ -71,20 +74,13 @@ export const resolvers: Resolver = {
       withVerifyIsNotBlocked(args.wahlid, () =>
         getDirektmandat(args.wahlid, args.stimmkreisid)
       ),
-    getStimmentwicklung: (_, args) =>
-      withVerifyIsNotBlocked(args.wahlid, () =>
+    computeEntwicklungDerStimmen: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () => 
         computeEntwicklungDerStimmmen(
           args.wahlid,
           args.vglwahlid,
           args.stimmkreisid
-        )
-      ),
-    computeEntwicklungDerStimmen: (_, args) =>
-      computeEntwicklungDerStimmmen(
-        args.wahlid,
-        args.vglwahlid,
-        args.stimmkreisid
-      ),
+        )),
     getDirektKandidaten: (_, args) =>
       getDirektKandidaten(args.wahlid, args.stimmkreisid),
     getListenKandidaten: (_, args) =>

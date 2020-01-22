@@ -9,6 +9,7 @@ export enum WidgetType {
   GEWINNER_STIMMKREISE = "Stimmkreisgewinner (Q4)",
   UEBERHANGMANDATE = "Überhangmandate (Q5)",
   KNAPPSTE_KANDIDATEN = "Knappste Kandidaten (Q6)",
+  STIMMKREIS_INFO_Q7 = "Stimmkreisinfos (Q7)",
   ALTERSVERTEILUNG = "Altersverteilung im Landtag (Q8)"
 }
 

@@ -23,7 +23,7 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
   ): {
     xAxisLabels: string[];
     series: {
-      name: string; //Partei -> wirklich Sinn dieses labels? Wo taucht das ueberhaupt auf?
+      name: string; //Name der Partei -> wirklich Sinn dieses labels? Wo taucht das ueberhaupt auf?
       type: string; // immer bar
       data: { vorher: number; nachher: number }; //anzahl Stimmen aus previous bzw gewaehlter wahl
     }[];
