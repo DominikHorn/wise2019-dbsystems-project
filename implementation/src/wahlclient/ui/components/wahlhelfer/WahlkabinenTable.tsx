@@ -25,13 +25,23 @@ import {
 } from "../../../../client-graphql/wahlkabine/removeWahlkabineMutation";
 import * as QrReader from "react-qr-reader";
 import Password from "antd/lib/input/Password";
+import { FormComponentProps } from "antd/lib/form";
 
 export interface IWahlkabinenTableProps {
   readonly wahlhelferAuth: string;
 }
 
-interface IProps
+interface IWahlkabinenFormData {
+  readonly label: string;
+  readonly token: string;
+}
+
+interface IFormProps
   extends IWahlkabinenTableProps,
+    FormComponentProps<IWahlkabinenFormData> {}
+
+interface IProps
+  extends IFormProps,
     QueryToGetRegisteredWahlkabinenHOCProps,
     MutationToRegisterWahlkabineHOCProps,
     MutationToRemoveWahlkabineHOCProps {}
@@ -39,7 +49,6 @@ interface IProps
 interface IState {
   readonly modalVisible: boolean;
   readonly qrCodeError?: Error;
-  readonly wahlkabinenToken?: string;
 }
 
 class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
@@ -56,7 +65,16 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
   private onQrReaderScan = (token?: string) => {
     if (!token) return;
     message.success("Token erfolgreich ausgelesen");
-    this.setState({ wahlkabinenToken: token });
+    this.props.form.setFieldsValue({ token });
+  };
+
+  private registerWahlkabine = (e: React.FormEvent) => {
+    e.preventDefault();
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log("Form values:", values);
+      }
+    });
   };
 
   private renderTokenInput = () => (
@@ -79,11 +97,14 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
             Bitte halten Sie den von der betreffenden Wahlkabine generierten
             QR-Code in den markierten Bereich oder geben das Token hier ein:
           </div>
-          <Password
-            value={this.state.wahlkabinenToken}
-            placeholder={"Bitte Token eingeben"}
-            onChange={i => this.setState({ wahlkabinenToken: i.target.value })}
-          />
+          {this.props.form.getFieldDecorator<IWahlkabinenFormData>("token", {
+            rules: [
+              {
+                required: true,
+                message: "Der Token der Wahlkabine ist zwingend erforderlich"
+              }
+            ]
+          })(<Password placeholder={"Bitte Token eingeben"} />)}
         </Col>
       </Row>
       {this.state.qrCodeError && (
@@ -95,20 +116,38 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
     </>
   );
 
-  private renderRegisterWahlkabineModal = () =>
-    this.state.modalVisible && (
+  private renderRegisterWahlkabineModal = () => {
+    if (!this.state.modalVisible) {
+      // This is to close camera stream when modal is not visible
+      return <></>;
+    }
+
+    const { getFieldDecorator } = this.props.form;
+
+    return (
       <Modal
         visible={this.state.modalVisible}
         onCancel={() => this.setState({ modalVisible: false })}
+        onOk={this.registerWahlkabine}
       >
-        <Form.Item label={"Bezeichnung"} required={true}>
-          <Input placeholder={"Bitte eine Bezeichnung eingeben"} />
-        </Form.Item>
-        <Form.Item label={"Authentifizierung"} required={true}>
-          {this.renderTokenInput()}
-        </Form.Item>
+        <Form onSubmit={this.registerWahlkabine}>
+          <Form.Item label={"Bezeichnung"} required={true}>
+            {getFieldDecorator<IWahlkabinenFormData>("label", {
+              rules: [
+                {
+                  required: true,
+                  message: "Jede Wahlkabine muss eine Bezeichnung haben"
+                }
+              ]
+            })(<Input placeholder={"Bitte eine Bezeichnung eingeben"} />)}
+          </Form.Item>
+          <Form.Item label={"Authentifizierung"} required={true}>
+            {this.renderTokenInput()}
+          </Form.Item>
+        </Form>
       </Modal>
     );
+  };
 
   private renderTable = () => (
     <Table
@@ -170,6 +209,10 @@ const WahlkabinenTableWithQueries = compose(
   withRegisteredWahlkabinen<IWahlkabinenTableProps>(p => p.wahlhelferAuth)
 )(WahlkabinenTableComponent);
 
-export const WahlkabinenTable = WahlkabinenTableWithQueries as React.ComponentType<
+const WahlkabinenTableWithForm = Form.create<IFormProps>()(
+  WahlkabinenTableWithQueries
+);
+
+export const WahlkabinenTable = WahlkabinenTableWithForm as React.ComponentType<
   IWahlkabinenTableProps
 >;
