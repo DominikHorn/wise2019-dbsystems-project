@@ -159,7 +159,7 @@ class PageComponentClass extends React.Component<IProps, IState> {
     >
       <Col>
         <Row type={"flex"} justify={"center"} style={{ marginBottom: "8px" }}>
-          <Col>
+          <Col style={{ width: "100%" }}>
             <Button
               type={"primary"}
               style={{ width: "100%" }}
@@ -171,7 +171,7 @@ class PageComponentClass extends React.Component<IProps, IState> {
           </Col>
         </Row>
         <Row type={"flex"} justify={"center"}>
-          <Col>
+          <Col style={{ width: "100%" }}>
             <Button
               type={"primary"}
               style={{ width: "100%" }}
