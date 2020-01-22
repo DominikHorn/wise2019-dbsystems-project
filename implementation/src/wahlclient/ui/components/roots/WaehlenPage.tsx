@@ -7,10 +7,12 @@ import { ZweitstimmePage } from "../waehlen/ZweitstimmePage";
 import "./WaehlenPage.css";
 import { generateRandomToken } from "../../../../shared/token";
 import * as QRCode from "qrcode.react";
+import { compose, withApollo, WithApolloClient } from "react-apollo";
+import { isRegisteredGQL } from "../../../../client-graphql/wahlkabine/isRegisteredQuery";
 
 export interface IWaehlenPageProps {}
 
-interface IProps extends IWaehlenPageProps {}
+interface IProps extends WithApolloClient<IWaehlenPageProps> {}
 
 interface IState {
   readonly setupDone?: boolean;
@@ -55,7 +57,7 @@ function getWahlTabTitle(wahlTab: WahlTab) {
   }
 }
 
-export class WaehlenPage extends React.PureComponent<IProps, IState> {
+class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
@@ -242,6 +244,28 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
       </Row>
     );
 
+  private validateWahlkabineSetup = () => {
+    this.props.client
+      .query({
+        query: isRegisteredGQL,
+        variables: {
+          wahlkabineToken: this.state.wahlkabineToken
+        },
+        fetchPolicy: "network-only"
+      })
+      .then(res => {
+        if (!res || res.errors || !res.data.isRegistered) {
+          message.error("Computer sagt nein");
+          return;
+        }
+        message.success("Wahlkabine fertig konfiguriert");
+        this.setState({ setupDone: true });
+      })
+      .catch(err => {
+        message.error(`Fehler: ${err.message}`);
+      });
+  };
+
   private renderWahlkabineSetup = () => (
     <Row
       type={"flex"}
@@ -290,7 +314,7 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
             <Button
               type={"primary"}
               icon={"check-circle"}
-              onClick={() => message.error("UNIMPLEMENTED")}
+              onClick={this.validateWahlkabineSetup}
             >
               Validieren und Weiter
             </Button>
@@ -368,3 +392,9 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
     );
   }
 }
+
+const WaehlenPageWithApollo = withApollo(WaehlenPageComponent);
+
+export const WaehlenPage = WaehlenPageWithApollo as React.ComponentType<
+  IWaehlenPageProps
+>;
