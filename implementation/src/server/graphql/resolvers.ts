@@ -20,7 +20,8 @@ import {
   generateWahlhelferToken,
   getRegisteredWahlkabinen,
   withVerifyIsWahlhelfer,
-  registerWahlkabinen
+  registerWahlkabinen,
+  isRegisteredWahlkabine
 } from "../adapters/postgres/adminPSQL";
 import {
   getDirektKandidaten,
@@ -76,7 +77,8 @@ export const resolvers: Resolver = {
     getListenKandidaten: (_, args) =>
       getListenKandidaten(args.wahlid, args.regierungsbezirkid),
     getRegisteredWahlkabinen: (_, args) =>
-      withVerifyIsWahlhelfer(args.wahlhelferAuth, getRegisteredWahlkabinen)
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, getRegisteredWahlkabinen),
+    isRegistered: (_, args) => isRegisteredWahlkabine(args.wahlkabineToken)
   },
   Mutation: {
     importCSVData: (_, args) =>

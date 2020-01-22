@@ -205,3 +205,18 @@ export async function registerWahlkabinen(
   // TODO: implement
   return false;
 }
+
+export async function isRegisteredWahlkabine(
+  wahlkabineToken: string
+): Promise<boolean> {
+  return adapters.postgres
+    .query(
+      `
+    SELECT *
+    FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
+    WHERE token = $!   
+  `,
+      [wahlkabineToken]
+    )
+    .then(res => res && !!res[0]);
+}

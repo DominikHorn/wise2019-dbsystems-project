@@ -20,6 +20,9 @@ type Query {
 
   # Wahlhelfer
   getRegisteredWahlkabinen(wahlhelferAuth: String!): [Wahlkabine]!
+
+  # Wahlkabine
+  isRegistered(wahlkabineToken: String!): Boolean!
 }
 
 type Mutation {
