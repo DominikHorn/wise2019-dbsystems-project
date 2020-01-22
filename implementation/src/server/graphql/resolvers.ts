@@ -21,7 +21,8 @@ import {
   getRegisteredWahlkabinen,
   withVerifyIsWahlhelfer,
   registerWahlkabinen,
-  isRegisteredWahlkabine
+  isRegisteredWahlkabine,
+  removeWahlkabine
 } from "../adapters/postgres/adminPSQL";
 import {
   getDirektKandidaten,
@@ -87,8 +88,7 @@ export const resolvers: Resolver = {
           const files = await Promise.all(args.files).catch(
             err => `ERROR: files could not be awaited: ${err}`
           );
-          console.warn("DEBUG:", files);
-          console.log("CSV-Import: Received all files");
+          console.log(`CSV-Import: Received ${files.length} files`);
 
           for (const file of files) {
             const readStream = file.createReadStream();
@@ -115,7 +115,16 @@ export const resolvers: Resolver = {
       withVerifyIsAdmin(args.wahlleiterAuth, () => setDataBlocked(args)),
     registerWahlkabine: (_, args) =>
       withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
-        registerWahlkabinen(wahlid, stimmkreisid, args.wahlkabineToken)
+        registerWahlkabinen(
+          wahlid,
+          stimmkreisid,
+          args.wahlkabineToken,
+          args.wahlkabineLabel
+        )
+      ),
+    removeWahlkabine: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
+        removeWahlkabine(wahlid, stimmkreisid, args.wahlkabineToken)
       )
   }
 };

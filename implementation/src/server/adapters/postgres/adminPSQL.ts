@@ -18,7 +18,7 @@ import { generateRandomToken } from "../../../shared/token";
 enum AuthTables {
   DATA_BLOCKED = "datablocked",
   WAHLHELFER_TOKEN = "wahlhelfertoken",
-  WAHLKABINEN = "wahlkabinen"
+  WAHLKABINEN = "authenticated_wahlkabinen"
 }
 
 export function withVerifyIsAdmin<TReturn>(
@@ -193,17 +193,52 @@ export async function getRegisteredWahlkabinen(
   wahlhelfer_wahlid: number,
   wahlhelfer_stimmkreisid: number
 ): Promise<Wahlkabine[]> {
-  // TODO: implement
-  return [];
+  type WahlkabineData = {
+    label: string;
+    token: string;
+  };
+  return adapters.postgres.query<WahlkabineData>(
+    `
+    SELECT label, token
+    FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
+    WHERE wahlid = $1 AND stimmkreisid = $2
+  `,
+    [wahlhelfer_wahlid, wahlhelfer_stimmkreisid]
+  );
 }
 
 export async function registerWahlkabinen(
   wahlhelfer_wahlid: number,
   wahlhelfer_stimmkreisid: number,
+  wahlkabineToken: string,
+  label: string
+): Promise<boolean> {
+  return adapters.postgres
+    .query(
+      `
+    INSERT INTO "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN} (wahl_id, stimmkreis_id, token, label)
+    VALUES ($1, $2, $3, $4)
+    RETURNING *
+  `,
+      [wahlhelfer_wahlid, wahlhelfer_stimmkreisid, wahlkabineToken, label]
+    )
+    .then(res => res && !!res[0]);
+}
+
+export async function removeWahlkabine(
+  wahlhelfer_wahlid: number,
+  wahlhelfer_stimmkreisid: number,
   wahlkabineToken: string
 ): Promise<boolean> {
-  // TODO: implement
-  return false;
+  return adapters.postgres
+    .query(
+      `
+    DELETE FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
+    WHERE wahlid = $1 AND stimmkreisid = $2 AND token = $3
+  `,
+      [wahlhelfer_wahlid, wahlhelfer_stimmkreisid, wahlkabineToken]
+    )
+    .then(res => !!res);
 }
 
 export async function isRegisteredWahlkabine(
