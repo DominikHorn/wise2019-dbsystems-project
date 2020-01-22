@@ -199,6 +199,7 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
   private renderTable = () => (
     <Table
       size={"small"}
+      pagination={false}
       title={() => (
         <Row type={"flex"} gutter={[16, 16]} align={"middle"}>
           <Col>Authorisierte Wahlkabinen</Col>
