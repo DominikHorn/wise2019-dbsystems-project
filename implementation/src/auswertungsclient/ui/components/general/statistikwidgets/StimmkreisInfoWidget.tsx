@@ -4,7 +4,7 @@ import {
   withAllWahlenQuery
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
-import { Wahl } from "../../../../../shared/graphql.types";
+import { Wahl, Stimmkreis } from "../../../../../shared/graphql.types";
 import { compose } from "react-apollo";
 import { WahlSelector } from "../dataselectors/WahlSelector";
 import { WahlbeteiligungChart } from "./WahlbeteiligungChart";
@@ -12,9 +12,12 @@ import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { Row, Col } from "antd";
 import { renderCenteredLoading } from "../../../guiUtil";
 import { StimmentwicklungChart } from "./StimmentwicklungChart";
+import { StimmkreisCharts } from "./StimmkreisChartsComponent";
 
 interface IState {
   readonly selectedWahl?: Wahl;
+  readonly selectedStimmkreis?: Stimmkreis;
+  readonly wahlbeteiligung?: number;
 }
 
 export interface IStimmkreisInfoWidgetProps
@@ -30,7 +33,9 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
 > {
   constructor(props: IProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      selectedStimmkreis: null
+    };
   }
 
   private onSelectWahl = (selectedWahl: Wahl) =>
@@ -39,6 +44,9 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
       : this.setState({ selectedWahl });
 
   render() {
+    if (this.state.selectedStimmkreis) {
+      console.log(this.state.selectedStimmkreis.name);
+    }
     const { allWahlenData, routableState } = this.props;
     let selectedWahl: Wahl = null;
     if (routableState) {
@@ -85,18 +93,28 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
         {selectedWahl ? (
           <Row type={"flex"} style={{ height: "100%", width: "100%" }}>
             <Col span={8} style={{ height: "100%" }}>
-              <WahlbeteiligungChart wahl={selectedWahl} />
+              <WahlbeteiligungChart
+                wahl={selectedWahl}
+                onStimmkreisSelect={(
+                  selected: Stimmkreis,
+                  wahlbeteiligung: number
+                ) =>
+                  this.setState({
+                    selectedStimmkreis: selected,
+                    wahlbeteiligung: wahlbeteiligung
+                  })
+                }
+              />
             </Col>
             <Col span={15} style={{ height: "100%" }}>
-              {previousWahl ? (
-                <StimmentwicklungChart
+              {this.state.selectedStimmkreis && previousWahl ? (
+                <StimmkreisCharts
                   wahl={selectedWahl}
-                  vglwahl={previousWahl}
-                  stimmkreis={{ id: 101, name: "test" }}
-                  data={null}
+                  vglWahl={previousWahl}
+                  stimmkreis={this.state.selectedStimmkreis}
                 />
               ) : (
-                renderCenteredLoading()
+                renderInfo("Bitte einen Stimmkreis anklicken")
               )}
             </Col>
           </Row>

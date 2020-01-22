@@ -4,10 +4,10 @@ import { Mandat, QueryToGetDirektmandatArgs } from "../../shared/graphql.types";
 import { createTypedGraphqlHoc } from "../typedGraphql";
 
 const getDirektmandatQuery = gql`
-  query getDirektmandatQuery($wahlid: Int!, $stimmkreisId: Int!) {
+  query getDirektmandatQuery($wahlid: Int!, $stimmkreisid: Int!) {
     direktmandat: getDirektmandat(
       wahlid: $wahlid
-      stimmkreisId: $stimmkreisId
+      stimmkreisid: $stimmkreisid
     ) {
       kandidat {
         id

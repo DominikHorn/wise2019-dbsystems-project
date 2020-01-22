@@ -412,10 +412,6 @@ export async function getDirektmandat(
   );
 
   return res.map(resobj => ({
-    stimmkreis: {
-      id: resobj.stimmkreis_id,
-      name: resobj.stimmkreis_name
-    },
     kandidat: {
       id: resobj.kandidat_id,
       name: resobj.kandidat_name,

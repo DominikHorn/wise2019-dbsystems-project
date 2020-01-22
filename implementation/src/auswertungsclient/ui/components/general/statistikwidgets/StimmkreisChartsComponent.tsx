@@ -9,6 +9,10 @@ import { IStimmkreis, IWahl } from "../../../../../shared/sharedTypes";
 import { renderCenteredLoading } from "../../../guiUtil";
 import { StimmentwicklungChart } from "./StimmentwicklungChart";
 import { ProzAnteilChart } from "./ProzentualerAnteilStimmenChart";
+import {
+  withDirektmandatQuery,
+  IGetDirektmandatQueryHocProps
+} from "../../../../../client-graphql/public/getDirektmandatQuery";
 
 export interface IStimmkreisChartsComponentProps {
   readonly wahl: IWahl;
@@ -18,7 +22,8 @@ export interface IStimmkreisChartsComponentProps {
 
 interface IProps
   extends IStimmkreisChartsComponentProps,
-    IGetEntwicklungDerStimmenQueryHocProps {}
+    IGetEntwicklungDerStimmenQueryHocProps,
+    IGetDirektmandatQueryHocProps {}
 
 class StimmkreisChartsComponent extends React.PureComponent<IProps> {
   render() {
@@ -29,14 +34,23 @@ class StimmkreisChartsComponent extends React.PureComponent<IProps> {
         this.props.wahl ? (
           <div style={{ height: "100%" }}>
             <Row style={{ height: "50%" }}>
-              <Col span={7} style={{ height: "100%" }}>
-                Stimmkreis: {this.props.stimmkreis.name}
-                <br />
-                Wahlbeteiligung: 78 %
-                <br />
-                Gewinner: Hans
-                <br />
-              </Col>
+              {this.props.direktmandatData &&
+              this.props.direktmandatData.direktmandat ? (
+                <Col span={7} style={{ height: "100%" }}>
+                  Stimmkreis: {this.props.stimmkreis.name}
+                  <br />
+                  Wahlbeteiligung: 78 %
+                  <br />
+                  Gewinner:{" "}
+                  {this.props.direktmandatData.direktmandat.kandidat.name}
+                  <br />
+                </Col>
+              ) : (
+                <Col span={7} style={{ height: "100%" }}>
+                  {renderCenteredLoading()}
+                </Col>
+              )}
+
               <Col span={10} style={{ height: "100%" }}>
                 <ProzAnteilChart
                   wahl={this.props.wahl}
@@ -66,6 +80,10 @@ const EntwicklungDerStimmenChartWithQueries = compose(
   withEntwicklungDerStimmenQuery<IStimmkreisChartsComponentProps>(
     props => props.wahl.id,
     props => props.vglWahl.id,
+    props => props.stimmkreis.id
+  ),
+  withDirektmandatQuery<IStimmkreisChartsComponentProps>(
+    props => props.wahl.id,
     props => props.stimmkreis.id
   )
 )(StimmkreisChartsComponent);
