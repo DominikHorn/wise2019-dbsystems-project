@@ -55,6 +55,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-polyfill": "^6.26.0",
     "clean-webpack-plugin": "^2.0.1",
+    "copy-webpack-plugin": "^5.1.1",
     "cross-env": "^5.2.0",
     "css-loader": "^2.1.1",
     "extract-hoc": "^0.0.5",

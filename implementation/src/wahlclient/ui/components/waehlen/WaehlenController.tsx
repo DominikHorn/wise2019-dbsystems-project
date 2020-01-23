@@ -101,6 +101,12 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
     // Only do cleanup if really necessary
     if (this.isInCleanState()) return;
 
+    // Make sure next voter has a Freshhhh experience aswell
+    if (this.audio) {
+      this.audio.pause();
+      this.audio = null;
+    }
+
     this.props.resetWahlkabine({
       variables: { wahlkabineToken: this.props.wahlkabineToken }
     });
@@ -138,10 +144,27 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
     }
   };
 
+  private audio: any = null;
   componentDidUpdate() {
     // Force reset Wahlkabine if it is not unlocked
     if (this.props.isUnlockedData && !this.props.isUnlockedData.isUnlocked) {
       this.resetWahlkabine();
+    }
+
+    if (this.isWaehlerBraun()) {
+      if (!this.audio) {
+        this.audio = new Audio("/haselnuss.mp3");
+      }
+      this.audio.play();
+    } else if (this.audio) {
+      this.audio.pause();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.audio) {
+      this.audio.pause();
+      this.audio = null;
     }
   }
 
@@ -382,12 +405,12 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
             })
           }
           destroyInactiveTabPane={true}
-          style={{ backgroundColor: braunerWaehler ? "#632900" : "white" }}
+          style={{ backgroundColor: braunerWaehler ? "#A0522D" : "white" }}
           tabBarExtraContent={
             <Button
               icon={"reload"}
               onClick={this.resetWahlkabine}
-              style={{ marginRight: "8px" }}
+              style={{ marginRight: "10px" }}
               size={"small"}
               disabled={
                 activeTab === WahlTab.RECHTSBEHELFSBELEHRUNG ||

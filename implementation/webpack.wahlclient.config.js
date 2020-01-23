@@ -4,6 +4,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 const webpack = require("webpack");
 const fs = require("fs");
+const CopyPlugin = require("copy-webpack-plugin");
 
 const nodeEnv = process.env.NODE_ENV;
 const isProduction = nodeEnv !== "development";
@@ -71,6 +72,12 @@ module.exports = {
       template: path.resolve(__dirname, "src/wahlclient/index.html"),
       inject: "body"
     }),
+    new CopyPlugin([
+      {
+        from: path.resolve(__dirname, "src/wahlclient/data/haselnuss.mp3"),
+        to: path.resolve(__dirname, "dist/wahlclient/haselnuss.mp3")
+      }
+    ]),
     new webpack.HotModuleReplacementPlugin()
   ],
   resolve: {
