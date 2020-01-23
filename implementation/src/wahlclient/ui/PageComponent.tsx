@@ -155,7 +155,10 @@ class PageComponentClass extends React.Component<IProps, IState> {
       type={"flex"}
       justify={"center"}
       align={"middle"}
-      style={{ width: "100vw", height: "100vh" }}
+      style={{
+        width: "100vw",
+        height: "100vh"
+      }}
     >
       <Col>
         <Row type={"flex"} justify={"center"} style={{ marginBottom: "8px" }}>
