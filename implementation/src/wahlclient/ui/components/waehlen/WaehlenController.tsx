@@ -5,7 +5,7 @@ import {
   withResetWahlkabineMutation
 } from "../../../../client-graphql/wahlkabine/resetWahlkabineMutation";
 import { compose } from "react-apollo";
-import { message, Row, Col, Button, Icon, Divider, Tabs } from "antd";
+import { message, Row, Col, Button, Icon, Divider, Tabs, Spin } from "antd";
 import { Rechtsbehelfsbelehrung } from "./Rechtsbehelfsbelehrung";
 import { ErststimmePage } from "./ErststimmePage";
 import { ZweitstimmePage } from "./ZweitstimmePage";
@@ -161,8 +161,10 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
     </div>
   );
 
-  private renderRechtsbelehrung = () =>
-    this.renderInTabContainer(
+  private renderRechtsbelehrung = () => {
+    const waiting =
+      this.props.isUnlockedData && !this.props.isUnlockedData.isUnlocked;
+    return this.renderInTabContainer(
       <>
         <Row type={"flex"} justify={"center"} style={{ marginBottom: "8px" }}>
           <Col style={{ width: "100%" }}>
@@ -174,6 +176,8 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
             <Button
               type={"primary"}
               style={{ float: "right" }}
+              loading={waiting}
+              disabled={waiting}
               onClick={() => {
                 if (!this.props.isUnlockedData.isUnlocked) {
                   message.error(
@@ -187,13 +191,16 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
                 );
               }}
             >
-              Zur Kenntnis genommen
+              {waiting
+                ? "Warte auf Freigabe durch Wahlleiter"
+                : "Ja, ich habe die Rechtsbehelfsbelehrung zur Kenntnis genommen"}
               <Icon type={"right"} />
             </Button>
           </Col>
         </Row>
       </>
     );
+  };
 
   private renderErststimme = () =>
     this.renderInTabContainer(
