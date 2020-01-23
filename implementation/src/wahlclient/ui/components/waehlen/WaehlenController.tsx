@@ -5,7 +5,17 @@ import {
   withResetWahlkabineMutation
 } from "../../../../client-graphql/wahlkabine/resetWahlkabineMutation";
 import { compose } from "react-apollo";
-import { message, Row, Col, Button, Icon, Divider, Tabs, Spin } from "antd";
+import {
+  message,
+  Row,
+  Col,
+  Button,
+  Icon,
+  Divider,
+  Tabs,
+  Spin,
+  Alert
+} from "antd";
 import { Rechtsbehelfsbelehrung } from "./Rechtsbehelfsbelehrung";
 import { ErststimmePage } from "./ErststimmePage";
 import { ZweitstimmePage } from "./ZweitstimmePage";
@@ -344,6 +354,15 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
   };
 
   render() {
+    const { isUnlockedData } = this.props;
+    if (isUnlockedData && isUnlockedData.error) {
+      return (
+        <Alert
+          type={"error"}
+          message={`Fehler: ${isUnlockedData.error.message}`}
+        />
+      );
+    }
     const { activeTab } = this.state;
     const furthestReachableTab = this.getFurhtestReachableTab();
 

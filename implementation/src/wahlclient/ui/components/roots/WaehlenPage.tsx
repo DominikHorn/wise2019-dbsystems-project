@@ -43,7 +43,9 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
         // If we are not registered yet, refetch
         if (!res.data.isRegistered) {
           // Only poll again if server explicitely told us we're not registered yet
-          setTimeout(this.validateWahlkabineSetup, 1000);
+          this.setState({ setupDone: false }, () =>
+            setTimeout(this.validateWahlkabineSetup, 1000)
+          );
           return;
         }
         message.success("Wahlkabine fertig konfiguriert");
