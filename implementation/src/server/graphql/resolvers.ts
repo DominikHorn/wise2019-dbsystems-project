@@ -25,7 +25,8 @@ import {
   removeWahlkabine,
   setWahlkabineUnlocked,
   withVerifyIsWahlkabine,
-  resetWahlkabine
+  resetWahlkabine,
+  isUnlocked
 } from "../adapters/postgres/adminPSQL";
 import {
   getDirektKandidaten,
@@ -82,7 +83,11 @@ export const resolvers: Resolver = {
       getListenKandidaten(args.wahlid, args.regierungsbezirkid),
     getRegisteredWahlkabinen: (_, args) =>
       withVerifyIsWahlhelfer(args.wahlhelferAuth, getRegisteredWahlkabinen),
-    isRegistered: (_, args) => isRegisteredWahlkabine(args.wahlkabineToken)
+    isRegistered: (_, args) => isRegisteredWahlkabine(args.wahlkabineToken),
+    isUnlocked: (_, args) =>
+      withVerifyIsWahlkabine(args.wahlkabineToken, async () =>
+        isUnlocked(args.wahlkabineToken)
+      )
   },
   Mutation: {
     importCSVData: (_, args) =>
@@ -139,6 +144,9 @@ export const resolvers: Resolver = {
         )
       ),
     // No extra verification needed for this wahlkabine
-    resetWahlkabine: (_, args) => resetWahlkabine(args.wahlkabineToken)
+    resetWahlkabine: (_, args) =>
+      withVerifyIsWahlkabine(args.wahlkabineToken, () =>
+        resetWahlkabine(args.wahlkabineToken)
+      )
   }
 };

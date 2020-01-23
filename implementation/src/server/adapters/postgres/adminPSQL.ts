@@ -319,3 +319,16 @@ export async function resetWahlkabine(
     )
     .then(res => res && !!res[0]);
 }
+
+export async function isUnlocked(wahlkabineToken: string): Promise<Boolean> {
+  return adapters.postgres
+    .query<{ unlocked: boolean }>(
+      `
+        SELECT unlocked
+        FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
+        WHERE token = $1
+      `,
+      [wahlkabineToken]
+    )
+    .then(res => res && res[0].unlocked);
+}
