@@ -1,29 +1,23 @@
+import { Alert, Button, Col, Divider, Icon, message, Row, Tabs } from "antd";
 import * as React from "react";
-import { Kandidat, Partei } from "../../../../shared/graphql.types";
+import { compose } from "react-apollo";
+import {
+  MutationToCastVoteHOCProps,
+  withCastVoteMutation
+} from "../../../../client-graphql/wahlkabine/castVoteMutation";
+import {
+  QueryToIsUnlockedHOCProps,
+  withIsUnlocked
+} from "../../../../client-graphql/wahlkabine/isUnlockedQuery";
 import {
   MutationToResetWahlkabineHOCProps,
   withResetWahlkabineMutation
 } from "../../../../client-graphql/wahlkabine/resetWahlkabineMutation";
-import { compose } from "react-apollo";
-import {
-  message,
-  Row,
-  Col,
-  Button,
-  Icon,
-  Divider,
-  Tabs,
-  Spin,
-  Alert
-} from "antd";
-import { Rechtsbehelfsbelehrung } from "./Rechtsbehelfsbelehrung";
+import { Kandidat, Partei } from "../../../../shared/graphql.types";
 import { ErststimmePage } from "./ErststimmePage";
-import { ZweitstimmePage } from "./ZweitstimmePage";
-import {
-  withIsUnlocked,
-  QueryToIsUnlockedHOCProps
-} from "../../../../client-graphql/wahlkabine/isUnlockedQuery";
+import { Rechtsbehelfsbelehrung } from "./Rechtsbehelfsbelehrung";
 import "./WaehlenController.css";
+import { ZweitstimmePage } from "./ZweitstimmePage";
 
 enum WahlTab {
   RECHTSBEHELFSBELEHRUNG = 0,
@@ -57,6 +51,7 @@ export interface IWaehlenControllerProps {
 interface IProps
   extends IWaehlenControllerProps,
     MutationToResetWahlkabineHOCProps,
+    MutationToCastVoteHOCProps,
     QueryToIsUnlockedHOCProps {}
 
 interface IState {
@@ -196,6 +191,34 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
     });
   };
 
+  private castVote = () => {
+    this.props
+      .castVote({
+        variables: {
+          wahlkabineToken: this.props.wahlkabineToken,
+          erstkandidatID: this.state.selectedErstkandidat
+            ? this.state.selectedErstkandidat.id
+            : null,
+          zweitkandidatID: this.state.selectedZweitkandidat
+            ? this.state.selectedZweitkandidat.id
+            : null,
+          zweitparteiID: this.state.selectedZweitpartei
+            ? this.state.selectedZweitpartei.id
+            : null
+        }
+      })
+      .then(res => {
+        if (!res || res.errors || !res.data.success) {
+          message.error("Computer sagt Nein :(");
+          return;
+        }
+        this.nextTab();
+      })
+      .catch(err => {
+        message.error(`Fehler: ${err.message}`);
+      });
+  };
+
   private getFurhtestReachableTab = () => {
     const {
       acceptedRechtsbehelfsbelehrung,
@@ -329,7 +352,7 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
             </Button>
           </Col>
           <Col>
-            <Button type={"primary"} icon={"check"} onClick={this.nextTab}>
+            <Button type={"primary"} icon={"check"} onClick={this.castVote}>
               Stimmen Abgeben
             </Button>
           </Col>
@@ -469,6 +492,7 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
 
 const WaehlenControllerWithQueries = compose(
   withResetWahlkabineMutation(),
+  withCastVoteMutation(),
   withIsUnlocked<IWaehlenControllerProps>(
     p => p.wahlkabineToken,
     // ~5000 wahlkabinen -> 5000 requests per second ;(
