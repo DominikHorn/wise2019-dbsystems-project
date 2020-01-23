@@ -14,6 +14,7 @@ import {
 import { adapters } from "../adapterUtil";
 import { getAllStimmkreise } from "./stimmkreisPSQL";
 import { generateRandomToken } from "../../../shared/token";
+import { sleep } from "../../../shared/util";
 
 enum AuthTables {
   DATA_BLOCKED = "datablocked",
@@ -21,14 +22,15 @@ enum AuthTables {
   WAHLKABINEN = "authenticated_wahlkabinen"
 }
 
-export function withVerifyIsAdmin<TReturn>(
+export async function withVerifyIsAdmin<TReturn>(
   auth: string,
-  fun: () => TReturn
-): TReturn {
+  fun: () => Promise<TReturn>
+): Promise<TReturn> {
   if (config.wahlleiterConfig.password === auth) {
     return fun();
   }
 
+  await sleep(5000);
   throw new AuthenticationError("Invalid Wahlleiter Auth");
 }
 
@@ -49,10 +51,34 @@ export async function withVerifyIsWahlhelfer<TReturn>(
     .then(res => res && res[0]);
 
   if (!wahlhelferdata) {
+    await sleep(5000);
     throw new AuthenticationError("Invalid Wahlhelfer Auth");
   } else {
     return fun(wahlhelferdata.wahl_id, wahlhelferdata.stimmkreis_id);
   }
+}
+
+export async function withVerifyIsWahlkabine<TReturn>(
+  auth: string,
+  fun: () => Promise<TReturn>
+): Promise<TReturn> {
+  const exists = await adapters.postgres
+    .query(
+      `
+    SELECT *
+    FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
+    WHERE token = $1
+  `,
+      [auth]
+    )
+    .then(res => res && !!res[0]);
+
+  if (!exists) {
+    await sleep(5000);
+    throw new AuthenticationError("Invalid Wahlkabine Auth");
+  }
+
+  return fun();
 }
 
 export async function withVerifyIsNotBlocked<TReturn>(
@@ -197,10 +223,12 @@ export async function getRegisteredWahlkabinen(
     label: string;
     token: string;
     unlocked: boolean;
+    stimmkreisid: number;
+    wahlid: number;
   };
   return adapters.postgres.query<WahlkabineData>(
     `
-    SELECT label, token, unlocked
+    SELECT label, token, wahl_id as wahlid, stimmkreis_id as stimmkreisid, unlocked
     FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
     WHERE wahl_id = $1 AND stimmkreis_id = $2
   `,
@@ -266,12 +294,41 @@ export async function setWahlkabineUnlocked(
   return adapters.postgres
     .query(
       `
-    UPDATE "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
-    SET unlocked = $1
-    WHERE wahl_id = $2 AND stimmkreis_id = $3 AND token = $4
-    RETURNING unlocked
-  `,
+      UPDATE "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
+      SET unlocked = $1
+      WHERE wahl_id = $2 AND stimmkreis_id = $3 AND token = $4
+      RETURNING unlocked
+      `,
       [unlocked, wahlhelfer_wahlid, wahlhelfer_stimmkreisid, wahlkabine_token]
     )
     .then(res => res && !!res[0]);
+}
+
+export async function resetWahlkabine(
+  wahlkabineToken: string
+): Promise<Boolean> {
+  return adapters.postgres
+    .query(
+      `
+      UPDATE "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
+      SET unlocked = false
+      WHERE token = $1
+      RETURNING unlocked
+      `,
+      [wahlkabineToken]
+    )
+    .then(res => res && !!res[0]);
+}
+
+export async function isUnlocked(wahlkabineToken: string): Promise<Boolean> {
+  return adapters.postgres
+    .query<{ unlocked: boolean }>(
+      `
+        SELECT unlocked
+        FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
+        WHERE token = $1
+      `,
+      [wahlkabineToken]
+    )
+    .then(res => res && res[0].unlocked);
 }

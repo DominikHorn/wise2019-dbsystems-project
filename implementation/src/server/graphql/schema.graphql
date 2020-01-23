@@ -23,6 +23,7 @@ type Query {
 
   # Wahlkabine
   isRegistered(wahlkabineToken: String!): Boolean!
+  isUnlocked(wahlkabineToken: String!): Boolean!
 }
 
 type Mutation {
@@ -52,6 +53,9 @@ type Mutation {
     wahlkabineToken: String!
     unlocked: Boolean!
   ): Boolean!
+
+  # Wahlkabine
+  resetWahlkabine(wahlkabineToken: String!): Boolean
 }
 
 type Wahl {

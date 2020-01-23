@@ -259,9 +259,17 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
       rowKey={"label"}
       columns={[
         { title: "Label", key: "label", dataIndex: "label" },
+        { title: "WahlID", key: "wahlid", width: 100, dataIndex: "wahlid" },
         {
-          title: "Wahl freischalten",
+          title: "Stimmkreis",
+          key: "stimmkreisid",
+          width: 100,
+          dataIndex: "stimmkreisid"
+        },
+        {
+          title: "Freischalten",
           key: "unlock",
+          width: 100,
           render: wahlkabine => (
             <Row type={"flex"} justify={"center"} align={"middle"}>
               <Col>
@@ -278,6 +286,7 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
         {
           title: "Löschen",
           key: "delete",
+          width: 80,
           render: wahlkabine => (
             <Row
               type={"flex"}
