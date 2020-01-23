@@ -22,6 +22,7 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
       wahlkabineToken: generateRandomToken()
     };
 
+    // Start validation polling after a 5 second initial wait
     setTimeout(this.validateWahlkabineSetup, 5000);
   }
 
@@ -41,6 +42,7 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
         }
         // If we are not registered yet, refetch
         if (!res.data.isRegistered) {
+          // Only poll again if server explicitely told us we're not registered yet
           setTimeout(this.validateWahlkabineSetup, 1000);
           return;
         }
