@@ -259,6 +259,12 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
       rowKey={"label"}
       columns={[
         { title: "Label", key: "label", dataIndex: "label" },
+        { title: "WahlID", key: "wahlid", dataIndex: "wahlid" },
+        {
+          title: "StimmkreisID",
+          key: "stimmkreisid",
+          dataIndex: "stimmkreisid"
+        },
         {
           title: "Wahl freischalten",
           key: "unlock",

@@ -219,10 +219,12 @@ export async function getRegisteredWahlkabinen(
     label: string;
     token: string;
     unlocked: boolean;
+    stimmkreisid: number;
+    wahlid: number;
   };
   return adapters.postgres.query<WahlkabineData>(
     `
-    SELECT label, token, unlocked
+    SELECT label, token, wahl_id as wahlid, stimmkreis_id as stimmkreisid, unlocked
     FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
     WHERE wahl_id = $1 AND stimmkreis_id = $2
   `,
