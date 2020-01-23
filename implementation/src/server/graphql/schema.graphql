@@ -52,6 +52,9 @@ type Mutation {
     wahlkabineToken: String!
     unlocked: Boolean!
   ): Boolean!
+
+  # Wahlkabine
+  resetWahlkabine(wahlkabineToken: String!): Boolean
 }
 
 type Wahl {

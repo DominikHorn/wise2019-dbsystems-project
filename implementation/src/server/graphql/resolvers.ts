@@ -23,7 +23,9 @@ import {
   registerWahlkabine,
   isRegisteredWahlkabine,
   removeWahlkabine,
-  setWahlkabineUnlocked
+  setWahlkabineUnlocked,
+  withVerifyIsWahlkabine,
+  resetWahlkabine
 } from "../adapters/postgres/adminPSQL";
 import {
   getDirektKandidaten,
@@ -135,6 +137,8 @@ export const resolvers: Resolver = {
           args.wahlkabineToken,
           args.unlocked
         )
-      )
+      ),
+    // No extra verification needed for this wahlkabine
+    resetWahlkabine: (_, args) => resetWahlkabine(args.wahlkabineToken)
   }
 };
