@@ -67,6 +67,17 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
     };
   }
 
+  private resetWahlkabine = () => {
+    // TODO: disable wählen (extra mutation purely for disabling wahlkabine)
+    this.setState({
+      activeTab: WahlTab.RECHTSBEHELFSBELEHRUNG,
+      acceptedRechtsbehelfsbelehrung: false,
+      selectedErstkandidat: undefined,
+      selectedZweitkandidat: undefined,
+      selectedZweitpartei: undefined
+    });
+  };
+
   private nextTab = () => {
     if (!this.state.acceptedRechtsbehelfsbelehrung) {
       message.error(
@@ -346,6 +357,11 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
             })
           }
           style={{ backgroundColor: "white" }}
+          tabBarExtraContent={
+            <Button icon={"reset"} onClick={this.resetWahlkabine}>
+              Zurücksetzen
+            </Button>
+          }
         >
           <Tabs.TabPane
             tab={getWahlTabTitle(WahlTab.RECHTSBEHELFSBELEHRUNG)}
