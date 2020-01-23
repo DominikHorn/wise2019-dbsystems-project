@@ -1,10 +1,8 @@
-import * as React from "react";
-import { RouteComponentProps } from "react-router";
-import { Card, message, Button, Col, Row, Alert, Table } from "antd";
-import * as QrReader from "react-qr-reader";
+import { Alert, Button, Card, Col, message, Row } from "antd";
 import Password from "antd/lib/input/Password";
-import { compose } from "react-apollo";
-import { withRegisteredWahlkabinen } from "../../../../client-graphql/wahlkabine/getRegisteredWahlkabinenQuery";
+import * as React from "react";
+import * as QrReader from "react-qr-reader";
+import { RouteComponentProps } from "react-router";
 import { WahlkabinenTable } from "../wahlhelfer/WahlkabinenTable";
 
 export interface IWahlhelferPageProps {
@@ -28,9 +26,6 @@ export class WahlhelferPage extends React.PureComponent<
   private renderAuthenticatedWahlhelferUI = () => (
     <>
       <Row type={"flex"} gutter={[16, 16]} justify={"end"}>
-        <Col>
-          <Button disabled={true}>Wählen freigeben</Button>
-        </Col>
         <Col>
           <Button disabled={true}>Stimmeintragung</Button>
         </Col>

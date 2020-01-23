@@ -28,6 +28,10 @@ import * as QrReader from "react-qr-reader";
 import Password from "antd/lib/input/Password";
 import { FormComponentProps } from "antd/lib/form";
 import { Wahlkabine } from "../../../../shared/graphql.types";
+import {
+  withSetWahlkabineUnlockedMutation,
+  MutationToSetWahlkabineUnlockedHOCProps
+} from "../../../../client-graphql/wahlkabine/setWahlkabineUnlockedMutation";
 
 export interface IWahlkabinenTableProps {
   readonly wahlhelferAuth: string;
@@ -46,7 +50,8 @@ interface IProps
   extends IFormProps,
     QueryToGetRegisteredWahlkabinenHOCProps,
     MutationToRegisterWahlkabineHOCProps,
-    MutationToRemoveWahlkabineHOCProps {}
+    MutationToRemoveWahlkabineHOCProps,
+    MutationToSetWahlkabineUnlockedHOCProps {}
 
 interface IState {
   readonly modalVisible: boolean;
@@ -129,7 +134,25 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
     wahlkabine: Wahlkabine,
     unlocked: boolean
   ) => {
-    message.error("Unimplemented");
+    this.props
+      .setWahlkabineUnlocked({
+        variables: {
+          unlocked,
+          wahlhelferAuth: this.props.wahlhelferAuth,
+          wahlkabineToken: wahlkabine.token
+        }
+      })
+      .then(res => {
+        if (!res || res.errors || !res.data.success) {
+          message.error("Server verweigert das Freigeben der Wahlkabine");
+          return;
+        }
+      })
+      .catch(err => {
+        message.error(
+          `Freigeben der Wahlkabine fehlgeschlagen: ${err.message}`
+        );
+      });
   };
 
   private renderTokenInput = () => (
@@ -301,6 +324,7 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
 const WahlkabinenTableWithQueries = compose(
   withRegisterWahlkabineMutation(),
   withRemoveWahlkabineMutation(),
+  withSetWahlkabineUnlockedMutation(),
   withRegisteredWahlkabinen<IWahlkabinenTableProps>(p => p.wahlhelferAuth)
 )(WahlkabinenTableComponent);
 
