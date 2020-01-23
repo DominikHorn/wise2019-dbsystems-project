@@ -21,6 +21,8 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
     this.state = {
       wahlkabineToken: generateRandomToken()
     };
+
+    setTimeout(this.validateWahlkabineSetup, 5000);
   }
 
   private validateWahlkabineSetup = () => {
@@ -33,8 +35,13 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
         fetchPolicy: "network-only"
       })
       .then(res => {
-        if (!res || res.errors || !res.data.isRegistered) {
+        if (!res || res.errors) {
           message.error("Computer sagt nein");
+          return;
+        }
+        // If we are not registered yet, refetch
+        if (!res.data.isRegistered) {
+          setTimeout(this.validateWahlkabineSetup, 1000);
           return;
         }
         message.success("Wahlkabine fertig konfiguriert");
@@ -85,18 +92,6 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
               size={512}
               value={this.state.wahlkabineToken}
             />
-          </Col>
-        </Row>
-
-        <Row type={"flex"} justify={"center"}>
-          <Col>
-            <Button
-              type={"primary"}
-              icon={"check-circle"}
-              onClick={this.validateWahlkabineSetup}
-            >
-              Validieren und Weiter
-            </Button>
           </Col>
         </Row>
       </Col>
