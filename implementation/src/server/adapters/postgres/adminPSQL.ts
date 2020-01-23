@@ -14,7 +14,7 @@ import {
 import { adapters } from "../adapterUtil";
 import { getAllStimmkreise } from "./stimmkreisPSQL";
 import { generateRandomToken } from "../../../shared/token";
-import { sleep } from "../../../shared/util.js";
+import { sleep } from "../../../shared/util";
 
 enum AuthTables {
   DATA_BLOCKED = "datablocked",
