@@ -6,7 +6,6 @@ import { isRegisteredGQL } from "../../../../client-graphql/wahlkabine/isRegiste
 import { withResetWahlkabineMutation } from "../../../../client-graphql/wahlkabine/resetWahlkabineMutation";
 import { generateRandomToken } from "../../../../shared/token";
 import { WaehlenController } from "../waehlen/WaehlenController";
-import "./WaehlenPage.css";
 
 export interface IWaehlenPageProps {}
 

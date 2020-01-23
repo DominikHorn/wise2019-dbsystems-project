@@ -25,7 +25,7 @@ class ErststimmePageComponent extends React.PureComponent<IProps> {
   private renderKandidatBox = (kandidat: Kandidat) => (
     <Card
       className={"candidat-card"}
-      style={{ borderColor: "#365592" }}
+      style={{ borderColor: "#365592", height: "100%" }}
       hoverable={true}
       onClick={() => this.props.onSelectKandidat(kandidat)}
     >

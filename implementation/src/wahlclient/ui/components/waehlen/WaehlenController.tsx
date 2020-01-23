@@ -13,6 +13,7 @@ import {
   withIsUnlocked,
   QueryToIsUnlockedHOCProps
 } from "../../../../client-graphql/wahlkabine/isUnlockedQuery";
+import "./WaehlenController.css";
 
 enum WahlTab {
   RECHTSBEHELFSBELEHRUNG = 0,
@@ -328,6 +329,20 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
       </Row>
     );
 
+  private isWaehlerBraun = () => {
+    const {
+      selectedErstkandidat,
+      selectedZweitkandidat,
+      selectedZweitpartei
+    } = this.state;
+    if (selectedErstkandidat && selectedErstkandidat.partei.name === "AfD")
+      return true;
+    if (selectedZweitkandidat && selectedZweitkandidat.partei.name === "AfD")
+      return true;
+    if (selectedZweitpartei && selectedZweitpartei.name === "AfD") return true;
+    return false;
+  };
+
   render() {
     const { activeTab } = this.state;
     const furthestReachableTab = this.getFurhtestReachableTab();
@@ -336,8 +351,10 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
       margin: "0px"
     };
 
+    const braunerWaehler = this.isWaehlerBraun();
+
     return (
-      <div className={"waehlen-page-container"}>
+      <div className={`waehlen-container`}>
         <Tabs
           activeKey={`${activeTab}`}
           onChange={activeTabKey =>
@@ -345,7 +362,7 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
               activeTab: Number(activeTabKey) as WahlTab
             })
           }
-          style={{ backgroundColor: "white" }}
+          style={{ backgroundColor: braunerWaehler ? "#632900" : "white" }}
           tabBarExtraContent={
             <Button
               icon={"reload"}
@@ -354,7 +371,6 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
               size={"small"}
               disabled={
                 activeTab === WahlTab.RECHTSBEHELFSBELEHRUNG ||
-                // TODO: automatically reset after x seconds in last tab
                 activeTab === WahlTab.VOTECOMMITED
               }
             >
