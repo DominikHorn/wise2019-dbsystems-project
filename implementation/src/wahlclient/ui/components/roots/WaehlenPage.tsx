@@ -9,10 +9,16 @@ import { generateRandomToken } from "../../../../shared/token";
 import * as QRCode from "qrcode.react";
 import { compose, withApollo, WithApolloClient } from "react-apollo";
 import { isRegisteredGQL } from "../../../../client-graphql/wahlkabine/isRegisteredQuery";
+import {
+  withResetWahlkabineMutation,
+  MutationToResetWahlkabineHOCProps
+} from "../../../../client-graphql/wahlkabine/resetWahlkabineMutation";
 
 export interface IWaehlenPageProps {}
 
-interface IProps extends WithApolloClient<IWaehlenPageProps> {}
+interface IProps
+  extends WithApolloClient<IWaehlenPageProps>,
+    MutationToResetWahlkabineHOCProps {}
 
 interface IState {
   readonly setupDone?: boolean;
@@ -68,7 +74,9 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
   }
 
   private resetWahlkabine = () => {
-    // TODO: disable wählen (extra mutation purely for disabling wahlkabine)
+    this.props.resetWahlkabine({
+      variables: { wahlkabineToken: this.state.wahlkabineToken }
+    });
     this.setState({
       activeTab: WahlTab.RECHTSBEHELFSBELEHRUNG,
       acceptedRechtsbehelfsbelehrung: false,
@@ -421,6 +429,10 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
 
 const WaehlenPageWithApollo = withApollo(WaehlenPageComponent);
 
-export const WaehlenPage = WaehlenPageWithApollo as React.ComponentType<
+const WaehlenPageWithQueries = compose(withResetWahlkabineMutation())(
+  WaehlenPageWithApollo
+);
+
+export const WaehlenPage = WaehlenPageWithQueries as React.ComponentType<
   IWaehlenPageProps
 >;
