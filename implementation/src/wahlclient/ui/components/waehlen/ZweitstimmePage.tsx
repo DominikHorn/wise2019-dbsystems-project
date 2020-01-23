@@ -1,14 +1,15 @@
 import {
   Button,
+  Card,
+  Checkbox,
   Col,
   Divider,
   Icon,
+  Input,
   Row,
-  Tooltip,
-  Card,
-  Checkbox,
-  Input
+  Tooltip
 } from "antd";
+import memoize from "memoize-one";
 import * as React from "react";
 import { compose } from "react-apollo";
 import {
@@ -17,13 +18,11 @@ import {
 } from "../../../../client-graphql/wahlen/getListenKandidatenQuery";
 import {
   Kandidat,
+  ListenKandidat,
   Partei,
   Regierungsbezirk,
-  Wahl,
-  ListenKandidat
+  Wahl
 } from "../../../../shared/graphql.types";
-import memoize from "memoize-one";
-import { withDebounce } from "../../../../shared/debounce";
 
 interface ZweitstimmePageProps {
   readonly wahl: Wahl;

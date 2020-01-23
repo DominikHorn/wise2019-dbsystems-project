@@ -362,6 +362,7 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
               activeTab: Number(activeTabKey) as WahlTab
             })
           }
+          destroyInactiveTabPane={true}
           style={{ backgroundColor: braunerWaehler ? "#632900" : "white" }}
           tabBarExtraContent={
             <Button
