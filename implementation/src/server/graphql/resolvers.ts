@@ -33,6 +33,7 @@ import {
   getListenKandidaten
 } from "../adapters/postgres/kandidatPSQL";
 import { adapters } from "../adapters/adapterUtil";
+import { castVote } from "../adapters/postgres/stimmenPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -85,7 +86,7 @@ export const resolvers: Resolver = {
       withVerifyIsWahlhelfer(args.wahlhelferAuth, getRegisteredWahlkabinen),
     isRegistered: (_, args) => isRegisteredWahlkabine(args.wahlkabineToken),
     isUnlocked: (_, args) =>
-      withVerifyIsWahlkabine(args.wahlkabineToken, async () =>
+      withVerifyIsWahlkabine(args.wahlkabineToken, false, async () =>
         isUnlocked(args.wahlkabineToken)
       )
   },
@@ -143,10 +144,22 @@ export const resolvers: Resolver = {
           args.unlocked
         )
       ),
-    // No extra verification needed for this wahlkabine
     resetWahlkabine: (_, args) =>
-      withVerifyIsWahlkabine(args.wahlkabineToken, () =>
+      withVerifyIsWahlkabine(args.wahlkabineToken, false, () =>
         resetWahlkabine(args.wahlkabineToken)
+      ),
+    castVote: (_, args) =>
+      withVerifyIsWahlkabine(
+        args.wahlkabineToken,
+        true,
+        (wahlid, stimmkreisid) =>
+          castVote(
+            wahlid,
+            stimmkreisid,
+            args.erstkandidatID,
+            args.zweitkandidatID,
+            args.zweitparteiID
+          )
       )
   }
 };

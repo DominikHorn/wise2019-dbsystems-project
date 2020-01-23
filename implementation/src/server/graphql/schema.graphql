@@ -56,6 +56,12 @@ type Mutation {
 
   # Wahlkabine
   resetWahlkabine(wahlkabineToken: String!): Boolean
+  castVote(
+    wahlkabineToken: String!
+    erstkandidatID: Int
+    zweitkandidatID: Int
+    zweitparteiID: Int
+  ): Boolean!
 }
 
 type Wahl {

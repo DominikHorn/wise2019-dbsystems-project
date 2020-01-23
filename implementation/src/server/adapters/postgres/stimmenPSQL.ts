@@ -84,3 +84,22 @@ export async function bulkInsertVotes(
 export async function deferVotesConstraints(client: PoolClient) {
   await client.query(`SET CONSTRAINTS ALL DEFERRED`);
 }
+
+export async function castVote(
+  wahlid: number,
+  stimmkreisid: number,
+  erstkandidatID: number | null,
+  zweitkandidatID: number | null,
+  zweitparteiID: number | null,
+  aggregiert: boolean = false
+): Promise<boolean> {
+  console.log(
+    "DEBUG: castVote(",
+    erstkandidatID,
+    zweitkandidatID,
+    zweitparteiID,
+    ")"
+  );
+
+  return false;
+}

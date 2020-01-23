@@ -15,6 +15,7 @@ import { adapters } from "../adapterUtil";
 import { getAllStimmkreise } from "./stimmkreisPSQL";
 import { generateRandomToken } from "../../../shared/token";
 import { sleep } from "../../../shared/util";
+import { number } from "prop-types";
 
 enum AuthTables {
   DATA_BLOCKED = "datablocked",
@@ -60,25 +61,26 @@ export async function withVerifyIsWahlhelfer<TReturn>(
 
 export async function withVerifyIsWahlkabine<TReturn>(
   auth: string,
-  fun: () => Promise<TReturn>
+  mustBeUnlocked: boolean,
+  fun: (wahlid: number, stimmkreisid: number) => Promise<TReturn>
 ): Promise<TReturn> {
-  const exists = await adapters.postgres
-    .query(
+  const res = await adapters.postgres
+    .query<{ wahl_id: number; stimmkreis_id: number }>(
       `
-    SELECT *
+    SELECT wahl_id, stimmkreis_id
     FROM "${DatabaseSchemaGroup}".${AuthTables.WAHLKABINEN}
-    WHERE token = $1
+    WHERE token = $1 ${mustBeUnlocked ? "AND unlocked = True" : ""}
   `,
       [auth]
     )
-    .then(res => res && !!res[0]);
+    .then(res => res && res[0]);
 
-  if (!exists) {
+  if (!res) {
     await sleep(5000);
     throw new AuthenticationError("Invalid Wahlkabine Auth");
   }
 
-  return fun();
+  return fun(res.wahl_id, res.stimmkreis_id);
 }
 
 export async function withVerifyIsNotBlocked<TReturn>(
