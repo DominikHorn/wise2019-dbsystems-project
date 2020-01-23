@@ -91,13 +91,18 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
     this.props.resetWahlkabine({
       variables: { wahlkabineToken: this.props.wahlkabineToken }
     });
-    this.setState({
-      activeTab: WahlTab.RECHTSBEHELFSBELEHRUNG,
-      acceptedRechtsbehelfsbelehrung: false,
-      selectedErstkandidat: undefined,
-      selectedZweitkandidat: undefined,
-      selectedZweitpartei: undefined
-    });
+    this.setState(
+      {
+        activeTab: WahlTab.RECHTSBEHELFSBELEHRUNG,
+        acceptedRechtsbehelfsbelehrung: false,
+        selectedErstkandidat: undefined,
+        selectedZweitkandidat: undefined,
+        selectedZweitpartei: undefined
+      },
+      () => {
+        message.warning("Wahlkabine wurde zurückgesetzt");
+      }
+    );
   };
 
   componentDidUpdate() {
@@ -169,12 +174,18 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
             <Button
               type={"primary"}
               style={{ float: "right" }}
-              onClick={() =>
+              onClick={() => {
+                if (!this.props.isUnlockedData.isUnlocked) {
+                  message.error(
+                    "Diese Wahlkabine muss zuerst von einem Wahlhelfer freigegeben werden"
+                  );
+                  return;
+                }
                 this.setState(
                   { acceptedRechtsbehelfsbelehrung: true },
                   this.nextTab
-                )
-              }
+                );
+              }}
             >
               Zur Kenntnis genommen
               <Icon type={"right"} />
@@ -260,6 +271,8 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
       </>
     );
 
+  private renderCountdown = () => "UNIMPLEMENTED";
+
   private renderVoteCommited = () =>
     this.renderInTabContainer(
       <Row
@@ -276,8 +289,10 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
           </Row>
           <Row>
             <Col style={{ textAlign: "center", fontSize: "30pt" }}>
-              Ihre Stimme wurde erfolgreich abgegeben. Sie können die Wahlkabine
-              nun verlassen
+              {`Ihre Stimme wurde erfolgreich abgegeben. Sie können die Wahlkabine
+              nun verlassen. Die Wahlkabine wird automatisch in den Initialzustand 
+              versetzt nach Ablauf des Countdowns `}
+              {this.renderCountdown()}
             </Col>
           </Row>
         </Col>
