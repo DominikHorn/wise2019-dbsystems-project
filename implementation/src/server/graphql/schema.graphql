@@ -166,13 +166,12 @@ type Stimmentwicklung {
 }
 
 type Q7 {
-  wahl: Wahl!
   stimmkreis: Stimmkreis!
   partei: Partei!
   direktmandat: String!
   wahlbeteiligung: Float!
-  prozAnteil: Float!
-  absAnteil: Float!
+  prozAnteil: Float
+  absAnteil: Float
   vorher: Int!
   nachher: Int!
 }

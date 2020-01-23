@@ -75,12 +75,12 @@ export const withAllStimmkreisInfosQuery = <TProps = {}>(
     options: props => ({
       variables: {
         wahlid: getWahlId(props),
-        vglwahlid: getVGLWahlId(props),
         stimmkreisid1: getStimmkreisId1(props),
         stimmkreisid2: getStimmkreisId2(props),
         stimmkreisid3: getStimmkreisId3(props),
         stimmkreisid4: getStimmkreisId4(props),
-        stimmkreisid5: getStimmkreisId5(props)
+        stimmkreisid5: getStimmkreisId5(props),
+        vglwahlid: getVGLWahlId(props)
       }
     }),
     props: ({ data }) => ({

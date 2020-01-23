@@ -36,8 +36,7 @@ import {
 } from "../adapters/postgres/kandidatPSQL";
 import { adapters } from "../adapters/adapterUtil";
 import { castVote } from "../adapters/postgres/stimmenPSQL";
-import { getAllStimmkreiseForWahl } from "../adapters/postgres/queries/stimmkreisPSQL";
-import { argsToArgsConfig } from "graphql/type/definition";
+import { getAllStimmkreiseForWahl } from "../adapters/postgres/stimmkreisPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -52,8 +51,10 @@ export const resolvers: Resolver = {
   },
   Query: {
     getAllWahlen,
-    getAllStimmkreise: (_: any, args: { wahlid: number }) =>
-      getAllStimmkreiseForWahl(args.wahlid),
+    getAllStimmkreise: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getAllStimmkreiseForWahl(args.wahlid)
+      ),
     getMandate: (_, args) =>
       withVerifyIsNotBlocked(args.wahlid, () => getMandate(args.wahlid)),
     getStimmkreisWinner: (_, args) =>

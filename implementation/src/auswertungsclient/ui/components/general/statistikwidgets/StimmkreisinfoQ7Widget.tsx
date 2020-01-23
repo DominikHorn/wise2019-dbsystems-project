@@ -1,23 +1,22 @@
-import { IWahl, IStimmkreis } from "../../../../../shared/sharedTypes";
-import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
+import * as React from "react";
+import { compose } from "react-apollo";
 import {
   IGetAllWahlenQueryHocProps,
   withAllWahlenQuery
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
-import * as React from "react";
+import { Stimmkreis, Wahl } from "../../../../../shared/graphql.types";
 import { renderInfo } from "../../../guiUtil";
 import { WahlSelector } from "../dataselectors/WahlSelector";
-import { compose } from "react-apollo";
-import { StimmkreisSelector } from "../dataselectors/StimmkreisSelector";
-import { withAllStimmkreiseQuery } from "../../../../../client-graphql/public/getAllStimmkreiseQuery";
+import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
+import { InnerStimmkreisInfoQ7 } from "./InnerStimmkreisInfoQ7";
 
 interface IState {
-  readonly selectedWahl?: IWahl;
-  readonly selectedStimmkreis1?: IStimmkreis;
-  readonly selectedStimmkreis2?: IStimmkreis;
-  readonly selectedStimmkreis3?: IStimmkreis;
-  readonly selectedStimmkreis4?: IStimmkreis;
-  readonly selectedStimmkreis5?: IStimmkreis;
+  readonly selectedWahl?: Wahl;
+  readonly selectedStimmkreis1?: Stimmkreis;
+  readonly selectedStimmkreis2?: Stimmkreis;
+  readonly selectedStimmkreis3?: Stimmkreis;
+  readonly selectedStimmkreis4?: Stimmkreis;
+  readonly selectedStimmkreis5?: Stimmkreis;
 }
 
 export interface StimmkreisInfoQ7WidgetProps
@@ -35,7 +34,7 @@ class StimmkreisInfoQ7WidgetComponent extends React.PureComponent<
     super(props);
     this.state = {};
   }
-  private onSelectWahl = (selectedWahl: IWahl) =>
+  private onSelectWahl = (selectedWahl: Wahl) =>
     this.props.setRoutableState
       ? this.props.setRoutableState({ selectedWahl })
       : this.setState({ selectedWahl });
@@ -48,6 +47,14 @@ class StimmkreisInfoQ7WidgetComponent extends React.PureComponent<
     } else {
       selectedWahl = this.state.selectedWahl;
     }
+
+    const previousWahl =
+      selectedWahl &&
+      (allWahlenData.allWahlen || [])
+        .sort((w1, w2) =>
+          w1.wahldatum < w2.wahldatum ? -1 : w1.wahldatum > w2.wahldatum ? 1 : 0
+        )
+        .find(w => new Date(w.wahldatum) < new Date(selectedWahl.wahldatum));
 
     return (
       <StatistikWidget
@@ -76,8 +83,11 @@ class StimmkreisInfoQ7WidgetComponent extends React.PureComponent<
           </>
         }
       >
-        {selectedWahl ? (
-          <StimmkreisSelector />
+        {selectedWahl && previousWahl ? (
+          <InnerStimmkreisInfoQ7
+            wahl={selectedWahl}
+            previousWahl={previousWahl}
+          />
         ) : (
           renderInfo("Bitte eine Wahl auswählen")
         )}
