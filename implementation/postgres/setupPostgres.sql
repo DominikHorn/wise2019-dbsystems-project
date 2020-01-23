@@ -16,12 +16,12 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".wahlen (
 	id smallint NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	wahldatum date NOT NULL
 );
-INSERT INTO "landtagswahlen".wahlen (wahldatum)
+INSERT INTO "landtagswahlen".wahlen (id, wahldatum)
 	SELECT a.*
 	FROM (
-		SELECT date('2018-10-14')
+		SELECT 1, date('2013-09-15')
 		UNION
-		SELECT date('2013-09-15')
+		SELECT 2, date('2018-10-14')
 	) a
 	WHERE NOT EXISTS (SELECT * FROM "landtagswahlen".wahlen);
 
