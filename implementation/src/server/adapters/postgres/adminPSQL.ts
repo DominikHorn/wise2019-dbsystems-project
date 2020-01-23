@@ -14,6 +14,7 @@ import {
 import { adapters } from "../adapterUtil";
 import { getAllStimmkreise } from "./stimmkreisPSQL";
 import { generateRandomToken } from "../../../shared/token";
+import { sleep } from "../../../shared/util.js";
 
 enum AuthTables {
   DATA_BLOCKED = "datablocked",
@@ -21,14 +22,15 @@ enum AuthTables {
   WAHLKABINEN = "authenticated_wahlkabinen"
 }
 
-export function withVerifyIsAdmin<TReturn>(
+export async function withVerifyIsAdmin<TReturn>(
   auth: string,
-  fun: () => TReturn
-): TReturn {
+  fun: () => Promise<TReturn>
+): Promise<TReturn> {
   if (config.wahlleiterConfig.password === auth) {
     return fun();
   }
 
+  await sleep(5000);
   throw new AuthenticationError("Invalid Wahlleiter Auth");
 }
 
@@ -49,6 +51,7 @@ export async function withVerifyIsWahlhelfer<TReturn>(
     .then(res => res && res[0]);
 
   if (!wahlhelferdata) {
+    await sleep(5000);
     throw new AuthenticationError("Invalid Wahlhelfer Auth");
   } else {
     return fun(wahlhelferdata.wahl_id, wahlhelferdata.stimmkreis_id);
@@ -71,6 +74,7 @@ export async function withVerifyIsWahlkabine<TReturn>(
     .then(res => res && !!res[0]);
 
   if (!exists) {
+    await sleep(5000);
     throw new AuthenticationError("Invalid Wahlkabine Auth");
   }
 
