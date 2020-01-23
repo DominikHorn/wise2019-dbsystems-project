@@ -358,7 +358,17 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
           }
           style={{ backgroundColor: "white" }}
           tabBarExtraContent={
-            <Button icon={"reset"} onClick={this.resetWahlkabine}>
+            <Button
+              icon={"reload"}
+              onClick={this.resetWahlkabine}
+              style={{ marginRight: "8px" }}
+              size={"small"}
+              disabled={
+                activeTab === WahlTab.RECHTSBEHELFSBELEHRUNG ||
+                // TODO: automatically reset after x seconds in last tab
+                activeTab === WahlTab.VOTECOMMITED
+              }
+            >
               Zurücksetzen
             </Button>
           }
