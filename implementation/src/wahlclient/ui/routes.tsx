@@ -45,11 +45,10 @@ export interface IMenuRoute extends IRouteProps {
 
 export const DEFAULT_ROUTE: IRouteProps = {
   path: "/",
-  render: () => <Redirect to={"/waehlen"} />
+  render: () => <Redirect to={RouteBasepaths.wahlhelfer} />
 };
 
 export const RouteBasepaths = {
-  waehlen: "/waehlen",
   wahlhelfer: "/wahlhelfer",
   wahlleiter: "/wahlleiter"
 };
@@ -61,15 +60,6 @@ export const RouteWaehlenPaths = {
 };
 
 export const TOPLEVEL_ROUTES: IMenuRoute[] = [
-  {
-    menuKey: "Waehlen",
-    menuTitle: "Wählen",
-    menuIconIdentifier: "check-square",
-    path: `${RouteBasepaths.waehlen}/`,
-    render: (props: RouteComponentProps<any>) => (
-      <WaehlenPage routeProps={props} />
-    )
-  },
   {
     menuKey: "Wahlhelfer",
     menuTitle: "WahlhelferIn",

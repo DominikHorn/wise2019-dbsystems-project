@@ -40,11 +40,14 @@ enum CSV_KEYS {
   zweitstimmen = "darunter Zweitstimmen"
 }
 enum INFO_CSV_KEYS {
-  stimmkreisID = "Schlüsselnummer",
+  stimmkreis_2018_ID = "Schlüsselnummer",
+  stimmkreis_2013_ID = "Schl.Nr.",
   waehler = "Wähler",
   stimmberechtigte = "Stimmberechtigte",
-  ungueltige_erstimmen = "ungueltige Erststimmen 2018",
-  ungueltige_zweitstimmen = "ungueltige Zweitstimmen 2018"
+  ungueltige_erststimmen_2018 = "ungültige Erststimmen 2018",
+  ungueltige_erststimmen_2013 = "ungültige Erststimmen 2013",
+  ungueltige_zweitstimmen_2018 = "ungültige Zweitstimmen 2018",
+  ungueltige_zweitstimmen_2013 = "ungültige Zweitstimmen 2013"
 }
 
 async function parseCrawledCSV(
@@ -216,92 +219,134 @@ async function parseCrawledCSV(
   await sendInsertListVotesRequest();
 }
 
-async function parseInfoCSV(
+async function parseInfo2013CSV(
   result: ParseResult,
-  wahl: IDatabaseWahl,
   aggregiert: boolean,
   client?: PoolClient
 ) {
+  const wahl2013_id = 1;
+
+  console.log(`Info-CSV-2013-Parser: parsing ${result.data.length} rows`);
   for (const row of result.data) {
-    const stimmkreis_id = row[INFO_CSV_KEYS.stimmkreisID];
+    const stimmkreis_id = row[INFO_CSV_KEYS.stimmkreis_2013_ID];
     const anzahlWahlberechtigte = row[INFO_CSV_KEYS.stimmberechtigte];
     const anzahlWaehler = row[INFO_CSV_KEYS.waehler];
-    const erstvoteAmountStr = row[INFO_CSV_KEYS.ungueltige_erstimmen];
-    const zweitvoteAmountStr = row[INFO_CSV_KEYS.ungueltige_zweitstimmen];
-    const erstvoteAmount = Number(erstvoteAmountStr);
-    const zweitvoteAmount = Number(zweitvoteAmountStr);
 
-    let ungueltigeEinzelErstVotes: VoteType[] = [];
-    let ungueltigeAggregiertErstVotes: VoteType[] = [];
-    let ungueltigeEinzelZweitVotes: VoteType[] = [];
-    let ungueltigeAggregiertZweitVotes: VoteType[] = [];
-
+    // General 2013 stimmkreis info
     await insertStimmkreisInfo(
       stimmkreis_id,
-      wahl.id,
+      wahl2013_id,
       anzahlWahlberechtigte,
       anzahlWaehler,
       client
     );
+  }
+}
+
+async function parseInfo2018CSV(
+  result: ParseResult,
+  aggregiert: boolean,
+  client?: PoolClient
+) {
+  console.log(`Info-CSV-2018-Parser: parsing ${result.data.length} rows`);
+  // We can guarantee that this is the case because initial database setup
+  // inserts wahlen this way
+  const wahl2013_id = 1;
+  const wahl2018_id = 2;
+
+  for (const row of result.data) {
+    const stimmkreis_id = row[INFO_CSV_KEYS.stimmkreis_2018_ID];
+    const anzahlWahlberechtigte = row[INFO_CSV_KEYS.stimmberechtigte];
+    const anzahlWaehler = row[INFO_CSV_KEYS.waehler];
+    const erstvote2018AmountStr =
+      row[INFO_CSV_KEYS.ungueltige_erststimmen_2018];
+    const erstvote2013AmountStr =
+      row[INFO_CSV_KEYS.ungueltige_erststimmen_2013];
+    const zweitvote2018AmountStr =
+      row[INFO_CSV_KEYS.ungueltige_zweitstimmen_2018];
+    const zweitvote2013AmountStr =
+      row[INFO_CSV_KEYS.ungueltige_zweitstimmen_2013];
+    const erstvote2018Amount = Number(erstvote2018AmountStr);
+    const erstvote2013Amount = Number(erstvote2013AmountStr);
+    const zweitvote2018Amount = Number(zweitvote2018AmountStr);
+    const zweitvote2013Amount = Number(zweitvote2013AmountStr);
+
+    // General 2018 stimmkreis info
+    await insertStimmkreisInfo(
+      stimmkreis_id,
+      wahl2018_id,
+      anzahlWahlberechtigte,
+      anzahlWaehler,
+      client
+    );
+
     // insert ungueltige erstimmen
     if (aggregiert) {
-      ungueltigeAggregiertErstVotes.push({
-        values: [stimmkreis_id, wahl.id, erstvoteAmount],
-        quantity: 1
-      });
-    } else {
-      ungueltigeEinzelErstVotes.push({
-        values: [stimmkreis_id, wahl.id],
-        quantity: erstvoteAmount
-      });
-    }
-    if (ungueltigeAggregiertErstVotes.length > 0) {
       await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id", "anzahl"],
         "aggregiert_ungueltige_erststimmen",
-        ungueltigeAggregiertErstVotes,
+        [
+          {
+            values: [stimmkreis_id, wahl2013_id, erstvote2013Amount],
+            quantity: 1
+          },
+          {
+            values: [stimmkreis_id, wahl2018_id, erstvote2018Amount],
+            quantity: 1
+          }
+        ],
         client
       );
-      ungueltigeAggregiertErstVotes = [];
-    }
-    if (ungueltigeEinzelErstVotes.length > 0) {
+    } else {
       await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id"],
         "einzel_ungueltige_erststimmen",
-        ungueltigeEinzelErstVotes,
+        [
+          {
+            values: [stimmkreis_id, wahl2013_id],
+            quantity: erstvote2013Amount
+          },
+          {
+            values: [stimmkreis_id, wahl2018_id],
+            quantity: erstvote2018Amount
+          }
+        ],
         client
       );
-      ungueltigeEinzelErstVotes = [];
     }
     // insert ungueltige zweitstimmen
     if (aggregiert) {
-      ungueltigeAggregiertZweitVotes.push({
-        values: [stimmkreis_id, wahl.id, zweitvoteAmount],
-        quantity: 1
-      });
-    } else {
-      ungueltigeEinzelZweitVotes.push({
-        values: [stimmkreis_id, wahl.id],
-        quantity: zweitvoteAmount
-      });
-    }
-    if (ungueltigeAggregiertZweitVotes.length > 0) {
       await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id", "anzahl"],
         "aggregiert_ungueltige_zweitstimmen",
-        ungueltigeAggregiertZweitVotes,
+        [
+          {
+            values: [stimmkreis_id, wahl2013_id, zweitvote2013Amount],
+            quantity: 1
+          },
+          {
+            values: [stimmkreis_id, wahl2018_id, zweitvote2018Amount],
+            quantity: 1
+          }
+        ],
         client
       );
-      ungueltigeAggregiertZweitVotes = [];
-    }
-    if (ungueltigeEinzelZweitVotes.length > 0) {
+    } else {
       await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id"],
         "einzel_ungueltige_zweitstimmen",
-        ungueltigeEinzelZweitVotes,
+        [
+          {
+            values: [stimmkreis_id, wahl2013_id],
+            quantity: zweitvote2013Amount
+          },
+          {
+            values: [stimmkreis_id, wahl2018_id],
+            quantity: zweitvote2018Amount
+          }
+        ],
         client
       );
-      ungueltigeEinzelZweitVotes = [];
     }
   }
 }
@@ -337,9 +382,14 @@ export const parseCSV = async (
             reject("CSV Does not appear to contain columns");
             return;
           }
-          if (result.meta.fields[0] == INFO_CSV_KEYS.stimmkreisID) {
-            // Special info pdf
-            await parseInfoCSV(result, wahl, aggregiert, client);
+          if (result.meta.fields[0] === INFO_CSV_KEYS.stimmkreis_2018_ID) {
+            // Special info csv for 2018
+            await parseInfo2018CSV(result, aggregiert, client);
+          } else if (
+            result.meta.fields[0] === INFO_CSV_KEYS.stimmkreis_2013_ID
+          ) {
+            // Special info csv for 2013
+            await parseInfo2013CSV(result, aggregiert, client);
           } else {
             // Crawled format
             await parseCrawledCSV(result, wahl, aggregiert, client);

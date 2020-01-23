@@ -17,6 +17,12 @@ type Query {
   ): [Stimmentwicklung]!
   getDirektKandidaten(wahlid: Int!, stimmkreisid: Int!): [Kandidat]!
   getListenKandidaten(wahlid: Int!, regierungsbezirkid: Int!): [ListenKandidat]!
+
+  # Wahlhelfer
+  getRegisteredWahlkabinen(wahlhelferAuth: String!): [Wahlkabine]!
+
+  # Wahlkabine
+  isRegistered(wahlkabineToken: String!): Boolean!
 }
 
 type Mutation {
@@ -33,12 +39,33 @@ type Mutation {
     wahlid: Int!
     blocked: Boolean!
   ): Boolean
+
+  # Wahlhelfer
+  registerWahlkabine(
+    wahlhelferAuth: String!
+    wahlkabineToken: String!
+    wahlkabineLabel: String!
+  ): Boolean!
+  removeWahlkabine(wahlhelferAuth: String!, wahlkabineToken: String!): Boolean!
+  setWahlkabineUnlocked(
+    wahlhelferAuth: String!
+    wahlkabineToken: String!
+    unlocked: Boolean!
+  ): Boolean!
 }
 
 type Wahl {
   id: Int!
   wahldatum: Date!
   dataBlocked: Boolean
+}
+
+type Wahlkabine {
+  wahlid: Int
+  stimmkreisid: Int
+  label: String!
+  token: String
+  unlocked: Boolean!
 }
 
 type Mandat {

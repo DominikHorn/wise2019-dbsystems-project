@@ -17,7 +17,13 @@ import {
   setDataBlocked,
   withVerifyIsAdmin,
   withVerifyIsNotBlocked,
-  generateWahlhelferToken
+  generateWahlhelferToken,
+  getRegisteredWahlkabinen,
+  withVerifyIsWahlhelfer,
+  registerWahlkabine,
+  isRegisteredWahlkabine,
+  removeWahlkabine,
+  setWahlkabineUnlocked
 } from "../adapters/postgres/adminPSQL";
 import {
   getDirektKandidaten,
@@ -71,7 +77,10 @@ export const resolvers: Resolver = {
     getDirektKandidaten: (_, args) =>
       getDirektKandidaten(args.wahlid, args.stimmkreisid),
     getListenKandidaten: (_, args) =>
-      getListenKandidaten(args.wahlid, args.regierungsbezirkid)
+      getListenKandidaten(args.wahlid, args.regierungsbezirkid),
+    getRegisteredWahlkabinen: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, getRegisteredWahlkabinen),
+    isRegistered: (_, args) => isRegisteredWahlkabine(args.wahlkabineToken)
   },
   Mutation: {
     importCSVData: (_, args) =>
@@ -80,8 +89,7 @@ export const resolvers: Resolver = {
           const files = await Promise.all(args.files).catch(
             err => `ERROR: files could not be awaited: ${err}`
           );
-          console.warn("DEBUG:", files);
-          console.log("CSV-Import: Received all files");
+          console.log(`CSV-Import: Received ${files.length} files`);
 
           for (const file of files) {
             const readStream = file.createReadStream();
@@ -105,6 +113,28 @@ export const resolvers: Resolver = {
         generateWahlhelferToken(args)
       ),
     setDataBlocked: (_, args) =>
-      withVerifyIsAdmin(args.wahlleiterAuth, () => setDataBlocked(args))
+      withVerifyIsAdmin(args.wahlleiterAuth, () => setDataBlocked(args)),
+    registerWahlkabine: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
+        registerWahlkabine(
+          wahlid,
+          stimmkreisid,
+          args.wahlkabineToken,
+          args.wahlkabineLabel
+        )
+      ),
+    removeWahlkabine: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
+        removeWahlkabine(wahlid, stimmkreisid, args.wahlkabineToken)
+      ),
+    setWahlkabineUnlocked: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
+        setWahlkabineUnlocked(
+          wahlid,
+          stimmkreisid,
+          args.wahlkabineToken,
+          args.unlocked
+        )
+      )
   }
 };

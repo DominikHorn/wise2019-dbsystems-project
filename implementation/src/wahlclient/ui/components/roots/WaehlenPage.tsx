@@ -1,19 +1,23 @@
-import { Button, Col, Divider, Icon, message, Row, Tabs, Card } from "antd";
+import { Button, Col, Divider, Icon, message, Row, Tabs } from "antd";
 import * as React from "react";
-import { RouteComponentProps } from "react-router";
 import { Kandidat, Partei } from "../../../../shared/graphql.types";
 import { ErststimmePage } from "../waehlen/ErststimmePage";
+import { Rechtsbehelfsbelehrung } from "../waehlen/Rechtsbehelfsbelehrung";
 import { ZweitstimmePage } from "../waehlen/ZweitstimmePage";
 import "./WaehlenPage.css";
-import { Rechtsbehelfsbelehrung } from "../waehlen/Rechtsbehelfsbelehrung";
+import { generateRandomToken } from "../../../../shared/token";
+import * as QRCode from "qrcode.react";
+import { compose, withApollo, WithApolloClient } from "react-apollo";
+import { isRegisteredGQL } from "../../../../client-graphql/wahlkabine/isRegisteredQuery";
 
-export interface IWaehlenPageProps {
-  routeProps: RouteComponentProps<any>;
-}
+export interface IWaehlenPageProps {}
 
-interface IProps extends IWaehlenPageProps {}
+interface IProps extends WithApolloClient<IWaehlenPageProps> {}
 
 interface IState {
+  readonly setupDone?: boolean;
+  readonly wahlkabineToken: string;
+
   /** Value meanings as follows:
    *
    * undefined: no selection made
@@ -53,27 +57,26 @@ function getWahlTabTitle(wahlTab: WahlTab) {
   }
 }
 
-const LOREM_IPSUM = `
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
-Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
-Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi.   
-Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat.   
-Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis.   
-At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, At accusam aliquyam diam diam dolore dolores duo eirmod eos erat, et nonumy sed tempor et et invidunt justo labore Stet clita ea et gubergren, kasd magna no rebum. sanctus sea sed takimata ut vero voluptua. est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat.   
-Consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus.   
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.   
-Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.   
-Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit.   
-`;
-
-export class WaehlenPage extends React.PureComponent<IProps, IState> {
+class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
       activeTab: WahlTab.RECHTSBEHELFSBELEHRUNG,
-      acceptedRechtsbehelfsbelehrung: false
+      acceptedRechtsbehelfsbelehrung: false,
+      wahlkabineToken: generateRandomToken()
     };
   }
+
+  private resetWahlkabine = () => {
+    // TODO: disable wählen (extra mutation purely for disabling wahlkabine)
+    this.setState({
+      activeTab: WahlTab.RECHTSBEHELFSBELEHRUNG,
+      acceptedRechtsbehelfsbelehrung: false,
+      selectedErstkandidat: undefined,
+      selectedZweitkandidat: undefined,
+      selectedZweitpartei: undefined
+    });
+  };
 
   private nextTab = () => {
     if (!this.state.acceptedRechtsbehelfsbelehrung) {
@@ -84,7 +87,6 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
     }
     const nextTab = this.state.activeTab + 1;
     if (nextTab > WahlTab.VOTECOMMITED) {
-      // TODO: actually commit data to reach this state
       return;
     }
     this.setState({
@@ -253,11 +255,95 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
       </Row>
     );
 
+  private validateWahlkabineSetup = () => {
+    this.props.client
+      .query({
+        query: isRegisteredGQL,
+        variables: {
+          wahlkabineToken: this.state.wahlkabineToken
+        },
+        fetchPolicy: "network-only"
+      })
+      .then(res => {
+        if (!res || res.errors || !res.data.isRegistered) {
+          message.error("Computer sagt nein");
+          return;
+        }
+        message.success("Wahlkabine fertig konfiguriert");
+        this.setState({ setupDone: true });
+      })
+      .catch(err => {
+        message.error(`Fehler: ${err.message}`);
+      });
+  };
+
+  private renderWahlkabineSetup = () => (
+    <Row
+      type={"flex"}
+      justify={"center"}
+      align={"middle"}
+      style={{ width: "100%", height: "calc(100vh - 64px)" }}
+    >
+      <Col span={10}>
+        <Row type={"flex"} justify={"center"} style={{ marginBottom: "16px" }}>
+          <Col>
+            <div
+              style={{
+                textAlign: "justify",
+                fontSize: "12pt",
+                fontWeight: "bolder"
+              }}
+            >
+              {`Nutzen Sie den QR Code oder folgendes Token um die Wahlkabine
+          in Ihrem Stimmkreis zu registrieren: `}
+              <div
+                style={{
+                  fontFamily: "Courier New",
+                  backgroundColor: "lightGray",
+                  padding: "5px"
+                }}
+              >
+                {this.state.wahlkabineToken}
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Row type={"flex"} justify={"center"} style={{ marginBottom: "16px" }}>
+          <Col>
+            <QRCode
+              bgColor={"#f0f2f5"}
+              fgColor={"#000000"}
+              level={"H"}
+              size={512}
+              value={this.state.wahlkabineToken}
+            />
+          </Col>
+        </Row>
+
+        <Row type={"flex"} justify={"center"}>
+          <Col>
+            <Button
+              type={"primary"}
+              icon={"check-circle"}
+              onClick={this.validateWahlkabineSetup}
+            >
+              Validieren und Weiter
+            </Button>
+          </Col>
+        </Row>
+      </Col>
+    </Row>
+  );
+
   render() {
-    const { activeTab } = this.state;
+    const { activeTab, setupDone } = this.state;
     const tabPaneStyle: React.CSSProperties = {
       margin: "0px"
     };
+
+    if (!setupDone) {
+      return this.renderWahlkabineSetup();
+    }
 
     const furthestReachableTab = this.getFurhtestReachableTab();
 
@@ -271,6 +357,11 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
             })
           }
           style={{ backgroundColor: "white" }}
+          tabBarExtraContent={
+            <Button icon={"reset"} onClick={this.resetWahlkabine}>
+              Zurücksetzen
+            </Button>
+          }
         >
           <Tabs.TabPane
             tab={getWahlTabTitle(WahlTab.RECHTSBEHELFSBELEHRUNG)}
@@ -317,3 +408,9 @@ export class WaehlenPage extends React.PureComponent<IProps, IState> {
     );
   }
 }
+
+const WaehlenPageWithApollo = withApollo(WaehlenPageComponent);
+
+export const WaehlenPage = WaehlenPageWithApollo as React.ComponentType<
+  IWaehlenPageProps
+>;

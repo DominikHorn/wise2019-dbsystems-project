@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Divider } from "antd";
 
 export const Rechtsbehelfsbelehrung = () => (
   <>

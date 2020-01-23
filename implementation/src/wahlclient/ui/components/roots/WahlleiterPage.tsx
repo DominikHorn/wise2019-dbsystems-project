@@ -11,7 +11,10 @@ import {
   Checkbox,
   Table,
   Switch,
-  Input
+  Input,
+  Alert,
+  Icon,
+  Divider
 } from "antd";
 import locale from "antd/es/date-picker/locale/de_DE";
 import { FormComponentProps } from "antd/lib/form";
@@ -46,6 +49,8 @@ import {
   withGenerateWahlhelferTokensMutation,
   IGenerateWahlhelferTokensHOCProps
 } from "../../../../client-graphql/wahlleiter/generateWahlhelferTokensMutation";
+import { WahltokenPDFExporter } from "../general/WahltokenPDFExporter";
+import * as QRCode from "qrcode.react";
 
 const { Password } = Input;
 
@@ -67,6 +72,7 @@ interface IState {
   modalVisible: boolean;
   voteComputationLoading: boolean;
   uploadLoading: boolean;
+  wahlhelferTokensLoading: boolean;
   wahlhelferTokens?: WahlhelferToken[];
 }
 
@@ -77,17 +83,25 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
       wahlleiterAuth: "",
       modalVisible: false,
       voteComputationLoading: false,
+      wahlhelferTokensLoading: false,
       uploadLoading: false
     };
   }
 
-  private onGenerateWahlhelferTokens = () => {
-    this.props
-      .generateWahlhelferTokens({ wahlleiterAuth: this.state.wahlleiterAuth })
-      .then(res =>
-        this.setState({ wahlhelferTokens: res && res.data.wahlhelferTokens })
-      );
-  };
+  private onGenerateWahlhelferTokens = () =>
+    this.setState({ wahlhelferTokensLoading: true }, () =>
+      this.props
+        .generateWahlhelferTokens({ wahlleiterAuth: this.state.wahlleiterAuth })
+        .then(res =>
+          this.setState({
+            wahlhelferTokens: res && res.data.wahlhelferTokens
+          })
+        )
+        .catch(err => {
+          message.error(`Error generating tokens: ${err.message}`);
+        })
+        .finally(() => this.setState({ wahlhelferTokensLoading: false }))
+    );
 
   private onComputeElectionResults = () => {
     this.setState({ voteComputationLoading: true });
@@ -231,10 +245,11 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
   ) => (
     <>
       <Button
-        type={"primary"}
         onClick={() =>
           this.setState({ modalVisible: !this.state.modalVisible })
         }
+        style={{ width: "100%" }}
+        icon={"import"}
       >
         CSV Importieren
       </Button>
@@ -267,110 +282,157 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
   );
 
   private renderWahlenTable = () => (
-    <Row style={{ marginTop: "15px" }}>
-      <Col>
-        <Table
-          size={"small"}
-          pagination={false}
-          rowKey={"id"}
-          columns={[
-            { title: "ID", key: "id", dataIndex: "id" },
-            {
-              title: "Datum",
-              key: "datum",
-              render: props => props.wahldatum.toLocaleDateString()
-            },
-            {
-              title: "Blockiert",
-              key: "blocked",
-              render: props => (
-                <Switch
-                  checked={props.dataBlocked}
-                  onChange={val =>
-                    this.props
-                      .setDataBlocked({
-                        blocked: val,
-                        wahlid: props.id,
-                        wahlleiterAuth: this.state.wahlleiterAuth
-                      })
-                      .then(_ => this.props.allWahlenData.refetch())
-                      .then(
-                        () => {},
-                        err => message.error(err.toString())
-                      )
-                  }
-                />
-              )
-            }
-          ]}
-          dataSource={this.props.allWahlenData.allWahlen || []}
-          loading={this.props.allWahlenData.loading}
-        />
-      </Col>
-    </Row>
+    <Table
+      size={"small"}
+      pagination={false}
+      rowKey={"id"}
+      columns={[
+        { title: "ID", key: "id", dataIndex: "id" },
+        {
+          title: "Datum",
+          key: "datum",
+          render: props => props.wahldatum.toLocaleDateString()
+        },
+        {
+          title: "Blockiert",
+          key: "blocked",
+          render: props => (
+            <Switch
+              checked={props.dataBlocked}
+              onChange={val =>
+                this.props
+                  .setDataBlocked({
+                    blocked: val,
+                    wahlid: props.id,
+                    wahlleiterAuth: this.state.wahlleiterAuth
+                  })
+                  .then(_ => this.props.allWahlenData.refetch())
+                  .then(
+                    () => {},
+                    err => message.error(err.toString())
+                  )
+              }
+            />
+          )
+        }
+      ]}
+      dataSource={this.props.allWahlenData.allWahlen || []}
+      loading={this.props.allWahlenData.loading}
+    />
   );
 
   private renderWahlhelferTokenTable = () => (
-    <Row type={"flex"} justify={"center"} style={{ marginTop: "15px" }}>
-      <Col>
-        <Table
-          size={"small"}
-          pagination={false}
-          rowKey={"token"}
-          columns={[
-            {
-              title: "ID",
-              key: "id",
-              dataIndex: "wahl.id"
-            },
-            {
-              title: "Datum",
-              key: "datum",
-              render: props => props.wahl.wahldatum.toLocaleDateString()
-            },
-            {
-              title: "Stimmkreis",
-              key: "stimmkreis",
-              width: 200,
-              dataIndex: "stimmkreis.name"
-            },
-            {
-              title: "Token",
-              key: "token",
-              width: 475,
-              dataIndex: "token"
-            }
-          ]}
-          dataSource={this.state.wahlhelferTokens || []}
-        />
-      </Col>
-    </Row>
+    <>
+      <Divider />
+      <Row type={"flex"} justify={"center"} style={{ marginTop: "15px" }}>
+        <Col style={{ width: "100%" }}>
+          <Table
+            size={"small"}
+            pagination={{ pageSize: 10 }}
+            rowKey={"token"}
+            title={() => (
+              <Row type={"flex"} justify={"start"}>
+                <Col>
+                  <WahltokenPDFExporter
+                    wahlhelferTokens={this.state.wahlhelferTokens}
+                  />
+                </Col>
+              </Row>
+            )}
+            columns={[
+              {
+                title: "Wahl ID",
+                key: "id",
+                dataIndex: "wahl.id",
+                width: 75
+              },
+              {
+                title: "Datum",
+                key: "datum",
+                render: props => props.wahl.wahldatum.toLocaleDateString(),
+                width: 100
+              },
+              {
+                title: "Stimmkreis",
+                key: "stimmkreis",
+                render: props =>
+                  `(${props.stimmkreis.id}) ${props.stimmkreis.name}`
+              },
+              {
+                title: "Token",
+                key: "token",
+                width: 360,
+                render: props => (
+                  <span style={{ fontFamily: "Courier" }}>{props.token}</span>
+                )
+              },
+              {
+                title: "QR",
+                key: "qr",
+                width: 100,
+                render: data => (
+                  <QRCode
+                    bgColor={"#FFFFFF"}
+                    fgColor={"#000000"}
+                    level={"L"}
+                    size={64}
+                    value={data.token}
+                  />
+                )
+              }
+            ]}
+            dataSource={this.state.wahlhelferTokens || []}
+          />
+        </Col>
+      </Row>
+    </>
   );
 
   private renderAdminActions = () => (
-    <Row type={"flex"} gutter={16} justify={"center"}>
-      <Col>
-        <Password
-          value={this.state.wahlleiterAuth}
-          onChange={i => this.setState({ wahlleiterAuth: i.target.value })}
-        />
-      </Col>
+    <Row type={"flex"} gutter={16} justify={"center"} align={"middle"}>
       {!!this.state.wahlleiterAuth && (
         <>
-          <Col>
-            <Button
-              type={"primary"}
-              onClick={this.onComputeElectionResults}
-              loading={this.state.voteComputationLoading}
+          <Col xs={24} sm={12} md={10} lg={8} xl={6} xxl={4}>
+            <Row
+              type={"flex"}
+              justify={"center"}
+              style={{ marginBottom: "8px" }}
             >
-              Ergebnisse berechnen
-            </Button>
+              <Col style={{ width: "100%" }}>
+                {this.renderUploadModal(this.props.form.getFieldDecorator)}
+              </Col>
+            </Row>
+            <Row
+              type={"flex"}
+              justify={"center"}
+              style={{ marginBottom: "8px" }}
+            >
+              <Col style={{ width: "100%" }}>
+                <Button
+                  onClick={this.onComputeElectionResults}
+                  loading={this.state.voteComputationLoading}
+                  style={{ width: "100%" }}
+                  icon={"calculator"}
+                >
+                  Ergebnisse berechnen
+                </Button>
+              </Col>
+            </Row>
+            <Row type={"flex"} justify={"center"}>
+              <Col style={{ width: "100%" }}>
+                <Button
+                  onClick={this.onGenerateWahlhelferTokens}
+                  loading={this.state.wahlhelferTokensLoading}
+                  style={{ width: "100%" }}
+                  icon={"code"}
+                >
+                  Wahlhelfer Token generieren
+                </Button>
+              </Col>
+            </Row>
           </Col>
-          <Col>{this.renderUploadModal(this.props.form.getFieldDecorator)}</Col>
-          <Col>
-            <Button type={"primary"} onClick={this.onGenerateWahlhelferTokens}>
-              Wahlhelfer Token generieren
-            </Button>
+          <Col xs={24} sm={12} md={14} lg={16} xl={18} xxl={20}>
+            {!!this.state.wahlleiterAuth && this.renderWahlenTable()}
           </Col>
         </>
       )}
@@ -378,15 +440,33 @@ class WahlleiterPageComponent extends React.PureComponent<IProps, IState> {
   );
 
   render() {
-    const { wahlleiterAuth, wahlhelferTokens } = this.state;
+    const { wahlhelferTokens, wahlleiterAuth } = this.state;
+
     return (
       <Card
         title={"WahlleiterIn Funktionen"}
         style={{ minHeight: "100%" }}
         hoverable={true}
+        extra={
+          <Password
+            value={this.state.wahlleiterAuth}
+            onChange={i => this.setState({ wahlleiterAuth: i.target.value })}
+            placeholder={"Bitte Passwort eingeben"}
+          />
+        }
       >
+        {!wahlleiterAuth && (
+          <Alert
+            type={"warning"}
+            message={
+              <>
+                <Icon type={"lock"} />
+                {" Bitte ein Passwort eingeben um Zutritt zu erhalten"}
+              </>
+            }
+          />
+        )}
         {this.renderAdminActions()}
-        {!!wahlleiterAuth && this.renderWahlenTable()}
         {!!wahlhelferTokens && this.renderWahlhelferTokenTable()}
       </Card>
     );

@@ -96,30 +96,22 @@ export async function computeQ7(
        ) lgs
   GROUP BY lgs.wahl_id, lgs.stimmkreis_id, lgs.partei_id
 ), kandidatgebundene_gueltige_stimmen AS(
-SELECT kgs.wahl_id, kgs.stimmkreis_id, kgs.kandidat_id, sum(anzahl) as anzahl
-FROM (
   (
-    SELECT egks.wahl_id, egks.stimmkreis_id, egks.kandidat_id, count(*) as anzahl
-    FROM "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen egks
-    WHERE egks.stimmkreis_id = $2 OR egks.stimmkreis_id = $3 OR egks.stimmkreis_id = $4 OR egks.stimmkreis_id = $5 OR egks.stimmkreis_id = $6
-    GROUP BY egks.stimmkreis_id, egks.wahl_id, egks.kandidat_id
+      SELECT egks.wahl_id, egks.stimmkreis_id, egks.kandidat_id, count(*) as anzahl
+      FROM "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen egks
+      GROUP BY egks.stimmkreis_id, egks.kandidat_id, egks.wahl_id
   )
   UNION ALL
   (
-    SELECT agks.wahl_id, agks.stimmkreis_id, agks.kandidat_id, agks.anzahl
-    FROM "landtagswahlen".aggregiert_gueltige_kandidatgebundene_stimmen agks
-    WHERE agks.stimmkreis_id = $2 OR agks.stimmkreis_id = $3 OR agks.stimmkreis_id = $4 OR agks.stimmkreis_id = $5 OR agks.stimmkreis_id = $6
+      SELECT agks.wahl_id, agks.stimmkreis_id, agks.kandidat_id, agks.anzahl
+      FROM "landtagswahlen".aggregiert_gueltige_kandidatgebundene_stimmen agks
   )
-) kgs
-GROUP BY kgs.wahl_id, kgs.stimmkreis_id, kgs.kandidat_id
-
 ),
 
 kandidatgebundene_stimmen_pro_partei_pro_stimmkreis  AS (
 SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, sum(kgs.anzahl) as anzahl
 FROM kandidatgebundene_gueltige_stimmen kgs
   JOIN "landtagswahlen".kandidaten k ON k.id = kgs.kandidat_id
---WHERE kgs.stimmkreis_id = '101'
 GROUP BY kgs.wahl_id, kgs.stimmkreis_id, kgs.wahl_id, k.partei_id, k.partei_id
 ),
 -- --absolute Anzahl an Stimmen pro Partei
@@ -338,7 +330,6 @@ export async function computeWahlbeteiligung(
   }));
 }
 
-//TODO Graphql query anpassen, sodass einzel mitgegeben wird
 export async function computeEntwicklungDerStimmmen(
   wahl_id: number,
   vgl_wahl_id: number,
@@ -443,11 +434,16 @@ export async function getDirektmandat(
  * Computes election results by refreshing materialized views
  */
 export async function computeElectionResults(): Promise<boolean> {
-  for (const viewToRefresh of refreshOrder) {
-    await adapters.postgres.query(
-      `REFRESH MATERIALIZED VIEW "${DatabaseSchemaGroup}".${viewToRefresh};`
-    );
-  }
+  console.time("compute-election-results");
+  const query = refreshOrder
+    .map(
+      viewToRefresh =>
+        `REFRESH MATERIALIZED VIEW "${DatabaseSchemaGroup}".${viewToRefresh};`
+    )
+    .join("\n");
+
+  await adapters.postgres.query(query);
+  console.timeEnd("compute-election-results");
   return true;
 }
 
