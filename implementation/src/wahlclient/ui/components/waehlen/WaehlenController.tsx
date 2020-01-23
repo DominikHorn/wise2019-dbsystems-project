@@ -62,6 +62,8 @@ interface IState {
   readonly selectedZweitpartei?: Partei | null;
 
   readonly acceptedRechtsbehelfsbelehrung: boolean;
+
+  readonly resetCountdown?: number;
 }
 
 class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
@@ -105,6 +107,26 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
     );
   };
 
+  private startResetCountdown = () => {
+    this.setState({ resetCountdown: 5 });
+    setTimeout(this.tickResetCountdown, 1000);
+  };
+
+  private tickResetCountdown = () => {
+    const newCountdownValue = this.state.resetCountdown - 1;
+    if (newCountdownValue <= 0) {
+      this.setState({ resetCountdown: undefined }, this.resetWahlkabine);
+      return;
+    } else {
+      this.setState(
+        {
+          resetCountdown: newCountdownValue
+        },
+        () => setTimeout(this.tickResetCountdown, 1000)
+      );
+    }
+  };
+
   componentDidUpdate() {
     // Force reset Wahlkabine if it is not unlocked
     if (this.props.isUnlockedData && !this.props.isUnlockedData.isUnlocked) {
@@ -122,6 +144,9 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
     const nextTab = this.state.activeTab + 1;
     if (nextTab > WahlTab.VOTECOMMITED) {
       return;
+    }
+    if (nextTab === WahlTab.VOTECOMMITED) {
+      this.startResetCountdown();
     }
     this.setState({
       activeTab: nextTab
@@ -278,8 +303,6 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
       </>
     );
 
-  private renderCountdown = () => "UNIMPLEMENTED";
-
   private renderVoteCommited = () =>
     this.renderInTabContainer(
       <Row
@@ -298,8 +321,7 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
             <Col style={{ textAlign: "center", fontSize: "30pt" }}>
               {`Ihre Stimme wurde erfolgreich abgegeben. Sie können die Wahlkabine
               nun verlassen. Die Wahlkabine wird automatisch in den Initialzustand 
-              versetzt nach Ablauf des Countdowns `}
-              {this.renderCountdown()}
+              versetzt in ${this.state.resetCountdown || 0} Sekunden`}
             </Col>
           </Row>
         </Col>
