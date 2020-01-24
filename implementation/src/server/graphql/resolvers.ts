@@ -152,14 +152,18 @@ export const resolvers: Resolver = {
       withVerifyIsWahlkabine(
         args.wahlkabineToken,
         true,
-        (wahlid, stimmkreisid) =>
-          castVote(
+        async (wahlid, stimmkreisid) => {
+          // Reset wahlkabine
+          await resetWahlkabine(args.wahlkabineToken);
+          const res = await castVote(
             wahlid,
             stimmkreisid,
             args.erstkandidatID,
             args.zweitkandidatID,
             args.zweitparteiID
-          )
+          );
+          return res;
+        }
       )
   }
 };

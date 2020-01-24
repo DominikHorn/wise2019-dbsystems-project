@@ -37,8 +37,6 @@ function getWahlTabTitle(wahlTab: WahlTab) {
       return "Zweitstimmabgabe";
     case WahlTab.CHECKVOTE:
       return "Bestätigung";
-    case WahlTab.VOTECOMMITED:
-      return "Stimmabgabe Beendet";
     default:
       return "Error - Unknown Tab";
   }
@@ -68,8 +66,6 @@ interface IState {
   readonly selectedZweitpartei?: Partei | null;
 
   readonly acceptedRechtsbehelfsbelehrung: boolean;
-
-  readonly resetCountdown?: number;
 }
 
 class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
@@ -119,26 +115,6 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
     );
   };
 
-  private startResetCountdown = () => {
-    this.setState({ resetCountdown: 5 });
-    setTimeout(this.tickResetCountdown, 1000);
-  };
-
-  private tickResetCountdown = () => {
-    const newCountdownValue = this.state.resetCountdown - 1;
-    if (newCountdownValue <= 0) {
-      this.setState({ resetCountdown: undefined }, this.resetWahlkabine);
-      return;
-    } else {
-      this.setState(
-        {
-          resetCountdown: newCountdownValue
-        },
-        () => setTimeout(this.tickResetCountdown, 1000)
-      );
-    }
-  };
-
   private audio: any = null;
   componentDidUpdate() {
     // Force reset Wahlkabine if it is not unlocked
@@ -171,11 +147,8 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
       return;
     }
     const nextTab = this.state.activeTab + 1;
-    if (nextTab > WahlTab.VOTECOMMITED) {
+    if (nextTab > WahlTab.CHECKVOTE) {
       return;
-    }
-    if (nextTab === WahlTab.VOTECOMMITED) {
-      this.startResetCountdown();
     }
     this.setState({
       activeTab: nextTab
@@ -212,7 +185,7 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
           message.error("Computer sagt Nein :(");
           return;
         }
-        this.nextTab();
+        message.success("Ihre Stimme wurde erfolgreich übernommen");
       })
       .catch(err => {
         message.error(`Fehler: ${err.message}`);
@@ -360,31 +333,6 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
       </>
     );
 
-  private renderVoteCommited = () =>
-    this.renderInTabContainer(
-      <Row
-        type={"flex"}
-        justify={"center"}
-        align={"middle"}
-        style={{ width: "100%", height: `calc(100vh - 149px)`, color: "green" }}
-      >
-        <Col span={16}>
-          <Row type={"flex"} justify={"center"}>
-            <Col>
-              <Icon type={"check"} style={{ fontSize: "100pt" }} />
-            </Col>
-          </Row>
-          <Row>
-            <Col style={{ textAlign: "center", fontSize: "30pt" }}>
-              {`Ihre Stimme wurde erfolgreich abgegeben. Sie können die Wahlkabine
-              nun verlassen. Die Wahlkabine wird automatisch in den Initialzustand 
-              versetzt in ${this.state.resetCountdown || 0} Sekunden`}
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    );
-
   private isWaehlerBraun = () => {
     const {
       selectedErstkandidat,
@@ -475,14 +423,6 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
             disabled={furthestReachableTab < WahlTab.CHECKVOTE}
           >
             {this.renderCheckVote()}
-          </Tabs.TabPane>
-          <Tabs.TabPane
-            tab={getWahlTabTitle(WahlTab.VOTECOMMITED)}
-            key={`${WahlTab.VOTECOMMITED}`}
-            style={tabPaneStyle}
-            disabled={true}
-          >
-            {this.renderVoteCommited()}
           </Tabs.TabPane>
         </Tabs>
       </div>
