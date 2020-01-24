@@ -296,7 +296,9 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
           )
         }
       ]}
-      dataSource={this.props.registeredWahlkabinenData.wahlkabinen}
+      dataSource={(
+        this.props.registeredWahlkabinenData.wahlkabinen || []
+      ).sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0))}
     />
   );
 
