@@ -49,7 +49,7 @@ class AltersverteilungsWidgetComponent extends React.PureComponent<
         {...this.props}
         title={
           <>
-            <span style={{ float: "left" }}>{"Landtagswahl:"}</span>
+            <span style={{ float: "left" }}>{"Altersverteilung:"}</span>
             <span
               style={{
                 display: "block",

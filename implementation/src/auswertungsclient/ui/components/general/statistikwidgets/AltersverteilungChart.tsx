@@ -21,7 +21,10 @@ const getDistinctAltersValuesSorted = memoize(
   (verteilung: Altersverteilung[]) =>
     Object.values(
       verteilung.reduce(
-        (aggr, v) => ({ ...aggr, [v.geburtsjahr]: v.geburtsjahr }),
+        (aggr, v) => ({
+          ...aggr,
+          [v.geburtsjahr]: v.geburtsjahr
+        }),
         {}
       )
     ).sort((a, b) => (a < b ? -1 : a > b ? 1 : 0))
@@ -29,47 +32,55 @@ const getDistinctAltersValuesSorted = memoize(
 
 const getParteiSortedValues = memoize((v: Altersverteilung[]) =>
   v.reduce(
-    (aggr, curr) => ({
-      ...aggr,
-      [curr.geburtsjahr]: (aggr[curr.geburtsjahr] || 0) + curr.anzahl
-    }),
+    (aggr, curr) =>
+      curr.geburtsjahr === null
+        ? { ...aggr, [-1]: (aggr[-1] || 0) + curr.anzahl }
+        : {
+            ...aggr,
+            [curr.geburtsjahr]: (aggr[curr.geburtsjahr] || 0) + curr.anzahl
+          },
     {} as { [geburtsjahr: number]: number }
   )
 );
 
 const AltersverteilungComponent = (props: IProps) => {
-  const parteiSortedValues = Object.values(
-    getParteiSortedValues(
-      (props.altersverteilungData &&
-        props.altersverteilungData.altersverteilung) ||
-        []
-    )
+  const xAxisData = getDistinctAltersValuesSorted(
+    (props.altersverteilungData &&
+      props.altersverteilungData.altersverteilung) ||
+      []
+  ).map(val => (val === null ? "Unbekannt" : val));
+  const parteiSortedValues = getParteiSortedValues(
+    (props.altersverteilungData &&
+      props.altersverteilungData.altersverteilung) ||
+      []
   );
+  console.log(xAxisData);
+  const seriesData = xAxisData.map(
+    alter =>
+      (alter === "Unbekannt"
+        ? parteiSortedValues[-1]
+        : parteiSortedValues[Number(alter)]) || 0
+  );
+
   const option = {
     tooltip: {},
     toolbox: {
       feature: {
         saveAsImage: { title: "Als Bild speichern" },
-        magicType: {
-          type: ["stack", "tiled"]
-        },
         dataZoom: { title: "Zoom", yAxisIndex: false }
       }
     },
     legend: false,
     xAxis: {
       type: "category",
-      data: getDistinctAltersValuesSorted(
-        (props.altersverteilungData &&
-          props.altersverteilungData.altersverteilung) ||
-          []
-      )
+      data: xAxisData,
+      axisLabel: { rotate: -45 }
     },
     yAxis: {},
     series: [
       {
         type: "bar",
-        data: parteiSortedValues
+        data: seriesData
       }
     ]
   };
