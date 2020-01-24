@@ -658,7 +658,6 @@ with erststimmen_pro_stimmkreis AS(
     
 );
 
-
 CREATE OR REPLACE VIEW "landtagswahlen".sieger_zweitstimmen_pro_stimmkreis AS (   
 		 with zweitstimmen_pro_stimmkreis AS(
         SELECT lgs.wahl_id, lgs.stimmkreis_id, lgs.partei_id, lgs.anzahl
@@ -679,9 +678,94 @@ CREATE OR REPLACE VIEW "landtagswahlen".sieger_zweitstimmen_pro_stimmkreis AS (
     )
     SELECT zpp.wahl_id, zpp.stimmkreis_id, zpp.partei_id, zpp.anzahl
     FROM zweitstimmen_pro_partei zpp
-    WHERE not exists(SELECT * FROM zweitstimmen_pro_partei zpp2 WHERE zpp2.anzahl > zpp.anzahl AND zpp2.wahl_id = zpp.wahl_id AND zpp2.stimmkreis_id = zpp.stimmkreis_id)
-     
-		 );
+    WHERE not exists(SELECT * FROM zweitstimmen_pro_partei zpp2 WHERE zpp2.anzahl > zpp.anzahl AND zpp2.wahl_id = zpp.wahl_id AND zpp2.stimmkreis_id = zpp.stimmkreis_id)     
+);
 
-
-
+CREATE MATERIALIZED VIEW IF NOT EXISTS "landtagswahlen".knappste_kandidaten (wahl_id, stimmkreis_id, kandidat_id, differenz, gewinner, partei_id, platz) AS (
+	WITH gesamtstimmen (wahl_id, anzahl) AS (
+		SELECT wahl_id, sum(anzahl)
+		FROM "landtagswahlen".gesamtstimmen_pro_partei
+		GROUP BY wahl_id
+	),
+	-- Die Parteien, welche nicht gesperrt sind für die Wahl
+	nicht_gesperrte_parteien (wahl_id, partei_id) AS (
+		SELECT gspp.wahl_id, gspp.partei_id
+		FROM (
+				SELECT wahl_id, partei_id, sum(anzahl) as anzahl
+				FROM "landtagswahlen".gesamtstimmen_pro_partei
+				GROUP BY wahl_id, partei_id
+			) gspp
+			JOIN gesamtstimmen gs ON gs.wahl_id = gspp.wahl_id
+		WHERE gspp.anzahl / gs.anzahl >= 0.05
+	),
+	nicht_gesperrte_direktkandidaten (wahl_id, stimmkreis_id, kandidat_id, stimmanzahl) AS (
+		SELECT dk.wahl_id, dk.stimmkreis_id, dk.direktkandidat_id, kgs.anzahl
+		FROM "landtagswahlen".direktkandidaten dk
+			JOIN "landtagswahlen".kandidaten k
+				ON k.id = dk.direktkandidat_id
+			JOIN "landtagswahlen".stimmkreise sk
+				ON sk.id = dk.stimmkreis_id
+			JOIN "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
+				ON kgs.kandidat_id = dk.direktkandidat_id
+					AND kgs.wahl_id = dk.wahl_id
+					AND kgs.stimmkreis_id = dk.stimmkreis_id
+			JOIN nicht_gesperrte_parteien ngp
+				ON ngp.wahl_id = dk.wahl_id
+					AND ngp.partei_id = k.partei_id
+	), knappste_sieger (wahl_id, stimmkreis_id, kandidat_id, abstand) AS (
+			SELECT ngd1.wahl_id,
+						 ngd1.stimmkreis_id,
+						 ngd1.kandidat_id,
+						 ngd1.stimmanzahl - ngd2.stimmanzahl as abstand
+			FROM nicht_gesperrte_direktkandidaten ngd1
+				JOIN nicht_gesperrte_direktkandidaten ngd2
+					ON ngd1.wahl_id = ngd2.wahl_id
+						AND ngd1.stimmkreis_id = ngd2.stimmkreis_id
+						AND ngd2.stimmanzahl < ngd1.stimmanzahl
+			WHERE NOT EXISTS (
+				SELECT *
+				FROM nicht_gesperrte_direktkandidaten ngd3
+				WHERE ngd1.wahl_id = ngd3.wahl_id
+					AND ngd1.stimmkreis_id = ngd3.stimmkreis_id
+					AND ngd1.kandidat_id <> ngd3.kandidat_id
+					AND ngd2.stimmanzahl < ngd3.stimmanzahl
+			)
+	), verlierer_direktkandidaten_stimmen (wahl_id, stimmkreis_id, kandidat_id, stimmanzahl) AS (
+			SELECT dk.wahl_id, kgs.stimmkreis_id, dk.direktkandidat_id, kgs.anzahl
+			FROM "landtagswahlen".direktkandidaten dk
+				JOIN "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
+					ON dk.wahl_id = kgs.wahl_id
+						AND dk.stimmkreis_id = kgs.stimmkreis_id
+						AND dk.direktkandidat_id = kgs.kandidat_id
+				JOIN "landtagswahlen".kandidaten k
+					ON dk.direktkandidat_id = k.id
+			WHERE NOT EXISTS (
+				SELECT *
+				FROM "landtagswahlen".gewonnene_direktmandate gd
+					JOIN "landtagswahlen".kandidaten k2
+						ON gd.kandidat_id = k2.id
+				WHERE dk.wahl_id = gd.wahl_id AND k.partei_id = k2.partei_id
+			)
+	), knappste_verlierer (wahl_id, stimmkreis_id, kandidat_id, differenz_zu_sieger) AS (
+			SELECT vds1.wahl_id,
+						 vds1.stimmkreis_id,
+						 vds1.kandidat_id,
+						 gd.stimmanzahl - vds1.stimmanzahl as differenz_zu_sieger
+			FROM verlierer_direktkandidaten_stimmen vds1
+				JOIN "landtagswahlen".gewonnene_direktmandate gd
+					ON vds1.wahl_id = gd.wahl_id
+						AND vds1.stimmkreis_id = gd.stimmkreis_id
+	)
+	SELECT l.*, k.partei_id, row_number() over (
+		PARTITION BY  wahl_id, partei_id
+		ORDER BY differenz
+		) as platz
+	FROM (
+			SELECT wahl_id, stimmkreis_id, kandidat_id, abstand as differenz, true as gewinner
+			FROM knappste_sieger
+			UNION
+			SELECT wahl_id, stimmkreis_id, kandidat_id, differenz_zu_sieger as differenz, false as gewinner
+			FROM knappste_verlierer
+		) l
+		JOIN "landtagswahlen".kandidaten k ON k.id = l.kandidat_id
+);

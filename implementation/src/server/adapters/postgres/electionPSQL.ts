@@ -20,7 +20,8 @@ type MaterialViews =
   | "ungueltige_zweitstimmen"
   | "finaleliste"
   | "gewonnene_direktmandate"
-  | "gewonnene_listenmandate";
+  | "gewonnene_listenmandate"
+  | "knappste_kandidaten";
 
 const KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW: MaterialViews =
   "kandidatgebundene_gueltige_stimmen";
@@ -39,14 +40,10 @@ type Tables =
 
 const PARTEIEN_TABLE: Tables = "parteien";
 const WAHLEN_TABLE: Tables = "wahlen";
+const KNAPPSTE_KANDIDATEN_MVIEW: MaterialViews = "knappste_kandidaten";
 const STIMMKREIS_TABLE: Tables = "stimmkreise";
 const KANDIDATEN_TABLE: Tables = "kandidaten";
 const REGIERUNGSBEZIRKE_TABLE: Tables = "regierungsbezirke";
-const DIREKTKANDIDATEN_TABLE: Tables = "direktkandidaten";
-
-type Views = "gesamtstimmen_pro_partei";
-
-const GESAMTSTIMMEN_PRO_PARTEI_VIEW: Views = "gesamtstimmen_pro_partei";
 
 const refreshOrder: MaterialViews[] = [
   "direktmandat_anzahl",
@@ -56,7 +53,8 @@ const refreshOrder: MaterialViews[] = [
   "ungueltige_zweitstimmen",
   "finaleliste",
   "gewonnene_direktmandate",
-  "gewonnene_listenmandate"
+  "gewonnene_listenmandate",
+  "knappste_kandidaten"
 ];
 
 export async function computeQ7(
@@ -591,7 +589,7 @@ export async function getUeberhangmandate(
         FULL OUTER JOIN anzahlGewonneneListenmandate agl
           ON agd.regierungsbezirk_id = agl.regierungsbezirk_id
             AND agd.partei_id = agl.partei_id
-        JOIN zustehende_mandate(0) zm
+        JOIN "landtagswahlen".zustehende_mandate(0) zm
           ON zm.regierungsbezirk_id = COALESCE(agd.regierungsbezirk_id, agl.regierungsbezirk_id)
             AND zm.partei_id = COALESCE(agd.partei_id, agl.partei_id)
             AND zm.wahl_id = $1
@@ -640,93 +638,6 @@ export async function getKnappsteKandidaten(
     platz: number;
   }[] = await adapters.postgres.query(
     `
-    WITH gesamtstimmen (wahl_id, anzahl) AS (
-      SELECT wahl_id, sum(anzahl)
-      FROM "${DatabaseSchemaGroup}".${GESAMTSTIMMEN_PRO_PARTEI_VIEW}
-      GROUP BY wahl_id
-    ),
-    -- Die Parteien, welche nicht gesperrt sind für die Wahl
-    nicht_gesperrte_parteien (wahl_id, partei_id) AS (
-      SELECT gspp.wahl_id, gspp.partei_id
-      FROM (
-          SELECT wahl_id, partei_id, sum(anzahl) as anzahl
-          FROM "${DatabaseSchemaGroup}".${GESAMTSTIMMEN_PRO_PARTEI_VIEW}
-          GROUP BY wahl_id, partei_id
-        ) gspp
-        JOIN gesamtstimmen gs ON gs.wahl_id = gspp.wahl_id
-      WHERE gspp.anzahl / gs.anzahl >= 0.05
-    ),
-    nicht_gesperrte_direktkandidaten (wahl_id, stimmkreis_id, kandidat_id, stimmanzahl) AS (
-      SELECT dk.wahl_id, dk.stimmkreis_id, dk.direktkandidat_id, kgs.anzahl
-      FROM "${DatabaseSchemaGroup}".${DIREKTKANDIDATEN_TABLE} dk
-        JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k
-          ON k.id = dk.direktkandidat_id
-        JOIN "${DatabaseSchemaGroup}".${STIMMKREIS_TABLE} sk
-            ON sk.id = dk.stimmkreis_id
-        JOIN "${DatabaseSchemaGroup}".${KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW} kgs
-          ON kgs.kandidat_id = dk.direktkandidat_id
-            AND kgs.wahl_id = dk.wahl_id
-            AND kgs.stimmkreis_id = dk.stimmkreis_id
-        JOIN nicht_gesperrte_parteien ngp
-          ON ngp.wahl_id = dk.wahl_id
-            AND ngp.partei_id = k.partei_id
-    ), knappste_sieger (wahl_id, stimmkreis_id, kandidat_id, abstand) AS (
-      SELECT ngd1.wahl_id,
-            ngd1.stimmkreis_id,
-            ngd1.kandidat_id,
-            ngd1.stimmanzahl - ngd2.stimmanzahl as abstand
-      FROM nicht_gesperrte_direktkandidaten ngd1
-        JOIN nicht_gesperrte_direktkandidaten ngd2
-          ON ngd1.wahl_id = ngd2.wahl_id
-            AND ngd1.stimmkreis_id = ngd2.stimmkreis_id
-            AND ngd2.stimmanzahl < ngd1.stimmanzahl
-      WHERE NOT EXISTS (
-        SELECT *
-        FROM nicht_gesperrte_direktkandidaten ngd3
-        WHERE ngd1.wahl_id = ngd3.wahl_id
-          AND ngd1.stimmkreis_id = ngd3.stimmkreis_id
-          AND ngd1.kandidat_id <> ngd3.kandidat_id
-          AND ngd2.stimmanzahl < ngd3.stimmanzahl
-      )
-    ), verlierer_direktkandidaten_stimmen (wahl_id, stimmkreis_id, kandidat_id, stimmanzahl) AS (
-      SELECT dk.wahl_id, kgs.stimmkreis_id, dk.direktkandidat_id, kgs.anzahl
-      FROM "${DatabaseSchemaGroup}".${DIREKTKANDIDATEN_TABLE} dk
-        JOIN "${DatabaseSchemaGroup}".${KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW} kgs
-          ON dk.wahl_id = kgs.wahl_id
-            AND dk.stimmkreis_id = kgs.stimmkreis_id
-            AND dk.direktkandidat_id = kgs.kandidat_id
-        JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k
-          ON dk.direktkandidat_id = k.id
-      WHERE NOT EXISTS (
-        SELECT *
-        FROM "${DatabaseSchemaGroup}".${GEWONNENE_DIREKTMANDATE_MVIEW} gd
-          JOIN "${DatabaseSchemaGroup}".kandidaten k2
-            ON gd.kandidat_id = k2.id
-        WHERE dk.wahl_id = gd.wahl_id AND k.partei_id = k2.partei_id
-      )
-    ), knappste_verlierer (wahl_id, stimmkreis_id, kandidat_id, differenz_zu_sieger) AS (
-      SELECT vds1.wahl_id,
-            vds1.stimmkreis_id,
-            vds1.kandidat_id,
-            gd.stimmanzahl - vds1.stimmanzahl as differenz_zu_sieger
-      FROM verlierer_direktkandidaten_stimmen vds1
-        JOIN "${DatabaseSchemaGroup}".${GEWONNENE_DIREKTMANDATE_MVIEW} gd
-          ON vds1.wahl_id = gd.wahl_id
-            AND vds1.stimmkreis_id = gd.stimmkreis_id
-    ), looser (wahl_id, stimmkreis_id, kandidat_id, differenz) AS (
-      SELECT l.*, k.partei_id, row_number() over (
-        PARTITION BY  wahl_id, partei_id
-        ORDER BY differenz
-        ) as platz
-      FROM (
-        SELECT wahl_id, stimmkreis_id, kandidat_id, abstand as differenz, true as gewinner
-        FROM knappste_sieger
-        UNION
-        SELECT wahl_id, stimmkreis_id, kandidat_id, differenz_zu_sieger as differenz, false as gewinner
-        FROM knappste_verlierer
-      ) l
-        JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k ON k.id = l.kandidat_id
-    )
     SELECT w.id as wahl_id,
            w.wahldatum as wahldatum,
            sk.id as stimmkreis_id,
@@ -738,7 +649,7 @@ export async function getKnappsteKandidaten(
            differenz,
            gewinner,
            platz
-    FROM looser l
+    FROM "${DatabaseSchemaGroup}".${KNAPPSTE_KANDIDATEN_MVIEW} l
       JOIN "${DatabaseSchemaGroup}".${WAHLEN_TABLE} w
         ON l.wahl_id = w.id
       JOIN "${DatabaseSchemaGroup}".${STIMMKREIS_TABLE} sk
