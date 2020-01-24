@@ -2,8 +2,8 @@
 
 declare -a REGIERUNGS_BEZIRKE=("901" "902" "903" "904" "905" "906" "907")
 
-rm wahl2018*
-rm wahl2013*
+rm wahl2018_*
+rm wahl2013_*
 
 for rb in "${REGIERUNGS_BEZIRKE[@]}"
 do
