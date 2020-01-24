@@ -27,6 +27,8 @@ export interface IDatabaseKandidat extends IDatabaseEntity {
   readonly id: number;
   readonly partei_id: number;
   readonly name: string;
+  readonly geburtsjahr?: number;
+  readonly wohnort?: string;
 }
 
 export interface IDatabaseWahlhelferToken extends IDatabaseEntity {

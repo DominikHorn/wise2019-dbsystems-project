@@ -4,7 +4,8 @@ import { GraphQLFileUpload } from "../../shared/sharedTypes";
 import { adapters } from "../adapters/adapterUtil";
 import {
   insertDirektkandidat,
-  getOrCreateKandidatForParteiIdAndName
+  getOrCreateKandidatForParteiIdAndName,
+  setKandidatZusatzdaten
 } from "../adapters/postgres/kandidatPSQL";
 import { getOrCreateParteiForIdAndName } from "../adapters/postgres/parteiPSQL";
 import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/regierungsbezirkePSQL";
@@ -49,6 +50,17 @@ enum INFO_CSV_KEYS {
   ungueltige_erststimmen_2013 = "ungültige Erststimmen 2013",
   ungueltige_zweitstimmen_2018 = "ungültige Zweitstimmen 2018",
   ungueltige_zweitstimmen_2013 = "ungültige Zweitstimmen 2013"
+}
+
+enum ALTERSDATEN_CSV_KEYS {
+  uniqueID = "UniqueID",
+  parteiID = "parteiID",
+  partei = "partei",
+  stimmkreis = "Wahlkreis",
+  stimmkreis_id = "ID",
+  kandidat_name = "Name",
+  kandidat_geburtsjahr = "Geb. Jahr",
+  kandidat_wohnort = "Wohnort"
 }
 
 async function parseCrawledCSV(
@@ -352,6 +364,18 @@ async function parseInfo2018CSV(
   }
 }
 
+async function parseAltersDaten(result: ParseResult, client?: PoolClient) {
+  console.log(`Altersdaten-CSV--Parser: parsing ${result.data.length} rows`);
+
+  for (const row of result.data) {
+    const kandidatName = row[ALTERSDATEN_CSV_KEYS.kandidat_name];
+    const geburtsjahr = Number(row[ALTERSDATEN_CSV_KEYS.kandidat_geburtsjahr]);
+    const wohnort = row[ALTERSDATEN_CSV_KEYS.kandidat_wohnort];
+
+    await setKandidatZusatzdaten(kandidatName, geburtsjahr, wohnort, client);
+  }
+}
+
 export const parseCSV = async (
   csvReadStream: ReadStream,
   wahldatum: Date,
@@ -391,6 +415,9 @@ export const parseCSV = async (
           ) {
             // Special info csv for 2013
             await parseInfo2013CSV(result, aggregiert, client);
+          } else if (result.meta.fields[0] === ALTERSDATEN_CSV_KEYS.uniqueID) {
+            // Parse altersdaten
+            await parseAltersDaten(result, client);
           } else {
             // Crawled format
             await parseCrawledCSV(result, wahl, aggregiert, client);

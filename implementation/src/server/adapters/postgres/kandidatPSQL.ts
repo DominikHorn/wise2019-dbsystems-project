@@ -5,7 +5,11 @@ import {
   IDatabaseDirektkandidat
 } from "../../databaseEntities";
 import { adapters } from "../adapterUtil";
-import { Kandidat, ListenKandidat } from "../../../shared/graphql.types";
+import {
+  Kandidat,
+  ListenKandidat,
+  Altersverteilung
+} from "../../../shared/graphql.types";
 
 let cachedKandidatForParteiIdAndName: (
   parteiId: number,
@@ -169,4 +173,70 @@ export async function getListenKandidaten(
           }
         }))
     );
+}
+
+export async function setKandidatZusatzdaten(
+  kandidatName: string,
+  geburtsjahr: number,
+  wohnort: string,
+  client?: PoolClient
+): Promise<IDatabaseKandidat[]> {
+  const QUERY = `
+    UPDATE "${DatabaseSchemaGroup}".kandidaten
+    SET 
+       geburtsjahr = $1,
+       wohnort = $2
+    WHERE name = $3
+    RETURNING *
+  `;
+  const ARGS = [geburtsjahr, wohnort, kandidatName];
+  return (await client)
+    ? client.query(QUERY, ARGS).then(r => r && r.rows)
+    : adapters.postgres.query(QUERY, ARGS);
+}
+
+export async function getAltersverteilungImParlament(
+  wahl_id: number,
+  client?: PoolClient
+): Promise<Altersverteilung[]> {
+  const QUERY = `
+    WITH mandate (wahl_id, kandidat_id) AS (
+      SELECT gd.wahl_id, gd.kandidat_id
+      FROM "${DatabaseSchemaGroup}".gewonnene_direktmandate gd
+      UNION
+      SELECT gl.wahl_id, gl.kandidat_id
+      FROM "${DatabaseSchemaGroup}".gewonnene_listenmandate gl
+    )
+    SELECT k.geburtsjahr, 
+           COUNT(COALESCE(k.geburtsjahr, -1)) as anzahl, 
+           p.id as partei_id, 
+           p.name as partei_name
+    FROM mandate m
+      JOIN "${DatabaseSchemaGroup}".kandidaten k
+        ON k.id = m.kandidat_id
+      JOIN "${DatabaseSchemaGroup}".parteien p
+        ON p.id = k.partei_id
+    WHERE wahl_id = $1
+    GROUP BY m.wahl_id, k.geburtsjahr, p.id, p.name
+    ORDER BY geburtsjahr;
+  `;
+  const ARGS = [wahl_id];
+
+  const result: {
+    geburtsjahr: number;
+    anzahl: number;
+    partei_id: number;
+    partei_name: string;
+  }[] = await (client
+    ? client.query(QUERY, ARGS).then(r => r.rows)
+    : adapters.postgres.query(QUERY, ARGS));
+
+  return result.map(r => ({
+    geburtsjahr: r.geburtsjahr,
+    anzahl: r.anzahl,
+    partei: {
+      id: r.partei_id,
+      name: r.partei_name
+    }
+  }));
 }

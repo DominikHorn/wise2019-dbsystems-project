@@ -8,7 +8,9 @@ CREATE TABLE IF NOT EXISTS "landtagswahlen".parteien (
 CREATE TABLE IF NOT EXISTS "landtagswahlen".kandidaten (
 	id int NOT NULL GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	partei_id smallint NOT NULL,
-	"name" varchar(200) NOT NULL,
+	"name" varchar(100) NOT NULL,
+	geburtsjahr int,
+	wohnort varchar(100),
 	FOREIGN KEY (partei_id) REFERENCES "landtagswahlen".parteien(id) ON DELETE CASCADE
 );
 

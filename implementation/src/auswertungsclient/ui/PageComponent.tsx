@@ -24,6 +24,7 @@ import { GewinnerWidget } from "./components/general/statistikwidgets/GewinnerWi
 import { UeberhangmandateWidget } from "./components/general/statistikwidgets/UeberhangmandateWidget";
 import { KnappsteKandidatenWidget } from "./components/general/statistikwidgets/KnappsteKandidatenWidget";
 import { renderError } from "../../wahlclient/ui/guiUtil";
+import { AltersverteilungsWidget } from "./components/general/statistikwidgets/AltersverteilungsWidget";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -368,6 +369,13 @@ class PageComponentClass extends React.Component<IProps, IState> {
           />
         ) : setting.type === WidgetType.KNAPPSTE_KANDIDATEN ? (
           <KnappsteKandidatenWidget
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
+            key={setting.layout.i}
+            removeWidget={removeWidget}
+          />
+        ) : setting.type === WidgetType.ALTERSVERTEILUNG ? (
+          <AltersverteilungsWidget
             routableState={setting.routableState}
             setRoutableState={setRoutableState}
             key={setting.layout.i}
