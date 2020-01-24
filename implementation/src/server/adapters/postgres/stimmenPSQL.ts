@@ -1,12 +1,8 @@
-import { PoolClient, Pool } from "pg";
-import {
-  DatabaseSchemaGroup,
-  IDatabaseKandidatVote
-} from "../../databaseEntities";
-import { adapters } from "../adapterUtil";
 import { createObjectCsvWriter } from "csv-writer";
-import { exists, fstat, unlink, unlinkSync } from "fs";
-import { resolve } from "path";
+import { unlinkSync } from "fs";
+import { PoolClient } from "pg";
+import { DatabaseSchemaGroup } from "../../databaseEntities";
+import { adapters } from "../adapterUtil";
 
 export type VoteFields =
   | "stimmkreis_id"
@@ -15,15 +11,16 @@ export type VoteFields =
   | "kandidat_id"
   | "anzahl";
 
-export type VoteTables =
-  | "einzel_gueltige_kandidatgebundene_stimmen"
-  | "einzel_gueltige_listengebundene_stimmen"
-  | "einzel_ungueltige_erststimmen"
-  | "einzel_ungueltige_zweitstimmen"
-  | "aggregiert_gueltige_kandidatgebundene_stimmen"
-  | "aggregiert_gueltige_listengebundene_stimmen"
-  | "aggregiert_ungueltige_erststimmen"
-  | "aggregiert_ungueltige_zweitstimmen";
+export enum VoteTables {
+  EINZEL_GUELTIGE_KANDIDATENSTIMMEN = "einzel_gueltige_kandidatgebundene_stimmen",
+  EINZEL_GUELTIGE_LISTENSTIMMEN = "einzel_gueltige_listengebundene_stimmen",
+  EINZEL_UNGUELTIGE_ERSTSTIMMEN = "einzel_ungueltige_erststimmen",
+  EINZEL_UNGUELTIGE_ZWEITSTIMMEN = "einzel_ungueltige_zweitstimmen",
+  AGGR_GUELTIGE_KANDIDATENSTIMMEN = "aggregiert_gueltige_kandidatgebundene_stimmen",
+  AGGR_GUELTIGE_LISTENSTIMMEN = "aggregiert_gueltige_listengebundene_stimmen",
+  AGGR_UNGUELTIGE_ERSTSTIMMEN = "aggregiert_ungueltige_erststimmen",
+  AGGR_UNGUELTIGE_ZWEITSTIMMEN = "aggregiert_ungueltige_zweitstimmen"
+}
 
 export type VoteViews =
   | "kandidatgebundene_stimmen"
@@ -93,13 +90,157 @@ export async function castVote(
   zweitparteiID: number | null,
   aggregiert: boolean = false
 ): Promise<boolean> {
-  console.log(
-    "DEBUG: castVote(",
-    erstkandidatID,
-    zweitkandidatID,
-    zweitparteiID,
-    ")"
-  );
+  if (
+    zweitkandidatID !== undefined &&
+    zweitkandidatID !== null &&
+    zweitparteiID !== undefined &&
+    zweitparteiID !== null
+  ) {
+    throw new Error(
+      "Can not cast secondary vote for party and candidate at the same time!"
+    );
+  }
 
-  return false;
+  return adapters.postgres.transaction<boolean>(async client => {
+    let res = false;
+    // Insert erstkandidat stimme
+    if (erstkandidatID === undefined || erstkandidatID === null) {
+      if (aggregiert) {
+        res = await client
+          .query(
+            `
+          INSERT INTO "${DatabaseSchemaGroup}".${VoteTables.AGGR_UNGUELTIGE_ERSTSTIMMEN} (wahl_id, stimmkreis_id, anzahl)
+          VALUES ($1, $2, 1)
+          ON CONFLICT (wahl_id, stimmkreis_id) DO
+            UPDATE "${DatabaseSchemaGroup}".${VoteTables.AGGR_UNGUELTIGE_ERSTSTIMMEN}
+            SET anzahl = anzahl + 1
+            WHERE wahl_id = $1 AND stimmkreis_id = $2
+        `,
+            [wahlid, stimmkreisid]
+          )
+          .then(r => r && r.rowCount > 0);
+      } else {
+        res = await client
+          .query(
+            `
+          INSERT INTO "${DatabaseSchemaGroup}".${VoteTables.EINZEL_UNGUELTIGE_ERSTSTIMMEN} (wahl_id, stimmkreis_id)
+          VALUES ($1, $2)
+        `,
+            [wahlid, stimmkreisid]
+          )
+          .then(r => r && r.rowCount > 0);
+      }
+    } else {
+      if (aggregiert) {
+        res = await client
+          .query(
+            `
+          INSERT INTO "${DatabaseSchemaGroup}".${VoteTables.AGGR_GUELTIGE_KANDIDATENSTIMMEN} (wahl_id, stimmkreis_id, kandidat_id, anzahl)
+          VALUES ($1, $2, $3, 1)
+          ON CONFLICT (wahl_id, stimmkreis_id) DO
+            UPDATE "${DatabaseSchemaGroup}".${VoteTables.AGGR_GUELTIGE_KANDIDATENSTIMMEN}
+            SET anzahl = anzahl + 1
+            WHERE wahl_id = $1 AND stimmkreis_id = $2 AND kandidat_id = $3
+         `,
+            [wahlid, stimmkreisid, erstkandidatID]
+          )
+          .then(r => r && r.rowCount > 0);
+      } else {
+        res = await client
+          .query(
+            `
+          INSERT INTO "${DatabaseSchemaGroup}".${VoteTables.EINZEL_GUELTIGE_KANDIDATENSTIMMEN} (wahl_id, stimmkreis_id, kandidat_id)
+          VALUES ($1, $2, $3)
+        `,
+            [wahlid, stimmkreisid, erstkandidatID]
+          )
+          .then(r => r && r.rowCount > 0);
+      }
+    }
+
+    // insert zweitstimme
+    const zweitkandidatInvalid =
+      zweitkandidatID === undefined || zweitkandidatID === null;
+    const zweitparteiInvalid =
+      zweitparteiID === undefined || zweitparteiID === null;
+    if (zweitkandidatInvalid && zweitparteiInvalid) {
+      if (aggregiert) {
+        res = await client
+          .query(
+            `
+          INSERT INTO "${DatabaseSchemaGroup}".${VoteTables.AGGR_UNGUELTIGE_ZWEITSTIMMEN} (wahl_id, stimmkreis_id, anzahl)
+          VALUES ($1, $2, 1)
+          ON CONFLICT (wahl_id, stimmkreis_id) DO
+            UPDATE "${DatabaseSchemaGroup}".${VoteTables.AGGR_UNGUELTIGE_ZWEITSTIMMEN}
+            SET anzahl = anzahl + 1
+            WHERE wahl_id = $1 AND stimmkreis_id = $2
+        `,
+            [wahlid, stimmkreisid]
+          )
+          .then(r => r && r.rowCount > 0);
+      } else {
+        res = await client
+          .query(
+            `
+          INSERT INTO "${DatabaseSchemaGroup}".${VoteTables.EINZEL_UNGUELTIGE_ZWEITSTIMMEN} (wahl_id, stimmkreis_id)
+          VALUES ($1, $2)
+        `,
+            [wahlid, stimmkreisid]
+          )
+          .then(r => r && r.rowCount > 0);
+      }
+    } else {
+      if (aggregiert) {
+        res = await client
+          .query(
+            `
+          INSERT INTO "${DatabaseSchemaGroup}".${
+              zweitparteiInvalid
+                ? VoteTables.AGGR_GUELTIGE_KANDIDATENSTIMMEN
+                : VoteTables.AGGR_GUELTIGE_LISTENSTIMMEN
+            } (wahl_id, stimmkreis_id, ${
+              zweitkandidatID ? "kandidat_id" : "partei_id"
+            }, anzahl)
+          VALUES ($1, $2, $3, 1)
+          ON CONFLICT (wahl_id, stimmkreis_id) DO
+            UPDATE "${DatabaseSchemaGroup}".${
+              zweitparteiInvalid
+                ? VoteTables.AGGR_GUELTIGE_KANDIDATENSTIMMEN
+                : VoteTables.AGGR_GUELTIGE_LISTENSTIMMEN
+            }
+            SET anzahl = anzahl + 1
+            WHERE wahl_id = $1 AND stimmkreis_id = $2 AND kandidat_id = $3
+         `,
+            [
+              wahlid,
+              stimmkreisid,
+              zweitparteiInvalid ? zweitkandidatID : zweitparteiID
+            ]
+          )
+          .then(r => r && r.rowCount > 0);
+      } else {
+        res = await client
+          .query(
+            `
+          INSERT INTO "${DatabaseSchemaGroup}".${
+              zweitparteiInvalid
+                ? VoteTables.EINZEL_GUELTIGE_KANDIDATENSTIMMEN
+                : VoteTables.EINZEL_GUELTIGE_LISTENSTIMMEN
+            } (wahl_id, stimmkreis_id, ${
+              zweitparteiInvalid ? "kandidat_id" : "partei_id"
+            })
+          VALUES ($1, $2, $3)
+        `,
+            [
+              wahlid,
+              stimmkreisid,
+              zweitparteiInvalid ? zweitkandidatID : zweitparteiID
+            ]
+          )
+          .then(r => r && r.rowCount > 0);
+      }
+    }
+
+    return res;
+  });
 }

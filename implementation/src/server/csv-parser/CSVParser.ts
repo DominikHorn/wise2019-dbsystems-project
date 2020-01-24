@@ -11,7 +11,8 @@ import { getOrCreateRegierungsbezirkForId } from "../adapters/postgres/regierung
 import {
   VoteType,
   bulkInsertVotes,
-  deferVotesConstraints
+  deferVotesConstraints,
+  VoteTables
 } from "../adapters/postgres/stimmenPSQL";
 import {
   getOrCreateStimmkreis,
@@ -71,7 +72,7 @@ async function parseCrawledCSV(
     if (kandidatEinzelVotes.length > 0) {
       await bulkInsertVotes(
         ["stimmkreis_id", "kandidat_id", "wahl_id"],
-        "einzel_gueltige_kandidatgebundene_stimmen",
+        VoteTables.EINZEL_GUELTIGE_KANDIDATENSTIMMEN,
         kandidatEinzelVotes,
         client
       );
@@ -80,7 +81,7 @@ async function parseCrawledCSV(
     if (kandidatAggregiertVotes.length > 0) {
       await bulkInsertVotes(
         ["stimmkreis_id", "kandidat_id", "wahl_id", "anzahl"],
-        "aggregiert_gueltige_kandidatgebundene_stimmen",
+        VoteTables.AGGR_GUELTIGE_KANDIDATENSTIMMEN,
         kandidatAggregiertVotes,
         client
       );
@@ -94,7 +95,7 @@ async function parseCrawledCSV(
     if (listenEinzelVotes.length > 0) {
       await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id", "partei_id"],
-        "einzel_gueltige_listengebundene_stimmen",
+        VoteTables.EINZEL_GUELTIGE_LISTENSTIMMEN,
         listenEinzelVotes,
         client
       );
@@ -103,7 +104,7 @@ async function parseCrawledCSV(
     if (listenAggregiertVotes.length > 0) {
       await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id", "partei_id", "anzahl"],
-        "aggregiert_gueltige_listengebundene_stimmen",
+        VoteTables.AGGR_GUELTIGE_LISTENSTIMMEN,
         listenAggregiertVotes,
         client
       );
@@ -284,7 +285,7 @@ async function parseInfo2018CSV(
     if (aggregiert) {
       await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id", "anzahl"],
-        "aggregiert_ungueltige_erststimmen",
+        VoteTables.AGGR_UNGUELTIGE_ERSTSTIMMEN,
         [
           {
             values: [stimmkreis_id, wahl2013_id, erstvote2013Amount],
@@ -300,7 +301,7 @@ async function parseInfo2018CSV(
     } else {
       await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id"],
-        "einzel_ungueltige_erststimmen",
+        VoteTables.EINZEL_UNGUELTIGE_ERSTSTIMMEN,
         [
           {
             values: [stimmkreis_id, wahl2013_id],
@@ -318,7 +319,7 @@ async function parseInfo2018CSV(
     if (aggregiert) {
       await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id", "anzahl"],
-        "aggregiert_ungueltige_zweitstimmen",
+        VoteTables.AGGR_UNGUELTIGE_ZWEITSTIMMEN,
         [
           {
             values: [stimmkreis_id, wahl2013_id, zweitvote2013Amount],
@@ -334,7 +335,7 @@ async function parseInfo2018CSV(
     } else {
       await bulkInsertVotes(
         ["stimmkreis_id", "wahl_id"],
-        "einzel_ungueltige_zweitstimmen",
+        VoteTables.EINZEL_UNGUELTIGE_ZWEITSTIMMEN,
         [
           {
             values: [stimmkreis_id, wahl2013_id],
