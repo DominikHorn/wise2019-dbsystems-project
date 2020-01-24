@@ -17,6 +17,7 @@ type Query {
   ): [Stimmentwicklung]!
   getDirektKandidaten(wahlid: Int!, stimmkreisid: Int!): [Kandidat]!
   getListenKandidaten(wahlid: Int!, regierungsbezirkid: Int!): [ListenKandidat]!
+  getAltersverteilung(wahlid: Int!): [Altersverteilung]!
 
   # Wahlhelfer
   getRegisteredWahlkabinen(wahlhelferAuth: String!): [Wahlkabine]!
@@ -151,4 +152,11 @@ type WahlhelferToken {
   wahl: Wahl!
   stimmkreis: Stimmkreis!
   token: String!
+}
+
+type Altersverteilung {
+  # Geburtsjahr is unknown for some candidates
+  geburtsjahr: Int
+  partei: Partei!
+  anzahl: Int!
 }

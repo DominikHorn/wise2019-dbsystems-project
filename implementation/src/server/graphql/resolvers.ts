@@ -30,7 +30,8 @@ import {
 } from "../adapters/postgres/adminPSQL";
 import {
   getDirektKandidaten,
-  getListenKandidaten
+  getListenKandidaten,
+  getAltersverteilungImParlament
 } from "../adapters/postgres/kandidatPSQL";
 import { adapters } from "../adapters/adapterUtil";
 import { castVote } from "../adapters/postgres/stimmenPSQL";
@@ -82,6 +83,10 @@ export const resolvers: Resolver = {
       getDirektKandidaten(args.wahlid, args.stimmkreisid),
     getListenKandidaten: (_, args) =>
       getListenKandidaten(args.wahlid, args.regierungsbezirkid),
+    getAltersverteilung: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getAltersverteilungImParlament(args.wahlid)
+      ),
     getRegisteredWahlkabinen: (_, args) =>
       withVerifyIsWahlhelfer(args.wahlhelferAuth, getRegisteredWahlkabinen),
     isRegistered: (_, args) => isRegisteredWahlkabine(args.wahlkabineToken),

@@ -1,8 +1,9 @@
 import { createObjectCsvWriter } from "csv-writer";
-import { unlinkSync } from "fs";
+import { unlinkSync, existsSync, mkdirSync } from "fs";
 import { PoolClient } from "pg";
 import { DatabaseSchemaGroup } from "../../databaseEntities";
 import { adapters } from "../adapterUtil";
+import { sleep } from "../../../shared/util";
 
 export type VoteFields =
   | "stimmkreis_id"
@@ -46,6 +47,9 @@ export async function bulkInsertVotes(
   );
   // Write to temporary csv file and import using SQL COPY command
   const path = `postgres-data/votes_${table}_${tempFileCounter++}.csv`;
+  if (!existsSync("postgres-data")) {
+    mkdirSync("postgres-data");
+  }
   const header = fields.map(field => ({ id: field, title: field }));
   const csvWriter = createObjectCsvWriter({
     path,
@@ -61,6 +65,8 @@ export async function bulkInsertVotes(
   });
 
   await csvWriter.writeRecords(data);
+  // Dirty fix to get around csvWriter not propery flushing file
+  await sleep(100);
 
   const QUERY_STR = `
     COPY "${DatabaseSchemaGroup}".${table} (${fields.join(",")})
