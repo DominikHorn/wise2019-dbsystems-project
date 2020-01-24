@@ -37,14 +37,16 @@ const hoc = createTypedGraphqlHoc<
 >(getRegisteredWahlkabinenGQL);
 
 export const withRegisteredWahlkabinen = <TProps = {}>(
-  getWahlhelferAuth: (props: TProps) => string
+  getWahlhelferAuth: (props: TProps) => string,
+  getPollIntervall?: (props: TProps) => number
 ) =>
   hoc<TProps, QueryToGetRegisteredWahlkabinenHOCProps>({
     options: props => ({
       variables: {
         wahlhelferAuth: getWahlhelferAuth(props)
       },
-      fetchPolicy: "network-only"
+      fetchPolicy: "network-only",
+      pollInterval: getPollIntervall(props)
     }),
     props: ({ data }) => ({
       registeredWahlkabinenData: data

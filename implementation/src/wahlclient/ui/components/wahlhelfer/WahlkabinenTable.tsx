@@ -244,15 +244,6 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
               Neue Wahlkabine Authorisieren
             </Button>
           </Col>
-          <Col>
-            <Button
-              icon={"reload"}
-              loading={this.props.registeredWahlkabinenData.loading}
-              onClick={() => this.props.registeredWahlkabinenData.refetch()}
-            >
-              Refresh
-            </Button>
-          </Col>
         </Row>
       )}
       loading={this.props.registeredWahlkabinenData.loading}
@@ -305,7 +296,9 @@ class WahlkabinenTableComponent extends React.PureComponent<IProps, IState> {
           )
         }
       ]}
-      dataSource={this.props.registeredWahlkabinenData.wahlkabinen}
+      dataSource={(
+        this.props.registeredWahlkabinenData.wahlkabinen || []
+      ).sort((a, b) => (a.label < b.label ? -1 : a.label > b.label ? 1 : 0))}
     />
   );
 
@@ -334,7 +327,10 @@ const WahlkabinenTableWithQueries = compose(
   withRegisterWahlkabineMutation(),
   withRemoveWahlkabineMutation(),
   withSetWahlkabineUnlockedMutation(),
-  withRegisteredWahlkabinen<IWahlkabinenTableProps>(p => p.wahlhelferAuth)
+  withRegisteredWahlkabinen<IWahlkabinenTableProps>(
+    p => p.wahlhelferAuth,
+    () => 1000
+  )
 )(WahlkabinenTableComponent);
 
 const WahlkabinenTableWithForm = Form.create<IFormProps>()(

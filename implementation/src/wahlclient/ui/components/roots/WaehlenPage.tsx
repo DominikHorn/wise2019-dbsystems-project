@@ -6,7 +6,6 @@ import { isRegisteredGQL } from "../../../../client-graphql/wahlkabine/isRegiste
 import { withResetWahlkabineMutation } from "../../../../client-graphql/wahlkabine/resetWahlkabineMutation";
 import { generateRandomToken } from "../../../../shared/token";
 import { WaehlenController } from "../waehlen/WaehlenController";
-import "./WaehlenPage.css";
 
 export interface IWaehlenPageProps {}
 
@@ -22,6 +21,9 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
     this.state = {
       wahlkabineToken: generateRandomToken()
     };
+
+    // Start validation polling after a 5 second initial wait
+    setTimeout(this.validateWahlkabineSetup, 5000);
   }
 
   private validateWahlkabineSetup = () => {
@@ -34,8 +36,16 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
         fetchPolicy: "network-only"
       })
       .then(res => {
-        if (!res || res.errors || !res.data.isRegistered) {
+        if (!res || res.errors) {
           message.error("Computer sagt nein");
+          return;
+        }
+        // If we are not registered yet, refetch
+        if (!res.data.isRegistered) {
+          // Only poll again if server explicitely told us we're not registered yet
+          this.setState({ setupDone: false }, () =>
+            setTimeout(this.validateWahlkabineSetup, 1000)
+          );
           return;
         }
         message.success("Wahlkabine fertig konfiguriert");
@@ -86,18 +96,6 @@ class WaehlenPageComponent extends React.PureComponent<IProps, IState> {
               size={512}
               value={this.state.wahlkabineToken}
             />
-          </Col>
-        </Row>
-
-        <Row type={"flex"} justify={"center"}>
-          <Col>
-            <Button
-              type={"primary"}
-              icon={"check-circle"}
-              onClick={this.validateWahlkabineSetup}
-            >
-              Validieren und Weiter
-            </Button>
           </Col>
         </Row>
       </Col>

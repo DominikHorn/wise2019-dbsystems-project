@@ -1,18 +1,23 @@
+import { Alert, Button, Col, Divider, Icon, message, Row, Tabs } from "antd";
 import * as React from "react";
-import { Kandidat, Partei } from "../../../../shared/graphql.types";
+import { compose } from "react-apollo";
+import {
+  MutationToCastVoteHOCProps,
+  withCastVoteMutation
+} from "../../../../client-graphql/wahlkabine/castVoteMutation";
+import {
+  QueryToIsUnlockedHOCProps,
+  withIsUnlocked
+} from "../../../../client-graphql/wahlkabine/isUnlockedQuery";
 import {
   MutationToResetWahlkabineHOCProps,
   withResetWahlkabineMutation
 } from "../../../../client-graphql/wahlkabine/resetWahlkabineMutation";
-import { compose } from "react-apollo";
-import { message, Row, Col, Button, Icon, Divider, Tabs, Spin } from "antd";
-import { Rechtsbehelfsbelehrung } from "./Rechtsbehelfsbelehrung";
+import { Kandidat, Partei } from "../../../../shared/graphql.types";
 import { ErststimmePage } from "./ErststimmePage";
+import { Rechtsbehelfsbelehrung } from "./Rechtsbehelfsbelehrung";
+import "./WaehlenController.css";
 import { ZweitstimmePage } from "./ZweitstimmePage";
-import {
-  withIsUnlocked,
-  QueryToIsUnlockedHOCProps
-} from "../../../../client-graphql/wahlkabine/isUnlockedQuery";
 
 enum WahlTab {
   RECHTSBEHELFSBELEHRUNG = 0,
@@ -32,8 +37,6 @@ function getWahlTabTitle(wahlTab: WahlTab) {
       return "Zweitstimmabgabe";
     case WahlTab.CHECKVOTE:
       return "Bestätigung";
-    case WahlTab.VOTECOMMITED:
-      return "Stimmabgabe Beendet";
     default:
       return "Error - Unknown Tab";
   }
@@ -46,6 +49,7 @@ export interface IWaehlenControllerProps {
 interface IProps
   extends IWaehlenControllerProps,
     MutationToResetWahlkabineHOCProps,
+    MutationToCastVoteHOCProps,
     QueryToIsUnlockedHOCProps {}
 
 interface IState {
@@ -62,8 +66,6 @@ interface IState {
   readonly selectedZweitpartei?: Partei | null;
 
   readonly acceptedRechtsbehelfsbelehrung: boolean;
-
-  readonly resetCountdown?: number;
 }
 
 class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
@@ -90,6 +92,12 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
     // Only do cleanup if really necessary
     if (this.isInCleanState()) return;
 
+    // Make sure next voter has a Freshhhh experience aswell
+    if (this.audio) {
+      this.audio.pause();
+      this.audio = null;
+    }
+
     this.props.resetWahlkabine({
       variables: { wahlkabineToken: this.props.wahlkabineToken }
     });
@@ -107,30 +115,27 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
     );
   };
 
-  private startResetCountdown = () => {
-    this.setState({ resetCountdown: 5 });
-    setTimeout(this.tickResetCountdown, 1000);
-  };
-
-  private tickResetCountdown = () => {
-    const newCountdownValue = this.state.resetCountdown - 1;
-    if (newCountdownValue <= 0) {
-      this.setState({ resetCountdown: undefined }, this.resetWahlkabine);
-      return;
-    } else {
-      this.setState(
-        {
-          resetCountdown: newCountdownValue
-        },
-        () => setTimeout(this.tickResetCountdown, 1000)
-      );
-    }
-  };
-
+  private audio: any = null;
   componentDidUpdate() {
     // Force reset Wahlkabine if it is not unlocked
     if (this.props.isUnlockedData && !this.props.isUnlockedData.isUnlocked) {
       this.resetWahlkabine();
+    }
+
+    if (this.isWaehlerBraun()) {
+      if (!this.audio) {
+        this.audio = new Audio("/haselnuss.mp3");
+      }
+      this.audio.play();
+    } else if (this.audio) {
+      this.audio.pause();
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.audio) {
+      this.audio.pause();
+      this.audio = null;
     }
   }
 
@@ -142,11 +147,8 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
       return;
     }
     const nextTab = this.state.activeTab + 1;
-    if (nextTab > WahlTab.VOTECOMMITED) {
+    if (nextTab > WahlTab.CHECKVOTE) {
       return;
-    }
-    if (nextTab === WahlTab.VOTECOMMITED) {
-      this.startResetCountdown();
     }
     this.setState({
       activeTab: nextTab
@@ -160,6 +162,34 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
         WahlTab.RECHTSBEHELFSBELEHRUNG
       )
     });
+  };
+
+  private castVote = () => {
+    this.props
+      .castVote({
+        variables: {
+          wahlkabineToken: this.props.wahlkabineToken,
+          erstkandidatID: this.state.selectedErstkandidat
+            ? this.state.selectedErstkandidat.id
+            : null,
+          zweitkandidatID: this.state.selectedZweitkandidat
+            ? this.state.selectedZweitkandidat.id
+            : null,
+          zweitparteiID: this.state.selectedZweitpartei
+            ? this.state.selectedZweitpartei.id
+            : null
+        }
+      })
+      .then(res => {
+        if (!res || res.errors || !res.data.success) {
+          message.error("Computer sagt Nein :(");
+          return;
+        }
+        message.success("Ihre Stimme wurde erfolgreich übernommen");
+      })
+      .catch(err => {
+        message.error(`Fehler: ${err.message}`);
+      });
   };
 
   private getFurhtestReachableTab = () => {
@@ -295,7 +325,7 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
             </Button>
           </Col>
           <Col>
-            <Button type={"primary"} icon={"check"} onClick={this.nextTab}>
+            <Button type={"primary"} icon={"check"} onClick={this.castVote}>
               Stimmen Abgeben
             </Button>
           </Col>
@@ -303,32 +333,30 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
       </>
     );
 
-  private renderVoteCommited = () =>
-    this.renderInTabContainer(
-      <Row
-        type={"flex"}
-        justify={"center"}
-        align={"middle"}
-        style={{ width: "100%", height: `calc(100vh - 149px)`, color: "green" }}
-      >
-        <Col span={16}>
-          <Row type={"flex"} justify={"center"}>
-            <Col>
-              <Icon type={"check"} style={{ fontSize: "100pt" }} />
-            </Col>
-          </Row>
-          <Row>
-            <Col style={{ textAlign: "center", fontSize: "30pt" }}>
-              {`Ihre Stimme wurde erfolgreich abgegeben. Sie können die Wahlkabine
-              nun verlassen. Die Wahlkabine wird automatisch in den Initialzustand 
-              versetzt in ${this.state.resetCountdown || 0} Sekunden`}
-            </Col>
-          </Row>
-        </Col>
-      </Row>
-    );
+  private isWaehlerBraun = () => {
+    const {
+      selectedErstkandidat,
+      selectedZweitkandidat,
+      selectedZweitpartei
+    } = this.state;
+    if (selectedErstkandidat && selectedErstkandidat.partei.name === "AfD")
+      return true;
+    if (selectedZweitkandidat && selectedZweitkandidat.partei.name === "AfD")
+      return true;
+    if (selectedZweitpartei && selectedZweitpartei.name === "AfD") return true;
+    return false;
+  };
 
   render() {
+    const { isUnlockedData } = this.props;
+    if (isUnlockedData && isUnlockedData.error) {
+      return (
+        <Alert
+          type={"error"}
+          message={`Fehler: ${isUnlockedData.error.message}`}
+        />
+      );
+    }
     const { activeTab } = this.state;
     const furthestReachableTab = this.getFurhtestReachableTab();
 
@@ -336,8 +364,10 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
       margin: "0px"
     };
 
+    const braunerWaehler = this.isWaehlerBraun();
+
     return (
-      <div className={"waehlen-page-container"}>
+      <div className={`waehlen-container`}>
         <Tabs
           activeKey={`${activeTab}`}
           onChange={activeTabKey =>
@@ -345,16 +375,16 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
               activeTab: Number(activeTabKey) as WahlTab
             })
           }
-          style={{ backgroundColor: "white" }}
+          destroyInactiveTabPane={true}
+          style={{ backgroundColor: braunerWaehler ? "#A0522D" : "white" }}
           tabBarExtraContent={
             <Button
               icon={"reload"}
               onClick={this.resetWahlkabine}
-              style={{ marginRight: "8px" }}
+              style={{ marginRight: "10px" }}
               size={"small"}
               disabled={
                 activeTab === WahlTab.RECHTSBEHELFSBELEHRUNG ||
-                // TODO: automatically reset after x seconds in last tab
                 activeTab === WahlTab.VOTECOMMITED
               }
             >
@@ -394,14 +424,6 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
           >
             {this.renderCheckVote()}
           </Tabs.TabPane>
-          <Tabs.TabPane
-            tab={getWahlTabTitle(WahlTab.VOTECOMMITED)}
-            key={`${WahlTab.VOTECOMMITED}`}
-            style={tabPaneStyle}
-            disabled={true}
-          >
-            {this.renderVoteCommited()}
-          </Tabs.TabPane>
         </Tabs>
       </div>
     );
@@ -410,6 +432,7 @@ class WaehlenControllerComponent extends React.PureComponent<IProps, IState> {
 
 const WaehlenControllerWithQueries = compose(
   withResetWahlkabineMutation(),
+  withCastVoteMutation(),
   withIsUnlocked<IWaehlenControllerProps>(
     p => p.wahlkabineToken,
     // ~5000 wahlkabinen -> 5000 requests per second ;(
