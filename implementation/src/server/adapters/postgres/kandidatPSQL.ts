@@ -230,7 +230,6 @@ export async function getAltersverteilungImParlament(
   }[] = await (client
     ? client.query(QUERY, ARGS).then(r => r.rows)
     : adapters.postgres.query(QUERY, ARGS));
-  console.log("result:", result);
 
   return result.map(r => ({
     geburtsjahr: r.geburtsjahr,
