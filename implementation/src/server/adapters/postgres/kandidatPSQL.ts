@@ -12,14 +12,13 @@ let cachedKandidatForParteiIdAndName: (
   name: string,
   client?: PoolClient
 ) => IDatabaseKandidat = () => null;
-export async function getKandidatForName(
+export async function getKandidatForParteiIDAndName(
   parteiId: number,
   name: string,
   client?: PoolClient
 ): Promise<IDatabaseKandidat | null> {
   const res = cachedKandidatForParteiIdAndName(parteiId, name, client);
   if (res) {
-    console.error("FOUND DUPLICATE CANDIDATE (?):", parteiId, name);
     return res;
   }
 
@@ -58,6 +57,9 @@ export async function getOrCreateKandidatForParteiIdAndName(
   name: string,
   client?: PoolClient
 ): Promise<IDatabaseKandidat> {
+  const kandidat = await getKandidatForParteiIDAndName(parteiId, name, client);
+  if (kandidat) return kandidat;
+
   const QUERY_STR = `
     INSERT INTO "${DatabaseSchemaGroup}".kandidaten
     VALUES (DEFAULT, $1, $2)
