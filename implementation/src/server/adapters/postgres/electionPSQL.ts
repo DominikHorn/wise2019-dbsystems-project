@@ -589,7 +589,7 @@ export async function getUeberhangmandate(
         FULL OUTER JOIN anzahlGewonneneListenmandate agl
           ON agd.regierungsbezirk_id = agl.regierungsbezirk_id
             AND agd.partei_id = agl.partei_id
-        JOIN zustehende_mandate(0) zm
+        JOIN "landtagswahlen".zustehende_mandate(0) zm
           ON zm.regierungsbezirk_id = COALESCE(agd.regierungsbezirk_id, agl.regierungsbezirk_id)
             AND zm.partei_id = COALESCE(agd.partei_id, agl.partei_id)
             AND zm.wahl_id = $1
