@@ -88,6 +88,8 @@ type Kandidat {
   id: Int!
   name: String!
   partei: Partei!
+  geburtsjahr: Int
+  wohnort: String
 }
 
 type ListenKandidat {

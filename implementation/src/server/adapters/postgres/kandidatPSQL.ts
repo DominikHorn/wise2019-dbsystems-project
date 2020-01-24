@@ -170,3 +170,23 @@ export async function getListenKandidaten(
         }))
     );
 }
+
+export async function setKandidatZusatzdaten(
+  kandidatName: string,
+  geburtsjahr: number,
+  wohnort: string,
+  client?: PoolClient
+): Promise<IDatabaseKandidat[]> {
+  const QUERY = `
+    UPDATE "${DatabaseSchemaGroup}".kandidaten
+    SET 
+       geburtsjahr = $1,
+       wohnort = $2
+    WHERE name = $3
+    RETURNING *
+  `;
+  const ARGS = [geburtsjahr, wohnort, kandidatName];
+  return (await client)
+    ? client.query(QUERY, ARGS).then(r => r && r.rows)
+    : adapters.postgres.query(QUERY, ARGS);
+}

@@ -1,0 +1,1922 @@
+UniqueID,parteiID,partei,Wahlkreis,ID,Name,Geb. Jahr,Wohnort
+10101,1,CSU,901,101,"Aigner, Ilse",1964,Otterfing
+10102,1,CSU,901,102,"Huber, Dr. Marcel",1958,Ampfing
+10103,1,CSU,901,103,"Spaenle, Dr. Ludwig",1961,München
+10104,1,CSU,901,104,"Schreyer, Kerstin",1971,Unterhaching
+10105,1,CSU,901,105,"Kiechle, Dr. Marion",1960,München
+10106,1,CSU,901,106,"Kaniber, Michaela",1977,Bayerisch Gmain
+10107,1,CSU,901,107,"Herrmann, Dr. Florian",1971,Freising
+10108,1,CSU,901,108,"Eisenreich, Georg",1970,München
+10109,1,CSU,901,109,"Artmann, Daniel",1988,Rosenheim
+10110,1,CSU,901,110,"Blume, Markus",1975,München
+10111,1,CSU,901,111,"Scharf, Ulrike",1967,Fraunberg
+10112,1,CSU,901,112,"Goppel, Dr. Thomas",1947,Eresing
+10113,1,CSU,901,113,"Schmid, Josef",1969,München
+10114,1,CSU,901,114,"Weidenbusch, Ernst",1963,Haar
+10115,1,CSU,901,115,"Wittmann, Mechthilde",1967,München
+10116,1,CSU,901,116,"Fröschl, Markus",1965,Trostberg
+10117,1,CSU,901,117,"Schwaiger, Johann",1957,Grafing b.München
+10118,1,CSU,901,118,"Schreder, Thomas",1966,Erding
+10119,1,CSU,901,119,"Schorer-Dremel, Tanja",1964,Eichstätt
+10120,1,CSU,901,120,"Theiss, Dr. Hans",1977,München
+10121,1,CSU,901,121,"Bachhuber, Martin",1955,Bad Heilbrunn
+10122,1,CSU,901,122,"Brannekämper, Robert",1965,München
+10123,1,CSU,901,123,"Dorow, Alex",1964,Landsberg am Lech
+10124,1,CSU,901,124,"Eiling-Hütig, Dr. Ute",1967,Feldafing
+10125,1,CSU,901,125,"Enghuber, Matthias",1984,Neuburg a.d.Donau
+10126,1,CSU,901,126,"Grob, Alfred",1965,Ingolstadt
+10127,1,CSU,901,127,"Haas, August",1961,Dachau
+10128,1,CSU,901,128,"Heese, Lutz",1948,München
+10129,1,CSU,901,129,"Heimisch, Alexander",1978,Gaimersheim
+10130,1,CSU,901,130,"Huber, Dr. Martin",1977,Töging a.Inn
+10131,1,CSU,901,131,"Huber, Thomas",1972,Grafing b.München
+10132,1,CSU,901,132,"Kittenrainer, Georg",1982,Bayrischzell
+10133,1,CSU,901,133,"Kühn, Harald",1963,Murnau a.Staffelsee
+10134,1,CSU,901,134,"Lederer, Otto",1970,Tuntenhausen
+10135,1,CSU,901,135,"Lorenz, Andreas",1971,München
+10136,1,CSU,901,136,"Miskowitsch, Benjamin",1984,Mammendorf
+10137,1,CSU,901,137,"Moser, Christian",1989,Pfaffenhofen a.d.Ilm
+10138,1,CSU,901,138,"Picker, Rolf-Jürgen",1953,Starnberg
+10139,1,CSU,901,139,"Pickert, Tina",1984,München
+10140,1,CSU,901,140,"Pollmann, Stephanie",1990,Heldenstein
+10141,1,CSU,901,141,"Scheitz, Georg",1967,Andechs
+10142,1,CSU,901,142,"Schickel, Dr. Matthias",1969,Ingolstadt
+10143,1,CSU,901,143,"Seidenath, Bernhard",1968,Haimhausen
+10144,1,CSU,901,144,"Steiner, Klaus",1953,Übersee
+10145,1,CSU,901,145,"Stöttner, Klaus",1963,Prutting
+10146,1,CSU,901,146,"Straub, Karl",1971,Wolnzach
+10201,2,SPD,901,201,"Kohnen, Natascha",1967,Neubiberg
+10202,2,SPD,901,202,"Rinderspacher, Markus",1969,München
+10203,2,SPD,901,203,"Rauscher, Doris",1967,Ebersberg
+10204,2,SPD,901,204,"Ritter, Florian",1962,München
+10205,2,SPD,901,205,"Eichinger, Gertrud",1966,Finsing
+10206,2,SPD,901,206,"Güll, Martin",1953,Hilgertshausen-Tandern
+10207,2,SPD,901,207,"Zacharias, Isabell",1965,München
+10208,2,SPD,901,208,"Parzinger, Sepp",1993,Bergen
+10209,2,SPD,901,209,"Burgmaier, Alexandra",1968,Raubling
+10210,2,SPD,901,210,"Knoblauch, Günther",1948,Mühldorf a.Inn
+10211,2,SPD,901,211,"Waldmann, Ruth",1971,München
+10212,2,SPD,901,212,"De Lapuente, Christian",1982,Ingolstadt
+10213,2,SPD,901,213,"Ganssmüller-Maluche, Annette",1961,Ismaning
+10214,2,SPD,901,214,"von Brunn, Florian",1969,München
+10215,2,SPD,901,215,"Schmidt-Völlmecke, Verena",1978,Warngau
+10216,2,SPD,901,216,"Falk, Peter",1964,Gröbenzell
+10217,2,SPD,901,217,"Wenngatz, Micky",1960,München
+10218,2,SPD,901,218,"Winklmeier, Christian",1991,Gilching
+10219,2,SPD,901,219,"Kern, Christiane",1973,München
+10220,2,SPD,901,220,"Malm, Dr. Mike",1974,München
+10221,2,SPD,901,221,"Aigner, Susanne",1977,Laufen
+10222,2,SPD,901,222,"Spaeth, Dr. Christoph",1981,Ingolstadt
+10223,2,SPD,901,223,"Stachowitz, Diana",1963,München
+10224,2,SPD,901,224,"Käser, Markus",1975,Pfaffenhofen a.d.Ilm
+10225,2,SPD,901,225,"Promann, Britta",1968,Rosenheim
+10226,2,SPD,901,226,"Ott, Dr. Michael",1964,München
+10227,2,SPD,901,227,"Streit, Dominik",1983,Weilheim i.OB
+10228,2,SPD,901,228,"Fischer, Andreas",1986,Neuburg a.d.Donau
+10229,2,SPD,901,229,"Kühn, Robert",1982,Bad Wiessee
+10230,2,SPD,901,230,"Maier, Kilian",1993,Mehring
+10231,2,SPD,901,231,"Grill, Markus",1972,Freising
+10301,3,FREIE WÄHLER,901,301,"Streibl, Florian",1963,Oberammergau
+10302,3,FREIE WÄHLER,901,302,"Piazolo, Dr. Michael",1959,München
+10303,3,FREIE WÄHLER,901,303,"Gottstein, Eva",1949,Eichstätt
+10304,3,FREIE WÄHLER,901,304,"Zierer, Benno",1956,Freising
+10305,3,FREIE WÄHLER,901,305,"Kraus, Nikolaus",1965,Ismaning
+10306,3,FREIE WÄHLER,901,306,"Weigert, Roland",1968,Karlshuld
+10307,3,FREIE WÄHLER,901,307,"Fischer, Mary",1962,Rimsting
+10308,3,FREIE WÄHLER,901,308,"Krichenbauer, Johann",1962,Burgkirchen a.d.Alz
+10309,3,FREIE WÄHLER,901,309,"Enders, Susann",1967,Weilheim i.OB
+10310,3,FREIE WÄHLER,901,310,"Stahl, Felix",1977,München
+10311,3,FREIE WÄHLER,901,311,"Purkhardt, Martina",1981,Schwabhausen
+10312,3,FREIE WÄHLER,901,312,"Friedl, Hans",1957,Alling
+10313,3,FREIE WÄHLER,901,313,"Edenhofer, Lilian",1967,Garmisch-Partenkirchen
+10314,3,FREIE WÄHLER,901,314,"Koller, Michael",1976,Berchtesgaden
+10315,3,FREIE WÄHLER,901,315,"Mehringer, Rainer",1963,Erding
+10316,3,FREIE WÄHLER,901,316,"Flauger, Petra",1970,Ingolstadt
+10317,3,FREIE WÄHLER,901,317,"Vilsmayer, Matthias",1972,Gilching
+10318,3,FREIE WÄHLER,901,318,"Degenhart, Christine",1964,Rosenheim
+10319,3,FREIE WÄHLER,901,319,"Hölscher, Gisela",1965,Waakirchen
+10320,3,FREIE WÄHLER,901,320,"Schiller-Schulze, Ute",1962,München
+10321,3,FREIE WÄHLER,901,321,"Stockinger, Georg",1960,Fürstenfeldbruck
+10322,3,FREIE WÄHLER,901,322,"Seissiger, Dr. Lothar",1949,Siegsdorf
+10323,3,FREIE WÄHLER,901,323,"Wittmann, Karl-Heinz",1946,München
+10324,3,FREIE WÄHLER,901,324,"Blasi, Martin",1967,München
+10325,3,FREIE WÄHLER,901,325,"Erhorn, Markus",1989,Dachau
+10326,3,FREIE WÄHLER,901,326,"Breyer, Dr. Jörg",1964,München
+10327,3,FREIE WÄHLER,901,327,"Gürtner, Albert",1960,Pfaffenhofen a.d.Ilm
+10328,3,FREIE WÄHLER,901,328,"Saller, Markus",1969,Mühldorf a.Inn
+10329,3,FREIE WÄHLER,901,329,"Ertl, Dr. Ilse",1965,Moosburg a.d.Isar
+10330,3,FREIE WÄHLER,901,330,"Müller, Harald",1967,München
+10331,3,FREIE WÄHLER,901,331,"Springer, Linus",1995,München
+10332,3,FREIE WÄHLER,901,332,"Blank, Josef",1961,Traunreut
+10333,3,FREIE WÄHLER,901,333,"Deger, Gökhan",1973,München
+10334,3,FREIE WÄHLER,901,334,"Grübl, Fritz",1944,Bad Reichenhall
+10335,3,FREIE WÄHLER,901,335,"Heilmeier, Bernd",1959,Eichenau
+10336,3,FREIE WÄHLER,901,336,"Hoigt, Benedikt",1980,Erding
+10337,3,FREIE WÄHLER,901,337,"Kaltner, Maria",1962,Dachau
+10338,3,FREIE WÄHLER,901,338,"Obermüller, Andreas",1963,Tegernsee
+10339,3,FREIE WÄHLER,901,339,"Scharlach, Maria",1964,Mauern
+10340,3,FREIE WÄHLER,901,340,"Schüler, Dr. Thorsten, genannt dr. thosch",1966,Starnberg
+10341,3,FREIE WÄHLER,901,341,"Stein, Barbara",1970,Prutting
+10342,3,FREIE WÄHLER,901,342,"Wengenmaier, Renate",1968,Landsberg am Lech
+10401,4,GRÜNE,901,401,"Schulze, Katharina",1985,München
+10402,4,GRÜNE,901,402,"Hartmann, Ludwig",1978,München
+10403,4,GRÜNE,901,403,"Sengl, Gisela",1960,Nußdorf
+10404,4,GRÜNE,901,404,"Büchler, Dr. Markus",1973,Oberschleißheim
+10405,4,GRÜNE,901,405,"Demirel, Gülseren",1964,München
+10406,4,GRÜNE,901,406,"Becher, Johannes",1988,Moosburg a.d.Isar
+10407,4,GRÜNE,901,407,"Köhler, Claudia",1966,Unterhaching
+10408,4,GRÜNE,901,408,"Krahl, Andreas",1989,Seehausen a.Staffelsee
+10409,4,GRÜNE,901,409,"Triebel, Gabriele",1960,Kaufering
+10410,4,GRÜNE,901,410,"Hierneis, Christian",1963,München
+10411,4,GRÜNE,901,411,"Kürten, Stephanie",1970,Karlshuld
+10412,4,GRÜNE,901,412,"Runge, Dr. Martin",1958,Gröbenzell
+10413,4,GRÜNE,901,413,"Kurz, Susanne",1974,München
+10414,4,GRÜNE,901,414,"Zimmer, Dr. Bernhard",1961,Piding
+10415,4,GRÜNE,901,415,"Müller, Marina",1993,Ingolstadt
+10416,4,GRÜNE,901,416,"Siekmann, Florian",1995,München
+10417,4,GRÜNE,901,417,"Günther, Susanne",1972,Freising
+10418,4,GRÜNE,901,418,"Knobel, Martin",1987,Rosenheim
+10419,4,GRÜNE,901,419,"Frank-Mayer, Ursula",1958,Dorfen
+10420,4,GRÜNE,901,420,"von Sarnowski, Thomas",1988,Ebersberg
+10421,4,GRÜNE,901,421,"Bogner, Judith",1968,Schwindegg
+10422,4,GRÜNE,901,422,"Monatzeder, Hep",1951,München
+10423,4,GRÜNE,901,423,"Schwarz, Karola",1971,Neuburg a.d.Donau
+10424,4,GRÜNE,901,424,"Hinterholzer, Leonhard",1964,Prien a.Chiemsee
+10425,4,GRÜNE,901,425,"Franke, Anne",1954,Gauting
+10426,4,GRÜNE,901,426,"Bittlmayer, Klaus",1971,Eichstätt
+10427,4,GRÜNE,901,427,"Gruber, Waltraud",1957,Aßling
+10428,4,GRÜNE,901,428,"Kellermann, Dr. Thorsten",1977,München
+10429,4,GRÜNE,901,429,"Stieglmeier, Helga",1956,Erding
+10430,4,GRÜNE,901,430,"Tomaschek, Thomas",1975,Rottach-Egern
+10431,4,GRÜNE,901,431,"Hanusch, Anna",1976,München
+10432,4,GRÜNE,901,432,"Reim, Wilhelm",1980,Gerolsbach
+10433,4,GRÜNE,901,433,"Hoffmann, Marese",1948,Hebertshausen
+10434,4,GRÜNE,901,434,"Kreß, Thomas",1962,Dachau
+10435,4,GRÜNE,901,435,"Habenschaden, Katrin",1977,München
+10436,4,GRÜNE,901,436,"Urban, Hans",1978,Eurasburg
+10437,4,GRÜNE,901,437,"Schwendner, Barbara",1963,Bad Tölz
+10438,4,GRÜNE,901,438,"Adjei, Benjamin",1990,Taufkirchen
+10439,4,GRÜNE,901,439,"Rosner, Andrea",1962,Kolbermoor
+10440,4,GRÜNE,901,440,"Baier, Andreas",1973,München
+10441,4,GRÜNE,901,441,"Nallinger, Sabine",1963,München
+10442,4,GRÜNE,901,442,"Dürr, Dr. Sepp",1953,Germering
+10443,4,GRÜNE,901,443,"Mörtl-Körner, Walburga",1957,Traunstein
+10444,4,GRÜNE,901,444,"Aschauer, Albert",1961,Teisendorf
+10445,4,GRÜNE,901,445,"Pilz-Strasser, Angelika",1955,München
+10446,4,GRÜNE,901,446,"Ebner, Dr. Rupert",1953,Ingolstadt
+10447,4,GRÜNE,901,447,"Körner, Anna Sophia",1995,Traunstein
+10448,4,GRÜNE,901,448,"Waas, Gerhard",1962,Schliersee
+10449,4,GRÜNE,901,449,"Freitag, Marie",1989,Kaufering
+10450,4,GRÜNE,901,450,"Roth, Dr. Florian",1967,München
+10451,4,GRÜNE,901,451,"König, Stefanie",1968,Wasserburg a.Inn
+10452,4,GRÜNE,901,452,"Müllejans, Alexander",1957,Eurasburg
+10453,4,GRÜNE,901,453,"Dullinger-Oßwald, Carmen",1951,München
+10454,4,GRÜNE,901,454,"Schmidhuber, Anna",1988,München
+10455,4,GRÜNE,901,455,"Krispenz, Luise",1989,Dachau
+10456,4,GRÜNE,901,456,"Miklósy, Alexander",1949,München
+10457,4,GRÜNE,901,457,"Prügl, Barbara",1961,Au i.d.Hallertau
+10458,4,GRÜNE,901,458,"Pfitzner, Bernd",1968,Tutzing
+10459,4,GRÜNE,901,459,"Sührig, Johanna",1999,Bad Kohlgrub
+10460,4,GRÜNE,901,460,"Küster, Johannes",1968,Holzkirchen
+10461,4,GRÜNE,901,461,"Koller, Jutta",1956,München
+10501,5,FDP,901,501,"Hagen, Martin",1981,Vaterstetten
+10502,5,FDP,901,502,"Duin, Albert",1953,München
+10503,5,FDP,901,503,"Lex, Ursula",1964,Miesbach
+10504,5,FDP,901,504,"Neff, Gabriele",1957,München
+10505,5,FDP,901,505,"Buggisch, Dr. Walter",1969,Bergen
+10506,5,FDP,901,506,"Hundesrügge, Britta",1967,Gauting
+10507,5,FDP,901,507,"Heubisch, Dr. Wolfgang",1946,München
+10508,5,FDP,901,508,"Schäuble, Jakob",1983,Ingolstadt
+10509,5,FDP,901,509,"Keck, Andreas",1963,München
+10510,5,FDP,901,510,"Jännert, Thomas",1977,Kirchheim b.München
+10511,5,FDP,901,511,"Pöhlmann, Anke",1989,München
+10512,5,FDP,901,512,"Zeil, Martin",1956,Gauting
+10513,5,FDP,901,513,"Sandt, Julika",1971,München
+10514,5,FDP,901,514,"Böcking, Sabrina",1986,München
+10515,5,FDP,901,515,"Haugg, Fritz",1969,Planegg
+10516,5,FDP,901,516,"Markwort, Helmut",1936,München
+10517,5,FDP,901,517,"Linnerer, Michael",1980,Raubling
+10518,5,FDP,901,518,"Barschdorf, Dr. Jens",1982,Freising
+10519,5,FDP,901,519,"Bezdeka, Klement",1979,München
+10520,5,FDP,901,520,"Müller, Alexander",1959,Baiern
+10521,5,FDP,901,521,"Bode, Ulrich",1962,Eichenau
+10522,5,FDP,901,522,"Corticelli, Peter",1970,Buchbach
+10523,5,FDP,901,523,"Krönauer, Manfred",1974,München
+10524,5,FDP,901,524,"Schäfer, Ulla",1969,Landsberg am Lech
+10525,5,FDP,901,525,"Schäch, Josef",1947,Wolnzach
+10526,5,FDP,901,526,"Korn, Christian",1974,Wartenberg
+10527,5,FDP,901,527,"Saller, Dr. Rudolf",1963,Altötting
+10528,5,FDP,901,528,"Sommerfeld, Dr. Frank",1966,Dachau
+10529,5,FDP,901,529,"Schön, Thomas",1979,Eichstätt
+10530,5,FDP,901,530,"Gschossmann, Wilhelm",1955,Ramsau b.Berchtesgaden
+10531,5,FDP,901,531,"Freiherr von Gumppenberg, Michael",1965,Munningen
+10532,5,FDP,901,532,"Will, Renate",1947,Vaterstetten
+10533,5,FDP,901,533,"Prinzbach, Cécile",1970,München
+10534,5,FDP,901,534,"Ranft, Thomas",1953,München
+10535,5,FDP,901,535,"Braun, Hildebrecht",1944,München
+10536,5,FDP,901,536,"Ahlfeld, Anna",1992,München
+10537,5,FDP,901,537,"Walter, Katharina",1984,München
+10538,5,FDP,901,538,"Hartung, Dr. Hannes",1973,Baierbrunn
+10539,5,FDP,901,539,"Breil, Klaus",1945,Bernried am Starnberger See
+10540,5,FDP,901,540,"Gawlik, Maximilian",1992,München
+10541,5,FDP,901,541,"Hilgendorf, Heinz",1943,Bad Aibling
+10542,5,FDP,901,542,"Cerveny, Vaclav",1961,Kirchseeon
+10543,5,FDP,901,543,"Weltin, Beate",1956,München
+10544,5,FDP,901,544,"Hohenthaner, Johannes",1967,München
+10545,5,FDP,901,545,"Alberti, Dr. Martin",1975,Freising
+10546,5,FDP,901,546,"Tietgen, Christian",1980,Olching
+10547,5,FDP,901,547,"Scholler, Jörg",1944,Gräfelfing
+10548,5,FDP,901,548,"Teichmann, Andreas",1973,Olching
+10549,5,FDP,901,549,"Boneberger, Wilhelm",1978,Gilching
+10550,5,FDP,901,550,"Helmers, Antje",1980,Tegernsee
+10551,5,FDP,901,551,"Neudert, Thomas",1975,Wolnzach
+10552,5,FDP,901,552,"Schmohl, Dr. Andreas",1972,Karlsfeld
+10553,5,FDP,901,553,"Brockmann, Oliver",1983,Schrobenhausen
+10554,5,FDP,901,554,"Pautzke, Felix",1976,Bad Reichenhall
+10555,5,FDP,901,555,"Samitz, Josef",1979,Wartenberg
+10556,5,FDP,901,556,"Gladbach, Beate",1969,Großmehring
+10557,5,FDP,901,557,"Schunck, Christian",1972,Obing
+10601,6,DIE LINKE,901,601,"Gürpinar, Ates",1984,München
+10602,6,DIE LINKE,901,602,"Bulling-Schröter, Eva",1956,Ingolstadt
+10603,6,DIE LINKE,901,603,"Wolf, Brigitte",1962,München
+10604,6,DIE LINKE,901,604,"Peiker, Christian",1984,Wasserburg a.Inn
+10605,6,DIE LINKE,901,605,"Killet, Julia",1981,München
+10606,6,DIE LINKE,901,606,"Baudler, Bernhard",1960,Schäftlarn
+10607,6,DIE LINKE,901,607,"Cullmann-Reder, Renate",1948,München
+10608,6,DIE LINKE,901,608,"Hoyer, Dr. Guido",1968,Freising
+10609,6,DIE LINKE,901,609,"Fingert, Annemarie",1955,München
+10610,6,DIE LINKE,901,610,"Dogan, Erol",1965,München
+10611,6,DIE LINKE,901,611,"Nava, Gabriele",1964,Neuburg a.d.Donau
+10612,6,DIE LINKE,901,612,"Lindenthal, Moritz",1999,München
+10613,6,DIE LINKE,901,613,"Martin-Köppl, Ernestine",1960,Emmering
+10614,6,DIE LINKE,901,614,"Westermeier, Jonathan",1992,Karlsfeld
+10615,6,DIE LINKE,901,615,"Popig, Laura-Christin",1993,Moosburg a.d.Isar
+10616,6,DIE LINKE,901,616,"Guerra, Tony",1989,München
+10617,6,DIE LINKE,901,617,"Ripke, Martina",1962,München
+10618,6,DIE LINKE,901,618,"Reiter, Michael",1996,Laufen
+10619,6,DIE LINKE,901,619,"Enderlein, Ellen",1960,München
+10620,6,DIE LINKE,901,620,"Fröhlich, Dr. Heinz",1960,Grafing b.München
+10621,6,DIE LINKE,901,621,"Schreiber, Eva",1958,München
+10622,6,DIE LINKE,901,622,"Ischinger, Karl",1945,München
+10623,6,DIE LINKE,901,623,"Keller, Ellen",1951,München
+10624,6,DIE LINKE,901,624,"Borchert, Lisa",1995,München
+10625,6,DIE LINKE,901,625,"Padovan, Elfi",1943,München
+10626,6,DIE LINKE,901,626,"Weber-Teuber, Dr. Klaus",1960,Neuried
+10627,6,DIE LINKE,901,627,"Auchter, Julia",1988,Garching b.München
+10628,6,DIE LINKE,901,628,"El Nour, Andrea",1964,Unterhaching
+10629,6,DIE LINKE,901,629,"Fingert, Diana",1975,München
+10630,6,DIE LINKE,901,630,"Mayr, Maria",1989,Geltendorf
+10631,6,DIE LINKE,901,631,"Just, Karin",1950,München
+10632,6,DIE LINKE,901,632,"Eigner, Dominik",1988,Kipfenberg
+10633,6,DIE LINKE,901,633,"Brunnemann, Eva-Maria",1956,München
+10634,6,DIE LINKE,901,634,"Klotz, Franziska",1990,Gilching
+10635,6,DIE LINKE,901,635,"Hertel-Stockinger, Herta",1959,Erding
+10636,6,DIE LINKE,901,636,"Feilzer, Bernhard",1948,Gilching
+10637,6,DIE LINKE,901,637,"Koppe, Walter",1957,Erding
+10638,6,DIE LINKE,901,638,"Mayer, Marina",1981,München
+10639,6,DIE LINKE,901,639,"Wilde, Corinna",1975,Grafing b.München
+10640,6,DIE LINKE,901,640,"Pertl, Manuela",1962,Unterwössen
+10641,6,DIE LINKE,901,641,"Nitzsche, Patrick",1992,Adelschlag
+10642,6,DIE LINKE,901,642,"Raufer, Michael",1980,Freilassing
+10643,6,DIE LINKE,901,643,"Sprinz, Hansjoachim",1945,Dießen am Ammersee
+10644,6,DIE LINKE,901,644,"Seidel, Wolfgang",1969,München
+10645,6,DIE LINKE,901,645,"Hager, Jörg",1945,Rottach-Egern
+10646,6,DIE LINKE,901,646,"Hackl, Philipp",1997,Winhöring
+10647,6,DIE LINKE,901,647,"Gehnen, Elmar",1956,Bad Tölz
+10648,6,DIE LINKE,901,648,"de la Motte Rouge, Werner",1958,Rohrbach
+10649,6,DIE LINKE,901,649,"Hamm, Robert",1989,Garching b.München
+10650,6,DIE LINKE,901,650,"Podlewski, Rolf-Werner",1954,Penzberg
+10651,6,DIE LINKE,901,651,"Kirchner, Stefanie",1975,Ingolstadt
+10652,6,DIE LINKE,901,652,"Pietsch, Rafael",2000,München
+10653,6,DIE LINKE,901,653,"Pingel, Dr. Clemens",1949,München
+10654,6,DIE LINKE,901,654,"Tepperies, Jan",1971,München
+10655,6,DIE LINKE,901,655,"Weidner, Monika",1966,München
+10656,6,DIE LINKE,901,656,"Lohmüller-Kaupp, Jürgen",1946,München
+10657,6,DIE LINKE,901,657,"Lazarowicz, Doris",1946,München
+10658,6,DIE LINKE,901,658,"Utz, Erich",1959,München
+10659,6,DIE LINKE,901,659,"Schulz, Wolfgang",1952,München
+10660,6,DIE LINKE,901,660,"Kroll, Uwe",1957,Paunzhausen
+10701,7,BP,901,701,"Weber, Florian",1963,Bad Aibling
+10702,7,BP,901,702,"Progl, Richard",1979,München
+10703,7,BP,901,703,"Dorn, Hubert",1956,München
+10704,7,BP,901,704,"Lausch, Josef",1970,Großkarolinenfeld
+10705,7,BP,901,705,"Schmidbauer, Mario",1952,München
+10706,7,BP,901,706,"Schropp, Regina",1973,Peißenberg
+10707,7,BP,901,707,"Freund, Helmut",1990,Frasdorf
+10708,7,BP,901,708,"Hofmann, Michael",1953,Dießen am Ammersee
+10709,7,BP,901,709,"Caim, Eva",1947,München
+10710,7,BP,901,710,"Schupfner, Markus",1978,Traunreut
+10711,7,BP,901,711,"Altmann, Johann",1954,München
+10712,7,BP,901,712,"Zimmer, Andreas",1985,Inning a.Holz
+10713,7,BP,901,713,"Gelesch, Loris-Marco",1965,Valley
+10714,7,BP,901,714,"Böhnlein, Robert",1970,Aßling
+10715,7,BP,901,715,"Drechsler, Thomas",1971,Mühldorf a.Inn
+10716,7,BP,901,716,"Mannseicher, Stephan",1985,München
+10717,7,BP,901,717,"Baueregger, Konrad",1957,Palling
+10718,7,BP,901,718,"Barthelmes, Michael",1981,Ingolstadt
+10719,7,BP,901,719,"Distler, Wolfgang",1976,Hitzhofen
+10720,7,BP,901,720,"Ferstl, Christian",1971,Egweil
+10721,7,BP,901,721,"Furche, Dr. Franz",1957,Haar
+10722,7,BP,901,722,"Geiger, Dr. Albert",1956,Straßlach-Dingharting
+10723,7,BP,901,723,"Kellerer, Sebastian",1989,Dachau
+10724,7,BP,901,724,"Müller, Alexander",1979,München
+10725,7,BP,901,725,"Paintner, Josef",1953,Karlsfeld
+10726,7,BP,901,726,"Pfänder, Rupert",1965,Andechs
+10727,7,BP,901,727,"Prado Diaz, Robert",1958,Pfaffenhofen a.d.Ilm
+10728,7,BP,901,728,"Sachs, Herbert",1979,Zolling
+10729,7,BP,901,729,"Seidl, Norbert",1964,München
+10730,7,BP,901,730,"Settele, Angela",1960,München
+10731,7,BP,901,731,"Stitzl, Simon",1996,Perach
+10732,7,BP,901,732,"Baumgartner, Alfons",1944,Grassau
+10733,7,BP,901,733,"Eckert, Christian",1947,Grafing b.München
+10734,7,BP,901,734,"Fahrenschon, Christian",1964,München
+10735,7,BP,901,735,"Fottner, Sebastian",1994,Aresing
+10736,7,BP,901,736,"Gattinger, Johann",1949,Obersöchering
+10737,7,BP,901,737,"Graf, Michael",1988,Erdweg
+10738,7,BP,901,738,"Heindl, Andreas",1953,Ingolstadt
+10739,7,BP,901,739,"Hort, Hans",1956,Warngau
+10740,7,BP,901,740,"Kerer, Tanja",1977,Rosenheim
+10741,7,BP,901,741,"Mayr, Robert",1944,Geretsried
+10742,7,BP,901,742,"Münzinger, Horst",1961,München
+10743,7,BP,901,743,"Neugschwender, Matthias",1990,Jetzendorf
+10744,7,BP,901,744,"Niedermeier, Hans Georg",1969,Bruckmühl
+10745,7,BP,901,745,"Ponert, Dennis",1992,Traunstein
+10746,7,BP,901,746,"Schnitzer, Anton",1964,Garmisch-Partenkirchen
+10747,7,BP,901,747,"Schwaiger, Tobias",1987,München
+10750,7,BP,901,750,"Stefanutti-Bscheidl, Annelies",1955,Grabenstätt
+10751,7,BP,901,751,"Steiner, Benno",1959,Flintsbach a.Inn
+10752,7,BP,901,752,"Steininger, Dieter",1959,Egling a.d.Paar
+10753,7,BP,901,753,"Steinlehner, Dominik",1989,Garching a.d.Alz
+10754,7,BP,901,754,"Stoib, Andreas",1989,Prien a.Chiemsee
+10755,7,BP,901,755,"Thannheiser, Heinz",1938,Starnberg
+10756,7,BP,901,756,"Thurnhuber, Marinus",1959,Warngau
+10757,7,BP,901,757,"Triebel, Hans",1953,Weyarn
+10758,7,BP,901,758,"Wegele, Georg",1952,Dießen am Ammersee
+10759,7,BP,901,759,"Weigl, Anton",1963,Mindelstetten
+10760,7,BP,901,760,"Weiß, Georg",1965,München
+10761,7,BP,901,761,"Zehetmaier, Robert",1973,Stephanskirchen
+10801,8,ÖDP,901,801,"Prudlo, Thomas",1966,München
+10802,8,ÖDP,901,802,"Haider, Sonja",1964,München
+10803,8,ÖDP,901,803,"Treffler, Stephan",1965,Erding
+10804,8,ÖDP,901,804,"Reindl, Rosi",1966,Glonn
+10805,8,ÖDP,901,805,"Kirner, Emilia",1997,Freising
+10806,8,ÖDP,901,806,"Winter, Dr. Maiken",1968,Raisting
+10807,8,ÖDP,901,807,"Maier, Ludwig",1961,Soyen
+10808,8,ÖDP,901,808,"Böhm, Dr. Gwendolyn",1974,München
+10809,8,ÖDP,901,809,"Meißner, Dr. Andreas",1965,München
+10810,8,ÖDP,901,810,"Sedlmayr, Robert",1966,Geltendorf
+10811,8,ÖDP,901,811,"Lietsch, Fritz",1957,Grafing b.München
+10812,8,ÖDP,901,812,"Retzer, Reinhard",1968,Lohkirchen
+10813,8,ÖDP,901,813,"Fortner, Josef",1960,Rohrdorf
+10814,8,ÖDP,901,814,"Schabl, Michael",1982,München
+10815,8,ÖDP,901,815,"Streit, Wilhelm",1958,Straßlach-Dingharting
+10816,8,ÖDP,901,816,"Edenhofer, Agnes",1962,Oberhausen
+10817,8,ÖDP,901,817,"Huber, Hans",1958,Burgkirchen a.d.Alz
+10818,8,ÖDP,901,818,"Paiva, Barbara",1982,Laufen
+10819,8,ÖDP,901,819,"Holdt, Christian",1966,Emmering
+10820,8,ÖDP,901,820,"Buttner, Wolfgang",1957,Landsberg am Lech
+10821,8,ÖDP,901,821,"Hofmaier, Franz",1952,Ingolstadt
+10822,8,ÖDP,901,822,"Zilker, Benjamin",1988,München
+10823,8,ÖDP,901,823,"Kahl, Veronika",1970,München
+10824,8,ÖDP,901,824,"Kühn, Anastasia",1996,Riegsee
+10825,8,ÖDP,901,825,"Giglberger, Stephan",1967,München
+10826,8,ÖDP,901,826,"Heim, Adrian",1964,Karlsfeld
+10827,8,ÖDP,901,827,"Lechner, Maria",1960,Eichstätt
+10828,8,ÖDP,901,828,"Köstler, Raimund",1963,Ingolstadt
+10829,8,ÖDP,901,829,"von Birgelen, Klaus",1967,München
+10830,8,ÖDP,901,830,"Ebner, Siegfried",1960,Pfaffenhofen a.d.Ilm
+10831,8,ÖDP,901,831,"Kriesche, Sven",1963,Siegsdorf
+10832,8,ÖDP,901,832,"Potschka, Martin",1976,München
+10833,8,ÖDP,901,833,"Limmer, Peter",1966,Holzkirchen
+10834,8,ÖDP,901,834,"Reinbold, Willi",1952,Eichstätt
+10835,8,ÖDP,901,835,"Ecke-Bünger, Maria",1958,München
+10836,8,ÖDP,901,836,"Dietzinger, Hermann",1955,Anger
+10837,8,ÖDP,901,837,"Spannagl, Franziska",1948,München
+10838,8,ÖDP,901,838,"Gampl, Markus",1969,Münsing
+10839,8,ÖDP,901,839,"Fischer, Richard",1983,Pfaffenhofen a.d.Ilm
+10840,8,ÖDP,901,840,"Ruff, Tobias",1976,München
+10841,8,ÖDP,901,841,"Kreis, Dieter",1968,Fürstenfeldbruck
+10842,8,ÖDP,901,842,"Sombach, Hanno",1965,Augsburg
+10843,8,ÖDP,901,843,"Hinz, Christopher",1997,Vierkirchen
+10844,8,ÖDP,901,844,"Bergauer, Felix",1969,Neufahrn b.Freising
+10845,8,ÖDP,901,845,"Wiedemann, Thomas",1962,Aying
+10846,8,ÖDP,901,846,"Sachsinger, Sonja",1951,München
+10847,8,ÖDP,901,847,"Bader, Hans Leo",1968,München
+10848,8,ÖDP,901,848,"Reiter, Wolfgang",1964,Erding
+10849,8,ÖDP,901,849,"Böser, Eduard",1981,Gräfelfing
+10850,8,ÖDP,901,850,"Schmid, Georg",1967,Niedertaufkirchen
+10851,8,ÖDP,901,851,"Siebert, Dr. Regine",1938,Ottobrunn
+10852,8,ÖDP,901,852,"Koch, Stephan",1985,Bad Tölz
+10853,8,ÖDP,901,853,"Kuret, Karin",1964,Landsberg am Lech
+10854,8,ÖDP,901,854,"Meyer, Wolfgang",1964,Ingolstadt
+10855,8,ÖDP,901,855,"Stichlmair, Michael",1964,Schrobenhausen
+10856,8,ÖDP,901,856,"Knatz, Brigitte",1954,Unterschleißheim
+10857,8,ÖDP,901,857,"Deskau, Nicolas",1980,München
+10858,8,ÖDP,901,858,"Meiser, Stefan",1957,Landsberg am Lech
+10859,8,ÖDP,901,859,"Lettenmayer, Caroline",1963,Putzbrunn
+10860,8,ÖDP,901,860,"Dirnaichner, Maria",1959,Schnaitsee
+10861,8,ÖDP,901,861,"Buchner, Dr. Klaus",1941,München
+10901,9,PIRATEN,901,901,"Schiller, Arnold",1965,München
+10902,9,PIRATEN,901,902,"Krueger, Dr. Olaf Konstantin",1964,Oberaudorf
+10903,9,PIRATEN,901,903,"Babelotzky, Jonathan",1998,München
+10904,9,PIRATEN,901,904,"Kalipke, Myriam",1978,Geretsried
+10905,9,PIRATEN,901,905,"Deuter, Reinhold",1958,Aresing
+10906,9,PIRATEN,901,906,"Beinlich, Dorothea",1956,Töging a.Inn
+10907,9,PIRATEN,901,907,"Beinlich, Thomas",1959,Töging a.Inn
+10908,9,PIRATEN,901,908,"Belas, Manuel",1983,Unterhaching
+10909,9,PIRATEN,901,909,"Doppler, Christian",1982,Ingolstadt
+10910,9,PIRATEN,901,910,"Emer, Patrick",1984,München
+10911,9,PIRATEN,901,911,"Ernst, Dr. Hartmut",1949,Rosenheim
+10912,9,PIRATEN,901,912,"Knoblich, Thomas",1972,Ismaning
+10913,9,PIRATEN,901,913,"Kohler, Alexander",1979,Geretsried
+10914,9,PIRATEN,901,914,"Lorenz, Stefan",1969,Erding
+10915,9,PIRATEN,901,915,"Mayer, Thomas",1979,München
+10916,9,PIRATEN,901,916,"Meyer, Günther",1975,München
+10917,9,PIRATEN,901,917,"Morgenstern, Christopher",1983,München
+10918,9,PIRATEN,901,918,"Pfuhl, Carsten",1984,Weilheim i.OB
+10919,9,PIRATEN,901,919,"Prauß, Florian",1981,Geisenfeld
+10920,9,PIRATEN,901,920,"Purkart, Michael",1970,Bergkirchen
+10921,9,PIRATEN,901,921,"Puskeppelies, Nils",1973,München
+10922,9,PIRATEN,901,922,"Rösch, Roger",1990,Alling
+10923,9,PIRATEN,901,923,"Seuffert, Daniel",1966,Obertaufkirchen
+10924,9,PIRATEN,901,924,"Welter, Dr. Oliver",1975,Dachau
+10925,9,PIRATEN,901,925,"Hiesinger, Stefan",1973,Allershausen
+11101,11,AfD,901,1001,"Bergmüller, Franz",1965,Feldkirchen-Westerham
+11102,11,AfD,901,1002,"Henkel, Uli",1954,München
+11103,11,AfD,901,1003,"Plenk, Markus",1969,Ruhpolding
+11104,11,AfD,901,1004,"Steier, Christoph",1992,Karlsfeld
+11105,11,AfD,901,1005,"Winhart, Andreas",1983,Bad Aibling
+11106,11,AfD,901,1006,"Huber, Martin",1960,Taufkirchen (Vils)
+11107,11,AfD,901,1007,"Wilhelm, Christina",1978,Neuburg a.d.Donau
+11108,11,AfD,901,1008,"Walbrunn, Markus",1987,München
+11109,11,AfD,901,1009,"Hahn, Dr. Ingo",1971,Gauting
+11110,11,AfD,901,1010,"Kranich, Bernhard",1964,Zolling
+11111,11,AfD,901,1011,"Kraus, Johannes, genannt Kraus von Sande",1969,Wettstetten
+11112,11,AfD,901,1012,"Biedermann, Wilfried",1951,Aschheim
+11113,11,AfD,901,1013,"Lipp, Oskar",1995,Ingolstadt
+11114,11,AfD,901,1014,"Multusch, Oliver",1968,Mühldorf a.Inn
+11115,11,AfD,901,1015,"Imgart, Rüdiger",1956,Weilheim i.OB
+11116,11,AfD,901,1016,"Hastreiter, Thomas",1968,München
+11117,11,AfD,901,1017,"Schosnowski, Jens",1975,Bad Reichenhall
+11118,11,AfD,901,1018,"Groß, Michael",1955,München
+11119,11,AfD,901,1019,"Schwembauer, Thomas",1966,Burghausen
+11120,11,AfD,901,1020,"Bößenecker, Misha",1967,München
+11121,11,AfD,901,1021,"Bolle, Rainer",1962,Waakirchen
+11122,11,AfD,901,1022,"Cyron, Dr. Anne",1955,Rosenheim
+11123,11,AfD,901,1023,"Fuchert, Bruno",1951,München
+11124,11,AfD,901,1024,"Groß, Rainer",1960,Gauting
+11125,11,AfD,901,1025,"Helmer, Matthias",1952,München
+11126,11,AfD,901,1026,"Radtke, Klaus",1953,Starnberg
+11127,11,AfD,901,1027,"Riediger, Ulrich",1954,Grünwald
+11128,11,AfD,901,1028,"Schwarz, Edeltraud",1967,Scheuring
+11129,11,AfD,901,1029,"Sturm, Hilmar",1973,Ingolstadt
+11130,11,AfD,901,1030,"Teich, Tobias",1984,Geisenfeld
+11131,11,AfD,901,1031,"Wassill, Iris",1969,München
+11201,12,LKR,901,1101,"Schütt, Ulrike",1965,Haar
+11202,12,LKR,901,1102,"Reich, Dr. Peter",1967,München
+11203,12,LKR,901,1103,"Wächter, Andre",1973,München
+11204,12,LKR,901,1104,"Müllerke, Henning",1968,Bad Heilbrunn
+11205,12,LKR,901,1105,"Lochmiller, Stefan",1967,München
+11206,12,LKR,901,1106,"Kuss, Dr. Karl-Ludwig",1942,Hohenbrunn
+11207,12,LKR,901,1107,"Werner, Dr. Klaus-Jürgen",1951,München
+11208,12,LKR,901,1108,"Seer, Anton",1969,Grünwald
+11209,12,LKR,901,1109,"Decker, Dr. Wolfgang",1957,München
+11210,12,LKR,901,1110,"Zygan, Dr. Klemens",1950,München
+11211,12,LKR,901,1111,"Ritz, Wolfgang",1960,München
+11212,12,LKR,901,1112,"Neufahrt, Eva-Marie",1946,Haar
+11213,12,LKR,901,1113,"Grevé, Heike",1960,Hepberg
+11214,12,LKR,901,1114,"Bieler, Steffen",1962,München
+11215,12,LKR,901,1115,"Ax, Carsten",1968,Grasbrunn
+11216,12,LKR,901,1116,"Grevé, Julius",1949,Steingaden
+11217,12,LKR,901,1117,"Gehrig, Markus",1962,Feldafing
+11218,12,LKR,901,1118,"Schalamow, Silvia",1957,Oberhaching
+11301,13,mut,901,1201,"Stamm, Claudia",1970,Ottobrunn
+11302,13,mut,901,1202,"Lessenich, Dr. Stephan",1965,München
+11303,13,mut,901,1203,"Ellen, Marion",1969,München
+11304,13,mut,901,1204,"Pflaum, Dr. Stephan",1975,Haar
+11305,13,mut,901,1205,"Capric, Katharina",1983,Freising
+11306,13,mut,901,1206,"Erdmann, Jens",1964,München
+11307,13,mut,901,1207,"Teifel, Sabrina",1985,Reit im Winkl
+11308,13,mut,901,1208,"Faust, Harald",1964,München
+11309,13,mut,901,1209,"Held, Afra",1985,Grafing b.München
+11310,13,mut,901,1210,"Linke, Jörg",1961,Neubiberg
+11311,13,mut,901,1211,"Kunst, Marie-Luise",1972,München
+11312,13,mut,901,1212,"Ortmann, Marc",1991,München
+11313,13,mut,901,1213,"Heidegger, Mirella",1971,Fürstenfeldbruck
+11314,13,mut,901,1214,"King, Tim",1969,Haar
+11315,13,mut,901,1215,"Mayr, Maria",1972,Wonneberg
+11316,13,mut,901,1216,"Schweiger, Axel",1957,München
+11317,13,mut,901,1217,"Rothbauer, Julia",1977,Herrsching a.Ammersee
+11318,13,mut,901,1218,"Altenburger, Joseph",1958,Bad Aibling
+11319,13,mut,901,1219,"Ronge, Khando",1978,Prien a.Chiemsee
+11320,13,mut,901,1220,"Maier, Thomas",1997,Altötting
+11321,13,mut,901,1221,"Felsner, Sebastian",1991,München
+11322,13,mut,901,1222,"Estner, Karin",1961,Starnberg
+11323,13,mut,901,1223,"Krüger, Hans-Joachim",1953,Markt Indersdorf
+11324,13,mut,901,1224,"Dietrich, Michaela",1983,Bad Aibling
+11325,13,mut,901,1225,"Hölscher, Dietmar",1967,München
+11326,13,mut,901,1226,"Ziegler, Sabine",1964,Putzbrunn
+11327,13,mut,901,1227,"Maier, Manfred",1967,Rosenheim
+11328,13,mut,901,1228,"Schreiner, Dr. Julia",1972,München
+11329,13,mut,901,1229,"Ferraro, Massimo",1978,München
+11330,13,mut,901,1230,"Schweda-Möller, Anna",1981,München
+11331,13,mut,901,1231,"Kralik, Manuel",1980,Weyarn
+11332,13,mut,901,1232,"Philippczik, Dr. Gabriele",1971,Rosenheim
+11333,13,mut,901,1233,"Gaßner, Werner",1967,München
+11334,13,mut,901,1234,"Martschink, Andrea",1962,München
+11335,13,mut,901,1235,"Hudler, Stefan",1986,Freising
+11336,13,mut,901,1236,"Schönweitz, Angela",1980,München
+11337,13,mut,901,1237,"Heidegger, Martin",1966,Fürstenfeldbruck
+11338,13,mut,901,1238,"Balser, Irmgard",1946,Prien a.Chiemsee
+11339,13,mut,901,1239,"Geiger, Berthold",1963,Garching a.d.Alz
+11340,13,mut,901,1240,"Pancur, Andrea",1969,München
+11341,13,mut,901,1241,"Geerken, Thorsten",1963,München
+11342,13,mut,901,1242,"Eilers, Stefanie",1972,Freising
+11343,13,mut,901,1243,"Miller, Wolfgang",1949,München
+11344,13,mut,901,1244,"Eslami, Franziska",1962,Rosenheim
+11345,13,mut,901,1245,"Putzier, Heiner",1953,Weilheim i.OB
+11346,13,mut,901,1246,"Schulz, Christine",1974,München
+11347,13,mut,901,1247,"Wiesinger, Stefan",1957,Herrsching a.Ammersee
+11348,13,mut,901,1248,"Untergruber, Corinna",1983,Nußdorf a.Inn
+11349,13,mut,901,1249,"Epp, Sebastian",1987,München
+11350,13,mut,901,1250,"Heinz, Dr. Jana",1971,München
+11351,13,mut,901,1251,"Ullrich, Dr. Dieter",1959,Altomünster
+11352,13,mut,901,1252,"Natrath-Bronner, Janna",1946,Herrsching a.Ammersee
+11353,13,mut,901,1253,"Aschauer, Klaus",1961,München
+11354,13,mut,901,1254,"Voß, Daniela",1977,Neubiberg
+11355,13,mut,901,1255,"Schnitzenbaumer, Sebastian",1977,München
+11356,13,mut,901,1256,"Wild, Anne",1965,München
+11357,13,mut,901,1257,"Warning, Wilhelm",1948,München
+11358,13,mut,901,1258,"Meineke, Torsten",1961,München
+11359,13,mut,901,1259,"Britz, Nicole",1969,München
+11360,13,mut,901,1260,"Glück, Hans",1958,Tittmoning
+11401,14,Die Humanisten,901,1301,"Knöferl, Matthias",1985,Ingolstadt
+11402,14,Die Humanisten,901,1302,"Eckert, Michael",1990,Ingolstadt
+11403,14,Die Humanisten,901,1303,"Giebelen, Caroline",1974,München
+11404,14,Die Humanisten,901,1304,"Giesemann, Daniel",1986,München
+11405,14,Die Humanisten,901,1305,"Höckmeier, Isabella",1974,Geisenfeld
+11406,14,Die Humanisten,901,1306,"Larch, Sascha",1968,Neusäß
+11407,14,Die Humanisten,901,1307,"Ratzmann, Martin",1983,Diedorf
+11408,14,Die Humanisten,901,1308,"Schulz, Manuel",1978,Miesbach
+11409,14,Die Humanisten,901,1309,"Wierer, Markus",1982,München
+11410,14,Die Humanisten,901,1310,"Wachter, Wolfgang",1953,Freising
+11411,14,Die Humanisten,901,1311,"Horn, Christian",1969,Geretsried
+11501,15,Die PARTEI,901,1401,"Lutz, Christian",1987,Icking
+11502,15,Die PARTEI,901,1402,"Gutbrod, Thomas",1969,Unterhaching
+11503,15,Die PARTEI,901,1403,"Burneleit, Marie",1979,München
+11504,15,Die PARTEI,901,1404,"Bruckner, Gerd",1958,München
+11505,15,Die PARTEI,901,1405,"Schwarzbauer, Maxi-Paula",1992,Schrobenhausen
+11506,15,Die PARTEI,901,1406,"Neuwirth, Kevin",1998,Freising
+11507,15,Die PARTEI,901,1407,"Blei, Christian",1998,Burgheim
+11508,15,Die PARTEI,901,1408,"Pyttlik, Oliver",1969,Oberding
+11509,15,Die PARTEI,901,1409,"Trapp, Samuel",1988,München
+11510,15,Die PARTEI,901,1410,"Tresselt, Rüdiger",1965,München
+11511,15,Die PARTEI,901,1411,"Krüger, Ricarda",1989,Rosenheim
+11512,15,Die PARTEI,901,1412,"Reindl, Lukas",1992,München
+11513,15,Die PARTEI,901,1413,"Pschigoda, Alexander",1978,München
+11514,15,Die PARTEI,901,1414,"Meyer, Jan",1979,München
+11515,15,Die PARTEI,901,1415,"Wallner, Max",1968,Wolnzach
+11516,15,Die PARTEI,901,1416,"Sandner, Bernd",1972,Neuburg a.d.Donau
+11517,15,Die PARTEI,901,1417,"Zalesjak, Morris",1999,Karlsfeld
+11518,15,Die PARTEI,901,1418,"Decker, Andreas",1972,Freising
+11519,15,Die PARTEI,901,1419,"Schwab, Peter",1990,Kolbermoor
+11520,15,Die PARTEI,901,1420,"Wieland, Markus",1994,München
+11521,15,Die PARTEI,901,1421,"Fießler, Andreas",1986,Kirchheim b.München
+11522,15,Die PARTEI,901,1422,"Kuliberda, Markus",1958,Erding
+11523,15,Die PARTEI,901,1423,"Tischer, Felix",1995,Eichstätt
+11524,15,Die PARTEI,901,1424,"Brunner, Simon",1997,Kirchseeon
+11525,15,Die PARTEI,901,1425,"Waritschlager, Josef",1989,Altötting
+11601,16,Gesundheitsforschung,901,1501,"Akman, Dr. Kemal",1979,Weilheim i.OB
+11602,16,Gesundheitsforschung,901,1502,"Heubusch, Barbara",1964,Roth
+11603,16,Gesundheitsforschung,901,1503,"Schippl, Peter",1961,Roth
+11604,16,Gesundheitsforschung,901,1504,"Szalay, Stefan",1977,München
+11605,16,Gesundheitsforschung,901,1505,"Putze, Alexander",1998,Waldkraiburg
+11701,17,Tierschutzpartei,901,1601,"Frank, Thomas",1964,München
+11702,17,Tierschutzpartei,901,1602,"Jannicke, Meike",1989,München
+11703,17,Tierschutzpartei,901,1603,"Krämer, Michael",1959,München
+11704,17,Tierschutzpartei,901,1604,"Lasan, Marie Ann",1957,München
+11705,17,Tierschutzpartei,901,1605,"Mindt, Elisabeth",1959,Großkarolinenfeld
+11706,17,Tierschutzpartei,901,1606,"Reithmayer, Elisabeth",1954,Kirchheim b.München
+11707,17,Tierschutzpartei,901,1607,"Reithmayer, Manfred",1954,Kirchheim b.München
+11708,17,Tierschutzpartei,901,1608,"Schwarz, Bernhard",1972,München
+11709,17,Tierschutzpartei,901,1609,"Stoyhe, Kim",1993,Eichenau
+11710,17,Tierschutzpartei,901,1610,"Weiser, Stephanie",1979,München
+11711,17,Tierschutzpartei,901,1611,"Wied, Alexander",1972,Röhrmoos
+11712,17,Tierschutzpartei,901,1612,"Wittmann, Dr. Susanne",1965,München
+11801,18,V-Partei,901,1701,"Rustler, Christine",1977,München
+11802,18,V-Partei,901,1702,"Lange, Henrik",1979,München
+11803,18,V-Partei,901,1703,"Tönsmann, Marcel",1989,München
+11804,18,V-Partei,901,1704,"Preisinger, Jürgen",1962,Oberhaching
+11805,18,V-Partei,901,1705,"Lippa, Magdalena",1988,Eching
+11806,18,V-Partei,901,1706,"Krätschmer, Markus",1984,Poing
+11807,18,V-Partei,901,1707,"Preisinger, Susanne",1962,Oberhaching
+11808,18,V-Partei,901,1708,"Hackbarth, Jürgen",1961,Ingolstadt
+11809,18,V-Partei,901,1709,"Meinen, Antje",1965,Ingolstadt
+11810,18,V-Partei,901,1710,"Capan, Yasemin",1980,Poing
+11811,18,V-Partei,901,1711,"Preisinger, Maximilian",1993,Oberhaching
+11812,18,V-Partei,901,1712,"Lorko, Henrietta",1970,München
+11813,18,V-Partei,901,1713,"Arnold, Dr. Till",1982,München
+11814,18,V-Partei,901,1714,"Berchtold-Benchieb, Christine",1973,Eichenau
+11815,18,V-Partei,901,1715,"Mittelmaier, Roland",1959,Kochel a.See
+11816,18,V-Partei,901,1716,"Roger, Aneta",1995,München
+11817,18,V-Partei,901,1717,"Lange, Gregor",1982,München
+11818,18,V-Partei,901,1718,"Seewald, Maike",1991,Weilheim i.OB
+11819,18,V-Partei,901,1719,"Steinacher, Sebastian",1981,Geisenfeld
+11820,18,V-Partei,901,1720,"Kellberger, Manfred",1952,München
+11821,18,V-Partei,901,1721,"Hell, Kerstin",1969,Jachenau
+11822,18,V-Partei,901,1722,"Mittelmaier, Marianne",1961,Kochel a.See
+11823,18,V-Partei,901,1723,"Lindlbauer, Sophia",1996,Schrobenhausen
+11824,18,V-Partei,901,1724,"Uphues, Josephine",1996,München
+11825,18,V-Partei,901,1725,"Schmid, Kathrin",1982,München
+11826,18,V-Partei,901,1726,"Selbmann, Angelika",1963,München
+11827,18,V-Partei,901,1727,"Kaiser, Ferdinand",1976,München
+11828,18,V-Partei,901,1728,"Naumann, Andreas",1979,München
+11829,18,V-Partei,901,1729,"Schuppe, Jakob",1992,Landsberg am Lech
+11830,18,V-Partei,901,1730,"Arifi, Krenar",1964,Landsberg am Lech
+20101,1,CSU,902,101,"Sibler, Bernd",1971,Plattling
+20102,1,CSU,902,102,"Haase, Harald",1973,Zwiesel
+20103,1,CSU,902,103,"Ritt, Hans",1962,Straubing
+20104,1,CSU,902,104,"Högl, Petra",1971,Volkenschwand
+20105,1,CSU,902,105,"Meyer, Stefan",1984,Vilshofen an der Donau
+20106,1,CSU,902,106,"Pütz, Dr. Ralph",1961,Bayerbach b.Ergoldsbach
+20107,1,CSU,902,107,"Haderer, Monika",1966,Eggenfelden
+20108,1,CSU,902,108,"Taitsch, Benjamin",1992,Reisbach
+20109,1,CSU,902,109,"Diermeier, Andreas",1985,Bad Abbach
+20110,1,CSU,902,110,"Antretter, Oliver",1969,Deggendorf
+20111,1,CSU,902,111,"Binder, Johannes",1998,Sonnen
+20112,1,CSU,902,112,"Gibis, Max",1973,Mauth
+20113,1,CSU,902,113,"Loibl, Dr. Petra",1965,Eichendorf
+20114,1,CSU,902,114,"Radlmeier, Helmut",1966,Landshut
+20115,1,CSU,902,115,"Taubeneder, Walter",1953,Neuhaus a.Inn
+20116,1,CSU,902,116,"Wagle, Martin",1966,Pfarrkirchen
+20117,1,CSU,902,117,"Waschler, Dr. Gerhard",1957,Passau
+20118,1,CSU,902,118,"Zellmeier, Josef",1964,Laberweinting
+20201,2,SPD,902,201,"Müller, Ruth",1967,Pfeffenhausen
+20202,2,SPD,902,202,"Vilsmeier, Dr. Bernd",1966,Marklkofen
+20203,2,SPD,902,203,"Blöhm, Bettina",1980,Thurmansbang
+20204,2,SPD,902,204,"Flisek, Christian",1974,Passau
+20205,2,SPD,902,205,"Mayerhofer, Sabine",1970,Neuhaus a.Inn
+20206,2,SPD,902,206,"Sommerfeld, Dr. Olaf",1976,Straubing
+20207,2,SPD,902,207,"Unfried, Harald",1964,Landshut
+20208,2,SPD,902,208,"Huber, Florian",1988,Moosthenning
+20209,2,SPD,902,209,"Kuby, Valentin",1991,Arnstorf
+20210,2,SPD,902,210,"Rampmaier, Dr. Jürgen",1957,Pfarrkirchen
+20211,2,SPD,902,211,"Rapke, Martin",1970,Landau a.d.Isar
+20212,2,SPD,902,212,"Schweiger, Stephan",1973,Kelheim
+20213,2,SPD,902,213,"Kreutz, Martin",1981,Mallersdorf-Pfaffenberg
+20214,2,SPD,902,214,"Kaltenhauser, Peter",1964,Kößlarn
+20215,2,SPD,902,215,"Süß, Josef",1989,Waldkirchen
+20216,2,SPD,902,216,"Hutter, Hans",1979,Drachselsried
+20217,2,SPD,902,217,"Kröll, Robert",1971,Osterhofen
+20218,2,SPD,902,218,"Hutzenthaler, Sebastian",1963,Ergoldsbach
+20301,3,FREIE WÄHLER,902,301,"Aiwanger, Hubert",1971,Rottenburg a.d.Laaber
+20302,3,FREIE WÄHLER,902,302,"Widmann, Jutta",1961,Landshut
+20303,3,FREIE WÄHLER,902,303,"Eibl, Manfred",1960,Perlesreut
+20304,3,FREIE WÄHLER,902,304,"Meiski, Dr. Georg",1963,Deggendorf
+20305,3,FREIE WÄHLER,902,305,"Faltermeier, Dr. Hubert",1949,Kelheim
+20306,3,FREIE WÄHLER,902,306,"Beck, Tobias",1987,Mallersdorf-Pfaffenberg
+20307,3,FREIE WÄHLER,902,307,"Schießl, Werner",1968,Eggenfelden
+20308,3,FREIE WÄHLER,902,308,"Toso, Roswitha",1963,Tittling
+20309,3,FREIE WÄHLER,902,309,"Lindinger, Christian",1964,Ruhstorf a.d.Rott
+20310,3,FREIE WÄHLER,902,310,"Weckmann, Stephan",1968,Straubing
+20311,3,FREIE WÄHLER,902,311,"Bauer, Georg",1961,Bayerisch Eisenstein
+20312,3,FREIE WÄHLER,902,312,"Maiwald, Gerhild",1951,Hengersberg
+20313,3,FREIE WÄHLER,902,313,"Schneemayer, Helmut",1966,Neuburg a.Inn
+20314,3,FREIE WÄHLER,902,314,"Fischer, Stefanie",1968,Hauzenberg
+20315,3,FREIE WÄHLER,902,315,"Fichtner, Helmut",1970,Mainburg
+20316,3,FREIE WÄHLER,902,316,"Walter-Kilian, Annette",1964,Landshut
+20317,3,FREIE WÄHLER,902,317,"Hirmer, Jakob",1960,Simbach a.Inn
+20318,3,FREIE WÄHLER,902,318,"Daiberl, Herbert",1963,Landshut
+20401,4,GRÜNE,902,401,"Steinberger, Rosi",1960,Kumhausen
+20402,4,GRÜNE,902,402,"Schuberl, Toni",1983,Passau
+20403,4,GRÜNE,902,403,"Schönberger, Marlene",1990,Adlkofen
+20404,4,GRÜNE,902,404,"Heilmann, Christian",1965,Deggendorf
+20405,4,GRÜNE,902,405,"Niedermeier, Feride",1975,Straubing
+20406,4,GRÜNE,902,406,"Weigl, Matthias",1999,Passau
+20407,4,GRÜNE,902,407,"Hagl, Sigi",1967,Landshut
+20408,4,GRÜNE,902,408,"Schlüter, Jens",1979,Zwiesel
+20409,4,GRÜNE,902,409,"Kalin, Maria",1984,Passau
+20410,4,GRÜNE,902,410,"Stephan, Daniel",1985,Kelheim
+20411,4,GRÜNE,902,411,"Lindner, Sabine",1963,Deggendorf
+20412,4,GRÜNE,902,412,"Schwimmer, Wolfgang",1978,Vilsbiburg
+20413,4,GRÜNE,902,413,"Laux, Antje",1964,Spiegelau
+20414,4,GRÜNE,902,414,"Ernst, Matthias",1994,Straubing
+20415,4,GRÜNE,902,415,"Reiser, Günther",1946,Hebertsfelden
+20416,4,GRÜNE,902,416,"Zieglmeier, Richard",1955,Abensberg
+20417,4,GRÜNE,902,417,"Rabanter, Lorenz",1980,Eggenfelden
+20418,4,GRÜNE,902,418,"Hallitzky, Eike",1959,Neuburg a.Inn
+20501,5,FDP,902,501,"Hoffmann, Norbert",1983,Landshut
+20502,5,FDP,902,502,"Muthmann, Alexander",1956,Freyung
+20503,5,FDP,902,503,"Curtis, Jake",1984,Mainburg
+20504,5,FDP,902,504,"Schmid, Josefa",1974,Kollnburg
+20505,5,FDP,902,505,"Heuwieser, Dominik",1984,Unterdietfurt
+20506,5,FDP,902,506,"Dittlmann, Andreas",1968,Passau
+20507,5,FDP,902,507,"Kooter, Kenneth",1978,Deggendorf
+20508,5,FDP,902,508,"Illein, Bettina",1973,Tettenweis
+20509,5,FDP,902,509,"Heimbeck, Jörg",1969,Langquaid
+20510,5,FDP,902,510,"Egerer, Franz",1973,Pilsting
+20511,5,FDP,902,511,"Rothlehner, Claus",1981,Eggenfelden
+20512,5,FDP,902,512,"Brücher, Carmen",1967,Passau
+20513,5,FDP,902,513,"Däullary, Anna",1989,Weihmichl
+20514,5,FDP,902,514,"Falk, Ulrich",1972,Freyung
+20515,5,FDP,902,515,"Binner, Ernst",1958,Straubing
+20516,5,FDP,902,516,"Hauser, Karl",1958,Deggendorf
+20517,5,FDP,902,517,"Fleming, Florian Christopher",1990,Ortenburg
+20518,5,FDP,902,518,"Altinger, Marco Thomas",1978,Landshut
+20601,6,DIE LINKE,902,601,"Ilsanker, Josef",1975,Passau
+20602,6,DIE LINKE,902,602,"Freinecker, Aleksandra",1993,Dingolfing
+20603,6,DIE LINKE,902,603,"Ringlstetter, Karl Heinz",1962,Straubing
+20604,6,DIE LINKE,902,604,"Süß, Christina",1990,Pocking
+20605,6,DIE LINKE,902,605,"Neubert, Dennis",1993,Wallersdorf
+20606,6,DIE LINKE,902,606,"Fischer, Susanne",1963,Bad Füssing
+20607,6,DIE LINKE,902,607,"Hemmann, Stefan",1984,Kröning
+20608,6,DIE LINKE,902,608,"Spielbauer, Johannes",1993,Straubing
+20609,6,DIE LINKE,902,609,"Reddies, Wolfgang",1965,Aicha vorm Wald
+20610,6,DIE LINKE,902,610,"Hagnauer, Johannes",1984,Schwandorf
+20611,6,DIE LINKE,902,611,"Freinecker, Johannes",1997,Hebertsfelden
+20612,6,DIE LINKE,902,612,"Schanzer, Joseph",1999,Waldkirchen
+20613,6,DIE LINKE,902,613,"Stöger, Marco",1993,Schönau
+20614,6,DIE LINKE,902,614,"Fischer, Udo",1954,Bad Füssing
+20615,6,DIE LINKE,902,615,"Beicht, Gottfried",1951,Straubing
+20616,6,DIE LINKE,902,616,"Kalkkuhl, Mirco",1978,Kelheim
+20617,6,DIE LINKE,902,617,"Jocham, Markus",1962,Geisenhausen
+20701,7,BP,902,701,"Zirngibl, Fritz",1954,Teugn
+20702,7,BP,902,702,"Maier, Franz",1980,Waldkirchen
+20703,7,BP,902,703,"Maller, Anton",1957,Gangkofen
+20704,7,BP,902,704,"Neuhauser, Robert",1956,Landshut
+20705,7,BP,902,705,"Pfeffer, Thomas",1989,Lalling
+20706,7,BP,902,706,"Müller, Hans-Jürgen",1966,Adlkofen
+20707,7,BP,902,707,"Geisenfelder, Florian",1991,Rohr i.NB
+20708,7,BP,902,708,"Schindlbeck, Manuel Georg",1986,Teisnach
+20709,7,BP,902,709,"Hafer, Kai-Uwe",1968,Passau
+20710,7,BP,902,710,"Kapfer, Hans",1961,Waldkirchen
+20711,7,BP,902,711,"Thurmeier, Florian",1971,Gangkofen
+20712,7,BP,902,712,"Prade, Matthias",1989,Dingolfing
+20713,7,BP,902,713,"Manz, Robert",1977,Landshut
+20714,7,BP,902,714,"Rechenmacher, Maximilian",1963,Zwiesel
+20715,7,BP,902,715,"Frömel, Peter",1959,Abensberg
+20716,7,BP,902,716,"Kaunzinger, Stefan",1970,Landshut
+20717,7,BP,902,717,"Schweiberger, Gerhard",1967,Hengersberg
+20718,7,BP,902,718,"Heilmeier, Thomas",1975,Passau
+20801,8,ÖDP,902,801,"Becker, Agnes",1980,Wegscheid
+20802,8,ÖDP,902,802,"Suttner, Bernhard",1949,Windberg
+20803,8,ÖDP,902,803,"Lirsch, Edith",1958,Triftern
+20804,8,ÖDP,902,804,"Mangold, Urban",1963,Passau
+20805,8,ÖDP,902,805,"Setzensack, Annette",1974,Mainburg
+20806,8,ÖDP,902,806,"Vogel, Marie-Sophie",1992,Landshut
+20807,8,ÖDP,902,807,"Dankesreiter, Walter",1965,Windorf
+20808,8,ÖDP,902,808,"Gold, Josef",1955,Kirchroth
+20809,8,ÖDP,902,809,"Aigner, Alois",1962,Reisbach
+20810,8,ÖDP,902,810,"Heilmeier, Lorenz",1963,Ergoldsbach
+20811,8,ÖDP,902,811,"Seufzger, Klaus",1982,Dingolfing
+20812,8,ÖDP,902,812,"Köberl, Michael",1974,Freyung
+20813,8,ÖDP,902,813,"Neuhierl, Rudolf",1961,Hengersberg
+20814,8,ÖDP,902,814,"Ohly, Ingrid",1948,Fürstenzell
+20815,8,ÖDP,902,815,"Iglhaut, Günther",1964,Geiersthal
+20816,8,ÖDP,902,816,"Weindl, Elisabeth",1968,Eggenfelden
+20817,8,ÖDP,902,817,"Rottengruber, Anne",1976,Mainburg
+20818,8,ÖDP,902,818,"Kerschl, Christian",1970,Deggendorf
+20901,9,PIRATEN,902,901,"Filakovic, Mario",1972,Dingolfing
+21101,11,AfD,902,1001,"Ebner-Steiner, Katrin",1978,Metten
+21102,11,AfD,902,1002,"Hansbauer, Wolfgang",1953,Simbach a.Inn
+21103,11,AfD,902,1003,"Straßberger, Günter",1963,Altdorf
+21104,11,AfD,902,1004,"Seidl, Josef",1963,Simbach
+21105,11,AfD,902,1005,"Stadler, Ralf",1964,Tittling
+21106,11,AfD,902,1006,"Müller, Johann",1959,Geiersthal
+21107,11,AfD,902,1007,"Kleinschwärzer, Manfred",1949,Mallersdorf-Pfaffenberg
+21108,11,AfD,902,1008,"Gebhardt, Peter A.",1948,Abensberg
+21109,11,AfD,902,1009,"Atzinger, Oskar",1963,Salzweg
+21110,11,AfD,902,1010,"Sicker, Gertraud",1957,Metten
+21111,11,AfD,902,1011,"Welsch-Ficklscherer, Hedwig",1951,Schöfweg
+21112,11,AfD,902,1012,"Kriegl, Werner",1974,Bad Griesbach i.Rottal
+21113,11,AfD,902,1013,"Meißner, Andreas",1991,Pocking
+21114,11,AfD,902,1014,"Bucher, Simon",1995,Straubing
+21301,13,mut,902,1101,"Helmich, Fabian",1976,Riedenburg
+21302,13,mut,902,1102,"Rau, Annegret",1991,Landshut
+21303,13,mut,902,1103,"Feirer, Johann",1960,Kirchdorf a.Inn
+21304,13,mut,902,1104,"Zens, Anna Christina",1958,Massing
+21305,13,mut,902,1105,"Geisel, Maximilian",1990,Gangkofen
+21306,13,mut,902,1106,"Zens, Margit",1990,Massing
+21307,13,mut,902,1107,"Drescher, Manfred Martin",1951,Landshut
+21308,13,mut,902,1108,"Pollner, Anna",1992,Landshut
+21309,13,mut,902,1109,"Feirer, Helga",1961,Kirchdorf a.Inn
+21310,13,mut,902,1110,"Pohler, Ferdinand",1989,Landshut
+21311,13,mut,902,1111,"Gebsattel-Ederer, Vanessa",1986,Riedenburg
+21312,13,mut,902,1112,"Zens, Konrad",1960,Massing
+21313,13,mut,902,1113,"Hofmann, Ina",1980,Gangkofen
+21314,13,mut,902,1114,"Drathschmid, Monika",1992,Adlkofen
+21701,17,Tierschutzpartei,902,1201,"Götz-Volkmann, Gertraud",1959,Landshut
+21702,17,Tierschutzpartei,902,1202,"Huber, Carina",1969,Velden
+21703,17,Tierschutzpartei,902,1203,"Obermüller, Kaspar",1944,Ortenburg
+21704,17,Tierschutzpartei,902,1204,"Röhrner, Ingrid",1965,Velden
+21705,17,Tierschutzpartei,902,1205,"Schlesinger, Martina",1976,Adlkofen
+21706,17,Tierschutzpartei,902,1206,"Seidemann, Bernd Joseph",1958,Eichendorf
+21801,18,V-Partei,902,1301,"Kiermaier, Johann",1964,Niederalteich
+30101,1,CSU,903,101,"Füracker, Albert",1968,Lupburg
+30102,1,CSU,903,102,"Blümel, Rita",1961,Schierling
+30103,1,CSU,903,103,"Thomas, Bärthlein",1963,Amberg
+30104,1,CSU,903,104,"Haimerl, Barbara",1968,Wald
+30105,1,CSU,903,105,"Lehner, Michael",1984,Regensburg
+30106,1,CSU,903,106,"Renner, Tanja",1982,Schlammersdorf
+30107,1,CSU,903,107,"Huber, Helga",1968,Freystadt
+30108,1,CSU,903,108,"Nachtigall, Dagmar",1966,Weiden i.d.OPf.
+30109,1,CSU,903,109,"Wendl, Manfred",1968,Schwandorf
+30110,1,CSU,903,110,"Flierl, Alexander",1970,Oberviechtach
+30111,1,CSU,903,111,"Hopp, Dr. Gerhard",1981,Runding
+30112,1,CSU,903,112,"Oetzinger, Dr. Stephan",1984,Mantel
+30113,1,CSU,903,113,"Reiß, Tobias",1968,Brand
+30114,1,CSU,903,114,"Rieger, Dr. Franz",1959,Regensburg
+30115,1,CSU,903,115,"Schwartz, Dr. Harald",1969,Kümmersbruck
+30116,1,CSU,903,116,"Stierstorfer, Sylvia",1963,Pfatter
+30201,2,SPD,903,201,"Karl, Annette",1960,Neustadt a.d.Waldnaab
+30202,2,SPD,903,202,"Bergmann, Uwe",1971,Schnaittenbach
+30203,2,SPD,903,203,"Wild, Margit",1957,Regensburg
+30204,2,SPD,903,204,"Wein, Peter",1988,Burglengenfeld
+30205,2,SPD,903,205,"Deiml, Jutta",1962,Kemnath
+30206,2,SPD,903,206,"Jobst, Matthias",1987,Alteglofsheim
+30207,2,SPD,903,207,"Kopp, Franz",1984,Runding
+30208,2,SPD,903,208,"Madeisky, Andre",1982,Neumarkt i.d.OPf.
+30209,2,SPD,903,209,"Wagner, Dr. Carolin",1982,Lappersdorf
+30210,2,SPD,903,210,"Rüger, Dr. Armin",1962,Sulzbach-Rosenberg
+30211,2,SPD,903,211,"Thanheiser, Evi",1968,Nabburg
+30212,2,SPD,903,212,"Bittner, Raphael",1999,Plößberg
+30213,2,SPD,903,213,"Lutz, Petra",1964,Hemau
+30214,2,SPD,903,214,"Eisinger, Philipp",1995,Freystadt
+30215,2,SPD,903,215,"Tasali-Stoll, Dr. Sema",1960,Neustadt a.d.Waldnaab
+30216,2,SPD,903,216,"Meier, Sebastian",1990,Roding
+30301,3,FREIE WÄHLER,903,301,"Hanisch, Joachim",1948,Bruck i.d.OPf.
+30302,3,FREIE WÄHLER,903,302,"Gotthardt, Tobias",1977,Kallmünz
+30303,3,FREIE WÄHLER,903,303,"Riedl, Robert",1955,Bad Kötzting
+30304,3,FREIE WÄHLER,903,304,"Radler, Kerstin",1961,Regensburg
+30305,3,FREIE WÄHLER,903,305,"Schmidt, Bernhard",1972,Erbendorf
+30306,3,FREIE WÄHLER,903,306,"Penkala, Matthias",1990,Freystadt
+30307,3,FREIE WÄHLER,903,307,"Sitter, Alexandra",1970,Ammerthal
+30308,3,FREIE WÄHLER,903,308,"Meier, Karl",1955,Neustadt a.d.Waldnaab
+30309,3,FREIE WÄHLER,903,309,"Groß, Tobias",1981,Theisseil
+30310,3,FREIE WÄHLER,903,310,"Lehnerer, Doris",1975,Königstein
+30311,3,FREIE WÄHLER,903,311,"Strobl, Julia",1986,Lauterhofen
+30312,3,FREIE WÄHLER,903,312,"Riedl, Thomas",1963,Eschenbach i.d.OPf.
+30313,3,FREIE WÄHLER,903,313,"Hetznegger, Manfred",1959,Regensburg
+30314,3,FREIE WÄHLER,903,314,"Weidacher, Dr. Herbert",1956,Cham
+30315,3,FREIE WÄHLER,903,315,"Landsmann, Hans-Peter",1967,Barbing
+30316,3,FREIE WÄHLER,903,316,"Jäger, Alfred",1975,Wackersdorf
+30401,4,GRÜNE,903,401,"Mistol, Jürgen",1965,Regensburg
+30402,4,GRÜNE,903,402,"Toman, Anna",1991,Bärnau
+30403,4,GRÜNE,903,403,"Winklmann, Tina",1980,Wackersdorf
+30404,4,GRÜNE,903,404,"Quaas, Benjamin",1987,Teublitz
+30405,4,GRÜNE,903,405,"Rösel, Yvonne",1967,Sulzbach-Rosenberg
+30406,4,GRÜNE,903,406,"Doblinger, Michael",1962,Pemfling
+30407,4,GRÜNE,903,407,"Borke-Thoma, Eva",1985,Neumarkt i.d.OPf.
+30408,4,GRÜNE,903,408,"Bergmann, Klaus",1964,Windischeschenbach
+30409,4,GRÜNE,903,409,"Zeichinger, Veronika",1986,Regensburg
+30410,4,GRÜNE,903,410,"Ebenburger, Dr. Klaus",1949,Amberg
+30411,4,GRÜNE,903,411,"Mölders, Petra",1958,Cham
+30412,4,GRÜNE,903,412,"Stadler, Josef",1955,Wörth a.d.Donau
+30413,4,GRÜNE,903,413,"Wein, Marie",1999,Brunn
+30414,4,GRÜNE,903,414,"Schüßler, Mathias",1998,Erlangen
+30415,4,GRÜNE,903,415,"Schuhmacher, Sonja",1959,Weiden i.d.OPf.
+30416,4,GRÜNE,903,416,"Hauff, Siegfried",1958,Pyrbaum
+30501,5,FDP,903,501,"Skutella, Christoph",1985,Weiden i.d.OPf.
+30502,5,FDP,903,502,"Vo, Huu Loi",1984,Regensburg
+30503,5,FDP,903,503,"Gründer, Nils",1997,Neumarkt i.d.OPf.
+30504,5,FDP,903,504,"Burger-Sippl, Silvia",1965,Deining
+30505,5,FDP,903,505,"Stuiber, Alfred",1980,Roding
+30506,5,FDP,903,506,"Kremser, Reinhard",1958,Hemau
+30507,5,FDP,903,507,"Enger, Dr. Ilka",1964,Regensburg
+30508,5,FDP,903,508,"Behrendt, Joachim",1964,Kohlberg
+30509,5,FDP,903,509,"Hocholdinger, Markus",1995,Amberg
+30510,5,FDP,903,510,"Taubmann, Kilian",1987,Sulzbach-Rosenberg
+30511,5,FDP,903,511,"Kraus, Ulrich",1978,Roding
+30512,5,FDP,903,512,"Heinrich, Reinhard",1959,Waldsassen
+30513,5,FDP,903,513,"Grahn, Wolf-Dieter",1949,Schwandorf
+30514,5,FDP,903,514,"Wilka, Mathilde",1954,Schönsee
+30515,5,FDP,903,515,"Lederer, Ingo",1983,Regenstauf
+30516,5,FDP,903,516,"Hubmann, Alexander",1972,Eschenbach i.d.OPf.
+30601,6,DIE LINKE,903,601,"Brey, Marius Josef",1996,Chamerau
+30602,6,DIE LINKE,903,602,"Maxim, Ursula",1967,Regenstauf
+30603,6,DIE LINKE,903,603,"Kappl, Eva",1998,Wackersdorf
+30604,6,DIE LINKE,903,604,"Zant, Ali Daniel",1971,Weiden i.d.OPf.
+30605,6,DIE LINKE,903,605,"Schienhammer, Nadine",1983,Kastl
+30606,6,DIE LINKE,903,606,"Berndt, Wolfgang",1949,Sulzbach-Rosenberg
+30607,6,DIE LINKE,903,607,"Sivan, Martina",1956,Schönsee
+30608,6,DIE LINKE,903,608,"Emmerling, Tobias",1996,Regensburg
+30609,6,DIE LINKE,903,609,"Schwarz, Jan",1997,Regensburg
+30610,6,DIE LINKE,903,610,"Schmidt, Philipp",1997,Neumarkt i.d.OPf.
+30611,6,DIE LINKE,903,611,"Fleisser, Karl",1952,Oberviechtach
+30612,6,DIE LINKE,903,612,"Weidner, Christian",1969,Weiden i.d.OPf.
+30613,6,DIE LINKE,903,613,"Spieß, Richard",1959,Regensburg
+30614,6,DIE LINKE,903,614,"Oberthür, Christian",1982,Walderbach
+30615,6,DIE LINKE,903,615,"Decker, Marian",1952,Regensburg
+30616,6,DIE LINKE,903,616,"Hundt, Sarah",1992,Regensburg
+30701,7,BP,903,701,"Suttner, Werner",1968,Pfatter
+30702,7,BP,903,702,"Ringelmann, Petra",1971,Cham
+30703,7,BP,903,703,"Schmieder, Maximilian",1996,Weiden i.d.Opf.
+30704,7,BP,903,704,"Smolevska, Natalie",1995,Pfatter
+30705,7,BP,903,705,"Mrozek, Markus",1973,Amberg
+30706,7,BP,903,706,"Schweikl, Alexander",1975,Bad Kötzting
+30707,7,BP,903,707,"Koll-Pfeifer, Alexander",1992,Nürnberg
+30708,7,BP,903,708,"Weber, Alexander",1970,Teublitz
+30709,7,BP,903,709,"Prensky, Michael",1959,Schmidmühlen
+30710,7,BP,903,710,"Schindler, Thomas",1970,Obertraubling
+30711,7,BP,903,711,"Weinfurtner, Markus",1972,Roding
+30712,7,BP,903,712,"Eberhardt, Peter",1951,Maxhütte-Haidhof
+30713,7,BP,903,713,"Oel, Berthold",1961,Laaber
+30714,7,BP,903,714,"Bachmann, Peter",1972,Kümmersbruck
+30715,7,BP,903,715,"Lang, Magdalena",1961,Barbing
+30716,7,BP,903,716,"Karl, Gerhard",1965,Regensburg
+30801,8,ÖDP,903,801,"Mrasek, Klaus",1964,Amberg
+30802,8,ÖDP,903,802,"Kindl, Dr. Barbara",1964,Vohenstrauß
+30803,8,ÖDP,903,803,"Damm, Alfred",1963,Schwandorf
+30804,8,ÖDP,903,804,"Suttner, Benedikt",1980,Regensburg
+30805,8,ÖDP,903,805,"Mauch, Dr. Thomas",1954,Mintraching
+30806,8,ÖDP,903,806,"Kunz, Theresia",1962,Tirschenreuth
+30807,8,ÖDP,903,807,"Neumeyer, Joseph",1958,Berching
+30808,8,ÖDP,903,808,"Meissner, Ruth",1960,Pemfling
+30809,8,ÖDP,903,809,"Wiest, Claudia",1967,Wiesent
+30810,8,ÖDP,903,810,"Eckl, Heidi",1964,Nabburg
+30811,8,ÖDP,903,811,"Badura, Franz",1968,Amberg
+30812,8,ÖDP,903,812,"Schmid, Gerald",1970,Mitterteich
+30813,8,ÖDP,903,813,"Eberhardt, Hannes",1981,Regensburg
+30814,8,ÖDP,903,814,"Scheingraber, Dr. Stefan",1968,Cham
+30815,8,ÖDP,903,815,"Schönfelder-Hans, Monika",1964,Lauterhofen
+30816,8,ÖDP,903,816,"Hartung, Andreas",1965,Irchenrieth
+30901,9,PIRATEN,903,901,"Kramm, Andreas",1980,Regensburg
+30902,9,PIRATEN,903,902,"Stenzel, Tobias",1986,Luhe-Wildenau
+30903,9,PIRATEN,903,903,"Terbeznik, Klaus",1970,Schwandorf
+30904,9,PIRATEN,903,904,"Graßler, Katharina",1986,Regensburg
+30905,9,PIRATEN,903,905,"Lang, Peter",1959,Schwandorf
+30906,9,PIRATEN,903,906,"Heuer, Steffen",1981,Regensburg
+31101,11,AfD,903,1001,"Magerl, Roland",1973,Mantel
+31102,11,AfD,903,1002,"Nolte, Benjamin",1982,Regensburg
+31103,11,AfD,903,1003,"Löw, Stefan",1990,Floß
+31104,11,AfD,903,1004,"Marino, Claudia",1964,Weiden i.d.OPf.
+31105,11,AfD,903,1005,"Mixl, Reinhard",1961,Schwandorf
+31106,11,AfD,903,1006,"Arnold, Dieter",1973,Lappersdorf
+31107,11,AfD,903,1007,"Meier, Werner",1967,Velburg
+31108,11,AfD,903,1008,"Lankes, Josef",1961,Cham
+31301,13,mut,903,1101,"Zimmermann, Prof. Hansjoerg",1959,München
+31302,13,mut,903,1102,"Geiger, Alexandra",1961,Regensburg
+31303,13,mut,903,1103,"Kosak, Ferdinand",1981,Regensburg
+31304,13,mut,903,1104,"Seiche, Julia",1952,Regensburg
+31305,13,mut,903,1105,"Bortner, Reinhold",1963,Weiden i.d.OPf.
+31306,13,mut,903,1106,"Mücke, Anna-Maria",1960,Pentling
+31307,13,mut,903,1107,"Vielsmaier, Florian",1980,Regensburg
+31308,13,mut,903,1108,"Baumer, Ulla",1958,Wiesau
+31309,13,mut,903,1109,"Franzen, Janis",1989,Regensburg
+31310,13,mut,903,1110,"Polzer, Lisa",1983,Regensburg
+31311,13,mut,903,1111,"Pizzuto, Franco",1983,Regensburg
+31312,13,mut,903,1112,"Franzen, Laura",1988,Regensburg
+31313,13,mut,903,1113,"Krieg, Frank",1964,Grafenwiesen
+31314,13,mut,903,1114,"Kugler, Lisa",1986,Regensburg
+31315,13,mut,903,1115,"Müller, Dominik",1969,Bad Abbach
+31316,13,mut,903,1116,"Schmid, Helena",1981,Regenstauf
+31501,15,Die PARTEI,903,1201,"Hartl, Maximilian",2000,Regensburg
+31502,15,Die PARTEI,903,1202,"Frank, Ingo",1989,Regensburg
+31503,15,Die PARTEI,903,1203,"Seidl, Anton",1992,Regensburg
+31504,15,Die PARTEI,903,1204,"Porsch, Milena",1996,Regensburg
+31505,15,Die PARTEI,903,1205,"Bayer, Melody",1987,Regensburg
+31506,15,Die PARTEI,903,1206,"Schweiger, Stefan",1991,Regensburg
+31507,15,Die PARTEI,903,1207,"Sindersberger, Karin",1971,Regensburg
+31508,15,Die PARTEI,903,1208,"Baumann, Christian",1961,Gleißenberg
+31601,16,Gesundheitsforschung,903,1301,"Kellner, Christine",1991,Weidenberg
+31602,16,Gesundheitsforschung,903,1302,"Pudlo, Fabian",1995,Eching
+31603,16,Gesundheitsforschung,903,1303,"Li, Yue",1986,München
+31604,16,Gesundheitsforschung,903,1304,"Schmidtke, Udo",1991,München
+31801,18,V-Partei,903,1401,"Pedanova, Andrea",1989,Bruck i.d.OPf.
+31802,18,V-Partei,903,1402,"Knauer, Beate",1968,Bernhardswald
+40101,1,CSU,904,101,"Huml, Melanie",1975,Bamberg
+40102,1,CSU,904,102,"Lerchenfeld Freiherr von, Ludwig",1957,Presseck
+40103,1,CSU,904,103,"Brendel-Fischer, Gudrun",1959,Heinersreuth
+40104,1,CSU,904,104,"Mittag, Martin",1982,Seßlach
+40105,1,CSU,904,105,"König, Alexander",1961,Bad Steben
+40106,1,CSU,904,106,"Wagner, Paul-Bernhard",1986,Naila
+40107,1,CSU,904,107,"Kraus, Rosa",1961,Gößweinstein
+40108,1,CSU,904,108,"Schöffel, Martin",1977,Wunsiedel 
+40109,1,CSU,904,109,"Dremel, Holger",1972,Scheßlitz
+40110,1,CSU,904,110,"Hohl, Dr. Michael",1959,Bayreuth
+40111,1,CSU,904,111,"Hofmann, Michael",1974,Eggolsheim
+40112,1,CSU,904,112,"Kuhn, Stefan",1976,Bamberg
+40113,1,CSU,904,113,"Schulz, Michael",1968,Coburg
+40114,1,CSU,904,114,"Hummel, Alexander",1977,Pettstadt
+40115,1,CSU,904,115,"Zorn, Christian",1979,Redwitz a.d.Rodach
+40116,1,CSU,904,116,"Baumgärtner, Jürgen",1973,Wilhelmsthal
+40201,2,SPD,904,201,"Aures, Inge",1956,Kulmbach
+40202,2,SPD,904,202,"Adelt, Klaus",1956,Selbitz
+40203,2,SPD,904,203,"Busch, Michael",1957,Ebersdorf b.Coburg
+40204,2,SPD,904,204,"Pohl, Dr. Ralf",1964,Küps
+40205,2,SPD,904,205,"Tasdelen, Halil",1973,Bayreuth
+40206,2,SPD,904,206,"Kuntke, Heinz",1951,Bamberg
+40207,2,SPD,904,207,"Karabag, Dr. Atila",1972,Forchheim
+40208,2,SPD,904,208,"Metzner, Uwe",1968,Stegaurach
+40209,2,SPD,904,209,"Bartl, Franziska",1985,Coburg
+40210,2,SPD,904,210,"Müller, Sebastian",1987,Lichtenfels
+40211,2,SPD,904,211,"Müller, Miriam",1982,Bamberg
+40212,2,SPD,904,212,"Mielentz, Jörg",1975,Hof
+40213,2,SPD,904,213,"Flauder, Christina",1964,Kulmbach
+40214,2,SPD,904,214,"Winkelmaier, Oliver",1976,Pegnitz
+40215,2,SPD,904,215,"Schmidt, Richard",1996,Hausen
+40216,2,SPD,904,216,"Berger, Joscha",1997,Hirschaid
+40301,3,FREIE WÄHLER,904,301,"Glauber, Thorsten",1970,Pinzberg
+40302,3,FREIE WÄHLER,904,302,"Ludwig, Rainer",1961,Kulmbach
+40303,3,FREIE WÄHLER,904,303,"Wiedemann, Florian",1981,Hummeltal
+40304,3,FREIE WÄHLER,904,304,"Zwingmann, Michael",1974,Kronach
+40305,3,FREIE WÄHLER,904,305,"Preißler, Maria",1997,Rödental
+40306,3,FREIE WÄHLER,904,306,"Simmerlein, Elisabeth",1990,Pinzberg
+40307,3,FREIE WÄHLER,904,307,"Scheer, Verena",1989,Stegaurach
+40308,3,FREIE WÄHLER,904,308,"Grötsch, Hans Martin",1979,Königstein
+40309,3,FREIE WÄHLER,904,309,"Schutty, Dietmar",1961,Bamberg
+40310,3,FREIE WÄHLER,904,310,"Lampl, Maria",1955,Bayreuth
+40311,3,FREIE WÄHLER,904,311,"Deuerling, Georg",1968,Altenkunstadt
+40312,3,FREIE WÄHLER,904,312,"Weber, Viktor",1988,Hallstadt
+40313,3,FREIE WÄHLER,904,313,"von Stetten, Dr. Klaus",1959,Selb
+40314,3,FREIE WÄHLER,904,314,"John, Claudia",1989,Bamberg
+40315,3,FREIE WÄHLER,904,315,"Rödel, Peter",1950,Berg
+40316,3,FREIE WÄHLER,904,316,"Kräußlich, Max",1991,Weitramsdorf
+40401,4,GRÜNE,904,401,"Sowa, Ursula",1957,Bamberg
+40402,4,GRÜNE,904,402,"Pargent, Tim",1993,Bayreuth
+40403,4,GRÜNE,904,403,"Memmel, Edith",1951,Mitwitz
+40404,4,GRÜNE,904,404,"Huber, Emmerich",1953,Forchheim
+40405,4,GRÜNE,904,405,"Sinterhauf, Ina",1976,Coburg
+40406,4,GRÜNE,904,406,"Brammer, Philipp",1976,Hof
+40407,4,GRÜNE,904,407,"Prechtel, Dr. Annette",1974,Forchheim
+40408,4,GRÜNE,904,408,"Kukla, Wilfried",1952,Wunsiedel 
+40409,4,GRÜNE,904,409,"Benzel-Weyh, Martina",1974,Coburg
+40410,4,GRÜNE,904,410,"Lunz, Georg",1960,Litzendorf
+40411,4,GRÜNE,904,411,"Artmann, Brigitte",1959,Marktredwitz
+40412,4,GRÜNE,904,412,"Behr, Ralph",1968,Scheßlitz
+40413,4,GRÜNE,904,413,"Wandel, Elisabeth",1955,Trogen
+40414,4,GRÜNE,904,414,"Motschmann, Valentin",1987,Bad Staffelstein
+40415,4,GRÜNE,904,415,"Gote, Ulrike",1965,Bayreuth
+40416,4,GRÜNE,904,416,"Glüsenkamp, Jonas",1988,Bamberg
+40501,5,FDP,904,501,"Körber, Sebastian",1980,Forchheim
+40502,5,FDP,904,502,"Pöhner, Martin",1977,Bamberg
+40503,5,FDP,904,503,"Otte, Michael",1968,Kasendorf
+40504,5,FDP,904,504,"Bischoff, Harald",1973,Lichtenfels
+40505,5,FDP,904,505,"Wünsche, Martin",1995,Hirschaid
+40506,5,FDP,904,506,"Herbert, Dr. Ulrich",1952,Coburg
+40507,5,FDP,904,507,"Funke-Barjak, Luisa",1983,Bayreuth
+40508,5,FDP,904,508,"Senf, Peter",1969,Hof
+40509,5,FDP,904,509,"Drechsler, Margit",1965,Kulmbach
+40510,5,FDP,904,510,"Wernsdörfer, Steffen",1993,Bamberg
+40511,5,FDP,904,511,"Pflaum, Sebastian",1990,Hirschaid
+40512,5,FDP,904,512,"Schick, Stefan",1969,Forchheim
+40513,5,FDP,904,513,"Huttner, Dr. Stephan",1959,Bayreuth
+40514,5,FDP,904,514,"Froeschmann, Peter",1947,Münchberg
+40515,5,FDP,904,515,"Nehmzow, Irmgard",1943,Altenkunstadt
+40516,5,FDP,904,516,"Gebhard, Gerold",1968,Dörfles-Esbach
+40601,6,DIE LINKE,904,601,"Lehmann, Paul",1987,Bamberg
+40602,6,DIE LINKE,904,602,"Saeidi, Babette",1965,Coburg
+40603,6,DIE LINKE,904,603,"Frisch, Manuel",1980,Hof
+40604,6,DIE LINKE,904,604,"Sommerer, Sebastian",1993,Tröstau
+40605,6,DIE LINKE,904,605,"Schmittnägel, Gabriele",1952,Gattendorf
+40606,6,DIE LINKE,904,606,"Knoblach, Detlef",1957,Kronach
+40607,6,DIE LINKE,904,607,"Tränkenschuh, Andreas",1994,Bamberg
+40608,6,DIE LINKE,904,608,"Greim, Oswald",1954,Nürnberg
+40609,6,DIE LINKE,904,609,"Bätz, Florian",1990,Kronach
+40610,6,DIE LINKE,904,610,"Pätzke, Wilfried",1955,Eggolsheim
+40611,6,DIE LINKE,904,611,"Baumgartner, Ludwig",1978,Himmelkron
+40612,6,DIE LINKE,904,612,"Zimmermann, Gerhard",1954,Bamberg
+40613,6,DIE LINKE,904,613,"Warstat, Stefan",1965,Kronach
+40614,6,DIE LINKE,904,614,"Hluchy, Linus",1999,Heroldsbach
+40615,6,DIE LINKE,904,615,"Gellenthien, Tobias",1997,Heroldsbach
+40616,6,DIE LINKE,904,616,"Hähnlein, René",1971,Coburg
+40701,7,BP,904,701,"Wagner, Jürgen",1962,Bamberg
+40702,7,BP,904,702,"Dotzler, Thomas",1965,Bamberg
+40703,7,BP,904,703,"Ehret, Alfred",1953,Forchheim
+40704,7,BP,904,704,"Suck, Frank",1966,Hirschaid
+40705,7,BP,904,705,"Sedlmeyer, Gunther",1958,Reckendorf
+40706,7,BP,904,706,"Zeigler, Christiane",1961,Arzberg
+40707,7,BP,904,707,"Voß, Torsten",1980,Ebermannstadt
+40708,7,BP,904,708,"Gerbig, Matthias",1972,Bamberg
+40801,8,ÖDP,904,801,"Müller, Thomas",1954,Burgkunstadt
+40802,8,ÖDP,904,802,"Forster, Manuela",1972,Nürnberg
+40803,8,ÖDP,904,803,"Büchner, Thomas",1962,Neustadt b.Coburg
+40804,8,ÖDP,904,804,"Sieling, Tobias",1971,Scheßlitz
+40805,8,ÖDP,904,805,"Schmidt, Stephan",1985,Hof
+40806,8,ÖDP,904,806,"Koppe, Bernd",1961,Mistelgau
+40807,8,ÖDP,904,807,"Büchner, Lucas",1988,Bamberg
+40808,8,ÖDP,904,808,"Englert, Reinhard",1950,Burgkunstadt
+40809,8,ÖDP,904,809,"Raabs, Christoph",1972,Neustadt b.Coburg
+40810,8,ÖDP,904,810,"Grimm, Raphael",1969,Oberhaid
+40811,8,ÖDP,904,811,"Bachmeyer, Konrad",1954,Trebgast
+40812,8,ÖDP,904,812,"Duppel, Ralf",1962,Schwarzenbach a.d.Saale
+40813,8,ÖDP,904,813,"Dworazik, Dietmar",1952,Litzendorf
+40814,8,ÖDP,904,814,"Lenk, Markus",1968,Eckersdorf
+40815,8,ÖDP,904,815,"Wilhelm, Simon",1976,Pretzfeld
+40816,8,ÖDP,904,816,"Pülz, Michael",1960,Redwitz a.d.Rodach
+40901,9,PIRATEN,904,901,"Rödel, Michael",1990,Hof
+40902,9,PIRATEN,904,902,"Großrau, Peter",1977,Kronach
+40903,9,PIRATEN,904,903,"Wagner, Karl",1960,Helmbrechts
+40904,9,PIRATEN,904,904,"Leopold, Richard",1966,Forchheim
+40905,9,PIRATEN,904,905,"Korb, Stephan",1971,Hof
+40906,9,PIRATEN,904,906,"Berek, Anita",1972,Bad Alexandersbad
+40907,9,PIRATEN,904,907,"Rauh, Daniel",1987,Kronach
+40908,9,PIRATEN,904,908,"Sturm, Holger",1971,Oberkotzau
+40909,9,PIRATEN,904,909,"Steffen, Nico",1977,Memmelsdorf
+41101,11,AfD,904,1001,"Böhm, Martin",1964,Coburg
+41102,11,AfD,904,1002,"Rauh, Detlef",1953,Weißenbrunn
+41103,11,AfD,904,1003,"Pflaum, Dominik",1987,Heroldsbach
+41104,11,AfD,904,1004,"Schiffers, Jan",1977,Bamberg
+41105,11,AfD,904,1005,"Rausch, Thomas",1961,Bayreuth
+41106,11,AfD,904,1006,"Wüst, Prof.Dr. Michael",1956,Hof
+41107,11,AfD,904,1007,"Köhler, Florian",1994,Bamberg
+41108,11,AfD,904,1008,"Kögler, Gerd",1967,Kirchenlamitz
+41301,13,mut,904,1101,"Hüttner, Michaela",1973,Arzberg
+41302,13,mut,904,1102,"Fischer, Iris",1964,Holzkirchen
+41303,13,mut,904,1103,"Raithel, Christine",1967,Heinersreuth
+41304,13,mut,904,1104,"Göcking, Simone",1962,Arzberg
+41305,13,mut,904,1105,"Gerdom, Anne",1987,Bamberg
+41306,13,mut,904,1106,"Zeus, Claudia",1964,Marktredwitz
+41307,13,mut,904,1107,"Grüner, Ursula",1958,Bayreuth
+41308,13,mut,904,1108,"Pfaffenberger, Arno",1961,Kulmbach
+41309,13,mut,904,1109,"Bauer, Dietmar",1969,Arzberg
+41310,13,mut,904,1110,"Kracke, Lutz-Benno",1943,Neudrossenfeld
+41311,13,mut,904,1111,"Kraus, Martina",1962,Bischberg
+41312,13,mut,904,1112,"Hoffmann, Jürgen",1965,Selb
+41313,13,mut,904,1113,"Hersch, Cornelia",1961,Hummeltal
+41314,13,mut,904,1114,"Hüttner, Reinhard",1968,Arzberg
+41315,13,mut,904,1115,"Prodöhl, Ramona",1966,Mistelbach
+41316,13,mut,904,1116,"Kampe, Werner",1962,Kulmbach
+41501,15,Die PARTEI,904,1201,"Krumm, Julian",1995,Bayreuth
+41502,15,Die PARTEI,904,1202,"Roensch, Andreas",1977,Bamberg
+41503,15,Die PARTEI,904,1203,"Kreten, Julian",1988,Obertrubach
+41504,15,Die PARTEI,904,1204,"Walter, Thilo",1971,Bamberg
+41505,15,Die PARTEI,904,1205,"Hartmann, Andreas",1980,Hof
+41506,15,Die PARTEI,904,1206,"Beck, Michael",1975,Bayreuth
+41507,15,Die PARTEI,904,1207,"Zippel, Julian",1996,Oberhaid
+41508,15,Die PARTEI,904,1208,"Hautsch, Markus",1965,Bischofsgrün
+41509,15,Die PARTEI,904,1209,"Frerking, Silas Rouven",1987,Bamberg
+41510,15,Die PARTEI,904,1210,"Schern, Frank",1974,Sparneck
+41511,15,Die PARTEI,904,1211,"Thielmann, Cornelia",1992,Oberhaid
+41601,16,Gesundheitsforschung,904,1301,"Köhler, Werner",1949,Münchberg
+41602,16,Gesundheitsforschung,904,1302,"Jäckel, Britta",1970,Münchberg
+41603,16,Gesundheitsforschung,904,1303,"Schmalz, Boris",1984,München
+41801,18,V-Partei,904,1401,"Billner, Christian",1984,Pegnitz
+41802,18,V-Partei,904,1402,"Schindelmann, Felix",1983,Bayreuth
+41803,18,V-Partei,904,1403,"Frederking, Reinhard",1962,Pegnitz
+41804,18,V-Partei,904,1404,"Frederking, Regina",1960,Pegnitz
+41805,18,V-Partei,904,1405,"Pförtsch, Christian",1977,Bayreuth
+41806,18,V-Partei,904,1406,"O'Toole, Shelby",1996,Bayreuth
+41807,18,V-Partei,904,1407,"Granegger, Bettina",1970,Weidenberg
+50101,1,CSU,905,101,"Söder, Dr. Markus",1967,Nürnberg
+50102,1,CSU,905,102,"Herrmann, Joachim",1956,Erlangen
+50103,1,CSU,905,103,"Guttenberger, Petra",1962,Fürth
+50104,1,CSU,905,104,"Herold, Hans",1955,Ipsheim
+50105,1,CSU,905,105,"Regitz, Barbara",1958,Nürnberg
+50106,1,CSU,905,106,"Schalk, Andreas",1984,Ansbach
+50107,1,CSU,905,107,"Freller, Karl",1956,Schwabach
+50108,1,CSU,905,108,"Trinkl, Cornelia",1982,Röthenbach a.d.Pegnitz
+50109,1,CSU,905,109,"Nussel, Walter",1965,Herzogenaurach
+50110,1,CSU,905,110,"Dietzel, Ursula",1964,Hilpoltstein
+50111,1,CSU,905,111,"Dünkel, Norbert",1961,Hersbruck
+50112,1,CSU,905,112,"Bauer, Volker",1971,Kammerstein
+50113,1,CSU,905,113,"Westphal, Manuel",1974,Meinheim
+50114,1,CSU,905,114,"Kohler, Jochen",1975,Oberasbach
+50115,1,CSU,905,115,"Mathes, Gerlinde",1966,Nürnberg
+50116,1,CSU,905,116,"Lay, Gabriele",1952,Nürnberg
+50117,1,CSU,905,117,"Gebhardt, Bastian",1985,Stein
+50118,1,CSU,905,118,"Brandl, Alfons",1966,Herrieden
+50119,1,CSU,905,119,"Beugel-Hilz, Alexandra",1988,Spardorf
+50120,1,CSU,905,120,"Höfler, Peter",1977,Nürnberg
+50121,1,CSU,905,121,"Volleth, Jörg",1971,Erlangen
+50122,1,CSU,905,122,"Ixmeier, Renate",1965,Scheinfeld
+50123,1,CSU,905,123,"Quester, Lutz",1958,Nürnberg
+50124,1,CSU,905,124,"Hommel, Alexander",1973,Feucht
+50201,2,SPD,905,201,"Arnold, Horst",1962,Fürth
+50202,2,SPD,905,202,"Hiersemann, Alexandra",1960,Marloffstein
+50203,2,SPD,905,203,"Tasdelen, Arif",1974,Nürnberg
+50204,2,SPD,905,204,"Lipka, Andrea",1967,Simmelsdorf
+50205,2,SPD,905,205,"Schuster, Stefan",1959,Nürnberg
+50206,2,SPD,905,206,"Gardill, Kerstin",1976,Altdorf b.Nürnberg
+50207,2,SPD,905,207,"Scheuenstuhl, Harry",1961,Wilhermsdorf
+50208,2,SPD,905,208,"Arabackyj, Claudia",1972,Nürnberg
+50209,2,SPD,905,209,"Dösel, Harald",1972,Weißenburg i.Bay.
+50210,2,SPD,905,210,"Dees, Dr. Philipp",1982,Erlangen
+50211,2,SPD,905,211,"Schneider, Marcel",1969,Rednitzhembach
+50212,2,SPD,905,212,"Ringler, Norbert",1970,Heilsbronn
+50213,2,SPD,905,213,"Vlachou, Dionisia",1974,Nürnberg
+50214,2,SPD,905,214,"Zinnecker, Jonas",1996,Diebach
+50215,2,SPD,905,215,"Hurle, Dr. Katrin",1985,Erlangen
+50216,2,SPD,905,216,"Liberov, Vitali",1976,Nürnberg
+50217,2,SPD,905,217,"Bentz, Monika",1953,Kalchreuth
+50218,2,SPD,905,218,"Gmöhling, Felix",1994,Burgoberbach
+50219,2,SPD,905,219,"Borgendale, Martina",1979,Nürnberg
+50220,2,SPD,905,220,"Schermeyer, Andreas",1993,Thalmässing
+50221,2,SPD,905,221,"Biersack, Manuela",1967,Fürth
+50222,2,SPD,905,222,"Ott, Lukas",1999,Hersbruck
+50223,2,SPD,905,223,"Spiegel-Schmidt, Svenja",1997,Nürnberg
+50224,2,SPD,905,224,"Fleischmann, Stefan",1977,Scheinfeld
+50301,3,FREIE WÄHLER,905,301,"Bauer, Dr. Peter",1949,Sachsen b.Ansbach
+50302,3,FREIE WÄHLER,905,302,"Schmidt, Gabi",1968,Uehlfeld
+50303,3,FREIE WÄHLER,905,303,"Hauber, Wolfgang",1959,Weißenburg i.Bay.
+50304,3,FREIE WÄHLER,905,304,"Schneider, Thomas",1965,Röttenbach
+50305,3,FREIE WÄHLER,905,305,"Feisthammel, Angelika",1962,Burgthann
+50306,3,FREIE WÄHLER,905,306,"Enz, Christian",1979,Höchstadt a.d.Aisch
+50307,3,FREIE WÄHLER,905,307,"Moll, Dr. Gunther",1957,Erlangen
+50308,3,FREIE WÄHLER,905,308,"Dörfler, Jürgen",1961,Nürnberg
+50309,3,FREIE WÄHLER,905,309,"Beck, Stephan",1969,Stein
+50310,3,FREIE WÄHLER,905,310,"Schenkel, Alexander",1971,Erlangen
+50311,3,FREIE WÄHLER,905,311,"Meier, Marco",1993,Weihenzell
+50312,3,FREIE WÄHLER,905,312,"Kuhnert, Marion",1969,Feucht
+50313,3,FREIE WÄHLER,905,313,"Vogel, Michael",1954,Ansbach
+50314,3,FREIE WÄHLER,905,314,"Niedermann, Jürgen",1963,Erlangen
+50315,3,FREIE WÄHLER,905,315,"Kratzer, Hermann",1962,Greding
+50316,3,FREIE WÄHLER,905,316,"Kißlinger, Felix",1980,Oberasbach
+50317,3,FREIE WÄHLER,905,317,"Tiefel, Stefan-Hans",1984,Seukendorf
+50318,3,FREIE WÄHLER,905,318,"Schölkopf, Michael",1983,Eckental
+50319,3,FREIE WÄHLER,905,319,"Lau, Heidi",1954,Fürth
+50320,3,FREIE WÄHLER,905,320,"Riedelbauch, Holger",1969,Röthenbach a.d.Pegnitz
+50321,3,FREIE WÄHLER,905,321,"Vahldiek, Michael",1964,Engelthal
+50322,3,FREIE WÄHLER,905,322,"Bleisteiner, Gabi",1954,Pommelsbrunn
+50323,3,FREIE WÄHLER,905,323,"Huber, Christian",1982,Schwabach
+50324,3,FREIE WÄHLER,905,324,"Sparrer, Otto",1951,Dinkelsbühl
+50401,4,GRÜNE,905,401,"Osgyan, Verena",1971,Nürnberg
+50402,4,GRÜNE,905,402,"Stümpfig, Martin",1970,Feuchtwangen
+50403,4,GRÜNE,905,403,"Fuchs, Barbara",1960,Fürth
+50404,4,GRÜNE,905,404,"Ganserer, Markus",1977,Fürth
+50405,4,GRÜNE,905,405,"Weigand, Dr. Sabine",1961,Schwabach
+50406,4,GRÜNE,905,406,"Zwanziger, Christian",1987,Pommersfelden
+50407,4,GRÜNE,905,407,"Drechsler, Gabriele",1959,Schwarzenbruck
+50408,4,GRÜNE,905,408,"Hayn, Elmar",1971,Nürnberg
+50409,4,GRÜNE,905,409,"Marschall, Astrid",1968,Eckental
+50410,4,GRÜNE,905,410,"Höftmann, André",1996,Wilhermsdorf
+50411,4,GRÜNE,905,411,"Schaaf, Gabriela",1965,Heilsbronn
+50412,4,GRÜNE,905,412,"Hofmann, Andreas",1964,Roth
+50413,4,GRÜNE,905,413,"Deffner, Heidemarie",1964,Roßtal
+50414,4,GRÜNE,905,414,"Kucher, Winfried",1953,Weißenburg i.Bay.
+50415,4,GRÜNE,905,415,"Thomas, Cornelia",1953,Zirndorf
+50416,4,GRÜNE,905,416,"Weierich, Peter",1964,Erlangen
+50417,4,GRÜNE,905,417,"Hammer, Eva",1953,Möhrendorf
+50418,4,GRÜNE,905,418,"Neunhoeffer, Klaus",1955,Schwabach
+50419,4,GRÜNE,905,419,"Herling, Anja",1979,Nürnberg
+50420,4,GRÜNE,905,420,"Aurnhammer, Tom",1966,Georgensgmünd
+50421,4,GRÜNE,905,421,"Peucker-Göbel, Karin",1961,Herzogenaurach
+50422,4,GRÜNE,905,422,"Schubarth, Achim",1963,Treuchtlingen
+50423,4,GRÜNE,905,423,"Romstoeck, Isa",1949,Nürnberg
+50424,4,GRÜNE,905,424,"Reichel, René",1982,Nürnberg
+50501,5,FDP,905,501,"Fischbach, Matthias",1988,Erlangen
+50502,5,FDP,905,502,"Hanel, Alexander",1977,Leutershausen
+50503,5,FDP,905,503,"Dunker, Dr. Jan",1966,Nürnberg
+50504,5,FDP,905,504,"Sormaz, Ümit",1979,Nürnberg
+50505,5,FDP,905,505,"Mathes, Johanna",1988,Fürth
+50506,5,FDP,905,506,"Scharf, Luca",1998,Lauf a.d.Pegnitz
+50507,5,FDP,905,507,"Neuner, Andreas",1968,Rückersdorf
+50508,5,FDP,905,508,"Rißmann, Daniela",1987,Röthenbach a.d.Pegnitz
+50509,5,FDP,905,509,"Stromberger, Stefan",1988,Wendelstein
+50510,5,FDP,905,510,"Kumar, Dr. Walburga",1939,Roth
+50511,5,FDP,905,511,"Bartram, Gabriele",1951,Weißenburg i.Bay.
+50512,5,FDP,905,512,"Rotermund-Fritsche, Dr. Annette",1954,Nürnberg
+50513,5,FDP,905,513,"Ekrem, Boulent",1978,Herzogenaurach
+50514,5,FDP,905,514,"Meier, Agnes",1965,Stein
+50515,5,FDP,905,515,"Eichmann, Stephan",1977,Fürth
+50516,5,FDP,905,516,"Endres, Sabine",1985,Dietenhofen
+50517,5,FDP,905,517,"Fleischer, Franz",1954,Fürth
+50518,5,FDP,905,518,"Ahrens, Nils",1963,Erlangen
+50519,5,FDP,905,519,"von Meding, Sebastian",1970,Schwaig b.Nürnberg
+50520,5,FDP,905,520,"Freiherr von Lerchenfeld, Carl Heimeran",1958,Uffenheim
+50521,5,FDP,905,521,"Eipper, Dr. Christoph",1962,Nürnberg
+50522,5,FDP,905,522,"Markert, Ralf",1961,Herzogenaurach
+50523,5,FDP,905,523,"List, Bernd",1965,Schwabach
+50524,5,FDP,905,524,"Heußer, Edith",1988,Nürnberg
+50601,6,DIE LINKE,905,601,"Haupt, Niklas",1986,Fürth
+50602,6,DIE LINKE,905,602,"Pihan, Debora",1983,Nürnberg
+50603,6,DIE LINKE,905,603,"Fesli, Gizem",1993,Nürnberg
+50604,6,DIE LINKE,905,604,"Halla, Uwe",1979,Nürnberg
+50605,6,DIE LINKE,905,605,"Lüdemann, Angelika",1952,Nürnberg
+50606,6,DIE LINKE,905,606,"Gerbig, Stefan",1983,Nürnberg
+50607,6,DIE LINKE,905,607,"Trenkner, Sibylle",1967,Ansbach
+50608,6,DIE LINKE,905,608,"Eitel, Lukas",1998,Erlangen
+50609,6,DIE LINKE,905,609,"Feldmann, Christiane",1966,Schwabach
+50610,6,DIE LINKE,905,610,"Weinberg, Harald",1957,Ansbach
+50611,6,DIE LINKE,905,611,"Greim, Mechthild",1956,Nürnberg
+50612,6,DIE LINKE,905,612,"Beuckert, Michael",1971,Ansbach
+50613,6,DIE LINKE,905,613,"Heike, Anny",1948,Fürth
+50614,6,DIE LINKE,905,614,"Salzbrunn, Anton",1953,Erlangen
+50615,6,DIE LINKE,905,615,"Pirner, Giesberta",1963,Nürnberg
+50616,6,DIE LINKE,905,616,"Wiedmann, René",1971,Lauf a.d.Pegnitz
+50617,6,DIE LINKE,905,617,"Vigilante Raffa, Tamara",1975,Ansbach
+50618,6,DIE LINKE,905,618,"Förster, Henry",1956,Neustadt a.d.Aisch
+50619,6,DIE LINKE,905,619,"Müller, Heidi",1953,Obermichelbach
+50620,6,DIE LINKE,905,620,"Schönweiß, Ulrich",1963,Fürth
+50621,6,DIE LINKE,905,621,"Krapf, Christa",1950,Nürnberg
+50622,6,DIE LINKE,905,622,"Schwarz, Tino",1986,Georgensgmünd
+50623,6,DIE LINKE,905,623,"Mayer, Anna",1987,Nürnberg
+50624,6,DIE LINKE,905,624,"Rettlinger, Heinz",1955,Gunzenhausen
+50701,7,BP,905,701,"Rinke, Klaus-Peter",1954,Bruckberg
+50702,7,BP,905,702,"Brendecke, Michael",1960,Fürth
+50703,7,BP,905,703,"Mauderer, Josef",1957,Hilpoltstein
+50704,7,BP,905,704,"Bock, Irmtraud",1959,Nürnberg
+50705,7,BP,905,705,"Kral, Manfred",1953,Höchstadt a.d.Aisch
+50706,7,BP,905,706,"Braungardt, Werner",1971,Mühlhausen
+50707,7,BP,905,707,"Hoff, Peter",1947,Nürnberg
+50708,7,BP,905,708,"Brendecke, Fatimah",1965,Fürth
+50709,7,BP,905,709,"Weigl, Michaela",1965,Mindelstetten
+50710,7,BP,905,710,"Bogacki, Rafael",1980,Erlangen
+50711,7,BP,905,711,"Häring, Martin",1950,Sulzbach-Rosenberg
+50712,7,BP,905,712,"Peppenauer, Jonas",2000,Eichstätt
+50801,8,ÖDP,905,801,"Osterlänger, Jürgen",1958,Emskirchen
+50802,8,ÖDP,905,802,"Höppel, Frank",1971,Erlangen
+50803,8,ÖDP,905,803,"Brendle-Behnisch, Günther",1956,Heilsbronn
+50804,8,ÖDP,905,804,"Hetzel, Maria",1968,Bruckberg
+50805,8,ÖDP,905,805,"Rechholz, Christian",1972,Nürnberg
+50806,8,ÖDP,905,806,"Anschütz, Hans",1964,Nürnberg
+50807,8,ÖDP,905,807,"Malowaniec, Dr. Krzysztof",1955,Stein
+50808,8,ÖDP,905,808,"Wolkersdorfer, Roland",1968,Schwabach
+50809,8,ÖDP,905,809,"Stryz, Franz",1954,Nürnberg
+50810,8,ÖDP,905,810,"Ebert, Reinhard",1963,Heidenheim
+50811,8,ÖDP,905,811,"Spiegel, Norbert",1967,Alfeld
+50812,8,ÖDP,905,812,"Reinhart, Manfred",1964,Buckenhof
+50813,8,ÖDP,905,813,"Hager, Ludwig",1968,Nürnberg
+50814,8,ÖDP,905,814,"Zankl, Claudia",1988,Nürnberg
+50815,8,ÖDP,905,815,"Scherer, Simon",1982,Gunzenhausen
+50816,8,ÖDP,905,816,"Schrollinger, Thomas",1968,Nürnberg
+50817,8,ÖDP,905,817,"Maibom, Johannes",1957,Emskirchen
+50818,8,ÖDP,905,818,"Klein, Martin",1971,Ansbach
+50819,8,ÖDP,905,819,"Grahn, Leif",1978,Buckenhof
+50820,8,ÖDP,905,820,"May, Daniela",1966,Emskirchen
+50821,8,ÖDP,905,821,"Stadelmann, Christian",1991,Erlangen
+50822,8,ÖDP,905,822,"Sichermann, Paul",1965,Ansbach
+50823,8,ÖDP,905,823,"Ullmann, Christian",1954,Erlangen
+50824,8,ÖDP,905,824,"Ott, Heinrich",1950,Nürnberg
+50901,9,PIRATEN,905,901,"Windisch, Matthias",1964,Wendelstein
+50902,9,PIRATEN,905,902,"Wanger, Markus",1983,Gunzenhausen
+50903,9,PIRATEN,905,903,"Purzner, Jürgen",1963,Erlangen
+50904,9,PIRATEN,905,904,"Rank, Wolfgang",1962,Röttenbach
+50905,9,PIRATEN,905,905,"Warsinke, Stefan",1993,Nürnberg
+50906,9,PIRATEN,905,906,"Vogel, Hilmar",1973,Fürth
+50907,9,PIRATEN,905,907,"Betz, Florian",1981,Nürnberg
+50908,9,PIRATEN,905,908,"Ceglar, Michael",1963,Lauf a.d.Pegnitz
+50909,9,PIRATEN,905,909,"Radojevic, Daniel",1981,Aurachtal
+50910,9,PIRATEN,905,910,"Turnwald-Kurtz, Erich",1956,Nürnberg
+50911,9,PIRATEN,905,911,"Reitmaier, Peter",1986,Gunzenhausen
+50912,9,PIRATEN,905,912,"Körber, Hayo",1983,Nürnberg
+51001,10,DIE FRANKEN,905,1001,"Gattenlöhner, Robert",1956,Roth
+51002,10,DIE FRANKEN,905,1002,"Brandl, Andreas",1973,Lauf a.d.Pegnitz
+51003,10,DIE FRANKEN,905,1003,"Turinsky, Bianka",1980,Feucht
+51004,10,DIE FRANKEN,905,1004,"Bartlitz, Dr. David",1987,Nürnberg
+51005,10,DIE FRANKEN,905,1005,"Reinwald, Ulrich",1975,Nürnberg
+51006,10,DIE FRANKEN,905,1006,"Gattenlöhner, Elke",1961,Roth
+51007,10,DIE FRANKEN,905,1007,"Kistler, Karola",1960,Dietersheim
+51008,10,DIE FRANKEN,905,1008,"Wagner, Klaus",1967,Ansbach
+51009,10,DIE FRANKEN,905,1009,"Ackermann, Carola",1969,Röttenbach
+51010,10,DIE FRANKEN,905,1010,"Wagner, Martin",1947,Oberasbach
+51011,10,DIE FRANKEN,905,1011,"Sommerkorn, Klaus",1953,Erlangen
+51012,10,DIE FRANKEN,905,1012,"Hirsch, Harald",1967,Erlangen
+51013,10,DIE FRANKEN,905,1013,"Nikol, Olga",1952,Feucht
+51014,10,DIE FRANKEN,905,1014,"Grupe, Christian",1971,Erlangen
+51015,10,DIE FRANKEN,905,1015,"Haas, Edeltraud",1957,Feucht
+51016,10,DIE FRANKEN,905,1016,"Zehner, Roland",1959,Heßdorf
+51017,10,DIE FRANKEN,905,1017,"Raber, Regina",1947,Oberasbach
+51018,10,DIE FRANKEN,905,1018,"Gsänger, Franz",1947,Roth
+51019,10,DIE FRANKEN,905,1019,"Pudalik, Roland",1955,Feucht
+51020,10,DIE FRANKEN,905,1020,"Hasenest, Werner",1954,Neunkirchen a.Sand
+51021,10,DIE FRANKEN,905,1021,"Zagel, Ralph",1974,Lauf a.d.Pegnitz
+51022,10,DIE FRANKEN,905,1022,"Trutz, Paul",1986,Nürnberg
+51023,10,DIE FRANKEN,905,1023,"Dorsch, Marco",1981,Westheim
+51024,10,DIE FRANKEN,905,1024,"Bloos, Werner",1968,Haundorf
+51101,11,AfD,905,1101,"Swoboda, Raimund",1950,Markt Erlbach
+51102,11,AfD,905,1102,"Müller, Dr. Ralph",1963,Altdorf b.Nürnberg
+51103,11,AfD,905,1103,"Pleyer, Claus-Georg",1967,Zirndorf
+51104,11,AfD,905,1104,"Mang, Ferdinand",1978,Allersberg
+51105,11,AfD,905,1105,"Jentzsch, René",1975,Höchstadt a.d.Aisch
+51106,11,AfD,905,1106,"Meier, Johannes",1989,Ansbach
+51107,11,AfD,905,1107,"Lang, Siegfried",1964,Burgsalach
+51108,11,AfD,905,1108,"Meister, Michael",1963,Herzogenaurach
+51109,11,AfD,905,1109,"Dörner, Dr. Wolfgang Marc",1960,Nürnberg
+51110,11,AfD,905,1110,"Vogler, Matthias",1981,Nürnberg
+51111,11,AfD,905,1111,"Konrad, Peter",1975,Würzburg
+51112,11,AfD,905,1112,"Wahner, Klaus",1964,Nürnberg
+51301,13,mut,905,1201,"Deutschmann, Christine",1967,Lauf a.d.Pegnitz
+51302,13,mut,905,1202,"Philipp, Susanne",1964,Rednitzhembach
+51303,13,mut,905,1203,"Turetschek, Herbert",1958,Nürnberg
+51304,13,mut,905,1204,"Bullmer, Andrea",1950,Nürnberg
+51305,13,mut,905,1205,"Wohlgemuth, Wolfgang",1960,Erlangen
+51306,13,mut,905,1206,"Wolfram, Ute",1960,Schwabach
+51307,13,mut,905,1207,"Flohr, Dieter",1963,Cadolzburg
+51308,13,mut,905,1208,"Weberpals, Dieter",1954,Offenhausen
+51309,13,mut,905,1209,"Lengenfelder, Rainer",1962,Nürnberg
+51310,13,mut,905,1210,"Schößwender, Martina",1971,Pommelsbrunn
+51311,13,mut,905,1211,"Keller, Helmut",1959,Nürnberg
+51312,13,mut,905,1212,"Schnack, Arwen",1981,Nürnberg
+51313,13,mut,905,1213,"Nißlbeck, Wolfgang",1962,Nürnberg
+51314,13,mut,905,1214,"Philipp, Larissa-Katharina",1997,Rednitzhembach
+51315,13,mut,905,1215,"Meier, David",1988,Nürnberg
+51316,13,mut,905,1216,"Wohlgemuth, Melina",1994,Erlangen
+51317,13,mut,905,1217,"Kindler, Manfred",1940,Schwabach
+51318,13,mut,905,1218,"Wohlgemuth, Carina",1989,Nürnberg
+51319,13,mut,905,1219,"Philipp, Karlheinz",1959,Rednitzhembach
+51320,13,mut,905,1220,"Deutschmann, Tobias",1996,Lauf a.d.Pegnitz
+51321,13,mut,905,1221,"Ackermann, Renate",1952,Ansbach
+51501,15,Die PARTEI,905,1301,"Volkert, Patrick",1988,Georgensgmünd
+51502,15,Die PARTEI,905,1302,"Roser, Julian",1993,Kammerstein
+51503,15,Die PARTEI,905,1303,"Pleick, Yannik",1998,Hilpoltstein
+51504,15,Die PARTEI,905,1304,"Schelte, Simon",1995,Schwanstetten
+51505,15,Die PARTEI,905,1305,"Dörrie, Dr. Jan",1973,Nürnberg
+51506,15,Die PARTEI,905,1306,"Neidnicht, Josefine",1994,Nürnberg
+51507,15,Die PARTEI,905,1307,"Kristuf, Rainer",1961,Fürth
+51508,15,Die PARTEI,905,1308,"Hubatsch, Leon",1998,Veitsbronn
+51509,15,Die PARTEI,905,1309,"Knapp, Jörg",1966,Nürnberg
+51601,16,Gesundheitsforschung,905,1401,"Beyerlein, Andrea",1958,Roth
+51602,16,Gesundheitsforschung,905,1402,"Asbeck, Stefan",1987,München
+51603,16,Gesundheitsforschung,905,1403,"Preis, Alexander",1996,Erlangen
+51801,18,V-Partei,905,1501,"Streck, Markus",1972,Wendelstein
+51802,18,V-Partei,905,1502,"Moshammer, Daniel",1988,Treuchtlingen
+51803,18,V-Partei,905,1503,"Michalko, Simone",1975,Nürnberg
+51804,18,V-Partei,905,1504,"Sibai, Amina",1987,Ansbach
+51805,18,V-Partei,905,1505,"Garratt, Daniel",1994,Nürnberg
+51806,18,V-Partei,905,1506,"Näser, Melanie",1979,Nürnberg
+51807,18,V-Partei,905,1507,"Fischer, Michaela",1961,Cadolzburg
+51808,18,V-Partei,905,1508,"Dischner, Doris",1962,Hersbruck
+51809,18,V-Partei,905,1509,"Erler, Marie Alin",1997,Zirndorf
+51810,18,V-Partei,905,1510,"Maurer, Michaela",1972,Nürnberg
+60101,1,CSU,906,101,"Stamm, Barbara",1944,Würzburg
+60102,1,CSU,906,102,"Eck, Gerhard",1960,Donnersdorf
+60103,1,CSU,906,103,"Bausback, Prof. Dr. Winfried",1965,Aschaffenburg
+60104,1,CSU,906,104,"Demar, Juliane",1993,Großbardorf
+60105,1,CSU,906,105,"Becker, Barbara",1969,Wiesenbronn
+60106,1,CSU,906,106,"Gerlach, Judith",1985,Weibersbrunn
+60107,1,CSU,906,107,"Jörg, Oliver",1972,Würzburg
+60108,1,CSU,906,108,"Kirchner, Sandro",1975,Burkardroth
+60109,1,CSU,906,109,"Ländner, Manfred",1958,Kürnach
+60110,1,CSU,906,110,"Rüth, Berthold",1958,Eschau
+60111,1,CSU,906,111,"Schwab, Thorsten",1975,Hafenlohr
+60112,1,CSU,906,112,"Vogel, Steffen",1974,Theres
+60113,1,CSU,906,113,"Brumme, Tibor",1970,Kitzingen
+60114,1,CSU,906,114,"Hennig, Timo",1988,Marktheidenfeld
+60115,1,CSU,906,115,"Hörtler, Steffen",1973,Bad Kissingen
+60116,1,CSU,906,116,"Noll, Stephan",1991,Alzenau
+60117,1,CSU,906,117,"Passow, Karin",1969,Kleinheubach
+60118,1,CSU,906,118,"Rath, Johanna",1978,Aschaffenburg
+60119,1,CSU,906,119,"Zachmann, Lothar",1967,Dingolshausen
+60201,2,SPD,906,201,"Halbleib, Volkmar",1964,Ochsenfurt
+60202,2,SPD,906,202,"Fehlner, Martina",1960,Aschaffenburg
+60203,2,SPD,906,203,"Rosenthal, Georg",1946,Würzburg
+60204,2,SPD,906,204,"Petersen, Kathi",1956,Schweinfurt
+60205,2,SPD,906,205,"van Eckert, René",1987,Mellrichstadt
+60206,2,SPD,906,206,"Gottschalk, Sven",1976,Lohr a.Main
+60207,2,SPD,906,207,"Kößler, Dr. Jürgen",1977,Iphofen
+60208,2,SPD,906,208,"Schaub, Norbert",1972,Hammelburg
+60209,2,SPD,906,209,"Pischinger, Jörg",1988,Großwallstadt
+60210,2,SPD,906,210,"Fotokehagias, Michail",1989,Elsenfeld
+60211,2,SPD,906,211,"Röhm, Sonja",1987,Aschaffenburg
+60212,2,SPD,906,212,"Meyerer, Thorsten",1973,Klingenberg a.Main
+60213,2,SPD,906,213,"Albert, Lara",1995,Sandberg
+60214,2,SPD,906,214,"Grötsch, Eberhard",1950,Würzburg
+60215,2,SPD,906,215,"Bolkart-Mühlrath, Martha",1960,Karlstadt
+60216,2,SPD,906,216,"Laemmerhold, Lutz",1949,Stockstadt a.Main
+60217,2,SPD,906,217,"Bamberg-Reinwand, Johanna",1982,Zeil a.Main
+60218,2,SPD,906,218,"Schmid, Harald",1957,Rimpar
+60219,2,SPD,906,219,"Braum, Martina",1971,Röthlein
+60301,3,FREIE WÄHLER,906,301,"Pittner, Gerald",1960,Bad Neustadt a.d.Saale
+60302,3,FREIE WÄHLER,906,302,"Dülk, Manfred",1952,Kürnach
+60303,3,FREIE WÄHLER,906,303,"Schötterl, Bernd",1968,Amorbach
+60304,3,FREIE WÄHLER,906,304,"Schneider, Dr. Ulrike",1966,Schweinfurt
+60305,3,FREIE WÄHLER,906,305,"Stolz, Anna",1982,Arnstein
+60306,3,FREIE WÄHLER,906,306,"Fahn, Dr. Hans Jürgen",1952,Erlenbach a.Main
+60307,3,FREIE WÄHLER,906,307,"Ries, Norbert",1960,Schöllkrippen
+60308,3,FREIE WÄHLER,906,308,"Stierhof, Frank",1981,Iphofen
+60309,3,FREIE WÄHLER,906,309,"Rützel, Thomas",1959,Greußenheim
+60310,3,FREIE WÄHLER,906,310,"Kleren, Matthias",1972,Münnerstadt
+60311,3,FREIE WÄHLER,906,311,"Pintar, Marco",1976,Neuendorf
+60312,3,FREIE WÄHLER,906,312,"Zarbo, Cengiz",1983,Volkach
+60313,3,FREIE WÄHLER,906,313,"Schmid, Engelbert",1953,Kleinheubach
+60314,3,FREIE WÄHLER,906,314,"Kern, Walter",1944,Großostheim
+60315,3,FREIE WÄHLER,906,315,"Falk, Ulrich",1970,Martinsheim
+60316,3,FREIE WÄHLER,906,316,"Heinelt, Norbert",1947,Schweinfurt
+60401,4,GRÜNE,906,401,"Celina, Kerstin",1968,Kürnach
+60402,4,GRÜNE,906,402,"Friedl, Patrick",1970,Würzburg
+60403,4,GRÜNE,906,403,"Röder, Birgid",1962,Gerolzhofen
+60404,4,GRÜNE,906,404,"Münch, Gregor",1991,Arnstein
+60405,4,GRÜNE,906,405,"Gößmann, Maria",1999,Würzburg
+60406,4,GRÜNE,906,406,"Shah, Yatin",1978,Bad Königshofen i.Grabfeld
+60407,4,GRÜNE,906,407,"Baier, Anja",1970,Karlstadt
+60408,4,GRÜNE,906,408,"Wagener, Stefan",1971,Aschaffenburg
+60409,4,GRÜNE,906,409,"Becker, Marion",1958,Mömlingen
+60410,4,GRÜNE,906,410,"Goll, Volker",1961,Kahl a.Main
+60411,4,GRÜNE,906,411,"Tippe, Karina",1964,Goldbach
+60412,4,GRÜNE,906,412,"Knoblach, Paul",1954,Bergrheinfeld
+60413,4,GRÜNE,906,413,"Eckardt, Oliver",1991,Trappstadt
+60414,4,GRÜNE,906,414,"Schneider, Joachim",1962,Klingenberg a.Main
+60415,4,GRÜNE,906,415,"Bergmann, Tatjana",1972,Kahl a.Main
+60416,4,GRÜNE,906,416,"Plate, Hans",1963,Willanzheim
+60417,4,GRÜNE,906,417,"Winter, Petra",1969,Bad Kissingen
+60418,4,GRÜNE,906,418,"Selariu, Marc",1992,Würzburg
+60419,4,GRÜNE,906,419,"Reder-Zirkelbach, Birgit",1966,Großeibstadt
+60501,5,FDP,906,501,"Kaltenhauser, Dr. Helmut",1961,Alzenau
+60502,5,FDP,906,502,"Kuhl, Wolfgang",1952,Erlabrunn
+60503,5,FDP,906,503,"Fischer, Wolfram",1958,Würzburg
+60504,5,FDP,906,504,"Graf von Stauffenberg, Karl Schenk",1970,Höchheim
+60505,5,FDP,906,505,"Sander, Peter",1975,Lohr a.Main
+60506,5,FDP,906,506,"Zimmermann, Frank",1970,Dorfprozelten
+60507,5,FDP,906,507,"Kolb, Peter",1957,Aschaffenburg
+60508,5,FDP,906,508,"Hofstetter, Dr. Hans-Joachim",1958,Bad Kissingen
+60509,5,FDP,906,509,"Müller, Hans",1958,Wiesentheid
+60510,5,FDP,906,510,"Bock, Gunnar",1978,Schweinfurt
+60511,5,FDP,906,511,"Jannek, Werner",1957,Marktheidenfeld
+60512,5,FDP,906,512,"Linduschka, Dr. Heinz",1950,Elsenfeld
+60513,5,FDP,906,513,"Schenkel, Dr. Astrid",1966,Würzburg
+60514,5,FDP,906,514,"Rausch, Hartmut",1953,Ostheim v.d.Rhön
+60515,5,FDP,906,515,"Pascher, Harald",1969,Ebern
+60516,5,FDP,906,516,"Vorbeck, Edda",1979,Schweinfurt
+60517,5,FDP,906,517,"Betz, Patrick-Daniel",1975,Karlstein a.Main
+60518,5,FDP,906,518,"Brumme, Dr. Holm",1958,Waldbüttelbrunn
+60519,5,FDP,906,519,"Schneider, Thilo",1966,Aschaffenburg
+60601,6,DIE LINKE,906,601,"Striesow, Robert",1987,Schweinfurt
+60602,6,DIE LINKE,906,602,"Pfaff, Christine",1963,Sommerach
+60603,6,DIE LINKE,906,603,"Genheimer, Florence",1992,Schweinfurt
+60604,6,DIE LINKE,906,604,"Beck, Florian",1984,Münnerstadt
+60605,6,DIE LINKE,906,605,"Greber, Andrea",1959,Schweinfurt
+60606,6,DIE LINKE,906,606,"Schäffer, Tobias",1998,Hausen
+60607,6,DIE LINKE,906,607,"Strobel, Angelika",1950,Werneck
+60608,6,DIE LINKE,906,608,"Hansen, Kevin-Christopher",1990,Kleinrinderfeld
+60609,6,DIE LINKE,906,609,"Greber, Jutta",1953,Schweinfurt
+60610,6,DIE LINKE,906,610,"Liebl, Georg",1947,Leidersbach
+60611,6,DIE LINKE,906,611,"Riedelsheimer, Marga",1953,Schweinfurt
+60612,6,DIE LINKE,906,612,"Hänsch, Christian",1969,Bad Kissingen
+60613,6,DIE LINKE,906,613,"Dörnhöfer, Doris",1953,Würzburg
+60614,6,DIE LINKE,906,614,"Diekmann, Peter",1946,Niedernberg
+60615,6,DIE LINKE,906,615,"Barrientos Krauss, Simone",1963,Ochsenfurt
+60616,6,DIE LINKE,906,616,"Häuslein, Stefan",1978,Marktheidenfeld
+60617,6,DIE LINKE,906,617,"Freund, Matthias",1967,Bad Neustadt a.d.Saale
+60618,6,DIE LINKE,906,618,"Timm, Martin, (Sukov, Leander)",1957,Ochsenfurt
+60619,6,DIE LINKE,906,619,"Siedler, Peter",1943,Kleinlangheim
+60701,7,BP,906,701,"Hartmann, Uwe",1963,Kitzingen
+60702,7,BP,906,702,"Gilbert, Uta",1961,Gerolzhofen
+60703,7,BP,906,703,"Hess, Oliver",1993,Mainstockheim
+60704,7,BP,906,704,"Sadlo, Franz",1948,Bad Kissingen
+60705,7,BP,906,705,"Fieger, Christian",1993,Eschau
+60706,7,BP,906,706,"Herberich, Matthias",1966,Eußenheim
+60707,7,BP,906,707,"Rönninger, Karl-Heinz",1944,Albertshofen
+60708,7,BP,906,708,"Nix, Benjamin",1987,Schweinfurt
+60709,7,BP,906,709,"Gilbert, Raimund",1990,Gerolzhofen
+60710,7,BP,906,710,"Götz, Thorsten",1987,Schweinfurt
+60711,7,BP,906,711,"Götz, Sabine",1966,Schweinfurt
+60712,7,BP,906,712,"Hartmann, Birgit",1960,Kitzingen
+60713,7,BP,906,713,"Weinmann, Ingrid",1942,Kitzingen
+60714,7,BP,906,714,"Trautmann, Felix",1985,Sulzbach a.Main
+60715,7,BP,906,715,"Lutz, Ingrid",1951,Waldbüttelbrunn
+60716,7,BP,906,716,"Schneider, Anette",1952,Iphofen
+60717,7,BP,906,717,"Rammig, Jürgen",1965,Kitzingen
+60718,7,BP,906,718,"Stadel, Rudolf",1956,Kitzingen
+60719,7,BP,906,719,"Brennfleck, Gertrud",1952,Kitzingen
+60801,8,ÖDP,906,801,"Schmitt, Bernhard",1966,Aschaffenburg
+60802,8,ÖDP,906,802,"Binder, Raimund",1964,Würzburg
+60803,8,ÖDP,906,803,"Reinhard, Michaela",1974,Bad Kissingen
+60804,8,ÖDP,906,804,"Dorsch, Patrik",1985,Hammelburg
+60805,8,ÖDP,906,805,"Paulus-Hildner, Silvia",1965,Kitzingen
+60806,8,ÖDP,906,806,"May, Dietmar",1957,Hollstadt
+60807,8,ÖDP,906,807,"von Bodisco, Wolf",1941,Würzburg
+60808,8,ÖDP,906,808,"Winter, Wolfgang",1957,Sulzbach a.Main
+60809,8,ÖDP,906,809,"Tröge, Bianca",1972,Kitzingen
+60810,8,ÖDP,906,810,"Lang, Rudolf",1953,Aschaffenburg
+60811,8,ÖDP,906,811,"Welzenbach, Patricia",1958,Würzburg
+60812,8,ÖDP,906,812,"Krommer, Marianne",1962,Bürgstadt
+60813,8,ÖDP,906,813,"Albert, Klemens",1950,Pfarrweisach
+60814,8,ÖDP,906,814,"Wagenhäuser, Esther",1988,Gerolzhofen
+60815,8,ÖDP,906,815,"Bretscher, Stefan",1969,Grafenrheinfeld
+60816,8,ÖDP,906,816,"Bauer, Katrin",1972,Aschaffenburg
+60817,8,ÖDP,906,817,"Peeters, Walther",1951,Aschaffenburg
+60818,8,ÖDP,906,818,"Friedrich, Benno",1969,Aschaffenburg
+60819,8,ÖDP,906,819,"Pröstler, Herbert",1953,Dettelbach
+60901,9,PIRATEN,906,901,"Kindermann, Michael",1966,Würzburg
+60902,9,PIRATEN,906,902,"Lukas, Mirco",1990,Zellingen
+60903,9,PIRATEN,906,903,"Wildenauer, Benjamin",1985,Bad Brückenau
+60904,9,PIRATEN,906,904,"Finke, Wolfgang",1956,Lohr a.Main
+60905,9,PIRATEN,906,905,"Winkler, Maximilian",1987,Würzburg
+61001,10,DIE FRANKEN,906,1001,"Freifrau von Thüngen, Christiane",1941,Thüngen
+61002,10,DIE FRANKEN,906,1002,"Konrad, Dr. Herbert",1950,Rimpar
+61003,10,DIE FRANKEN,906,1003,"Fischer, Horst",1955,Hohenroth
+61004,10,DIE FRANKEN,906,1004,"Weber, Franz",1953,Niederlauer
+61005,10,DIE FRANKEN,906,1005,"Wagner-Blind, Mechthild",1946,Würzburg
+61006,10,DIE FRANKEN,906,1006,"Wagner, Peter",1943,Würzburg
+61007,10,DIE FRANKEN,906,1007,"Freifrau von Thüngen, Nadja",1970,Thüngen
+61008,10,DIE FRANKEN,906,1008,"Freiherr von Thüngen, James Eric",1969,Thüngen
+61009,10,DIE FRANKEN,906,1009,"Tartsch, Detlef",1945,Nürnberg
+61010,10,DIE FRANKEN,906,1010,"Müller, Gabriele",1959,Thüngen
+61011,10,DIE FRANKEN,906,1011,"Metz, Christian",1982,Burkardroth
+61012,10,DIE FRANKEN,906,1012,"Mauser, Ursula",1942,Sommerhausen
+61013,10,DIE FRANKEN,906,1013,"Leist, Roslyn",1947,Würzburg
+61014,10,DIE FRANKEN,906,1014,"Hubrich, Joachim",1963,Karlstadt
+61015,10,DIE FRANKEN,906,1015,"Hemmelmann, Ewald",1956,Himmelstadt
+61016,10,DIE FRANKEN,906,1016,"Fuchs, Siegbert",1948,Sommerhausen
+61017,10,DIE FRANKEN,906,1017,"Dürbeck, Matthias",1962,Karlstein a.Main
+61018,10,DIE FRANKEN,906,1018,"Battiany-Fuchs, Renate",1949,Sommerhausen
+61019,10,DIE FRANKEN,906,1019,"Steinbauer, Kurt",1957,Karlstadt
+61101,11,AfD,906,1101,"Klingen, Christian",1965,Markt Einersheim
+61102,11,AfD,906,1102,"Graupner, Richard",1963,Schweinfurt
+61103,11,AfD,906,1103,"Gebhardt, Michael",1964,Giebelstadt
+61104,11,AfD,906,1104,"Mahler, Daniela",1975,Schwarzach a.Main
+61105,11,AfD,906,1105,"Peter, Martin",1971,Würzburg
+61106,11,AfD,906,1106,"Schreck, Kurt",1950,Erlenbach b.Marktheidenfeld
+61107,11,AfD,906,1107,"Geßner, Patrick",1984,Maßbach
+61108,11,AfD,906,1108,"Sacher, Alfred",1949,Haibach
+61109,11,AfD,906,1109,"Lippold-Eggen, Freia",1955,Bad Kissingen
+61110,11,AfD,906,1110,"Junker, Klaus Uwe",1964,Hösbach
+61301,13,mut,906,1201,"Matuschik, Matthias",1965,Gerbrunn
+61302,13,mut,906,1202,"Riegler, Julia",1976,Kitzingen
+61303,13,mut,906,1203,"Höfner, Julian",1995,Würzburg
+61304,13,mut,906,1204,"Lemmer, Thomas",1968,Kitzingen
+61305,13,mut,906,1205,"Günther, Elke",1954,Großostheim
+61306,13,mut,906,1206,"Pinke, Ortwin",1962,Eltmann
+61307,13,mut,906,1207,"Lampe, Daniela",1978,Würzburg
+61308,13,mut,906,1208,"Schilling, Malte",1996,Hammelburg
+61309,13,mut,906,1209,"Krämer, Gabriele",1958,Veitshöchheim
+61310,13,mut,906,1210,"Richter, Felix",1969,Würzburg
+61311,13,mut,906,1211,"Schilling, Beate",1961,Hammelburg
+61312,13,mut,906,1212,"Marschhäuser, Lillo",1953,Eisenheim
+61313,13,mut,906,1213,"Seng, Matthias",1964,Gerolzhofen
+61314,13,mut,906,1214,"Kern, Christl",1952,Dettelbach
+61501,15,Die PARTEI,906,1301,"Ritter, Markus",1974,Heinrichsthal
+61502,15,Die PARTEI,906,1302,"Kübert, Andrea",1986,Würzburg
+61503,15,Die PARTEI,906,1303,"Schnatz, Pascal",1993,Erlenbach a.Main
+61504,15,Die PARTEI,906,1304,"Portscher, Andreas",1989,Großostheim
+61505,15,Die PARTEI,906,1305,"Alm, Bernd",1983,Niederwerrn
+61506,15,Die PARTEI,906,1306,"Pföhler, Kornelius",1994,Schneeberg
+61507,15,Die PARTEI,906,1307,"Zeller, Lisa",1991,Veitshöchheim
+61508,15,Die PARTEI,906,1308,"Klenk, Tobias",1987,Würzburg
+61509,15,Die PARTEI,906,1309,"Buhn, Erik",1984,Aschaffenburg
+61510,15,Die PARTEI,906,1310,"Ament, Alena",1994,Erlenbach a.Main
+61511,15,Die PARTEI,906,1311,"Kuger, Antonia",1998,Amorbach
+61512,15,Die PARTEI,906,1312,"Blaschko, Robert-Rolland",1987,Würzburg
+61701,17,Tierschutzpartei,906,1401,"Sänger, Svenja",1989,Gemünden a.Main
+61702,17,Tierschutzpartei,906,1402,"Deckert, Katharina",1987,Würzburg
+61703,17,Tierschutzpartei,906,1403,"Bremer, Sabrina",1990,Iphofen
+61704,17,Tierschutzpartei,906,1404,"Kraft, Jaqueline",1992,Gemünden a.Main
+61801,18,V-Partei,906,1501,"Dietzler, Sabine",1984,Schöllkrippen
+61802,18,V-Partei,906,1502,"Großhans, Heinz",1955,Esselbach
+61803,18,V-Partei,906,1503,"Ortloff, Christian",1970,Schweinfurt
+61804,18,V-Partei,906,1504,"Schmitt, Bertram",1969,Ochsenfurt
+61805,18,V-Partei,906,1505,"Specht, Michael",1976,Johannesberg
+61806,18,V-Partei,906,1506,"Wolfram, Christine",1996,Würzburg
+61807,18,V-Partei,906,1507,"Dietzler, Andreas",1972,Schöllkrippen
+61808,18,V-Partei,906,1508,"Germann, Gabriel",1961,Bischbrunn
+61809,18,V-Partei,906,1509,"Kraus, Tobias",1985,Schwebheim
+61810,18,V-Partei,906,1510,"Krebs, Andrea",1975,Gössenheim
+61811,18,V-Partei,906,1511,"Krebs, Torsten",1972,Gössenheim
+61812,18,V-Partei,906,1512,"Leshel, Regina",1945,Esselbach
+61813,18,V-Partei,906,1513,"Ortloff, Ingeborg",1968,Schweinfurt
+61814,18,V-Partei,906,1514,"Schmitt, Tanja",1972,Ochsenfurt
+70101,1,CSU,907,101,"Kreuzer, Thomas",1959,Kempten (Allgäu)
+70102,1,CSU,907,102,"Trautner, Carolina",1961,Stadtbergen
+70103,1,CSU,907,103,"Reichhart, Dr. Hans",1982,Jettingen-Scheppach
+70104,1,CSU,907,104,"Pschierer, Franz Josef",1956,Mindelheim
+70105,1,CSU,907,105,"Schorer, Angelika",1958,Jengen
+70106,1,CSU,907,106,"Hintersberger, Johannes",1953,Augsburg
+70107,1,CSU,907,107,"Merk, Dr. Beate",1957,Neu-Ulm
+70108,1,CSU,907,108,"Windhaber, Hannelore",1963,Lindenberg i.Allgäu
+70109,1,CSU,907,109,"Rauch, Hans-Peter",1962,Waltenhofen
+70110,1,CSU,907,110,"Leipold, Martina",1969,Buxheim
+70111,1,CSU,907,111,"Losinger, Manfred",1955,Friedberg
+70112,1,CSU,907,112,"Kränzle, Bernd",1942,Augsburg
+70113,1,CSU,907,113,"Ost, Franz",1986,Donauwörth
+70114,1,CSU,907,114,"Deil, Johann",1990,Weißenhorn
+70115,1,CSU,907,115,"Weldishofer, Christian",1975,Zusmarshausen
+70116,1,CSU,907,116,"Dietz, Leopold Roland",1967,Augsburg
+70117,1,CSU,907,117,"Kaufmann, Andreas",1981,Roßhaupten
+70118,1,CSU,907,118,"Schneider, Oliver",1963,Westendorf
+70119,1,CSU,907,119,"Jahn, Dr. Thomas",1973,Kaufbeuren
+70120,1,CSU,907,120,"Beißwenger, Eric",1972,Bad Hindelang
+70121,1,CSU,907,121,"Fackler, Wolfgang",1975,Donauwörth
+70122,1,CSU,907,122,"Holetschek, Klaus",1964,Memmingen
+70123,1,CSU,907,123,"Jäckel, Andreas",1965,Augsburg
+70124,1,CSU,907,124,"Sauter, Alfred",1950,Ichenhausen
+70125,1,CSU,907,125,"Tomaschko, Peter",1973,Merching
+70126,1,CSU,907,126,"Winter, Georg",1951,Höchstädt a.d.Donau
+70201,2,SPD,907,201,"Güller, Harald",1963,Neusäß
+70202,2,SPD,907,202,"Strohmayr, Dr. Simone",1967,Stadtbergen
+70203,2,SPD,907,203,"Wengert, Dr. Paul",1952,Füssen
+70204,2,SPD,907,204,"Deckwerth, Ilona",1961,Füssen
+70205,2,SPD,907,205,"Woerlein, Herbert",1958,Stadtbergen
+70206,2,SPD,907,206,"Heinrich, Margarete",1965,Augsburg
+70207,2,SPD,907,207,"Auinger, Tobias",1990,Burgau
+70208,2,SPD,907,208,"Rief, Tobias",1982,Dillingen a.d.Donau
+70209,2,SPD,907,209,"Yeow, David",1978,Memmingen
+70210,2,SPD,907,210,"Wiedemann, Georg",1966,Oettingen i.Bay.
+70211,2,SPD,907,211,"Fürst, Daniel",1984,Neu-Ulm
+70212,2,SPD,907,212,"Kubatschka, Markus",1975,Immenstadt i.Allgäu
+70213,2,SPD,907,213,"Maffenbeier, Michael",1986,Niederrieden
+70214,2,SPD,907,214,"Friederich-Scheuerl, Susanne",1967,Memmingen
+70215,2,SPD,907,215,"Bachmann, Bernd",1973,Senden
+70216,2,SPD,907,216,"Grünwald, Sabine",1960,Schwabmünchen
+70217,2,SPD,907,217,"Helmschrott, Manfred",1961,Westendorf
+70218,2,SPD,907,218,"Lederer, Sandra",1986,Kissing
+70219,2,SPD,907,219,"Otte, Frank",1966,Bibertal
+70220,2,SPD,907,220,"Segnitzer-König, Marion",1983,Rain
+70221,2,SPD,907,221,"Valdés-Stauber, Martin",1991,Kaufbeuren
+70222,2,SPD,907,222,"Stegherr-Haußman, Erna",1960,Adelsried
+70223,2,SPD,907,223,"Wamser, Fabian",1994,Schwabmünchen
+70224,2,SPD,907,224,"Steiner, Mirjam",1979,Syrgenstein
+70225,2,SPD,907,225,"Wilhelm, Thomas",1975,Kempten (Allgäu)
+70226,2,SPD,907,226,"Wörz, Thomas",1972,Offingen
+70301,3,FREIE WÄHLER,907,301,"Hold, Alexander",1962,Kempten (Allgäu)
+70302,3,FREIE WÄHLER,907,302,"Abmayr, Ruth",1968,Günzburg
+70303,3,FREIE WÄHLER,907,303,"Mehring, Dr. Fabian",1989,Meitingen
+70304,3,FREIE WÄHLER,907,304,"Herz, Dr. Leopold",1953,Wertach
+70305,3,FREIE WÄHLER,907,305,"Häusler, Johann",1952,Biberbach
+70306,3,FREIE WÄHLER,907,306,"Stieglauer, Stephan",1970,Blindheim
+70307,3,FREIE WÄHLER,907,307,"Wengenmeir, Johann",1954,Augsburg
+70308,3,FREIE WÄHLER,907,308,"Pohl, Bernhard",1964,Kaufbeuren
+70309,3,FREIE WÄHLER,907,309,"Knabner, Susen",1978,Marktoberdorf
+70310,3,FREIE WÄHLER,907,310,"Moser, Michael",1968,Bodolz
+70311,3,FREIE WÄHLER,907,311,"Schrapp, Wolfgang",1958,Bellenberg
+70312,3,FREIE WÄHLER,907,312,"Stuber-Schneider, Regina",1956,Augsburg
+70313,3,FREIE WÄHLER,907,313,"Hatzold, Johannes",1962,Friedberg
+70314,3,FREIE WÄHLER,907,314,"Eisenlauer, Lucas",1994,Bibertal
+70315,3,FREIE WÄHLER,907,315,"Fröhlich, Ludwig",1951,Königsbrunn
+70316,3,FREIE WÄHLER,907,316,"Haug, Roman",1955,Bad Hindelang
+70317,3,FREIE WÄHLER,907,317,"Holm, Jonas",1998,Augsburg
+70318,3,FREIE WÄHLER,907,318,"Horst, Bernd",1955,Harburg (Schwaben)
+70319,3,FREIE WÄHLER,907,319,"Hützler, Wolfgang",1945,Bad Wörishofen
+70320,3,FREIE WÄHLER,907,320,"Kanzler, Susanne",1968,Dasing
+70321,3,FREIE WÄHLER,907,321,"Mayer, Christine",1980,Elchingen
+70322,3,FREIE WÄHLER,907,322,"Rittel, Anton",1967,Adelsried
+70323,3,FREIE WÄHLER,907,323,"Schönberg, Quirin",1994,Augsburg
+70324,3,FREIE WÄHLER,907,324,"Wirthensohn, Hugo",1958,Altusried
+70325,3,FREIE WÄHLER,907,325,"Zelt, Hermann",1960,Dietmannsried
+70401,4,GRÜNE,907,401,"Schuhknecht, Stephanie",1983,Augsburg
+70402,4,GRÜNE,907,402,"Gehring, Thomas",1958,Blaichach
+70403,4,GRÜNE,907,403,"Lettenbauer, Eva",1992,Daiting
+70404,4,GRÜNE,907,404,"Deisenhofer, Maximilian",1987,Augsburg
+70405,4,GRÜNE,907,405,"Groll, Erna-Kathrein",1959,Kempten (Allgäu)
+70406,4,GRÜNE,907,406,"Pflügl, Daniel",1975,Bad Wörishofen
+70407,4,GRÜNE,907,407,"Haubrich, Christina",1971,Merching
+70408,4,GRÜNE,907,408,"Rederer, Dr. Klaus",1965,Neu-Ulm
+70409,4,GRÜNE,907,409,"Jung, Ursula",1953,Königsbrunn
+70410,4,GRÜNE,907,410,"Bozoglu, Cemal",1961,Augsburg
+70411,4,GRÜNE,907,411,"Mader, Christina",1983,Immenstadt i.Allgäu
+70412,4,GRÜNE,907,412,"Räder, Dr. Günter",1959,Obergünzburg
+70413,4,GRÜNE,907,413,"Mühlegger-Steiger, Katrin",1977,Kissing
+70414,4,GRÜNE,907,414,"Monz, Peter Emil",1967,Augsburg
+70415,4,GRÜNE,907,415,"Destruelle, Mechthild",1967,Neu-Ulm
+70416,4,GRÜNE,907,416,"Vávra, Christian",1974,Marktoberdorf
+70417,4,GRÜNE,907,417,"Bachmann, Dagmar",1961,Augsburg
+70418,4,GRÜNE,907,418,"Lohr, Dr. Dr. Bernhard",1963,Günzburg
+70419,4,GRÜNE,907,419,"Kustermann, Gertrud",1960,Marktoberdorf
+70420,4,GRÜNE,907,420,"Weisser, Thomas",1985,Augsburg
+70421,4,GRÜNE,907,421,"Pfeifer, Karin",1957,Dürrlauingen
+70422,4,GRÜNE,907,422,"Filser, Florian",1980,Wildpoldsried
+70423,4,GRÜNE,907,423,"Hien, Petra",1954,Dillingen a.d.Donau
+70424,4,GRÜNE,907,424,"Hagl, Julius",1956,Oettingen i.Bay.
+70425,4,GRÜNE,907,425,"Villing, Evelyn",1961,Memmingen
+70426,4,GRÜNE,907,426,"Seifert, Ulrike",1956,Kaufbeuren
+70501,5,FDP,907,501,"Faller, Karlheinz",1954,Dasing
+70502,5,FDP,907,502,"Spitzer, Dr. Dominik",1967,Kempten (Allgäu)
+70503,5,FDP,907,503,"Stocker, Claudia",1969,Lauingen (Donau)
+70504,5,FDP,907,504,"Zander, Christoph",1994,Westerheim
+70505,5,FDP,907,505,"Bahner, Kevin",1975,Türkheim
+70506,5,FDP,907,506,"Blaschke, Herbert",1963,Burgau
+70507,5,FDP,907,507,"Toth, Christian",1987,Königsbrunn
+70508,5,FDP,907,508,"Müller, Dr. Monika",1983,Augsburg
+70509,5,FDP,907,509,"Tanner, Dr. Mark",1964,Nördlingen
+70510,5,FDP,907,510,"Buchenberg-Köhler, Bianca",1993,Oy-Mittelberg
+70511,5,FDP,907,511,"Vugrin, Sascha",1987,Augsburg
+70512,5,FDP,907,512,"Mohr, Bernhard",1949,Wiedergeltingen
+70513,5,FDP,907,513,"Immler, Guido",1951,Augsburg
+70514,5,FDP,907,514,"Jung, Markus",1968,Neusäß
+70515,5,FDP,907,515,"Pranghofer, Uwe",1962,Dillingen a.d.Donau
+70516,5,FDP,907,516,"Hartleitner, Maximilian",1979,Buchloe
+70517,5,FDP,907,517,"Hecht, Johannes",1957,Neu-Ulm
+70518,5,FDP,907,518,"Michaelis, Katrin",1970,Augsburg
+70519,5,FDP,907,519,"Prost, Marcus",1973,Lechbruck am See
+70520,5,FDP,907,520,"Thinschmidt, Dieter",1957,Sonthofen
+70521,5,FDP,907,521,"Quante, Thomas",1976,Friedberg
+70522,5,FDP,907,522,"Dietz, Michael",1985,Durach
+70523,5,FDP,907,523,"Kuhnen, Peter",1962,Weißenhorn
+70524,5,FDP,907,524,"Baumann, Sebastian",1974,Buxheim
+70525,5,FDP,907,525,"Weins, Sebastian",1987,Günzburg
+70526,5,FDP,907,526,"Kundinger, Max",1988,Donauwörth
+70601,6,DIE LINKE,907,601,"Zwiselsberger, Manuela",1985,Friedberg
+70602,6,DIE LINKE,907,602,"Mayer, Andreas",1993,Augsburg
+70603,6,DIE LINKE,907,603,"Lausberg, Lina",1998,Lindau (Bodensee)
+70604,6,DIE LINKE,907,604,"Gänsheimer, Christoph",1994,Oberostendorf
+70605,6,DIE LINKE,907,605,"Münderlein, Xenia",1988,Oettingen i.Bay.
+70606,6,DIE LINKE,907,606,"Österle, Dietmar",1962,Neu-Ulm
+70607,6,DIE LINKE,907,607,"Balkheimer, Sabrina",1985,Leipheim
+70608,6,DIE LINKE,907,608,"Balkheimer, Stefan",1975,Leipheim
+70609,6,DIE LINKE,907,609,"Benz, Heike",1960,Buch
+70610,6,DIE LINKE,907,610,"Gebhardt, Kevin",1998,Kempten (Allgäu)
+70611,6,DIE LINKE,907,611,"Wilholm, Christine",1964,Augsburg
+70612,6,DIE LINKE,907,612,"Hutter, Otto",1963,Augsburg
+70613,6,DIE LINKE,907,613,"Zanker, Verena",1995,Woringen
+70614,6,DIE LINKE,907,614,"Zwiselsberger, Andreas",1985,Friedberg
+70615,6,DIE LINKE,907,615,"Diron, Anke",1967,Augsburg
+70616,6,DIE LINKE,907,616,"Meichelböck, Paul",1960,Kaufbeuren
+70617,6,DIE LINKE,907,617,"Rupprecht, Anita",1962,Augsburg
+70618,6,DIE LINKE,907,618,"Billor, Kerem",1992,Augsburg
+70619,6,DIE LINKE,907,619,"Bauer, Rita",1978,Oettingen i.Bay.
+70620,6,DIE LINKE,907,620,"Schlotter, Michael",1999,Fischen i.Allgäu
+70621,6,DIE LINKE,907,621,"Just, Michaela",1998,Trunkelsberg
+70622,6,DIE LINKE,907,622,"Kaufmann, Udo",1959,Westerheim
+70623,6,DIE LINKE,907,623,"Himpenmacher, Tobias",1976,Asbach-Bäumenheim
+70624,6,DIE LINKE,907,624,"Schiele, Christian",1981,Rain
+70625,6,DIE LINKE,907,625,"Sperl, Daniel ",1969,Illertissen
+70626,6,DIE LINKE,907,626,"Tsernos, Gregor",1992,Augsburg
+70701,7,BP,907,701,"Kellerer, Helmut",1966,Augsburg
+70702,7,BP,907,702,"Eißner, Jürgen",1971,Marktoberdorf
+70703,7,BP,907,703,"Eser, Gerhard",1952,Mering
+70704,7,BP,907,704,"Kirchmann, Dr. Josef Anton",1946,Rettenberg
+70705,7,BP,907,705,"Eberhard, Harald",1958,Augsburg
+70706,7,BP,907,706,"Höpfinger, Günter",1950,Augsburg
+70707,7,BP,907,707,"Lehnert, Andreas Alfred",1968,Wertingen
+70708,7,BP,907,708,"Gumpinger, Josef Hagen",1994,Dinkelscherben
+70709,7,BP,907,709,"Brünisholz, Uwe",1960,Dietmannsried
+70710,7,BP,907,710,"Leising, Otto",1942,Sonthofen
+70711,7,BP,907,711,"Eißner, Sabine Angela",1977,Kaufbeuren
+70712,7,BP,907,712,"Schmidt, Wolfgang",1964,Burtenbach
+70713,7,BP,907,713,"Waibl, Magnus",1962,Stötten a.Auerberg
+70714,7,BP,907,714,"Bernhard, Tobias",2000,Schwabmünchen
+70715,7,BP,907,715,"Englisch, Sabine",1967,Alerheim
+70716,7,BP,907,716,"Glaser, Roland",1942,Marktoberdorf
+70717,7,BP,907,717,"Hilscher, Dr. Thomas",1955,Marktoberdorf
+70718,7,BP,907,718,"Neumann, Bernhard",1985,Augsburg
+70719,7,BP,907,719,"Settele, Andreas",1961,Kaufbeuren
+70720,7,BP,907,720,"Staudigl, Rolf",1969,Friedberg
+70721,7,BP,907,721,"Zierof, Johann Georg",1941,Kempten (Allgäu)
+70722,7,BP,907,722,"Hochlenert, Stefan",1963,Oberstaufen
+70723,7,BP,907,723,"Förg, Franz",1958,Bonstetten
+70724,7,BP,907,724,"Steinböck, Anton",1943,Augsburg
+70725,7,BP,907,725,"Schmidt, Anke",1965,Burtenbach
+70801,8,ÖDP,907,801,"Buchberger, Prof. Dr. Dieter Erwin",1958,Memmingen
+70802,8,ÖDP,907,802,"Schimmer-Göresz, Gabriela Johanna",1952,Osterberg
+70803,8,ÖDP,907,803,"Finger, Michael",1971,Oberstdorf
+70804,8,ÖDP,907,804,"Dornach, Krimhilde Marianne",1966,Weißenhorn
+70805,8,ÖDP,907,805,"Pettinger, Christian",1963,Augsburg
+70806,8,ÖDP,907,806,"Rottmann-Börner, Rosina Katharina",1953,Mindelheim
+70807,8,ÖDP,907,807,"Hofer, Michael",1950,Kempten (Allgäu)
+70808,8,ÖDP,907,808,"Olbrich-Krakowitzer, Gabriele",1961,Großaitingen
+70809,8,ÖDP,907,809,"Becker, Dr. Andreas",1958,Möttingen
+70810,8,ÖDP,907,810,"Berchtold, Sonja Maria",1980,Münsterhausen
+70811,8,ÖDP,907,811,"Link, Dr. Manfred Theodor",1941,Gersthofen
+70812,8,ÖDP,907,812,"Posch, Maria",1985,Inchenhofen
+70813,8,ÖDP,907,813,"Thum, Johannes",1958,Donauwörth
+70814,8,ÖDP,907,814,"Wagner, Roland",1969,Nesselwang
+70815,8,ÖDP,907,815,"Fichtl, Xaver",1953,Lindau (Bodensee)
+70816,8,ÖDP,907,816,"Freiherr Tucher von Simmelsdorf, Clemens",1964,Friedberg
+70817,8,ÖDP,907,817,"Albrecht, Jan-Simon",1996,Gersthofen
+70818,8,ÖDP,907,818,"Mattausch, Christian",1987,Neuburg a.d.Kammel
+70819,8,ÖDP,907,819,"Wintergerst, Meinrad",1957,Haldenwang
+70820,8,ÖDP,907,820,"Neidinger, Rafael",1973,Schwabmünchen
+70821,8,ÖDP,907,821,"Neher, Franz Josef",1950,Oberrieden
+70822,8,ÖDP,907,822,"Vidal, Klaus",1962,Pfaffenhofen a.d.Roth
+70823,8,ÖDP,907,823,"Rembold, Karl",1961,Donauwörth
+70824,8,ÖDP,907,824,"Fritzsche, Matthias",1975,Hainsfarth
+70825,8,ÖDP,907,825,"Miller, Peter",1966,Mindelheim
+70826,8,ÖDP,907,826,"Huemer, Robert",1967,Augsburg
+70901,9,PIRATEN,907,901,"Gasser, Benjamin",1978,Neu-Ulm
+70902,9,PIRATEN,907,902,"Kollien-Glaser, Martin",1963,Kaufbeuren
+70903,9,PIRATEN,907,903,"Bachmeir, Wilfried",1978,Schwabmünchen
+70904,9,PIRATEN,907,904,"Proißl, Michael",1979,Neu-Ulm
+70905,9,PIRATEN,907,905,"Jung, Andreas",1975,Mickhausen
+71101,11,AfD,907,1001,"Bayerbach, Markus",1963,Augsburg
+71102,11,AfD,907,1002,"Mannes, Gerd",1969,Leipheim
+71103,11,AfD,907,1003,"Singer, Ulrich",1976,Nördlingen
+71104,11,AfD,907,1004,"Hauptmann, Rafael",1989,Meitingen
+71105,11,AfD,907,1005,"Maier, Christoph",1984,Memmingen
+71106,11,AfD,907,1006,"Rotter, Wolfgang",1950,Stöttwang
+71107,11,AfD,907,1007,"Jurca, Andreas",1987,Augsburg
+71108,11,AfD,907,1008,"Keller, Karl",1954,Jengen
+71109,11,AfD,907,1009,"Settele, Josef",1953,Aindling
+71110,11,AfD,907,1010,"Vachenauer, Dr. Wilhelm",1949,Kempten (Allgäu)
+71111,11,AfD,907,1011,"Keib, Axel",1964,Oberstaufen
+71112,11,AfD,907,1012,"Großkurth, Dr. Gerhard",1961,Neu-Ulm
+71113,11,AfD,907,1013,"Fabian, Reinhard",1948,Königsbrunn
+71201,12,LKR,907,1101,"Kreutz, Sebastian",1950,Kammeltal
+71202,12,LKR,907,1102,"Zühlke, Roland",1958,Harburg (Schwaben)
+71203,12,LKR,907,1103,"Eichmüller, Thomas",1962,Ismaning
+71204,12,LKR,907,1104,"Kölbl, Dorothea",1951,Kammeltal
+71205,12,LKR,907,1105,"Kreutz, Christa",1956,Kammeltal
+71301,13,mut,907,1201,"Jovy, Jörg",1964,Murnau a.Staffelsee
+71302,13,mut,907,1202,"Schmitz, Regina",1964,München
+71303,13,mut,907,1203,"Clamroth, Benjamin",1962,Augsburg
+71304,13,mut,907,1204,"Hüntemann, Matthias",1963,Sonthofen
+71305,13,mut,907,1205,"Krämer, Andreas",1969,Kissing
+71306,13,mut,907,1206,"Ludwig, Karlheinz",1955,Augsburg
+71307,13,mut,907,1207,"Krcek, David",1972,Merching
+71501,15,Die PARTEI,907,1301,"Baier, Christian",1965,Schwabmünchen
+71502,15,Die PARTEI,907,1302,"Baumeister, Christian",1965,Neusäß
+71503,15,Die PARTEI,907,1303,"Glaser, Michael",1982,Ursberg
+71504,15,Die PARTEI,907,1304,"Klingelhöfer, Anja",1982,Augsburg
+71505,15,Die PARTEI,907,1305,"Veit, Oliver",1988,Augsburg
+71506,15,Die PARTEI,907,1306,"Viertel, Kai",1980,Augsburg
+71507,15,Die PARTEI,907,1307,"Wachsmann, Daniel",1988,Augsburg
+71508,15,Die PARTEI,907,1308,"Zacher, Markus",1973,Mittelneufnach
+71801,18,V-Partei,907,1401,"Wegner, Roland",1975,Langweid a.Lech
+71802,18,V-Partei,907,1402,"Heydrich, Roy",1981,Nersingen
+71803,18,V-Partei,907,1403,"Rudolf, Heike",1976,Augsburg
+71804,18,V-Partei,907,1404,"Harle, Konrad",1958,Augsburg
+71805,18,V-Partei,907,1405,"Hanson, Cheyenne",1998,Augsburg
+71806,18,V-Partei,907,1406,"Springer, Eva-Marie",1956,Höchstädt a.d.Donau
+71807,18,V-Partei,907,1407,"Fahr, Birgit",1962,Günzburg
+71808,18,V-Partei,907,1408,"Liermann, Frank",1972,Friedberg
+71809,18,V-Partei,907,1409,"Rayner, Edith Maria",1964,Dietmannsried
+71810,18,V-Partei,907,1410,"Buttala, Martina",1964,Günzburg
+71811,18,V-Partei,907,1411,"Schlipf, Pia",1982,Königsbrunn
+71812,18,V-Partei,907,1412,"Woywode, Daniela",1982,Bad Wörishofen
+71813,18,V-Partei,907,1413,"Wohlfahrt, Leonie",1990,Roßhaupten
+71814,18,V-Partei,907,1414,"Frey, Marcel Norbert",1989,Oberstdorf
+71815,18,V-Partei,907,1415,"Greif, Katharina",1991,Memmingen
+71816,18,V-Partei,907,1416,"Heck, Raphael Markus",1996,Augsburg
+71817,18,V-Partei,907,1417,"Herzog, Stefan",1968,Bodolz
+71818,18,V-Partei,907,1418,"Burger, Kristin",1992,Petersdorf
+71819,18,V-Partei,907,1419,"Springer, Marian Anton",1944,Höchstädt a.d.Donau
+71820,18,V-Partei,907,1420,"Burghart, Anna",1996,Biberbach
