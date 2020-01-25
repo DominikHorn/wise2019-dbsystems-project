@@ -10,8 +10,6 @@ import { WahlSelector } from "../dataselectors/WahlSelector";
 import { WahlbeteiligungChart } from "./WahlbeteiligungChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { Row, Col } from "antd";
-import { renderCenteredLoading } from "../../../guiUtil";
-import { StimmentwicklungChart } from "./StimmentwicklungChart";
 import { StimmkreisCharts } from "./StimmkreisChartsComponent";
 
 interface IState {
@@ -44,9 +42,6 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
       : this.setState({ selectedWahl });
 
   render() {
-    if (this.state.selectedStimmkreis) {
-      console.log(this.state.selectedStimmkreis.name);
-    }
     const { allWahlenData, routableState } = this.props;
     let selectedWahl: Wahl = null;
     if (routableState) {
@@ -98,18 +93,20 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
                 onStimmkreisSelect={(
                   selected: Stimmkreis,
                   wahlbeteiligung: number
-                ) =>
-                  this.setState({
-                    selectedStimmkreis: selected,
-                    wahlbeteiligung: wahlbeteiligung
-                  })
-                }
+                ) => (
+                  console.log(selected, wahlbeteiligung),
+                  this.setState(
+                    {
+                      selectedStimmkreis: selected,
+                      wahlbeteiligung: wahlbeteiligung
+                    },
+                    () => console.log("new state:", this.state)
+                  )
+                )}
               />
             </Col>
-            <Col span={15} style={{ height: "100%" }}>
-              {this.state.selectedStimmkreis &&
-              previousWahl &&
-              this.state.wahlbeteiligung ? (
+            <Col span={16} style={{ height: "100%" }}>
+              {this.state.selectedStimmkreis && this.state.wahlbeteiligung ? (
                 <StimmkreisCharts
                   wahl={selectedWahl}
                   vglWahl={previousWahl}

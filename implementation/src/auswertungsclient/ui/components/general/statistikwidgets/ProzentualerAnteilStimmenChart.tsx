@@ -1,12 +1,17 @@
 import ReactEcharts from "echarts-for-react";
 import * as React from "react";
 import { sleep } from "../../../../../shared/util";
-import { eatEvent, renderCenteredLoading } from "../../../guiUtil";
+import {
+  eatEvent,
+  renderCenteredLoading,
+  getParteiColor
+} from "../../../guiUtil";
 import {
   Wahl,
   Stimmentwicklung,
   Stimmkreis
 } from "../../../../../shared/graphql.types";
+import memoize from "memoize-one";
 
 export interface IProzAnteilChartProps {
   readonly wahl: Wahl;
@@ -17,34 +22,39 @@ export interface IProzAnteilChartProps {
 interface IProps extends IProzAnteilChartProps {}
 
 export class ProzAnteilChart extends React.PureComponent<IProps> {
-  private aggregateChartData = (
-    stimmenEntwicklung: Stimmentwicklung[]
-  ): {
-    data: {
-      value: number;
-      name: string;
-      selected?: boolean;
-      itemStyle?: { color?: string };
-    }[];
-  } => {
-    const res = stimmenEntwicklung.reduce(
-      (prev, curr) => ({
-        data: {
-          ...(prev.data || {}),
-          [curr.partei.id]: {
-            value: curr.nachher,
-            name: curr.partei.name
+  private aggregateChartData = memoize(
+    (
+      stimmenEntwicklung: Stimmentwicklung[]
+    ): {
+      data: {
+        value: number;
+        name: string;
+        selected?: boolean;
+        itemStyle?: { color?: string };
+      }[];
+    } => {
+      const res = stimmenEntwicklung.reduce(
+        (prev, curr) => ({
+          data: {
+            ...(prev.data || {}),
+            [curr.partei.id]: {
+              value: curr.nachher,
+              name: curr.partei.name,
+              itemStyle: { color: getParteiColor(curr.partei.name) }
+            }
           }
-        }
-      }),
+        }),
 
-      { data: {} } as { [key: string]: any }
-    );
+        { data: {} } as { [key: string]: any }
+      );
 
-    return {
-      data: Object.keys(res.data).map(key => res.data[key])
-    };
-  };
+      return {
+        data: Object.keys(res.data)
+          .map(key => res.data[key])
+          .sort((a, b) => (a.value > b.value ? -1 : a.value < b.value ? 1 : 0))
+      };
+    }
+  );
 
   private getOptions = () => ({
     tooltip: {
@@ -99,7 +109,6 @@ export class ProzAnteilChart extends React.PureComponent<IProps> {
   private chart: any = null;
   render() {
     const { data } = this.props;
-    if (this.props.data) console.log(this.aggregateChartData(this.props.data));
     return (
       <div style={{ width: "100%", height: "100%" }} onMouseDown={eatEvent}>
         <ReactEcharts

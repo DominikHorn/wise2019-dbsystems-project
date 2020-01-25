@@ -13,12 +13,12 @@ type Query {
   getDirektmandat(wahlid: Int!, stimmkreisid: Int!): Mandat!
   computeEntwicklungDerStimmen(
     wahlid: Int!
-    vglwahlid: Int!
+    vglwahlid: Int
     stimmkreisid: Int!
   ): [Stimmentwicklung]!
   getStimmentwicklung(
     wahlid: Int!
-    vglwahlid: Int!
+    vglwahlid: Int
     stimmkreisid: Int!
   ): [Stimmentwicklung]!
   getAllStimmkreisInfos(

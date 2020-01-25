@@ -50,17 +50,12 @@ const WahlbeteiligungChartComponent = (props: IProps) => {
     <>
       {props.wahlbeteiligungData.wahlbeteiligung &&
       props.wahlbeteiligungData.wahlbeteiligung.length > 0 ? (
-        <div
-          onMouseDown={eatEvent}
-          // onWheel={event => {
-          //   event.preventDefault();
-          // }}
-          style={{ width: "100%", height: "100%" }}
-        >
+        <div onMouseDown={eatEvent} style={{ width: "100%", height: "100%" }}>
           <ReactEcharts
             style={{ width: "100%", height: "100%" }}
             onEvents={{
               mapselectchanged: event => {
+                console.log("mapSelectedChanged:", event);
                 if (event && event.batch && event.batch[0]) {
                   const wbtobj = (
                     props.wahlbeteiligungData.wahlbeteiligung || []

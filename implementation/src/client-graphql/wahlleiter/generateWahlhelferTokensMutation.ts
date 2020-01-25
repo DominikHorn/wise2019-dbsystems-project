@@ -1,11 +1,10 @@
+import { FetchResult } from "apollo-link";
 import gql from "graphql-tag";
 import {
-  WahlhelferToken,
-  MutationToGenerateWahlhelferTokensArgs
+  MutationToGenerateWahlhelferTokensArgs,
+  WahlhelferToken
 } from "../../shared/graphql.types";
-import { FetchResult } from "apollo-link";
 import { createTypedGraphqlHoc } from "../typedGraphql";
-import { WahlSelector } from "../../auswertungsclient/ui/components/general/dataselectors/WahlSelector";
 
 const generateWahlhelferTokensGQL = gql`
   mutation generateWahlhelferTokensMutation($wahlleiterAuth: String!) {

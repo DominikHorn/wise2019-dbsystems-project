@@ -334,45 +334,79 @@ export async function computeWahlbeteiligung(
 
 export async function computeEntwicklungDerStimmmen(
   wahl_id: number,
-  vgl_wahl_id: number,
+  vgl_wahl_id: number | null | undefined,
   stimmkreis_id: number
 ): Promise<Stimmentwicklung[]> {
+  const VGL_QUERY = `
+    WITH gueltige_partei_stimmen (wahl_id, stimmkreis_id, partei_id, anzahl) AS (
+      SELECT wahl_id, stimmkreis_id, partei_id, sum(anzahl)
+      FROM (
+              SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, kgs.anzahl
+              FROM "${DatabaseSchemaGroup}".${KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW} kgs
+              JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k
+                    ON kgs.kandidat_id = k.id
+              UNION ALL
+              SELECT *
+              FROM "${DatabaseSchemaGroup}".${LISTENGEBUNDENDE_GUELTIGE_STIMMEN_MVIEW}
+           ) gueltige_stimmen
+      GROUP BY wahl_id, stimmkreis_id, partei_id
+    )
+    SELECT gs1.partei_id,
+           p.name as partei_name,
+           gs1.anzahl as nachher,
+           COALESCE(gs2.anzahl, 0) as vorher
+    FROM gueltige_partei_stimmen gs1
+      JOIN "${DatabaseSchemaGroup}".${PARTEIEN_TABLE} p
+        ON gs1.partei_id = p.id
+      LEFT OUTER JOIN gueltige_partei_stimmen gs2
+        ON gs1.stimmkreis_id = gs2.stimmkreis_id
+        AND gs1.partei_id = gs2.partei_id
+        AND gs1.wahl_id <> gs2.wahl_id
+    WHERE gs1.wahl_id = $1
+      AND COALESCE(gs2.wahl_id,$2) = $2
+      AND gs1.stimmkreis_id = $3;
+    `;
+  const VGL_ARGS = [wahl_id, vgl_wahl_id, stimmkreis_id];
+
+  const NO_VGL_QUERY = `
+    WITH gueltige_partei_stimmen (wahl_id, stimmkreis_id, partei_id, anzahl) AS (
+      SELECT wahl_id, stimmkreis_id, partei_id, sum(anzahl)
+      FROM (
+            SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, kgs.anzahl
+            FROM "${DatabaseSchemaGroup}".${KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW} kgs
+              JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k
+                ON kgs.kandidat_id = k.id
+            UNION ALL
+            SELECT *
+            FROM "${DatabaseSchemaGroup}".${LISTENGEBUNDENDE_GUELTIGE_STIMMEN_MVIEW}
+          ) gueltige_stimmen
+      GROUP BY wahl_id, stimmkreis_id, partei_id
+    )
+    SELECT gs1.partei_id,
+          p.name as partei_name,
+          gs1.anzahl as nachher,
+          0 as vorher
+    FROM gueltige_partei_stimmen gs1
+      JOIN "${DatabaseSchemaGroup}".${PARTEIEN_TABLE} p
+        ON gs1.partei_id = p.id
+    WHERE gs1.wahl_id = $1
+    AND gs1.stimmkreis_id = $2;
+  `;
+  const NO_VGL_ARGS = [wahl_id, stimmkreis_id];
+
+  const novgl =
+    vgl_wahl_id === null ||
+    vgl_wahl_id === undefined ||
+    wahl_id === vgl_wahl_id;
+
   const res: {
     partei_id: number;
     partei_name: string;
     vorher: number;
     nachher: number;
   }[] = await adapters.postgres.query(
-    `
-    WITH gueltige_partei_stimmen (wahl_id, stimmkreis_id, partei_id, anzahl) AS (
-      SELECT wahl_id, stimmkreis_id, partei_id, sum(anzahl)
-      FROM (
-               SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, kgs.anzahl
-               FROM "${DatabaseSchemaGroup}".${KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW} kgs
-                        JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k
-                             ON kgs.kandidat_id = k.id
-               UNION ALL
-               SELECT *
-               FROM "${DatabaseSchemaGroup}".${LISTENGEBUNDENDE_GUELTIGE_STIMMEN_MVIEW}
-           ) gueltige_stimmen
-      GROUP BY wahl_id, stimmkreis_id, partei_id
-    )
-    SELECT gs1.partei_id,
-          p.name as partei_name,
-          gs1.anzahl as nachher,
-          COALESCE(gs2.anzahl, 0) as vorher
-    FROM gueltige_partei_stimmen gs1
-        JOIN "${DatabaseSchemaGroup}".${PARTEIEN_TABLE} p
-            ON gs1.partei_id = p.id
-        LEFT OUTER JOIN gueltige_partei_stimmen gs2
-            ON gs1.stimmkreis_id = gs2.stimmkreis_id
-            AND gs1.partei_id = gs2.partei_id
-            AND gs1.wahl_id <> gs2.wahl_id
-    WHERE gs1.wahl_id = $1
-      AND COALESCE(gs2.wahl_id,$2) = $2
-      AND gs1.stimmkreis_id = $3;
-    `,
-    [wahl_id, vgl_wahl_id, stimmkreis_id]
+    novgl ? NO_VGL_QUERY : VGL_QUERY,
+    novgl ? NO_VGL_ARGS : VGL_ARGS
   );
   return res.map(resobj => ({
     partei: {
@@ -384,7 +418,6 @@ export async function computeEntwicklungDerStimmmen(
   }));
 }
 
-//TODO Berechnung auf Einzelstimmen noch korrekt
 export async function getDirektmandat(
   wahlid: number,
   stimmkreisid: number

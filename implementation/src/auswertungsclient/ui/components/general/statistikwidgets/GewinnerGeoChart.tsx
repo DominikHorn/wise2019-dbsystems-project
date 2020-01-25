@@ -51,9 +51,7 @@ const GewinnerGeoChartComponent = (props: IProps) => (
           }gewinner)`}
           style={{ marginLeft: "25px", marginTop: "5px", marginBottom: "5px" }}
           checked={props.erststimmen}
-          onValueChanged={val => (
-            console.log("props", props), props.onErststimmenChanged(val)
-          )}
+          onValueChanged={val => props.onErststimmenChanged(val)}
         />
         <ReactEcharts
           style={{ width: "100%", height: "100%" }}

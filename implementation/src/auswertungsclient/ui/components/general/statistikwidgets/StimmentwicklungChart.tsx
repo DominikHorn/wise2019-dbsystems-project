@@ -10,7 +10,7 @@ import { eatEvent } from "../../../guiUtil";
 
 export interface IStimmentwicklungChartProps {
   readonly wahl: Wahl;
-  readonly vglwahl: Wahl;
+  readonly vglwahl?: Wahl;
   readonly stimmkreis: Stimmkreis;
   readonly data: Stimmentwicklung[];
 }
@@ -29,8 +29,14 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
       data: { vorher: number; nachher: number }; //anzahl Stimmen aus previous bzw gewaehlter wahl
     }[];
   } => {
-    //TODO: Jahreszahlen richtig einbinden -> wie Zugriff auf year bei date?
-    const sourceBegin = [["partei", "2013", "2018"]];
+    const wahlyear = new Date(this.props.wahl.wahldatum)
+      .getFullYear()
+      .toString();
+    const vglwahlyear = this.props.vglwahl
+      ? new Date(this.props.vglwahl.wahldatum).getFullYear().toString()
+      : "keine vorherige Wahl vorhanden";
+
+    const sourceBegin = [["partei", vglwahlyear, wahlyear]];
     const res = stimmenEntwicklung.reduce(
       (prev, curr) => ({
         source: {
@@ -86,7 +92,6 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
   });
 
   private updateChartData = (props: IProps) => {
-    //debugger;
     if (!this.chart) return;
     if (!props.data) return;
 
@@ -123,9 +128,3 @@ export class StimmentwicklungChart extends React.PureComponent<IProps> {
     );
   }
 }
-
-// export const StimmentwicklungChart = (props: IProps) => (
-//   <div style={{ width: "100%", height: "100%" }}>
-//     <ReactEcharts option={getOptions()} />
-//   </div>
-// );

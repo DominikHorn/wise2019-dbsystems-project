@@ -6,7 +6,7 @@ import { Stimmentwicklung } from "../../shared/graphql.types";
 const getEntwicklungDerStimmenQuery = gql`
   query computeEntwicklungDerStimmenQuery(
     $wahlid: Int!
-    $vglwahlid: Int!
+    $vglwahlid: Int
     $stimmkreisid: Int!
   ) {
     stimmenEntwicklung: computeEntwicklungDerStimmen(

@@ -1,4 +1,4 @@
-import { Col, Row } from "antd";
+import { Col, Row, Alert } from "antd";
 import * as React from "react";
 import { compose } from "react-apollo";
 import {
@@ -16,7 +16,7 @@ import { Wahl, Stimmkreis } from "../../../../../shared/graphql.types";
 
 export interface IStimmkreisChartsComponentProps {
   readonly wahl: Wahl;
-  readonly vglWahl: Wahl;
+  readonly vglWahl?: Wahl;
   readonly stimmkreis: Stimmkreis;
   readonly wahlbeteiligung: number;
 }
@@ -28,49 +28,59 @@ interface IProps
 
 class StimmkreisChartsComponent extends React.PureComponent<IProps> {
   render() {
+    const {
+      entwicklungDerStimmenData,
+      direktmandatData,
+      stimmkreis,
+      wahl,
+      vglWahl,
+      wahlbeteiligung
+    } = this.props;
+    if (!entwicklungDerStimmenData || !direktmandatData) return <></>;
+    if (entwicklungDerStimmenData.loading || direktmandatData.loading)
+      return renderCenteredLoading();
+    if (entwicklungDerStimmenData.error || direktmandatData.error) {
+      return (
+        <Alert
+          type={"error"}
+          message={`ERROR: ${
+            entwicklungDerStimmenData.error
+              ? `${entwicklungDerStimmenData.error.message};\n`
+              : ""
+          } ${direktmandatData.error ? direktmandatData.error.message : ""}`}
+        />
+      );
+    }
+
     return (
       <div style={{ height: "100%" }}>
-        {this.props.entwicklungDerStimmenData &&
-        this.props.vglWahl &&
-        this.props.wahl ? (
-          <div style={{ height: "100%" }}>
-            <Row style={{ height: "50%" }}>
-              {this.props.direktmandatData &&
-              this.props.direktmandatData.direktmandat ? (
-                <Col span={7} style={{ height: "100%" }}>
-                  {`Stimmkreis: ${this.props.stimmkreis.name}`}
-                  <br />
-                  {`Wahlbeteiligung: ${this.props.wahlbeteiligung}%`}
-                  <br />
-                  {`Gewinner: ${this.props.direktmandatData.direktmandat.kandidat.name}`}
-                  <br />
-                </Col>
-              ) : (
-                <Col span={7} style={{ height: "100%" }}>
-                  {renderCenteredLoading()}
-                </Col>
-              )}
-
-              <Col span={10} style={{ height: "100%" }}>
-                <ProzAnteilChart
-                  wahl={this.props.wahl}
-                  data={this.props.entwicklungDerStimmenData.stimmenEntwicklung}
-                  stimmkreis={this.props.stimmkreis}
-                />
-              </Col>
-            </Row>
-            <Row style={{ height: "50%" }}>
-              <StimmentwicklungChart
-                wahl={this.props.wahl}
-                vglwahl={this.props.vglWahl}
-                data={this.props.entwicklungDerStimmenData.stimmenEntwicklung}
-                stimmkreis={this.props.stimmkreis}
-              />
-            </Row>
-          </div>
-        ) : (
-          renderCenteredLoading()
-        )}
+        <Row style={{ height: "50%" }}>
+          <Col span={7} style={{ height: "100%" }}>
+            {`Stimmkreis: ${stimmkreis.name}`}
+            <br />
+            {`Wahlbeteiligung: ${(
+              Math.round(wahlbeteiligung * 100) / 100
+            ).toFixed()}%`}
+            <br />
+            {`Gewinner: ${direktmandatData.direktmandat.kandidat.name}`}
+            <br />
+          </Col>
+          <Col span={17} style={{ height: "100%" }}>
+            <ProzAnteilChart
+              wahl={wahl}
+              data={entwicklungDerStimmenData.stimmenEntwicklung}
+              stimmkreis={stimmkreis}
+            />
+          </Col>
+        </Row>
+        <Row style={{ height: "50%" }}>
+          <StimmentwicklungChart
+            wahl={wahl}
+            vglwahl={vglWahl}
+            data={entwicklungDerStimmenData.stimmenEntwicklung}
+            stimmkreis={stimmkreis}
+          />
+        </Row>
       </div>
     );
   }
@@ -79,7 +89,7 @@ class StimmkreisChartsComponent extends React.PureComponent<IProps> {
 const EntwicklungDerStimmenChartWithQueries = compose(
   withEntwicklungDerStimmenQuery<IStimmkreisChartsComponentProps>(
     props => props.wahl.id,
-    props => props.vglWahl.id,
+    props => props.vglWahl && props.vglWahl.id,
     props => props.stimmkreis.id
   ),
   withDirektmandatQuery<IStimmkreisChartsComponentProps>(

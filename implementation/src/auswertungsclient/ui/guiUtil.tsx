@@ -10,7 +10,7 @@ export const PARTEI_COLORS: { [parteiname: string]: string } = {
   Grüne: "#3c9e2b",
   FDP: "#ccc12b",
   "Die Linke": "#ad0c00",
-  "Bayern Partei": "#ddccdd",
+  "Bayern Partei": "#00a9dc",
   "V-Partei": "#c22fbd",
   AfD: "#5084cc"
 };

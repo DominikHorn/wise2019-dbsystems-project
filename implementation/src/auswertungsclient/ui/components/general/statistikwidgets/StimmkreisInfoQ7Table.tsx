@@ -51,7 +51,6 @@ export class StimmkreisInfoQ7TableComponent extends React.PureComponent<
       nachher: curr.nachher;
       prozAnteil: curr.prozAnteil;
     });
-    console.log(res);
     return {
       dataSource: [
         {
