@@ -38,6 +38,7 @@ class InnerStimmkreisInfoQ7Component extends React.PureComponent<
   }
 
   render() {
+    console.log(`Vgl wahl`, this.props.previousWahl.id);
     const { allStimmkreiseData } = this.props;
     return (
       <div>

@@ -67,7 +67,7 @@ export async function computeQ7(
   stimmkreisid3: number,
   stimmkreisid4: number,
   stimmkreisid5: number,
-  vorg_wahlid: number
+  vglwahl: number
 ): Promise<Q7[]> {
   const res: {
     stimmkreis_id: number;
@@ -76,8 +76,8 @@ export async function computeQ7(
     partei_name: string;
     direktmandat: string;
     wahlbeteiligung: number;
-    prozAnteil: number;
-    absAnteil: number;
+    prozanteil: number;
+    absanteil: number;
     vorher: number;
     nachher: number;
   }[] = await adapters.postgres.query(
@@ -196,9 +196,9 @@ SELECT wb.stimmkreis_id as stimmkreis_id,
        gps.partei_id as partei_id, 
        p.name as partei_name, 
        k.name as direktmandat, 
-       wb.wahlbeteiligung as wahlbeteiligung, 
-       papp.prozAnteil as prozAnteil, 
-       gps.anzahl as absAnteil, 
+       wb.wahlbeteiligung * 100 as wahlbeteiligung, 
+       papp.prozAnteil as prozanteil, 
+       gps.anzahl as absanteil, 
        e.vorher as vorher, 
        e.nachher as nachher
 FROM wahlbeteiligung wb
@@ -225,7 +225,7 @@ FROM wahlbeteiligung wb
       stimmkreisid3,
       stimmkreisid4,
       stimmkreisid5,
-      vorg_wahlid
+      vglwahl
     ]
   );
   return res.map(resobj => ({
@@ -239,8 +239,8 @@ FROM wahlbeteiligung wb
     },
     direktmandat: resobj.direktmandat,
     wahlbeteiligung: resobj.wahlbeteiligung,
-    prozAnteil: resobj.prozAnteil,
-    absAnteil: resobj.absAnteil,
+    prozAnteil: resobj.prozanteil,
+    absAnteil: resobj.absanteil,
     vorher: resobj.vorher,
     nachher: resobj.nachher
   }));

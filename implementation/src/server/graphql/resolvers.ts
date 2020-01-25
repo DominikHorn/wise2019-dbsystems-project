@@ -94,7 +94,7 @@ export const resolvers: Resolver = {
           args.stimmkreisid3,
           args.stimmkreisid4,
           args.stimmkreisid5,
-          args.vgl_wahl
+          args.vglwahl
         )
       ),
     getDirektKandidaten: (_, args) =>
