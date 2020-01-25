@@ -35,7 +35,7 @@ type Query {
   getDirektKandidaten(wahlid: Int!, stimmkreisid: Int!): [Kandidat]!
   getListenKandidaten(wahlid: Int!, regierungsbezirkid: Int!): [ListenKandidat]!
   getAltersverteilung(wahlid: Int!): [Altersverteilung]!
-
+  getSuperDirektkandidaten(wahlid: Int!): [SuperKandidaten]!
   # Wahlhelfer
   getRegisteredWahlkabinen(wahlhelferAuth: String!): [Wahlkabine]!
 
@@ -157,6 +157,13 @@ type Wahlbeteiligung {
   wahl: Wahl!
   stimmkreis: Stimmkreis!
   wahlbeteiligung: Float!
+}
+
+type SuperKandidaten {
+  stimmkreis: Stimmkreis!
+  kandidat: Kandidat!
+  stimmen_direktk: Int!
+  stimmen_listenk: Int!
 }
 
 type Stimmentwicklung {
