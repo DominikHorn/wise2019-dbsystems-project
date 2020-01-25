@@ -73,7 +73,13 @@ const WahlbeteiligungChartComponent = (props: IProps) => {
               tooltip: {
                 trigger: "item",
                 showDelay: 0,
-                transitionDuration: 0.2
+                transitionDuration: 0.2,
+                formatter: (params: {
+                  data: { name: string; value: number };
+                }) =>
+                  `${
+                    params.data.name
+                  }<br/>Wahlbeteiligung: ${`${params.data.value.toFixed(2)} %`}`
               },
               visualMap: {
                 show: true,
