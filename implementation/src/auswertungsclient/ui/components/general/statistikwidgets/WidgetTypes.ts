@@ -10,7 +10,8 @@ export enum WidgetType {
   UEBERHANGMANDATE = "Überhangmandate (Q5)",
   KNAPPSTE_KANDIDATEN = "Knappste Kandidaten (Q6)",
   STIMMKREIS_INFO_Q7 = "Stimmkreisinfos (Q7)",
-  ALTERSVERTEILUNG = "Altersverteilung im Landtag (Q8)"
+  ALTERSVERTEILUNG = "Altersverteilung im Landtag (Q8)",
+  SUPER_DIREKTKANDIDATEN = "Super-Direktkandidaten (Q9"
 }
 
 export type StatistikWidgetSetting = {

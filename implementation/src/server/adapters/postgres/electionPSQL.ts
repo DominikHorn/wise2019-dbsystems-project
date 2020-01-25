@@ -10,7 +10,8 @@ import {
   StimmkreisWinner,
   UeberhangMandat,
   KnapperKandidat,
-  Q7
+  Q7,
+  SuperKandidaten
 } from "../../../shared/graphql.types";
 
 type MaterialViews =
@@ -282,6 +283,95 @@ export async function computeWahlbeteiligung(
       name: resobj.stimmkreis_name
     },
     wahlbeteiligung: resobj.wahlbeteiligung
+  }));
+}
+
+/**
+ *
+ *berechnet die Direktkandidaten, die in ihrem Stimmkreis mehr als 20mal so viele Stimmen bekommen haben, wie die
+ *Listenkandidaten ihrer Partei in diesem Stimmkreis zusammen gerechnet bekommen haben
+ */
+export async function getSuperDirektkandidaten(
+  wahlid: number
+): Promise<SuperKandidaten[]> {
+  const res: {
+    wahl_id: number;
+    wahldatum: Date;
+    stimmkreis_id: number;
+    stimmkreis_name: string;
+    kandidat_id: number;
+    kandidat_name: string;
+    partei_id: number;
+    partei_name: string;
+    stimmen_direktk: number;
+    stimmen_listenk: number;
+  }[] = await adapters.postgres.query(
+    `with stimmen_der_direktkandidaten as (
+      SELECT kgs.wahl_id, kgs.stimmkreis_id, kgs.kandidat_id, k2.partei_id, kgs.anzahl as anzahl
+      FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
+      JOIN "landtagswahlen".direktkandidaten k
+        ON kgs.wahl_id = k.wahl_id AND kgs.kandidat_id = k.direktkandidat_id and kgs.stimmkreis_id=k.stimmkreis_id
+      JOIN "landtagswahlen".kandidaten k2
+        ON kgs.kandidat_id = k2.id
+      WHERE kgs.wahl_id=$1 
+  
+    ),
+    kandidatgebundene_stimmen_mit_partei as (
+      SELECT kgs2.wahl_id, kgs2.stimmkreis_id, kgs2.kandidat_id, k3.partei_id, kgs2.anzahl
+      FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs2
+      JOIN "landtagswahlen".kandidaten k3
+       ON kgs2.kandidat_id=k3.id
+      WHERE kgs2.wahl_id=$1
+    ),
+    nicht_direktkandidat_stimmen as(
+      SELECT ksmp.wahl_id, ksmp.stimmkreis_id, ksmp.partei_id, sum(ksmp.anzahl) as anzahl
+      FROM kandidatgebundene_stimmen_mit_partei ksmp
+      WHERE not exists (SELECT * FROM "landtagswahlen".direktkandidaten k2 WHERE ksmp.kandidat_id = k2.direktkandidat_id) AND Ksmp.wahl_id=2
+      GROUP BY ksmp.wahl_id, ksmp.partei_id, ksmp.stimmkreis_id
+    ),
+    super_kandidaten as (
+      SELECT sdd.wahl_id, sdd.stimmkreis_id, sdd.kandidat_id, sdd.anzahl as stimmen_direktk, nds.partei_id, nds.anzahl as stimmen_listenk
+      FROM stimmen_der_direktkandidaten sdd
+      JOIN nicht_direktkandidat_stimmen nds
+       ON sdd.wahl_id = nds.wahl_id and sdd.stimmkreis_id = nds.stimmkreis_id and sdd.partei_id = nds.partei_id
+      WHERE sdd.anzahl >= 20*nds.anzahl
+      ORDER BY sdd.wahl_id, sdd.stimmkreis_id, sdd.partei_id
+        )
+    SELECT sk.wahl_id as wahl_id, 
+      sk.stimmkreis_id as stimmkreis_id, 
+      s.name as stimmkreis_name, 
+      sk.kandidat_id as kandidat_id, 
+      k4.name as kandidat_name, 
+      sk.partei_id as partei_id, 
+      p.name as partei_name, 
+      sk.stimmen_direktk as stimmen_direktk, 
+      sk.stimmen_listenk as stimmen_listenk
+    FROM super_kandidaten sk
+    JOIN "landtagswahlen".stimmkreise s
+      ON sk.stimmkreis_id=s.id
+    JOIN "landtagswahlen".kandidaten k4
+      ON k4.id = sk.kandidat_id
+    JOIN "landtagswahlen".parteien p
+      ON p.id = sk.partei_id
+    ORDER BY sk.wahl_id, sk.stimmkreis_id, sk.kandidat_id;
+  `,
+    [wahlid]
+  );
+  return res.map(resobj => ({
+    stimmkreis: {
+      id: resobj.stimmkreis_id,
+      name: resobj.stimmkreis_name
+    },
+    kandidat: {
+      id: resobj.kandidat_id,
+      name: resobj.kandidat_name,
+      partei: {
+        id: resobj.partei_id,
+        name: resobj.partei_name
+      }
+    },
+    stimmen_direktk: resobj.stimmen_direktk,
+    stimmen_listenk: resobj.stimmen_listenk
   }));
 }
 

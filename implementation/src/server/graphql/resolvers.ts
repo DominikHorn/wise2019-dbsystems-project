@@ -10,7 +10,8 @@ import {
   computeWahlbeteiligung,
   getDirektmandat,
   computeEntwicklungDerStimmmen,
-  computeQ7
+  computeQ7,
+  getSuperDirektkandidaten
 } from "../adapters/postgres/electionPSQL";
 import { Resolver } from "../../shared/graphql.types";
 import {
@@ -96,6 +97,10 @@ export const resolvers: Resolver = {
           args.stimmkreisid5,
           args.vglwahl
         )
+      ),
+    getSuperDirektkandidaten: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getSuperDirektkandidaten(args.wahlid)
       ),
     getDirektKandidaten: (_, args) =>
       getDirektKandidaten(args.wahlid, args.stimmkreisid),

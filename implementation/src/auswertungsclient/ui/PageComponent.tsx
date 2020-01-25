@@ -26,6 +26,7 @@ import { KnappsteKandidatenWidget } from "./components/general/statistikwidgets/
 import { renderError } from "../../wahlclient/ui/guiUtil";
 import { AltersverteilungsWidget } from "./components/general/statistikwidgets/AltersverteilungsWidget";
 import { StimmkreisInfoQ7Widget } from "./components/general/statistikwidgets/StimmkreisinfoQ7Widget";
+import { SuperDirektKandidatenWidget } from "./components/general/statistikwidgets/SuperDirektKandidatenWidget";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -384,6 +385,13 @@ class PageComponentClass extends React.Component<IProps, IState> {
           />
         ) : setting.type === WidgetType.ALTERSVERTEILUNG ? (
           <AltersverteilungsWidget
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
+            key={setting.layout.i}
+            removeWidget={removeWidget}
+          />
+        ) : setting.type === WidgetType.SUPER_DIREKTKANDIDATEN ? (
+          <SuperDirektKandidatenWidget
             routableState={setting.routableState}
             setRoutableState={setRoutableState}
             key={setting.layout.i}
