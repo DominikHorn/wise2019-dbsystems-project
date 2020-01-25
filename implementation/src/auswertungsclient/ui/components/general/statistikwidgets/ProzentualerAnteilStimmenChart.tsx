@@ -1,30 +1,24 @@
-import {
-  IStimmenEntwicklung,
-  IWahl,
-  IStimmkreis
-} from "../../../../../shared/sharedTypes";
-import * as React from "react";
-import { render } from "react-dom";
-import {
-  getParteiColor,
-  eatEvent,
-  renderCenteredLoading
-} from "../../../guiUtil";
-import { EParteiName } from "../../../../../shared/enums";
 import ReactEcharts from "echarts-for-react";
+import * as React from "react";
 import { sleep } from "../../../../../shared/util";
+import { eatEvent, renderCenteredLoading } from "../../../guiUtil";
+import {
+  Wahl,
+  Stimmentwicklung,
+  Stimmkreis
+} from "../../../../../shared/graphql.types";
 
 export interface IProzAnteilChartProps {
-  readonly wahl: IWahl;
-  readonly data: IStimmenEntwicklung[];
-  readonly stimmkreis: IStimmkreis;
+  readonly wahl: Wahl;
+  readonly data: Stimmentwicklung[];
+  readonly stimmkreis: Stimmkreis;
 }
 
 interface IProps extends IProzAnteilChartProps {}
 
 export class ProzAnteilChart extends React.PureComponent<IProps> {
   private aggregateChartData = (
-    stimmenEntwicklung: IStimmenEntwicklung[]
+    stimmenEntwicklung: Stimmentwicklung[]
   ): {
     data: {
       value: number;

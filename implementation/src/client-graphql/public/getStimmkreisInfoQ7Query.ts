@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
-import { IQ7 } from "../../shared/sharedTypes";
 import { DataValue } from "react-apollo";
+import { Q7 } from "../../shared/graphql.types";
 
 const getAllStimmkreisInfoQuery = gql`
   query getAllStimmkreisInfosQuery(
@@ -45,7 +45,7 @@ const getAllStimmkreisInfoQuery = gql`
 `;
 
 interface IGetAllStimmenkreisInfosQueryResponse extends IGraphqlType {
-  readonly allStimmkreisInfos: IQ7[];
+  readonly allStimmkreisInfos: Q7[];
 }
 
 interface IGetAllStimmkreisInfosQueryVariables {}

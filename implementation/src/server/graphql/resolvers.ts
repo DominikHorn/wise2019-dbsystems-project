@@ -36,7 +36,7 @@ import {
 } from "../adapters/postgres/kandidatPSQL";
 import { adapters } from "../adapters/adapterUtil";
 import { castVote } from "../adapters/postgres/stimmenPSQL";
-import { getAllStimmkreiseForWahl } from "../adapters/postgres/stimmkreisPSQL";
+import { getAllStimmkreiseForWahl } from "../adapters/postgres/queries/stimmkreisPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -78,23 +78,25 @@ export const resolvers: Resolver = {
         getDirektmandat(args.wahlid, args.stimmkreisid)
       ),
     computeEntwicklungDerStimmen: (_, args) =>
-      withVerifyIsNotBlocked(args.wahlid, () => 
+      withVerifyIsNotBlocked(args.wahlid, () =>
         computeEntwicklungDerStimmmen(
           args.wahlid,
           args.vglwahlid,
           args.stimmkreisid
-        )),
+        )
+      ),
     getAllStimmkreisInfos: (_, args) =>
-        withVerifyIsNotBlocked(args.wahlid, () => 
-          computeQ7(
-            args.wahlid,
-            args.stimmkreisid1,
-            args.stimmkreisid2,
-            args.stimmkreisid3,
-            args.stimmkreisid4,
-            args.stimmkreisid5,
-            args.vgl_wahl
-          )),
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        computeQ7(
+          args.wahlid,
+          args.stimmkreisid1,
+          args.stimmkreisid2,
+          args.stimmkreisid3,
+          args.stimmkreisid4,
+          args.stimmkreisid5,
+          args.vgl_wahl
+        )
+      ),
     getDirektKandidaten: (_, args) =>
       getDirektKandidaten(args.wahlid, args.stimmkreisid),
     getListenKandidaten: (_, args) =>
@@ -109,6 +111,7 @@ export const resolvers: Resolver = {
     isUnlocked: (_, args) =>
       withVerifyIsWahlkabine(args.wahlkabineToken, false, async () =>
         isUnlocked(args.wahlkabineToken)
+      )
   },
   Mutation: {
     importCSVData: (_, args) =>

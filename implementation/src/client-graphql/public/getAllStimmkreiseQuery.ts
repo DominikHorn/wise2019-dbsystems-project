@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
-import { IStimmkreis } from "../../shared/sharedTypes";
 import { DataValue } from "react-apollo";
+import { Stimmkreis } from "../../shared/graphql.types";
 
 const getAllStimmkreiseQuery = gql`
   query getAllStimmkkreiseQuery($wahlid: Int!) {
@@ -13,7 +13,7 @@ const getAllStimmkreiseQuery = gql`
 `;
 
 interface IGetAllStimmenkreiseQueryResponse extends IGraphqlType {
-  readonly allStimmkreise: IStimmkreis[];
+  readonly allStimmkreise: Stimmkreis[];
 }
 
 interface IGetAllStimmkreiseQueryVariables {}

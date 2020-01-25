@@ -5,7 +5,6 @@ import {
   IGetEntwicklungDerStimmenQueryHocProps,
   withEntwicklungDerStimmenQuery
 } from "../../../../../client-graphql/public/getEntwicklungDerStimmenQuery";
-import { IStimmkreis, IWahl } from "../../../../../shared/sharedTypes";
 import { renderCenteredLoading } from "../../../guiUtil";
 import { StimmentwicklungChart } from "./StimmentwicklungChart";
 import { ProzAnteilChart } from "./ProzentualerAnteilStimmenChart";
@@ -13,11 +12,12 @@ import {
   withDirektmandatQuery,
   IGetDirektmandatQueryHocProps
 } from "../../../../../client-graphql/public/getDirektmandatQuery";
+import { Wahl, Stimmkreis } from "../../../../../shared/graphql.types";
 
 export interface IStimmkreisChartsComponentProps {
-  readonly wahl: IWahl;
-  readonly vglWahl: IWahl;
-  readonly stimmkreis: IStimmkreis;
+  readonly wahl: Wahl;
+  readonly vglWahl: Wahl;
+  readonly stimmkreis: Stimmkreis;
   readonly wahlbeteiligung: number;
 }
 
@@ -38,12 +38,11 @@ class StimmkreisChartsComponent extends React.PureComponent<IProps> {
               {this.props.direktmandatData &&
               this.props.direktmandatData.direktmandat ? (
                 <Col span={7} style={{ height: "100%" }}>
-                  Stimmkreis: {this.props.stimmkreis.name}
+                  {`Stimmkreis: ${this.props.stimmkreis.name}`}
                   <br />
-                  Wahlbeteiligung: {this.props.wahlbeteiligung} {"%"}
+                  {`Wahlbeteiligung: ${this.props.wahlbeteiligung}%`}
                   <br />
-                  Gewinner:{" "}
-                  {this.props.direktmandatData.direktmandat.kandidat.name}
+                  {`Gewinner: ${this.props.direktmandatData.direktmandat.kandidat.name}`}
                   <br />
                 </Col>
               ) : (
@@ -63,7 +62,7 @@ class StimmkreisChartsComponent extends React.PureComponent<IProps> {
             <Row style={{ height: "50%" }}>
               <StimmentwicklungChart
                 wahl={this.props.wahl}
-                vglWahl={this.props.vglWahl}
+                vglwahl={this.props.vglWahl}
                 data={this.props.entwicklungDerStimmenData.stimmenEntwicklung}
                 stimmkreis={this.props.stimmkreis}
               />

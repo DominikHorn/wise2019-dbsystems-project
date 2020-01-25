@@ -41,7 +41,7 @@ class StimmkreisInfoQ7WidgetComponent extends React.PureComponent<
 
   render() {
     const { allWahlenData, routableState } = this.props;
-    let selectedWahl: IWahl = null;
+    let selectedWahl: Wahl = null;
     if (routableState) {
       selectedWahl = routableState.selectedWahl;
     } else {

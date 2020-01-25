@@ -1,13 +1,13 @@
-import { IStimmkreis } from "../../../../../shared/sharedTypes";
 import * as React from "react";
 import { Select } from "antd";
 import { renderCenteredLoading } from "../../../guiUtil";
+import { Stimmkreis } from "../../../../../shared/graphql.types";
 
 export interface IStimmkreisSelectorProps {
-  readonly selectableStimmkreise?: IStimmkreis[];
+  readonly selectableStimmkreise?: Stimmkreis[];
   readonly displayLoading?: boolean;
-  readonly selectedStimmkreis?: IStimmkreis;
-  readonly onSelectStimmkreis?: (stimmkreis: IStimmkreis) => void;
+  readonly selectedStimmkreis?: Stimmkreis;
+  readonly onSelectStimmkreis?: (stimmkreis: Stimmkreis) => void;
   readonly style?: React.CSSProperties;
   readonly size?: "small" | "default" | "large";
   readonly selectDefaultStimmkreis?: boolean;

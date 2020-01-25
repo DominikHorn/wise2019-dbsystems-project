@@ -1,7 +1,7 @@
 import gql from "graphql-tag";
 import { IGraphqlType, createTypedGraphqlHoc } from "../typedGraphql";
-import { IStimmenEntwicklung } from "../../shared/sharedTypes";
 import { DataValue } from "react-apollo";
+import { Stimmentwicklung } from "../../shared/graphql.types";
 
 const getEntwicklungDerStimmenQuery = gql`
   query computeEntwicklungDerStimmenQuery(
@@ -25,7 +25,7 @@ const getEntwicklungDerStimmenQuery = gql`
 `;
 
 interface IGetEntwicklungDerStimmenQueryResponse extends IGraphqlType {
-  readonly stimmenEntwicklung?: IStimmenEntwicklung[];
+  readonly stimmenEntwicklung?: Stimmentwicklung[];
 }
 
 interface IGetEntwicklungDerStimmenQueryVariables {
