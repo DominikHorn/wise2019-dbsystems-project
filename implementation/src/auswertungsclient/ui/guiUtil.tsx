@@ -2,21 +2,20 @@ import { Alert, Col, Divider, Icon, Row, Spin, Tooltip } from "antd";
 import { AlertProps } from "antd/lib/alert";
 import * as React from "react";
 import "./guiUtil.css";
-import { ParteiName } from "../../shared/graphql.types";
 
 export const PARTEI_COLORS: { [parteiname: string]: string } = {
-  [ParteiName.CSU]: "#212121",
-  [ParteiName.SPD]: "#e65949",
-  [ParteiName.FREIE_WAEHLER]: "#d99241",
-  [ParteiName.GRUENE]: "#3c9e2b",
-  [ParteiName.FDP]: "#ccc12b",
-  [ParteiName.DIE_LINKE]: "#ad0c00",
-  [ParteiName.BAYERN_PARTEI]: "#ddccdd",
-  [ParteiName.V_PARTEI]: "#c22fbd",
-  [ParteiName.AFD]: "#5084cc"
+  CSU: "#212121",
+  SPD: "#e65949",
+  "Freie Wähler": "#d99241",
+  Grüne: "#3c9e2b",
+  FDP: "#ccc12b",
+  "Die Linke": "#ad0c00",
+  "Bayern Partei": "#00a9dc",
+  "V-Partei": "#c22fbd",
+  AfD: "#5084cc"
 };
 
-export function getParteiColor(parteiname: ParteiName): string {
+export function getParteiColor(parteiname: string): string {
   return PARTEI_COLORS[parteiname] || "#8c40c2";
 }
 
@@ -97,7 +96,7 @@ export const renderError = (
 
 export const renderRepoLink = (label: string = "gitlab repo") => (
   <a
-    href={"https://gitlab.itestra.com/horn/labeling-platfrom-bachelorarbeit/"}
+    href={"https://gitlab.db.in.tum.de/dominikhorn/wise2019-dbsystems-project/"}
     target={"_blank"}
   >
     {label}

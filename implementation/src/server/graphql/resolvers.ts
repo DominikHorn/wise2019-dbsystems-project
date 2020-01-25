@@ -1,8 +1,4 @@
 import { GraphQLDateTime } from "graphql-iso-date";
-import {
-  GraphQLFileUpload,
-  getGraphqlReadableParteiName
-} from "../../shared/sharedTypes";
 import { getAllWahlen } from "../adapters/postgres/wahlenPSQL";
 import { parseCSV } from "../csv-parser/CSVParser";
 import {
@@ -13,7 +9,9 @@ import {
   getKnappsteKandidaten,
   computeWahlbeteiligung,
   getDirektmandat,
-  computeEntwicklungDerStimmmen
+  computeEntwicklungDerStimmmen,
+  computeQ7,
+  getSuperDirektkandidaten
 } from "../adapters/postgres/electionPSQL";
 import { Resolver } from "../../shared/graphql.types";
 import {
@@ -21,9 +19,25 @@ import {
   setDataBlocked,
   withVerifyIsAdmin,
   withVerifyIsNotBlocked,
-  generateWahlhelferToken
+  generateWahlhelferToken,
+  getRegisteredWahlkabinen,
+  withVerifyIsWahlhelfer,
+  registerWahlkabine,
+  isRegisteredWahlkabine,
+  removeWahlkabine,
+  setWahlkabineUnlocked,
+  withVerifyIsWahlkabine,
+  resetWahlkabine,
+  isUnlocked
 } from "../adapters/postgres/adminPSQL";
-import { getAllDirektKandidaten } from "../adapters/postgres/kandidatPSQL";
+import {
+  getDirektKandidaten,
+  getListenKandidaten,
+  getAltersverteilungImParlament
+} from "../adapters/postgres/kandidatPSQL";
+import { adapters } from "../adapters/adapterUtil";
+import { castVote } from "../adapters/postgres/stimmenPSQL";
+import { getAllStimmkreiseForWahl } from "../adapters/postgres/queries/stimmkreisPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -36,11 +50,12 @@ export const resolvers: Resolver = {
   Wahl: {
     dataBlocked: w => getIsBlocked(w.id)
   },
-  Partei: {
-    name: p => getGraphqlReadableParteiName(p.name)
-  },
   Query: {
     getAllWahlen,
+    getAllStimmkreise: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getAllStimmkreiseForWahl(args.wahlid)
+      ),
     getMandate: (_, args) =>
       withVerifyIsNotBlocked(args.wahlid, () => getMandate(args.wahlid)),
     getStimmkreisWinner: (_, args) =>
@@ -63,7 +78,7 @@ export const resolvers: Resolver = {
       withVerifyIsNotBlocked(args.wahlid, () =>
         getDirektmandat(args.wahlid, args.stimmkreisid)
       ),
-    getStimmentwicklung: (_, args) =>
+    computeEntwicklungDerStimmen: (_, args) =>
       withVerifyIsNotBlocked(args.wahlid, () =>
         computeEntwicklungDerStimmmen(
           args.wahlid,
@@ -71,19 +86,61 @@ export const resolvers: Resolver = {
           args.stimmkreisid
         )
       ),
-    getAllDirektKandidaten: (_, args) =>
-      getAllDirektKandidaten(args.wahlid, args.stimmkreisid)
+    getAllStimmkreisInfos: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        computeQ7(
+          args.wahlid,
+          args.stimmkreisid1,
+          args.stimmkreisid2,
+          args.stimmkreisid3,
+          args.stimmkreisid4,
+          args.stimmkreisid5,
+          args.vglwahl
+        )
+      ),
+    getSuperDirektkandidaten: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getSuperDirektkandidaten(args.wahlid)
+      ),
+    getDirektKandidaten: (_, args) =>
+      getDirektKandidaten(args.wahlid, args.stimmkreisid),
+    getListenKandidaten: (_, args) =>
+      getListenKandidaten(args.wahlid, args.regierungsbezirkid),
+    getAltersverteilung: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getAltersverteilungImParlament(args.wahlid)
+      ),
+    getRegisteredWahlkabinen: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, getRegisteredWahlkabinen),
+    isRegistered: (_, args) => isRegisteredWahlkabine(args.wahlkabineToken),
+    isUnlocked: (_, args) =>
+      withVerifyIsWahlkabine(args.wahlkabineToken, false, async () =>
+        isUnlocked(args.wahlkabineToken)
+      )
   },
   Mutation: {
     importCSVData: (_, args) =>
       withVerifyIsAdmin(args.wahlleiterAuth, () =>
-        Promise.all(
-          args.files.map(wahlfile =>
-            wahlfile.then((file: any) =>
-              parseCSV(file, args.wahldatum, args.aggregiert)
-            )
-          )
-        ).then(() => true)
+        adapters.postgres.transaction(async client => {
+          const files = await Promise.all(args.files).catch(
+            err => `ERROR: files could not be awaited: ${err}`
+          );
+          console.log(`CSV-Import: Received ${files.length} files`);
+
+          for (const file of files) {
+            const readStream = file.createReadStream();
+
+            console.log("CSV-Import: Processing", file.filename);
+            const res = await parseCSV(
+              readStream,
+              args.wahldatum,
+              args.aggregiert,
+              client
+            );
+            if (!res) return false;
+          }
+          return true;
+        })
       ),
     computeElectionResults: (_, args) =>
       withVerifyIsAdmin(args.wahlleiterAuth, computeElectionResults),
@@ -92,6 +149,49 @@ export const resolvers: Resolver = {
         generateWahlhelferToken(args)
       ),
     setDataBlocked: (_, args) =>
-      withVerifyIsAdmin(args.wahlleiterAuth, () => setDataBlocked(args))
+      withVerifyIsAdmin(args.wahlleiterAuth, () => setDataBlocked(args)),
+    registerWahlkabine: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
+        registerWahlkabine(
+          wahlid,
+          stimmkreisid,
+          args.wahlkabineToken,
+          args.wahlkabineLabel
+        )
+      ),
+    removeWahlkabine: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
+        removeWahlkabine(wahlid, stimmkreisid, args.wahlkabineToken)
+      ),
+    setWahlkabineUnlocked: (_, args) =>
+      withVerifyIsWahlhelfer(args.wahlhelferAuth, (wahlid, stimmkreisid) =>
+        setWahlkabineUnlocked(
+          wahlid,
+          stimmkreisid,
+          args.wahlkabineToken,
+          args.unlocked
+        )
+      ),
+    resetWahlkabine: (_, args) =>
+      withVerifyIsWahlkabine(args.wahlkabineToken, false, () =>
+        resetWahlkabine(args.wahlkabineToken)
+      ),
+    castVote: (_, args) =>
+      withVerifyIsWahlkabine(
+        args.wahlkabineToken,
+        true,
+        async (wahlid, stimmkreisid) => {
+          // Reset wahlkabine
+          await resetWahlkabine(args.wahlkabineToken);
+          const res = await castVote(
+            wahlid,
+            stimmkreisid,
+            args.erstkandidatID,
+            args.zweitkandidatID,
+            args.zweitparteiID
+          );
+          return res;
+        }
+      )
   }
 };

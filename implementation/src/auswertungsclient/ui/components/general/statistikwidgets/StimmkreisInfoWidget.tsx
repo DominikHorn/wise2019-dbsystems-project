@@ -4,17 +4,18 @@ import {
   withAllWahlenQuery
 } from "../../../../../client-graphql/public/getAllWahlenQuery";
 import { IStatistikWidgetProps, StatistikWidget } from "../StatistikWidget";
-import { Wahl } from "../../../../../shared/graphql.types";
+import { Wahl, Stimmkreis } from "../../../../../shared/graphql.types";
 import { compose } from "react-apollo";
 import { WahlSelector } from "../dataselectors/WahlSelector";
 import { WahlbeteiligungChart } from "./WahlbeteiligungChart";
 import { renderInfo } from "../../../../../wahlclient/ui/guiUtil";
 import { Row, Col } from "antd";
-import { StimmentwicklungChart } from "./StimmentwicklungChart";
-import { renderCenteredLoading } from "../../../guiUtil";
+import { StimmkreisCharts } from "./StimmkreisChartsComponent";
 
 interface IState {
   readonly selectedWahl?: Wahl;
+  readonly selectedStimmkreis?: Stimmkreis;
+  readonly wahlbeteiligung?: number;
 }
 
 export interface IStimmkreisInfoWidgetProps
@@ -30,7 +31,9 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
 > {
   constructor(props: IProps) {
     super(props);
-    this.state = {};
+    this.state = {
+      selectedStimmkreis: null
+    };
   }
 
   private onSelectWahl = (selectedWahl: Wahl) =>
@@ -83,29 +86,35 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
         }
       >
         {selectedWahl ? (
-          <Row
-            type={"flex"}
-            gutter={16}
-            style={{ height: "100%", width: "100%" }}
-          >
-            <Col span={10}>
-              <WahlbeteiligungChart wahl={selectedWahl} />
+          <Row type={"flex"} style={{ height: "100%", width: "100%" }}>
+            <Col span={8} style={{ height: "100%" }}>
+              <WahlbeteiligungChart
+                wahl={selectedWahl}
+                onStimmkreisSelect={(
+                  selected: Stimmkreis,
+                  wahlbeteiligung: number
+                ) => (
+                  console.log(selected, wahlbeteiligung),
+                  this.setState(
+                    {
+                      selectedStimmkreis: selected,
+                      wahlbeteiligung: wahlbeteiligung
+                    },
+                    () => console.log("new state:", this.state)
+                  )
+                )}
+              />
             </Col>
-            <Col>
-              Stimmkreis: Fürstenfeldbruck Ost
-              <br />
-              Wahlbeteiligung: 78 %
-              <br />
-              Gewinner: Hans
-              <br />
-              {previousWahl ? (
-                <StimmentwicklungChart
+            <Col span={16} style={{ height: "100%" }}>
+              {this.state.selectedStimmkreis && this.state.wahlbeteiligung ? (
+                <StimmkreisCharts
                   wahl={selectedWahl}
-                  vglwahl={previousWahl}
-                  stimmkreis={{ id: 101, name: "test" }}
+                  vglWahl={previousWahl}
+                  stimmkreis={this.state.selectedStimmkreis}
+                  wahlbeteiligung={this.state.wahlbeteiligung}
                 />
               ) : (
-                renderCenteredLoading()
+                renderInfo("Bitte einen Stimmkreis anklicken")
               )}
             </Col>
           </Row>

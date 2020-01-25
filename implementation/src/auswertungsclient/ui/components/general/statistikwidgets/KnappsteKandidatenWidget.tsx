@@ -19,6 +19,7 @@ export interface IKnappsteKandidatenWidgetProps
 interface IProps
   extends IKnappsteKandidatenWidgetProps,
     IGetAllWahlenQueryHocProps {}
+
 class KnappsteKandidatenWidgetComponent extends React.PureComponent<
   IProps,
   IState

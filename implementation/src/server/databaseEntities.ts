@@ -1,5 +1,3 @@
-import { ParteiName } from "../shared/graphql.types";
-
 /**
  * Schema group name
  */
@@ -22,13 +20,15 @@ export interface IDatabaseRegierungsbezirk extends IDatabaseEntity {
 
 export interface IDatabasePartei extends IDatabaseEntity {
   readonly id: number;
-  readonly name: ParteiName;
+  readonly name: string;
 }
 
 export interface IDatabaseKandidat extends IDatabaseEntity {
   readonly id: number;
   readonly partei_id: number;
   readonly name: string;
+  readonly geburtsjahr?: number;
+  readonly wohnort?: string;
 }
 
 export interface IDatabaseWahlhelferToken extends IDatabaseEntity {
@@ -75,7 +75,7 @@ export interface IDatabaseStimmkreisWinner extends IDatabaseEntity {
   readonly stimmkreis_id: number;
   readonly stimmkreis_name: string;
   readonly partei_id: number;
-  readonly partei_name: ParteiName;
+  readonly partei_name: string;
   readonly anzahl: number;
 }
 
@@ -103,5 +103,6 @@ export interface IDatabaseAnteil extends IDatabaseEntity {
 export interface IDatabaseStimmenEntwicklung extends IDatabaseEntity {
   readonly partei_id: number;
   readonly partei_name: string;
-  readonly veraenderung: number;
+  readonly vorher: number;
+  readonly nachher: number;
 }

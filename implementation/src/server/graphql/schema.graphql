@@ -4,18 +4,44 @@ scalar Date
 
 type Query {
   getAllWahlen: [Wahl]!
+  getAllStimmkreise(wahlid: Int!): [Stimmkreis]!
   getMandate(wahlid: Int!): [Mandat]!
   getStimmkreisWinner(wahlid: Int!, erststimmen: Boolean!): [StimmkreisWinner]!
   getUeberhangMandate(wahlid: Int!): [UeberhangMandat]!
   getKnappsteKandidaten(wahlid: Int!, amountPerPartei: Int): [KnapperKandidat]!
   getWahlbeteiligung(wahlid: Int!): [Wahlbeteiligung]!
   getDirektmandat(wahlid: Int!, stimmkreisid: Int!): Mandat!
-  getStimmentwicklung(
+  computeEntwicklungDerStimmen(
     wahlid: Int!
-    vglwahlid: Int!
+    vglwahlid: Int
     stimmkreisid: Int!
   ): [Stimmentwicklung]!
-  getAllDirektKandidaten(wahlid: Int!, stimmkreisid: Int!): [Kandidat]!
+  getStimmentwicklung(
+    wahlid: Int!
+    vglwahlid: Int
+    stimmkreisid: Int!
+  ): [Stimmentwicklung]!
+  getAllStimmkreisInfos(
+    wahlid: Int!
+    stimmkreisid1: Int!
+    stimmkreisid2: Int!
+    stimmkreisid3: Int!
+    stimmkreisid4: Int!
+    stimmkreisid5: Int!
+    vglwahl: Int!
+  ): [Q7]!
+  # getAbsoluteAnzahl(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
+  # getProzentualenAnteil(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
+  getDirektKandidaten(wahlid: Int!, stimmkreisid: Int!): [Kandidat]!
+  getListenKandidaten(wahlid: Int!, regierungsbezirkid: Int!): [ListenKandidat]!
+  getAltersverteilung(wahlid: Int!): [Altersverteilung]!
+  getSuperDirektkandidaten(wahlid: Int!): [SuperKandidaten]!
+  # Wahlhelfer
+  getRegisteredWahlkabinen(wahlhelferAuth: String!): [Wahlkabine]!
+
+  # Wahlkabine
+  isRegistered(wahlkabineToken: String!): Boolean!
+  isUnlocked(wahlkabineToken: String!): Boolean!
 }
 
 type Mutation {
@@ -32,12 +58,42 @@ type Mutation {
     wahlid: Int!
     blocked: Boolean!
   ): Boolean
+
+  # Wahlhelfer
+  registerWahlkabine(
+    wahlhelferAuth: String!
+    wahlkabineToken: String!
+    wahlkabineLabel: String!
+  ): Boolean!
+  removeWahlkabine(wahlhelferAuth: String!, wahlkabineToken: String!): Boolean!
+  setWahlkabineUnlocked(
+    wahlhelferAuth: String!
+    wahlkabineToken: String!
+    unlocked: Boolean!
+  ): Boolean!
+
+  # Wahlkabine
+  resetWahlkabine(wahlkabineToken: String!): Boolean
+  castVote(
+    wahlkabineToken: String!
+    erstkandidatID: Int
+    zweitkandidatID: Int
+    zweitparteiID: Int
+  ): Boolean!
 }
 
 type Wahl {
   id: Int!
   wahldatum: Date!
   dataBlocked: Boolean
+}
+
+type Wahlkabine {
+  wahlid: Int
+  stimmkreisid: Int
+  label: String!
+  token: String
+  unlocked: Boolean!
 }
 
 type Mandat {
@@ -50,11 +106,18 @@ type Kandidat {
   id: Int!
   name: String!
   partei: Partei!
+  geburtsjahr: Int
+  wohnort: String
+}
+
+type ListenKandidat {
+  kandidat: Kandidat!
+  platz: Int!
 }
 
 type Partei {
   id: Int!
-  name: ParteiName!
+  name: String!
 }
 
 type Stimmkreis {
@@ -96,8 +159,26 @@ type Wahlbeteiligung {
   wahlbeteiligung: Float!
 }
 
+type SuperKandidaten {
+  stimmkreis: Stimmkreis!
+  kandidat: Kandidat!
+  stimmen_direktk: Int!
+  stimmen_listenk: Int!
+}
+
 type Stimmentwicklung {
   partei: Partei!
+  vorher: Int!
+  nachher: Int!
+}
+
+type Q7 {
+  stimmkreis: Stimmkreis!
+  partei: Partei!
+  direktmandat: String!
+  wahlbeteiligung: Float!
+  prozAnteil: Float
+  absAnteil: Float
   vorher: Int!
   nachher: Int!
 }
@@ -108,23 +189,9 @@ type WahlhelferToken {
   token: String!
 }
 
-enum ParteiName {
-  CSU
-  SPD
-  FREIE_WAEHLER
-  GRUENE
-  FDP
-  DIE_LINKE
-  BAYERN_PARTEI
-  OEDP
-  PIRATEN
-  DIE_FRANKEN
-  AFD
-  LKR
-  MUT
-  DIE_HUMANISTEN
-  DIE_PARTEI
-  GESUNDHEITSFORSCHUNG
-  TIERSCHUTZPARTEI
-  V_PARTEI
+type Altersverteilung {
+  # Geburtsjahr is unknown for some candidates
+  geburtsjahr: Int
+  partei: Partei!
+  anzahl: Int!
 }

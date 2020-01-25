@@ -28,38 +28,29 @@ export const getWahlForDatum = async (
         FROM "${DatabaseSchemaGroup}".wahlen
         WHERE wahldatum = $1`;
   const convertDate = (date: Date) => date.toISOString().slice(0, 10);
-  if (client) {
-    return client
-      .query(QUERY_STR, [convertDate(wahldatum)])
-      .then(res => !!res && res.rows[0]);
-  }
-  const wahlen = await adapters.postgres.query<IDatabaseWahl>(QUERY_STR, [
-    convertDate(wahldatum)
-  ]);
+  const ARGS = [convertDate(wahldatum)];
 
-  return !!wahlen && wahlen[0];
+  return client
+    ? client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : adapters.postgres
+        .query<IDatabaseWahl>(QUERY_STR, ARGS)
+        .then(res => res[0]);
 };
 
 export const getOrCreateWahlForDatum = async (
   wahldatum: Date,
   client?: PoolClient
 ): Promise<IDatabaseWahl> => {
-  if (client) {
-    let wahl = await getWahlForDatum(wahldatum, client);
-    if (wahl) return wahl;
-    await client
-      .query(
-        `
-        INSERT INTO "${DatabaseSchemaGroup}".wahlen
-        VALUES (DEFAULT, $1)
-        `,
-        [wahldatum.toISOString().slice(0, 10)]
-      )
-      .then(res => !!res && res.rows[0]);
-    return getWahlForDatum(wahldatum, client);
-  }
+  const wahl = await getWahlForDatum(wahldatum, client);
+  if (wahl) return wahl;
 
-  return adapters.postgres.transaction(async client =>
-    getOrCreateWahlForDatum(wahldatum, client)
-  );
+  const QUERY_STR = `
+    INSERT INTO "${DatabaseSchemaGroup}".wahlen
+    VALUES (DEFAULT, $1)
+    RETURNING *`;
+  const ARGS = [wahldatum.toISOString().slice(0, 10)];
+
+  return client
+    ? client.query(QUERY_STR, ARGS).then(res => !!res && res.rows[0])
+    : adapters.postgres.query(QUERY_STR, ARGS).then(res => res && res[0]);
 };

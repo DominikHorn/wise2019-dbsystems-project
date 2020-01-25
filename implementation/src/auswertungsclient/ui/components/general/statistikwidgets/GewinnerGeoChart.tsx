@@ -14,9 +14,8 @@ import { BooleanSelector } from "../dataselectors/BooleanSelector";
 import {
   Wahl,
   StimmkreisWinner,
-  ParteiName
+  Partei
 } from "../../../../../shared/graphql.types";
-import { getHumanReadableParteiName } from "../../../../../shared/sharedTypes";
 
 export interface IGewinnerGeoChartProps {
   readonly erststimmen: boolean;
@@ -32,10 +31,11 @@ interface IProps extends IGewinnerGeoChartProps, IGetStimmkreisWinnerHocProps {}
  */
 function mapToChartData(
   queryData: StimmkreisWinner[]
-): { name: string; value: number }[] {
+): { name: string; value: number; partei: Partei }[] {
   return queryData.map(winner => ({
     name: `${winner.stimmkreis.name}`,
     value: winner.partei.id - 1,
+    partei: winner.partei,
     stimmanzahl: winner.anzahl
   }));
 }
@@ -51,7 +51,7 @@ const GewinnerGeoChartComponent = (props: IProps) => (
           }gewinner)`}
           style={{ marginLeft: "25px", marginTop: "5px", marginBottom: "5px" }}
           checked={props.erststimmen}
-          onValueChanged={props.onErststimmenChanged}
+          onValueChanged={val => props.onErststimmenChanged(val)}
         />
         <ReactEcharts
           style={{ width: "100%", height: "100%" }}
@@ -61,9 +61,7 @@ const GewinnerGeoChartComponent = (props: IProps) => (
               showDelay: 0,
               transitionDuration: 0.2,
               formatter: (params: any) =>
-                `${params.name}<br/>${getHumanReadableParteiName(
-                  Object.values(ParteiName)[params.value]
-                )}<br/>Stimmen: ${params.data.stimmanzahl}`
+                `${params.name}<br/>${params.data.partei.name}<br/>Stimmen: ${params.data.stimmanzahl}`
             },
             visualMap: {
               show: false,

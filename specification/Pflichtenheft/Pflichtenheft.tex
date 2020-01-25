@@ -109,7 +109,7 @@ Studierenden des Elite Software Engineering Masterstudiengangs aufbauen.
 Das System soll dabei nicht nur die Ergebnisse für die Landtagswahlen 
 2013 und 2018 analysier- und vergleichbar machen, e.g., die Sitzverteilung 
 im Landtag, statistische Auswertung von Ergebnissen, Berechnung gewonnener
-Mandate, sondern auch als sicheres Backendsystem für die elektronische 
+Mandate, sondern auch als sicheres System für die elektronische 
 Stimmabgabe im Wahllokal dienen. 
 %
 Es müssen die gesetzlichen Regelungen, Normen und Datenschutzaspekte
@@ -124,13 +124,12 @@ Landtagswahl 2018
       \addrow{M01}{...WählerInnen Einzelstimmen abzugeben nach vorangestellter Freigabe durch eine(n) WahlhelferIn.}
       \addrow{M02}{...Im Echtbetrieb, das mehrere Stimmen gleichzeitig abgegeben werden}
       \addrow{M03}{...selbst im Katastrophenfall persistierte Wahldaten zu recovern}
-	\addrow{M04}{...dem oder der WahlhelferIn Stimmen in aggregierter Form einzugeben.}
-	\addrow{M05}{...Daten von vergangenen Wahlen mit Hilfe einer CSV-Datei fehlerfrei in das System einzuspeisen und statistisch auszuwerten.}
-	\addrow{M06}{...bei der statistischen Auswertung die Verteilung der Sitze, die Auswertung für die Direkt- und Listenmandate und die Anzahl der Stimmen pro Partei einzusehen.}
-	\addrow{M07}{...pro Stimmkreis die Einzelstimmen zu Stimmkreisergebnissen vorzuaggregieren.}
-	\addrow{M08}{...erst nach Abschluss einer Wahl diese statistisch Auszuwerten, e.g., um Wahlbeeinflussung oder timed-attacks auf das Wahlgeheimnis zu verhindern.}
-	\addrow{M09}{Die Anwendung speichert Erst- und Zweitstimmen getrennt voneinander um das Wahlgeheimnis und Datenschutzaspekte zu respektieren.}
-      \addrow{M10}{Das System beachtet alle relevanten gesetzlichen Vorgaben für bayrische Landtagswahlen}
+	\addrow{M04}{...Daten von vergangenen Wahlen mit Hilfe einer CSV-Datei fehlerfrei in das System einzuspeisen und statistisch auszuwerten.}
+	\addrow{M05}{...bei der statistischen Auswertung die Verteilung der Sitze, die Auswertung für die Direkt- und Listenmandate und die Anzahl der Stimmen pro Partei einzusehen.}
+	\addrow{M06}{...pro Stimmkreis die Einzelstimmen zu Stimmkreisergebnissen vorzuaggregieren.}
+	\addrow{M07}{...erst nach Abschluss einer Wahl diese statistisch Auszuwerten, e.g., um Wahlbeeinflussung oder timed-attacks auf das Wahlgeheimnis zu verhindern.}
+      \addrow{M08}{Das System beachtet alle relevanten gesetzlichen Vorgaben für bayrische Landtagswahlen, e.g., Erst- und Zweitstimmen 
+                  werden getrennt voneinander gespeichert um das Wahlgeheimnis und Datenschutzaspekte zu respektieren.}
 \end{usecase}
 
 \subsection{Sollkriterien}
@@ -143,16 +142,15 @@ Landtagswahl 2018
 \subsection{Kannkriterien}
 \begin{usecase}
 	\addheading{Nummer}{Beschreibung} 
-	\addrow{K01}{Die Anwendung kann bei der statistischen Auswertung die Ergebnisse auf der Landkarte visualisieren}
-      \addrow{K02}{Stimmabgaben können als gültig und ungültig ausgewertet werden.}
-	\addrow{K03}{WahlleiterInnen können bereits eingegebene Stimmen korrigieren, beispielsweise nach einer Neuauszählung}
+	\addrow{K01}{Die Anwendung kann bei der statistischen Auswertung Ergebnisse auf einer Landkarte visualisieren}
+      \addrow{K02}{Es ist möglich ungültige Stimmen abzugeben.}
 \end{usecase}
 
 \subsection{Abgrenzungskriterien}
 \begin{usecase}
       \addheading{Nummer}{Das System...} 
-      \addrow{A01}{...Dient nicht als E-Voting Plattform sondern ist lediglich imstande Stimmen von WählerInnen in Wahlkabinen entgegen zu nehmen}
-	\addrow{A02}{...kann nicht die Berechtigung von WählerInnen überprüfen.}
+      \addrow{A01}{...Ist keine volle E-Voting Plattform sondern ist lediglich imstande Stimmen von WählerInnen in Wahlkabinen entgegen zu nehmen}
+	\addrow{A02}{...kann nicht die Berechtigung von WählerInnen überprüfen, sondern überlässt dies wie aktuell praktiziert den WahlhelferInnen.}
 	\addrow{A03}{...verarbeitet und berechnet keine juristischen Ausnahmefälle, die bei den Wahlen 2013 und 2018 nicht relevant waren.}
 \end{usecase}
 
@@ -201,7 +199,7 @@ Webtechnologien dafür geeignet Geräte- und Bildschirmgrößen-unabhängige Sof
 da es unpraktikabel ist sich vorab bei Wahlautomaten und (statistischen-)Auswertungsgeräten festzulegen.
 %
 Die Implementierung des Backendsystems erfolgt als minimale Softwareschicht auf einem externen 
-Rechner, fortan \textit{server} genannt. Jede Benutzeroberfläche schickt alle Anfragen, egal ob lesend oder schreibend, 
+Rechner, fortan \textit{server} genannt. Jede Benutzeroberfläche schickt Anfragen, egal ob lesend oder schreibend, 
 an den Server. Dieser führt die jeweilige Operation aus und liefert gegebenenfalls hervorgebrachte
 Anfrageergebnisse wieder zurück an den Rechner auf welchem die Benutzeroberfläche angezeigt wird, fortan \textit{client}.
 
@@ -209,21 +207,25 @@ Jede Personengruppe kann zu jeder Zeit immer nur auf die für sie relevanten Int
 Dies steigert primär die Intuitivität der Benutzeroberfläche und minimiert potentielle Verwirrung
 bei Benutzern. Die Absicherung des Systems beruht hingegen explizit nicht auf den getrennten 
 Oberflächen. Vielmehr wird das Backendsystem durch Nutzerauthentifizierung der WahlleiterInnen und 
-WahlhelferInnen, sowie Authentifizierung der einzelnen Wahllokale gesichert. Hierzu erhält jede(r)
-WahlhelferIn und WahlleiterIn und jedes Wahllokal vor jeder Landtagswahl einen sich je unterscheidenden 
+WahlhelferInnen, sowie Authentifizierung der einzelnen Wahllokale gesichert. Hierzu erhält der oder die 
+WahlleiterIn sowie jede(r) WahlhelferIn vor jeder Landtagswahl einen sich je unterscheidenden 
 Zugriffscode auf einem staatlich gesicherten, externen Kommunikationskanal zugesandt. Dieser
-ist jeweils nur für genau die vorgesehene Tätigkeit am vorgesehenen Ort verwendbar.
+ist jeweils nur für genau die vorgesehene Tätigkeit am verwendbar. Jeder Wahlkabine wird
+überdies je ein eindeutig identifizierbarer und von von WahlhelferInnen authorisierter Zugriffscode
+zugeordnet. Die Stimmabgabe ist nur mit einem authorisierten Wahlkabinen-Zugriffscode möglich und auch
+nur dann, wenn ein(e) WahlhelferIn die Wahlkabine freigegeben hat. Die Freigabe einer Wahlkabine
+ist immer nur für genau eine Stimmabgabe gültig.
 
 Zur Persistierung von Daten durch das Backendsystem wird ein zugriffsgesichertes Datenbanksystem eingesetzt. Dieses
 wird exklusiv von der durch das Projektteam implementierten Softwareschicht auf dem Server angesprochen.
 Das heißt, dass die Backendsoftware lediglich als Proxy zwischen BenutzerIn und Datenbanksystem agiert. Sämtliche 
-Datenzugriffe erfolgen stets authentifiziert, gefiltert und werden protokolliert. 
+kritischen Datenzugriffe erfolgen stets authentifiziert.
 %
 Der Einsatz eines DBMS wird durch mehrere inhärente Vorteile begünstigt:
 
 \begin{itemize}
       \item Parallele OLAP Abfragen ohne Zusatzaufwand möglich, i.e., mehrere BenutzerInnen können 
-            gleichzeitig ungehindert voneinander `die Wahlergebnisse statistisch auswerten.
+            gleichzeitig ungehindert voneinander die Wahlergebnisse statistisch auswerten.
       \item Mehrbenutzer OLTP out-of-the-box, i.e., mehrere WählerInnen und WahlhelferInnen können parallel Stimmen
             eintragen.
       \item Hohe Ausfallsicherheit, i.e., das System läuft stabil über längere Zeiträume
@@ -257,9 +259,9 @@ deren Interaktion und Aufbau graphisch.
         \hline
         Serverschnittstelle & Apollo Server & Apollo Server implementiert die notwendige serverseitige Funktionalität um auf GraphQL Anfragen zu antworten. Jeder request wird auf einen resolver-Funktion gemapped, welche sich darum kümmert die angeforderte Funktion (Daten lesen, Daten schreiben) auszuführen. \\
         \hline
-        Ansprechen Serverschnittstelle & Apollo Client & Apollo Client implementiert die notwendige clientseitige Funktionalität um GraphQL Anfragen an einen Server zu schicken und die Antworten zu empfangen \\
+        Anfragen senden & Apollo Client & Apollo Client implementiert die notwendige clientseitige Funktionalität um GraphQL Anfragen an einen Server zu schicken und die Antworten zu empfangen \\
         \hline
-        Frontend UI & React & React ist ein von Facebook entwickeltes UI-Framework und wird zur Darstellung sämtlicher Inhalte verwendet \\
+        Frontend Basis & React & React ist ein von Facebook entwickeltes UI-Framework und wird zur Darstellung sämtlicher Inhalte verwendet \\
         \hline
         Frontend UI & Ant Design & Ant Design ist eine React Component Library, welche viele nützliche GUI-Elemente vorgefertigt bereitstellt \\
         \hline
@@ -284,9 +286,9 @@ offensichtlich erreicht, sofern dieser Abschnitt sie nicht gesondert nennt.
       \addrow{M01}{Der oder die WahlhelferIn in einer separaten Oberfläche die individuelle Freigabe für jede Instanz der Stimmabgabeoberfläche im Wahllokal erteilt. Danach kann der oder die WählerIn genau eine Erst- und Zweitstimme- über die Stimmabgabeoberfläche in der Wahlkabine abgeben.}
       \addrow{M02}{Das eingesetzte DBS PostgreSQL ist performant genug um ein Mehrbenutzer-OLTP Szenario plausibel zu ermöglichen.}
       \addrow{M03}{Das eingesetzte DBS verfügt über ausreichen Backup und Recovery Funktionalität.}
-	\addrow{M07}{Dies wird über materialized Views im DBS erreicht.}
-	\addrow{M08}{Der lesende Datenzugriff kann für die Wahldauer untersagt werden, beispielsweise auf DBS-Level.}
-      \addrow{M10}{Datenschutz, Wahlgeheimnis u.ä. sind durch das Datenmodel und die Absicherung des Systems gewährleistet. Die restlichen Vorgaben werden von der Implementierung und dem Datenmodel umgesetzt.}
+	\addrow{M06}{Dies wird über materialized Views im DBS erreicht.}
+	\addrow{M07}{Der lesende Datenzugriff kann für die Wahldauer untersagt werden, beispielsweise auf DBS-Level.}
+      \addrow{M08}{Datenschutz, Wahlgeheimnis u.ä. sind durch das Datenmodel und die Absicherung des Systems gewährleistet. Die restlichen Vorgaben werden von der Implementierung und dem Datenmodel umgesetzt.}
       \addrow{S02}{Getrennte Oberflächen welche sich ggf. hinter einer für Webanwendungen üblichen Zugriffskontrolle befinden.}
       \addrow{S03}{Sichere Webanwendungen können diese Garantien genauso sehr treffen wie andere vergleichbare Implementierungsansätze, wie an Ihrem breiten Produktiveinsatz durch viele Spitzenunternehmen ersichtlich ist.}
 \end{usecase}
@@ -295,36 +297,36 @@ offensichtlich erreicht, sofern dieser Abschnitt sie nicht gesondert nennt.
 \includepdf[nup=1x2, pages=-,templatesize={\textwidth}{10cm}]{../Mock.pdf}
 
 \section{Datenmodell}
-Die grundlegenden zu verwaltenden Produktdaten ergeben sich aus der folgenden Liste von
-identifizierten Entitäten:
+Das Datenmodell ergibt sich aus den Anforderungen und dem Vorschlag des Lastenhefts wie folgt:
 \begin{itemize}
   \item \textbf{Wahl} - Repräsentation einer einzelnen Wahl an einem festen Datum. 
         Durch letzteres Merkmal ist es möglich mehrere Wahlen in einem Jahr festzuhalten.
   \item \textbf{Stimme} - Jede(r) WählerIn besitzt je eine Erst- und Zweitstimme, welche er oder sie in Ihrem
         Stimmbezirk für KandidatInnen abgeben können. Mit der Erststimme wählt eine wahlberechtigte Person
         primär den oder die von ihr bevorzugten DirektkandidatIn ihres Stimmkreises. Über die Zweitstimme wählt 
-        jede wahlberechtigte Person genau einen Kandidaten einer Liste aus ihrem Regierungsbezirk. Das prozentuale
-        Gesamtabschneiden einer Partei aus kombinierten Erst- und Zweitstimmen ist jedoch ebenso für das 
+        jede wahlberechtigte Person genau einen Kandidaten einer Liste aus ihrem Regierungsbezirk oder eine Partei, i.e, ihre Liste. 
+        Das prozentuale Gesamtabschneiden einer Partei aus kombinierten Erst- und Zweitstimmen ist für das 
         Wahlergebnis relevant.
   \item \textbf{Regierungsbezirk} - Bayern ist in sieben Regierungsbezirke unterteilt: Oberbayern,
         Niederbayern, Schwaben, Ober-, Unter-, Mittelfranken und Oberpfalz. Jeder Regierungsbezirk
         hat eine unterschiedliche Anzahl zu vergebender Direkt- und Listenmandate
   \item \textbf{Stimmkreis} - Regierungsbezirke sind gemäß Bevölkerungszahlen in Stimmkreise aufgeteilt.
-        Jeder Stimmkreis ist wiederum in ein oder mehrere Stimmbezirke unterteilt. Pro Stimmkreis wird ein(e)
-        DirektkandidatIn gewählt
-  \item \textbf{Stimmbezirk} - Die Stimmabgabe erfolgt in Stimmbezirken
+        Pro Stimmkreis wird ein(e) DirektkandidatIn gewählt
+  \item \textbf{RBInfo}/\textbf{SKInfo} - Zusatzinformationen zum Regierungsbezirk bzw. Stimmkreis,
+        welche sich pro Wahl ändern können, werden hier gespeichert.
   \item \textbf{KandidatIn} - Eine sich zur Wahl stellende Person mit notwendigen persönlichen Angaben. 
         Insbesondere kann ein(e) KandidatIn als DirektkandidatIn für einen Stimmkreis aufgestellt sein.
-  \item \textbf{Mandat} - Mandate für den Bayrischen Landtag können von KandidatInnen im Rahmen einer Landtagswahl
-        errungen werden. Hierbei wird zwischen Direktmandaten, Listenmandaten und Ausgleichsmandaten unterschieden.
-  \item \textbf{Partei} - KandidatInnen können Mitglied einer Partei sein und sich von dieser für einen Listenplatz
-        aufstellen lassen
+  \item \textbf{Partei} - KandidatInnen sind Mitglied einer Partei und können sich von dieser für einen 
+        Listenplatz aufstellen lassen
   \item \textbf{Liste} - Jede Partei kann pro Regierungsbezirk eine Liste mit KandidatInnen, welche Mitglieder der 
-        Partei sind, aufstellen.
+        Partei sind, aufstellen. Listenplätze ändern sich durch die anzahl erhaltener Stimmen. Listenmandate
+        einer Partei werden dann nach finaler Listenreihenfolge berechnet.
+  \item \textbf{Wahlhelfer} - Wahlhelfer überwachen und authentifizieren Wahlkabinen und Wähler
+  \item \textbf{Wahlkabine} - Wähler geben ihre Stimmen in Wahlkabinen ab
 \end{itemize}
 
 \begin{center}
-	\includegraphics[width=\textwidth]{../model.pdf}
+	\includegraphics[page=2,width=\textwidth]{../model.pdf}
 \end{center}
 
 \section{Globale Testfälle und Szenarien}
@@ -335,8 +337,7 @@ identifizierten Entitäten:
         \hline
         Stimmabgabe & 10~ Stimmabgaben können pro Sekunde erfolgen \\
         \hline
-        (statistische-) Auswertung & Zur voraussichtlichen Hauptlastzeit unmittelbar nach Datenfreigabe zum Abschluss des Wahlvorgangs 
-            bleibt das System performant. Es muss hierzu möglich sein 100 Analyseanfragen pro Sekunde zu bearbeiten \\
+        Auswertung & Es muss möglich sein 100 Analyseanfragen pro Sekunde zu bearbeiten \\
         \hline
       \end{tabular}
 \end{center}

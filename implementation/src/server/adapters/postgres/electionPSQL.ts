@@ -6,21 +6,24 @@ import {
 import {
   Wahlbeteiligung,
   Stimmentwicklung,
-  ParteiName,
   Mandat,
   StimmkreisWinner,
   UeberhangMandat,
-  KnapperKandidat
+  KnapperKandidat,
+  Q7,
+  SuperKandidaten
 } from "../../../shared/graphql.types";
 
 type MaterialViews =
+  | "direktmandat_anzahl"
   | "kandidatgebundene_gueltige_stimmen"
   | "listengebundene_gueltige_stimmen"
   | "ungueltige_erststimmen"
   | "ungueltige_zweitstimmen"
   | "finaleliste"
   | "gewonnene_direktmandate"
-  | "gewonnene_listenmandate";
+  | "gewonnene_listenmandate"
+  | "knappste_kandidaten";
 
 const KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW: MaterialViews =
   "kandidatgebundene_gueltige_stimmen";
@@ -35,45 +38,47 @@ type Tables =
   | "stimmkreise"
   | "kandidaten"
   | "regierungsbezirke"
-  | "direktkandidaten";
+  | "direktkandidaten"
+  | "stimmkreis_wahlinfo";
 
 const PARTEIEN_TABLE: Tables = "parteien";
 const WAHLEN_TABLE: Tables = "wahlen";
+const KNAPPSTE_KANDIDATEN_MVIEW: MaterialViews = "knappste_kandidaten";
 const STIMMKREIS_TABLE: Tables = "stimmkreise";
 const KANDIDATEN_TABLE: Tables = "kandidaten";
 const REGIERUNGSBEZIRKE_TABLE: Tables = "regierungsbezirke";
-const DIREKTKANDIDATEN_TABLE: Tables = "direktkandidaten";
-
-type Views = "gesamtstimmen_pro_partei";
-
-const GESAMTSTIMMEN_PRO_PARTEI_VIEW: Views = "gesamtstimmen_pro_partei";
+const STIMMKREIS_INFO_TABLE: Tables = "stimmkreis_wahlinfo";
 
 const refreshOrder: MaterialViews[] = [
+  "direktmandat_anzahl",
   "kandidatgebundene_gueltige_stimmen",
   "listengebundene_gueltige_stimmen",
   "ungueltige_erststimmen",
   "ungueltige_zweitstimmen",
   "finaleliste",
   "gewonnene_direktmandate",
-  "gewonnene_listenmandate"
+  "gewonnene_listenmandate",
+  "knappste_kandidaten"
 ];
 
 export async function computeQ7(
   wahlid: number,
-  stimmkreisids: [number, number, number, number, number],
-  vorg_wahlid: number
-): Promise<Wahlbeteiligung[]> {
+  stimmkreisid1: number,
+  stimmkreisid2: number,
+  stimmkreisid3: number,
+  stimmkreisid4: number,
+  stimmkreisid5: number,
+  vglwahl: number
+): Promise<Q7[]> {
   const res: {
-    wahl_id: number;
-    wahldatum: Date;
     stimmkreis_id: number;
     stimmkreis_name: string;
     partei_id: number;
     partei_name: string;
     direktmandat: string;
     wahlbeteiligung: number;
-    prozAnteil: number;
-    absAnzahl: number;
+    prozanteil: number;
+    absanteil: number;
     vorher: number;
     nachher: number;
   }[] = await adapters.postgres.query(
@@ -95,30 +100,22 @@ export async function computeQ7(
        ) lgs
   GROUP BY lgs.wahl_id, lgs.stimmkreis_id, lgs.partei_id
 ), kandidatgebundene_gueltige_stimmen AS(
-SELECT kgs.wahl_id, kgs.stimmkreis_id, kgs.kandidat_id, sum(anzahl) as anzahl
-FROM (
   (
-    SELECT egks.wahl_id, egks.stimmkreis_id, egks.kandidat_id, count(*) as anzahl
-    FROM "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen egks
-    WHERE egks.stimmkreis_id = $2 OR egks.stimmkreis_id = $3 OR egks.stimmkreis_id = $4 OR egks.stimmkreis_id = $5 OR egks.stimmkreis_id = $6
-    GROUP BY egks.stimmkreis_id, egks.wahl_id, egks.kandidat_id
+      SELECT egks.wahl_id, egks.stimmkreis_id, egks.kandidat_id, count(*) as anzahl
+      FROM "landtagswahlen".einzel_gueltige_kandidatgebundene_stimmen egks
+      GROUP BY egks.stimmkreis_id, egks.kandidat_id, egks.wahl_id
   )
   UNION ALL
   (
-    SELECT agks.wahl_id, agks.stimmkreis_id, agks.kandidat_id, agks.anzahl
-    FROM "landtagswahlen".aggregiert_gueltige_kandidatgebundene_stimmen agks
-    WHERE agks.stimmkreis_id = $2 OR agks.stimmkreis_id = $3 OR agks.stimmkreis_id = $4 OR agks.stimmkreis_id = $5 OR agks.stimmkreis_id = $6
+      SELECT agks.wahl_id, agks.stimmkreis_id, agks.kandidat_id, agks.anzahl
+      FROM "landtagswahlen".aggregiert_gueltige_kandidatgebundene_stimmen agks
   )
-) kgs
-GROUP BY kgs.wahl_id, kgs.stimmkreis_id, kgs.kandidat_id
-
 ),
 
 kandidatgebundene_stimmen_pro_partei_pro_stimmkreis  AS (
 SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, sum(kgs.anzahl) as anzahl
 FROM kandidatgebundene_gueltige_stimmen kgs
   JOIN "landtagswahlen".kandidaten k ON k.id = kgs.kandidat_id
---WHERE kgs.stimmkreis_id = '101'
 GROUP BY kgs.wahl_id, kgs.stimmkreis_id, kgs.wahl_id, k.partei_id, k.partei_id
 ),
 -- --absolute Anzahl an Stimmen pro Partei
@@ -134,13 +131,12 @@ FROM kandidatgebundene_stimmen_pro_partei_pro_stimmkreis kggs
   FROM gesamtstimmen_pro_partei_pro_stimmkreis
   GROUP BY wahl_id, stimmkreis_id
 ), prozentualen_anteil_pro_partei as (
-  SELECT gppps.wahl_id, gppps.stimmkreis_id, gppps.partei_id, p.name, (gppps.anzahl/gps.gesamtanzahlstimmen) *100 as prozentualerAnteil
+  SELECT gppps.wahl_id, gppps.stimmkreis_id, gppps.partei_id, (CAST( gppps.anzahl AS float)/CAST(gps.gesamtanzahlstimmen AS float)) *100 as prozAnteil
 FROM gesamtstimmen_pro_stimmkreis gps
   JOIN gesamtstimmen_pro_partei_pro_stimmkreis gppps
       ON  gps.wahl_id = gppps.wahl_id AND gps.stimmkreis_id = gppps.stimmkreis_id
   JOIN "landtagswahlen".parteien p
       ON p.id = gppps.partei_id
-ORDER BY gppps.wahl_id, gppps.stimmkreis_id, gppps.partei_id
 ), --fuer entwicklung der stimmen
  gesamtstimmen_pro_partei as (
 SELECT wahl_id, partei_id, sum(anzahl) as anzahl
@@ -196,42 +192,44 @@ WHERE ngd1.wahl_id = ngd2.wahl_id
   FROM "landtagswahlen".stimmkreis_wahlinfo swi
 
 ),  ergebnis as(--sk.name, e.partei_id, p.name, k.name,    e.vorher, e.nachher
-SELECT wb.wahl_id, w.wahldatum, wb.stimmkreis_id, sk.name, gps.partei_id, p.name, k.name as direktkandidat, wb.wahlbeteiligung, papp.prozentualerAnteil, gps.anzahl as absoluteAnzahl, e.vorher, e.nachher
+SELECT wb.stimmkreis_id as stimmkreis_id, 
+       sk.name as stimmkreis_name, 
+       gps.partei_id as partei_id, 
+       p.name as partei_name, 
+       k.name as direktmandat, 
+       wb.wahlbeteiligung * 100 as wahlbeteiligung, 
+       papp.prozAnteil as prozanteil, 
+       gps.anzahl as absanteil, 
+       e.vorher as vorher, 
+       e.nachher as nachher
 FROM wahlbeteiligung wb
-JOIN direktmandate dk
-ON wb.wahl_id = dk.wahl_id AND wb.stimmkreis_id = dk.stimmkreis_id
-JOIN gesamtstimmen_pro_partei_pro_stimmkreis gps
-ON wb.wahl_id = gps.wahl_id AND wb.stimmkreis_id = gps.stimmkreis_id
-JOIN prozentualen_anteil_pro_partei papp
-ON papp.wahl_id = gps.wahl_id AND papp.stimmkreis_id = gps.stimmkreis_id AND papp.partei_id = gps.partei_id
-JOIN "landtagswahlen".stimmkreise sk
-ON sk.id = papp.stimmkreis_id
-JOIN entwicklung e
-ON e.partei_id = gps.partei_id
-JOIN "landtagswahlen".parteien p
-ON p.id = papp.partei_id
-JOIN "landtagswahlen".kandidaten k
-ON k.id = dk.kandidat_id
-JOIN "landtagswahlen".wahlen w
-ON w.id = wb.wahl_id
-
+  JOIN direktmandate dk
+    ON wb.wahl_id = dk.wahl_id AND wb.stimmkreis_id = dk.stimmkreis_id
+  JOIN gesamtstimmen_pro_partei_pro_stimmkreis gps
+    ON wb.wahl_id = gps.wahl_id AND wb.stimmkreis_id = gps.stimmkreis_id
+  JOIN prozentualen_anteil_pro_partei papp
+    ON papp.wahl_id = gps.wahl_id AND papp.stimmkreis_id = gps.stimmkreis_id AND papp.partei_id = gps.partei_id
+  JOIN "landtagswahlen".stimmkreise sk
+    ON sk.id = papp.stimmkreis_id
+  JOIN entwicklung e
+    ON e.partei_id = gps.partei_id
+  JOIN "landtagswahlen".parteien p
+    ON p.id = papp.partei_id
+  JOIN "landtagswahlen".kandidaten k
+    ON k.id = dk.kandidat_id
 )
  SELECT * FROM ergebnis;`,
     [
       wahlid,
-      stimmkreisids[0],
-      stimmkreisids[1],
-      stimmkreisids[2],
-      stimmkreisids[3],
-      stimmkreisids[4],
-      vorg_wahlid
+      stimmkreisid1,
+      stimmkreisid2,
+      stimmkreisid3,
+      stimmkreisid4,
+      stimmkreisid5,
+      vglwahl
     ]
   );
   return res.map(resobj => ({
-    wahl: {
-      id: resobj.wahl_id,
-      wahldatum: resobj.wahldatum
-    },
     stimmkreis: {
       id: resobj.stimmkreis_id,
       name: resobj.stimmkreis_name
@@ -242,8 +240,8 @@ ON w.id = wb.wahl_id
     },
     direktmandat: resobj.direktmandat,
     wahlbeteiligung: resobj.wahlbeteiligung,
-    prozAnteil: resobj.prozAnteil,
-    absAnzahl: resobj.absAnzahl,
+    prozAnteil: resobj.prozanteil,
+    absAnteil: resobj.absanteil,
     vorher: resobj.vorher,
     nachher: resobj.nachher
   }));
@@ -260,67 +258,18 @@ export async function computeWahlbeteiligung(
     wahlbeteiligung: number;
   }[] = await adapters.postgres.query(
     `
-      with gueltige_erststimmen_pro_stimmkreis AS(
-        SELECT kgs.wahl_id, kgs.stimmkreis_id, sum(kgs.anzahl) as anzahl
-        FROM "${DatabaseSchemaGroup}".direktkandidaten dk, "${DatabaseSchemaGroup}".kandidatgebundene_gueltige_stimmen kgs
-        WHERE dk.wahl_id = $1 AND dk.wahl_id = kgs.wahl_id AND dk.stimmkreis_id = kgs.stimmkreis_id AND dk.direktkandidat_id = kgs.kandidat_id
-        GROUP BY  kgs.wahl_id, kgs.stimmkreis_id
-        ORDER BY kgs.wahl_id, kgs.stimmkreis_id
-      ),  
-      gesamtanzahl_erststimmen_pro_stimmkreis AS(
-        SELECT geps.wahl_id, geps.stimmkreis_id, (geps.anzahl + ue.anzahl) as anzahl
-        FROM gueltige_erststimmen_pro_stimmkreis geps, "${DatabaseSchemaGroup}".ungueltige_erststimmen ue
-        WHERE geps.wahl_id = $1 AND geps.wahl_id = ue.wahl_id AND geps.stimmkreis_id = ue.stimmkreis_id
-      ), 
-      gueltige_kandidat_zweitstimmen_pro_stimmkreis AS(
-        SELECT kgs.wahl_id, kgs.stimmkreis_id, sum(kgs.anzahl) as anzahl
-        FROM "${DatabaseSchemaGroup}".kandidatgebundene_gueltige_stimmen kgs
-        WHERE kgs.wahl_id = $1 AND not exists(SELECT * FROM "${DatabaseSchemaGroup}".direktkandidaten dk WHERE kgs.kandidat_id = dk.direktkandidat_id AND dk.wahl_id = kgs.wahl_id AND dk.stimmkreis_id = kgs.stimmkreis_id)
-        GROUP BY kgs.wahl_id, kgs.stimmkreis_id
-      ),
-      listengebundene_stimmen_pro_stimmkreis AS (
-        SELECT wahl_id, stimmkreis_id, sum(anzahl) as anzahl
-        FROM "${DatabaseSchemaGroup}".listengebundene_gueltige_stimmen
-        WHERE wahl_id = $1
-        GROUP BY wahl_id, stimmkreis_id
-      ),
-      gueltige_zweitstimmen_pro_stimmkreis AS(
-        SELECT lgs.wahl_id, lgs.stimmkreis_id, (lgs.anzahl + gkz.anzahl) as anzahl
-        FROM listengebundene_stimmen_pro_stimmkreis lgs, gueltige_kandidat_zweitstimmen_pro_stimmkreis gkz
-        WHERE lgs.wahl_id = gkz.wahl_id AND lgs.stimmkreis_id = gkz.stimmkreis_id
-      ), gesamtzahl_zweitstimmen_pro_stimmkreis AS (
-        SELECT gzps.wahl_id, gzps.stimmkreis_id, (gzps.anzahl + uz.anzahl) as anzahl
-        FROM gueltige_zweitstimmen_pro_stimmkreis gzps, "${DatabaseSchemaGroup}".ungueltige_zweitstimmen uz
-        WHERE gzps.wahl_id = uz.wahl_id AND gzps.stimmkreis_id = uz.stimmkreis_id
-      ),
-      gesamt_stimmen_pro_stimmkreis AS(
-        SELECT wahl_id, stimmkreis_id, max(anzahl) as anzahl
-        FROM (SELECT *
-              FROM gesamtanzahl_erststimmen_pro_stimmkreis
-              UNION ALL
-              SELECT *
-              FROM gesamtzahl_zweitstimmen_pro_stimmkreis
-              ) as "sz"
-          GROUP BY sz.wahl_id, sz.stimmkreis_id
-      ),
-      wahlbeteiligung AS(
-          SELECT w.id as wahl_id,
-                 w.wahldatum as wahldatum,
-                 sk.id as stimmkreis_id,
-                 sk.name as stimmkreis_name,
-                 geps2.stimmkreis_id, 
-                 (geps2.anzahl / swi.anzahlwahlberechtigte) * 100 as wahlbeteiligung
-          FROM "${DatabaseSchemaGroup}".stimmkreis_wahlinfo swi
-          JOIN gesamtanzahl_erststimmen_pro_stimmkreis geps2
-            ON swi.wahl_id = geps2.wahl_id AND swi.stimmkreis_id = geps2.stimmkreis_id
-          JOIN "${DatabaseSchemaGroup}".${WAHLEN_TABLE} w
-            ON w.id = swi.wahl_id
-          JOIN "${DatabaseSchemaGroup}".${STIMMKREIS_TABLE} sk
-            ON sk.id = swi.stimmkreis_id
-      )
-      SELECT * 
-      FROM wahlbeteiligung 
-      `,
+      SELECT w.id as wahl_id,
+             w.wahldatum as wahldatum,
+             sk.id as stimmkreis_id,
+             sk.name as stimmkreis_name,
+             CAST(anzahlwaehler AS FLOAT) / CAST(anzahlwahlberechtigte AS FLOAT) * 100 as wahlbeteiligung
+      FROM "${DatabaseSchemaGroup}".${STIMMKREIS_INFO_TABLE} ski
+        JOIN "${DatabaseSchemaGroup}".${WAHLEN_TABLE} w
+          ON w.id = ski.wahl_id
+        JOIN "${DatabaseSchemaGroup}".${STIMMKREIS_TABLE} sk
+          ON sk.id = ski.stimmkreis_id
+      WHERE wahl_id = $1;
+    `,
     [wahlid]
   );
 
@@ -337,48 +286,170 @@ export async function computeWahlbeteiligung(
   }));
 }
 
-//TODO Graphql query anpassen, sodass einzel mitgegeben wird
+/**
+ *
+ *berechnet die Direktkandidaten, die in ihrem Stimmkreis mehr als 20mal so viele Stimmen bekommen haben, wie die
+ *Listenkandidaten ihrer Partei in diesem Stimmkreis zusammen gerechnet bekommen haben
+ */
+export async function getSuperDirektkandidaten(
+  wahlid: number
+): Promise<SuperKandidaten[]> {
+  const res: {
+    wahl_id: number;
+    wahldatum: Date;
+    stimmkreis_id: number;
+    stimmkreis_name: string;
+    kandidat_id: number;
+    kandidat_name: string;
+    partei_id: number;
+    partei_name: string;
+    stimmen_direktk: number;
+    stimmen_listenk: number;
+  }[] = await adapters.postgres.query(
+    `with stimmen_der_direktkandidaten as (
+      SELECT kgs.wahl_id, kgs.stimmkreis_id, kgs.kandidat_id, k2.partei_id, kgs.anzahl as anzahl
+      FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs
+      JOIN "landtagswahlen".direktkandidaten k
+        ON kgs.wahl_id = k.wahl_id AND kgs.kandidat_id = k.direktkandidat_id and kgs.stimmkreis_id=k.stimmkreis_id
+      JOIN "landtagswahlen".kandidaten k2
+        ON kgs.kandidat_id = k2.id
+      WHERE kgs.wahl_id=$1 
+  
+    ),
+    kandidatgebundene_stimmen_mit_partei as (
+      SELECT kgs2.wahl_id, kgs2.stimmkreis_id, kgs2.kandidat_id, k3.partei_id, kgs2.anzahl
+      FROM "landtagswahlen".kandidatgebundene_gueltige_stimmen kgs2
+      JOIN "landtagswahlen".kandidaten k3
+       ON kgs2.kandidat_id=k3.id
+      WHERE kgs2.wahl_id=$1
+    ),
+    nicht_direktkandidat_stimmen as(
+      SELECT ksmp.wahl_id, ksmp.stimmkreis_id, ksmp.partei_id, sum(ksmp.anzahl) as anzahl
+      FROM kandidatgebundene_stimmen_mit_partei ksmp
+      WHERE not exists (SELECT * FROM "landtagswahlen".direktkandidaten k2 WHERE ksmp.kandidat_id = k2.direktkandidat_id) AND Ksmp.wahl_id=2
+      GROUP BY ksmp.wahl_id, ksmp.partei_id, ksmp.stimmkreis_id
+    ),
+    super_kandidaten as (
+      SELECT sdd.wahl_id, sdd.stimmkreis_id, sdd.kandidat_id, sdd.anzahl as stimmen_direktk, nds.partei_id, nds.anzahl as stimmen_listenk
+      FROM stimmen_der_direktkandidaten sdd
+      JOIN nicht_direktkandidat_stimmen nds
+       ON sdd.wahl_id = nds.wahl_id and sdd.stimmkreis_id = nds.stimmkreis_id and sdd.partei_id = nds.partei_id
+      WHERE sdd.anzahl >= 20*nds.anzahl
+      ORDER BY sdd.wahl_id, sdd.stimmkreis_id, sdd.partei_id
+        )
+    SELECT sk.wahl_id as wahl_id, 
+      sk.stimmkreis_id as stimmkreis_id, 
+      s.name as stimmkreis_name, 
+      sk.kandidat_id as kandidat_id, 
+      k4.name as kandidat_name, 
+      sk.partei_id as partei_id, 
+      p.name as partei_name, 
+      sk.stimmen_direktk as stimmen_direktk, 
+      sk.stimmen_listenk as stimmen_listenk
+    FROM super_kandidaten sk
+    JOIN "landtagswahlen".stimmkreise s
+      ON sk.stimmkreis_id=s.id
+    JOIN "landtagswahlen".kandidaten k4
+      ON k4.id = sk.kandidat_id
+    JOIN "landtagswahlen".parteien p
+      ON p.id = sk.partei_id
+    ORDER BY sk.wahl_id, sk.stimmkreis_id, sk.kandidat_id;
+  `,
+    [wahlid]
+  );
+  return res.map(resobj => ({
+    stimmkreis: {
+      id: resobj.stimmkreis_id,
+      name: resobj.stimmkreis_name
+    },
+    kandidat: {
+      id: resobj.kandidat_id,
+      name: resobj.kandidat_name,
+      partei: {
+        id: resobj.partei_id,
+        name: resobj.partei_name
+      }
+    },
+    stimmen_direktk: resobj.stimmen_direktk,
+    stimmen_listenk: resobj.stimmen_listenk
+  }));
+}
+
 export async function computeEntwicklungDerStimmmen(
   wahl_id: number,
-  vgl_wahl_id: number,
+  vgl_wahl_id: number | null | undefined,
   stimmkreis_id: number
 ): Promise<Stimmentwicklung[]> {
-  const res: {
-    partei_id: number;
-    partei_name: ParteiName;
-    vorher: number;
-    nachher: number;
-  }[] = await adapters.postgres.query(
-    `
+  const VGL_QUERY = `
     WITH gueltige_partei_stimmen (wahl_id, stimmkreis_id, partei_id, anzahl) AS (
       SELECT wahl_id, stimmkreis_id, partei_id, sum(anzahl)
       FROM (
-               SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, kgs.anzahl
-               FROM "${DatabaseSchemaGroup}".${KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW} kgs
-                        JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k
-                             ON kgs.kandidat_id = k.id
-               UNION
-               SELECT *
-               FROM "${DatabaseSchemaGroup}".${LISTENGEBUNDENDE_GUELTIGE_STIMMEN_MVIEW}
+              SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, kgs.anzahl
+              FROM "${DatabaseSchemaGroup}".${KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW} kgs
+              JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k
+                    ON kgs.kandidat_id = k.id
+              UNION ALL
+              SELECT *
+              FROM "${DatabaseSchemaGroup}".${LISTENGEBUNDENDE_GUELTIGE_STIMMEN_MVIEW}
            ) gueltige_stimmen
       GROUP BY wahl_id, stimmkreis_id, partei_id
     )
     SELECT gs1.partei_id,
-          p.name as partei_name,
-          gs1.anzahl as vorher,
-          COALESCE(gs2.anzahl, 0) as nachher
+           p.name as partei_name,
+           gs1.anzahl as nachher,
+           COALESCE(gs2.anzahl, 0) as vorher
     FROM gueltige_partei_stimmen gs1
-        JOIN "${DatabaseSchemaGroup}".${PARTEIEN_TABLE} p
-            ON gs1.partei_id = p.id
-        LEFT OUTER JOIN gueltige_partei_stimmen gs2
-            ON gs1.stimmkreis_id = gs2.stimmkreis_id
-            AND gs1.partei_id = gs2.partei_id
-            AND gs1.wahl_id <> gs2.wahl_id
+      JOIN "${DatabaseSchemaGroup}".${PARTEIEN_TABLE} p
+        ON gs1.partei_id = p.id
+      LEFT OUTER JOIN gueltige_partei_stimmen gs2
+        ON gs1.stimmkreis_id = gs2.stimmkreis_id
+        AND gs1.partei_id = gs2.partei_id
+        AND gs1.wahl_id <> gs2.wahl_id
     WHERE gs1.wahl_id = $1
       AND COALESCE(gs2.wahl_id,$2) = $2
       AND gs1.stimmkreis_id = $3;
-    `,
-    [wahl_id, vgl_wahl_id, stimmkreis_id]
+    `;
+  const VGL_ARGS = [wahl_id, vgl_wahl_id, stimmkreis_id];
+
+  const NO_VGL_QUERY = `
+    WITH gueltige_partei_stimmen (wahl_id, stimmkreis_id, partei_id, anzahl) AS (
+      SELECT wahl_id, stimmkreis_id, partei_id, sum(anzahl)
+      FROM (
+            SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, kgs.anzahl
+            FROM "${DatabaseSchemaGroup}".${KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW} kgs
+              JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k
+                ON kgs.kandidat_id = k.id
+            UNION ALL
+            SELECT *
+            FROM "${DatabaseSchemaGroup}".${LISTENGEBUNDENDE_GUELTIGE_STIMMEN_MVIEW}
+          ) gueltige_stimmen
+      GROUP BY wahl_id, stimmkreis_id, partei_id
+    )
+    SELECT gs1.partei_id,
+          p.name as partei_name,
+          gs1.anzahl as nachher,
+          0 as vorher
+    FROM gueltige_partei_stimmen gs1
+      JOIN "${DatabaseSchemaGroup}".${PARTEIEN_TABLE} p
+        ON gs1.partei_id = p.id
+    WHERE gs1.wahl_id = $1
+    AND gs1.stimmkreis_id = $2;
+  `;
+  const NO_VGL_ARGS = [wahl_id, stimmkreis_id];
+
+  const novgl =
+    vgl_wahl_id === null ||
+    vgl_wahl_id === undefined ||
+    wahl_id === vgl_wahl_id;
+
+  const res: {
+    partei_id: number;
+    partei_name: string;
+    vorher: number;
+    nachher: number;
+  }[] = await adapters.postgres.query(
+    novgl ? NO_VGL_QUERY : VGL_QUERY,
+    novgl ? NO_VGL_ARGS : VGL_ARGS
   );
   return res.map(resobj => ({
     partei: {
@@ -390,7 +461,6 @@ export async function computeEntwicklungDerStimmmen(
   }));
 }
 
-//TODO Berechnung auf Einzelstimmen noch korrekt
 export async function getDirektmandat(
   wahlid: number,
   stimmkreisid: number
@@ -422,122 +492,32 @@ export async function getDirektmandat(
   );
 
   return res.map(resobj => ({
-    stimmkreis: {
-      id: resobj.stimmkreis_id,
-      name: resobj.stimmkreis_name
-    },
     kandidat: {
       id: resobj.kandidat_id,
       name: resobj.kandidat_name,
       partei: {
         id: resobj.partei_id,
-        name: resobj.partei_name as ParteiName
+        name: resobj.partei_name
       }
     },
     direktmandat: true
   }))[0];
 }
 
-// export async function computeAbsolutenAnteil(
-//   wahl_id: number,
-//   stimmkreis_id: number
-// ): Promise<IAnteil[]> {
-//   const res: {
-//     wahl_id: number;
-//     stimmkreis_id: number;
-//     partei_id: number;
-//     partei_name: string;
-//     anteil: number;
-//   }[] = await adapters.postgres.query(
-//     `with kandidatgebundene_stimmen_pro_partei_pro_stimmkreis  AS (
-//         SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, sum(kgs.anzahl) as anzahl
-//         FROM "${DatabaseSchemaGroup}".kandidatgebundene_gueltige_stimmen kgs
-//           JOIN "${DatabaseSchemaGroup}".kandidaten k ON k.id = kgs.kandidat_id
-//         WHERE kgs.stimmkreis_id = $2 AND kgs.wahl_id = $1
-//         GROUP BY kgs.wahl_id, kgs.stimmkreis_id, kgs.wahl_id, k.partei_id, k.partei_id
-//       ),
-//       -- Summe von kandidatengebundenen und listengebundenen stimmen pro partei
-//       gesamtstimmen_pro_partei_pro_stimmkreis AS (
-//         SELECT kggs.wahl_id, kggs.stimmkreis_id, kggs.partei_id, (kggs.anzahl + lgs.anzahl) as anzahl
-//         FROM kandidatgebundene_stimmen_pro_partei_pro_stimmkreis kggs
-//           JOIN "${DatabaseSchemaGroup}".listengebundene_gueltige_stimmen lgs
-//             ON lgs.stimmkreis_id = kggs.stimmkreis_id AND lgs.partei_id = kggs.partei_id AND
-//               lgs.wahl_id = kggs.wahl_id
-//       )
-//       SELECT * FROM gesamtstimmen_pro_partei_pro_stimmkreis`,
-//     [wahl_id, stimmkreis_id]
-//   );
-//   console.log(res);
-//   return res.map(resobj => ({
-//     wahl_id: resobj.wahl_id,
-//     stimmkreis_id: resobj.stimmkreis_id,
-//     partei_id: resobj.partei_id,
-//     partei_name: resobj.partei_name,
-//     anteil: resobj.anteil
-//   }));
-// }
-
-// //TODO muss ich hier noch boolean zurueck geben, dass prozentual?
-// export async function computeProzentualenAnteil(
-//   wahl_id: number,
-//   stimmkreis_id: number
-// ): Promise<IAnteil[]> {
-//   const res: {
-//     wahl_id: number;
-//     stimmkreis_id: number;
-//     partei_id: number;
-//     partei_name: string;
-//     anteil: number;
-//   }[] = await adapters.postgres.query(
-//     `with kandidatgebundene_stimmen_pro_partei_pro_stimmkreis  AS (
-//       SELECT kgs.wahl_id, kgs.stimmkreis_id, k.partei_id, sum(kgs.anzahl) as anzahl
-//       FROM "${DatabaseSchemaGroup}".kandidatgebundene_gueltige_stimmen kgs
-//         JOIN "${DatabaseSchemaGroup}".kandidaten k ON k.id = kgs.kandidat_id
-//         WHERE kgs.wahl_id = $1 AND kgs.stimmkreis_id = $2
-//       GROUP BY kgs.wahl_id, kgs.stimmkreis_id, kgs.wahl_id, k.partei_id, k.partei_id
-//     ),
-//     -- Summe von kandidatengebundenen und listengebundenen stimmen pro partei
-//     gesamtstimmen_pro_partei_pro_stimmkreis AS (
-//       SELECT kggs.wahl_id, kggs.stimmkreis_id, kggs.partei_id, (kggs.anzahl + lgs.anzahl) as anzahl
-//       FROM kandidatgebundene_stimmen_pro_partei_pro_stimmkreis kggs
-//         JOIN "${DatabaseSchemaGroup}".listengebundene_gueltige_stimmen lgs
-//           ON lgs.stimmkreis_id = kggs.stimmkreis_id AND lgs.partei_id = kggs.partei_id AND
-//             lgs.wahl_id = kggs.wahl_id
-//     ),
-//     gesamtstimmen_pro_stimmkreis AS(
-//       SELECT wahl_id, stimmkreis_id, sum(anzahl) as gesamtanzahlstimmen
-//       FROM gesamtstimmen_pro_partei_pro_stimmkreis
-//       GROUP BY wahl_id, stimmkreis_id
-//     )
-//     SELECT gppps.wahl_id, gppps.stimmkreis_id, gppps.partei_id, p.name, (gppps.anzahl/gps.gesamtanzahlstimmen) *100 as prozentualerAnteil
-//     FROM gesamtstimmen_pro_stimmkreis gps
-//         JOIN gesamtstimmen_pro_partei_pro_stimmkreis gppps
-//             ON  gps.wahl_id = gppps.wahl_id AND gps.stimmkreis_id = gppps.stimmkreis_id
-//         JOIN "${DatabaseSchemaGroup}".parteien p
-//             ON p.id = gppps.partei_id
-//     ORDER BY gppps.wahl_id, gppps.stimmkreis_id, gppps.partei_id;`,
-//     [wahl_id, stimmkreis_id]
-//   );
-//   console.log(res);
-
-//   return res.map(resobj => ({
-//     wahl_id: resobj.wahl_id,
-//     stimmkreis_id: resobj.stimmkreis_id,
-//     partei_id: resobj.partei_id,
-//     partei_name: resobj.partei_name,
-//     anteil: resobj.anteil
-//   }));
-// }
-
 /**
  * Computes election results by refreshing materialized views
  */
 export async function computeElectionResults(): Promise<boolean> {
-  for (const viewToRefresh of refreshOrder) {
-    await adapters.postgres.query(
-      `REFRESH MATERIALIZED VIEW "${DatabaseSchemaGroup}".${viewToRefresh};`
-    );
-  }
+  console.time("compute-election-results");
+  const query = refreshOrder
+    .map(
+      viewToRefresh =>
+        `REFRESH MATERIALIZED VIEW "${DatabaseSchemaGroup}".${viewToRefresh};`
+    )
+    .join("\n");
+
+  await adapters.postgres.query(query);
+  console.timeEnd("compute-election-results");
   return true;
 }
 
@@ -590,7 +570,7 @@ export async function getMandate(wahlid: number): Promise<Mandat[]> {
     stimmkreis_id?: number;
     stimmkreis_name?: string;
     partei_id: number;
-    partei_name: ParteiName;
+    partei_name: string;
     direktmandat: boolean;
   }[] = await adapters.postgres.query(
     `
@@ -652,7 +632,7 @@ export async function getUeberhangmandate(
     regierungsbezirk_id: number;
     regierungsbezirk_name: string;
     partei_id: number;
-    partei_name: ParteiName;
+    partei_name: string;
     ueberhang: number;
     ausgleich: number;
     zustehend: number;
@@ -685,7 +665,7 @@ export async function getUeberhangmandate(
         FULL OUTER JOIN anzahlGewonneneListenmandate agl
           ON agd.regierungsbezirk_id = agl.regierungsbezirk_id
             AND agd.partei_id = agl.partei_id
-        JOIN zustehende_mandate(0) zm
+        JOIN "landtagswahlen".zustehende_mandate(0) zm
           ON zm.regierungsbezirk_id = COALESCE(agd.regierungsbezirk_id, agl.regierungsbezirk_id)
             AND zm.partei_id = COALESCE(agd.partei_id, agl.partei_id)
             AND zm.wahl_id = $1
@@ -728,99 +708,12 @@ export async function getKnappsteKandidaten(
     kandidat_id: number;
     kandidat_name: string;
     partei_id: number;
-    partei_name: ParteiName;
+    partei_name: string;
     differenz: number;
     gewinner: boolean;
     platz: number;
   }[] = await adapters.postgres.query(
     `
-    WITH gesamtstimmen (wahl_id, anzahl) AS (
-      SELECT wahl_id, sum(anzahl)
-      FROM "${DatabaseSchemaGroup}".${GESAMTSTIMMEN_PRO_PARTEI_VIEW}
-      GROUP BY wahl_id
-    ),
-    -- Die Parteien, welche nicht gesperrt sind für die Wahl
-    nicht_gesperrte_parteien (wahl_id, partei_id) AS (
-      SELECT gspp.wahl_id, gspp.partei_id
-      FROM (
-          SELECT wahl_id, partei_id, sum(anzahl) as anzahl
-          FROM "${DatabaseSchemaGroup}".${GESAMTSTIMMEN_PRO_PARTEI_VIEW}
-          GROUP BY wahl_id, partei_id
-        ) gspp
-        JOIN gesamtstimmen gs ON gs.wahl_id = gspp.wahl_id
-      WHERE gspp.anzahl / gs.anzahl >= 0.05
-    ),
-    nicht_gesperrte_direktkandidaten (wahl_id, stimmkreis_id, kandidat_id, stimmanzahl) AS (
-      SELECT dk.wahl_id, dk.stimmkreis_id, dk.direktkandidat_id, kgs.anzahl
-      FROM "${DatabaseSchemaGroup}".${DIREKTKANDIDATEN_TABLE} dk
-        JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k
-          ON k.id = dk.direktkandidat_id
-        JOIN "${DatabaseSchemaGroup}".${STIMMKREIS_TABLE} sk
-            ON sk.id = dk.stimmkreis_id
-        JOIN "${DatabaseSchemaGroup}".${KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW} kgs
-          ON kgs.kandidat_id = dk.direktkandidat_id
-            AND kgs.wahl_id = dk.wahl_id
-            AND kgs.stimmkreis_id = dk.stimmkreis_id
-        JOIN nicht_gesperrte_parteien ngp
-          ON ngp.wahl_id = dk.wahl_id
-            AND ngp.partei_id = k.partei_id
-    ), knappste_sieger (wahl_id, stimmkreis_id, kandidat_id, abstand) AS (
-      SELECT ngd1.wahl_id,
-            ngd1.stimmkreis_id,
-            ngd1.kandidat_id,
-            ngd1.stimmanzahl - ngd2.stimmanzahl as abstand
-      FROM nicht_gesperrte_direktkandidaten ngd1
-        JOIN nicht_gesperrte_direktkandidaten ngd2
-          ON ngd1.wahl_id = ngd2.wahl_id
-            AND ngd1.stimmkreis_id = ngd2.stimmkreis_id
-            AND ngd2.stimmanzahl < ngd1.stimmanzahl
-      WHERE NOT EXISTS (
-        SELECT *
-        FROM nicht_gesperrte_direktkandidaten ngd3
-        WHERE ngd1.wahl_id = ngd3.wahl_id
-          AND ngd1.stimmkreis_id = ngd3.stimmkreis_id
-          AND ngd1.kandidat_id <> ngd3.kandidat_id
-          AND ngd2.stimmanzahl < ngd3.stimmanzahl
-      )
-    ), verlierer_direktkandidaten_stimmen (wahl_id, stimmkreis_id, kandidat_id, stimmanzahl) AS (
-      SELECT dk.wahl_id, kgs.stimmkreis_id, dk.direktkandidat_id, kgs.anzahl
-      FROM "${DatabaseSchemaGroup}".${DIREKTKANDIDATEN_TABLE} dk
-        JOIN "${DatabaseSchemaGroup}".${KANDIDATENGEBUNDENE_GUELTIGE_STIMMEN_MVIEW} kgs
-          ON dk.wahl_id = kgs.wahl_id
-            AND dk.stimmkreis_id = kgs.stimmkreis_id
-            AND dk.direktkandidat_id = kgs.kandidat_id
-        JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k
-          ON dk.direktkandidat_id = k.id
-      WHERE NOT EXISTS (
-        SELECT *
-        FROM "${DatabaseSchemaGroup}".${GEWONNENE_DIREKTMANDATE_MVIEW} gd
-          JOIN "${DatabaseSchemaGroup}".kandidaten k2
-            ON gd.kandidat_id = k2.id
-        WHERE dk.wahl_id = gd.wahl_id AND k.partei_id = k2.partei_id
-      )
-    ), knappste_verlierer (wahl_id, stimmkreis_id, kandidat_id, differenz_zu_sieger) AS (
-      SELECT vds1.wahl_id,
-            vds1.stimmkreis_id,
-            vds1.kandidat_id,
-            gd.stimmanzahl - vds1.stimmanzahl as differenz_zu_sieger
-      FROM verlierer_direktkandidaten_stimmen vds1
-        JOIN "${DatabaseSchemaGroup}".${GEWONNENE_DIREKTMANDATE_MVIEW} gd
-          ON vds1.wahl_id = gd.wahl_id
-            AND vds1.stimmkreis_id = gd.stimmkreis_id
-    ), looser (wahl_id, stimmkreis_id, kandidat_id, differenz) AS (
-      SELECT l.*, k.partei_id, row_number() over (
-        PARTITION BY  wahl_id, partei_id
-        ORDER BY differenz
-        ) as platz
-      FROM (
-        SELECT wahl_id, stimmkreis_id, kandidat_id, abstand as differenz, true as gewinner
-        FROM knappste_sieger
-        UNION
-        SELECT wahl_id, stimmkreis_id, kandidat_id, differenz_zu_sieger as differenz, false as gewinner
-        FROM knappste_verlierer
-      ) l
-        JOIN "${DatabaseSchemaGroup}".${KANDIDATEN_TABLE} k ON k.id = l.kandidat_id
-    )
     SELECT w.id as wahl_id,
            w.wahldatum as wahldatum,
            sk.id as stimmkreis_id,
@@ -832,7 +725,7 @@ export async function getKnappsteKandidaten(
            differenz,
            gewinner,
            platz
-    FROM looser l
+    FROM "${DatabaseSchemaGroup}".${KNAPPSTE_KANDIDATEN_MVIEW} l
       JOIN "${DatabaseSchemaGroup}".${WAHLEN_TABLE} w
         ON l.wahl_id = w.id
       JOIN "${DatabaseSchemaGroup}".${STIMMKREIS_TABLE} sk

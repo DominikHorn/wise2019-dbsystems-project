@@ -24,6 +24,9 @@ import { GewinnerWidget } from "./components/general/statistikwidgets/GewinnerWi
 import { UeberhangmandateWidget } from "./components/general/statistikwidgets/UeberhangmandateWidget";
 import { KnappsteKandidatenWidget } from "./components/general/statistikwidgets/KnappsteKandidatenWidget";
 import { renderError } from "../../wahlclient/ui/guiUtil";
+import { AltersverteilungsWidget } from "./components/general/statistikwidgets/AltersverteilungsWidget";
+import { StimmkreisInfoQ7Widget } from "./components/general/statistikwidgets/StimmkreisinfoQ7Widget";
+import { SuperDirektKandidatenWidget } from "./components/general/statistikwidgets/SuperDirektKandidatenWidget";
 
 const { Header, Content, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -368,6 +371,27 @@ class PageComponentClass extends React.Component<IProps, IState> {
           />
         ) : setting.type === WidgetType.KNAPPSTE_KANDIDATEN ? (
           <KnappsteKandidatenWidget
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
+            key={setting.layout.i}
+            removeWidget={removeWidget}
+          />
+        ) : setting.type === WidgetType.STIMMKREIS_INFO_Q7 ? (
+          <StimmkreisInfoQ7Widget
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
+            key={setting.layout.i}
+            removeWidget={removeWidget}
+          />
+        ) : setting.type === WidgetType.ALTERSVERTEILUNG ? (
+          <AltersverteilungsWidget
+            routableState={setting.routableState}
+            setRoutableState={setRoutableState}
+            key={setting.layout.i}
+            removeWidget={removeWidget}
+          />
+        ) : setting.type === WidgetType.SUPER_DIREKTKANDIDATEN ? (
+          <SuperDirektKandidatenWidget
             routableState={setting.routableState}
             setRoutableState={setRoutableState}
             key={setting.layout.i}

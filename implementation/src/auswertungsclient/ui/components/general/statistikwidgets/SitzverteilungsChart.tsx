@@ -5,12 +5,10 @@ import {
   IGetMandateQueryHocProps,
   withMandateQuery
 } from "../../../../../client-graphql/public/getMandateQuery";
-import { getParteiColor, eatEvent } from "../../../guiUtil";
+import { Mandat, Wahl } from "../../../../../shared/graphql.types";
 import { sleep } from "../../../../../shared/util";
-import { Spin } from "antd";
 import { renderCenteredLoading } from "../../../../../wahlclient/ui/guiUtil";
-import { Mandat, ParteiName, Wahl } from "../../../../../shared/graphql.types";
-import { getHumanReadableParteiName } from "../../../../../shared/sharedTypes";
+import { eatEvent, getParteiColor } from "../../../guiUtil";
 
 function aggregateMandate(
   mandate: Mandat[]
@@ -21,7 +19,7 @@ function aggregateMandate(
   itemStyle?: { color?: string };
 }[] {
   const parteiAggr: {
-    [parteiname: string]: number;
+    [name: string]: number;
   } = {};
   mandate.forEach(mandat => {
     parteiAggr[mandat.kandidat.partei.name] =
@@ -29,10 +27,10 @@ function aggregateMandate(
   });
 
   return Object.keys(parteiAggr)
-    .map((parteiname: ParteiName) => ({
-      value: parteiAggr[parteiname],
-      name: getHumanReadableParteiName(parteiname),
-      itemStyle: { color: getParteiColor(parteiname) }
+    .map((name: string) => ({
+      name,
+      value: parteiAggr[name],
+      itemStyle: { color: getParteiColor(name) }
     }))
     .sort((a, b) => {
       if (a.name < b.name) return -1;

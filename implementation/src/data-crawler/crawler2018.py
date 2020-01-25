@@ -1,29 +1,10 @@
 import scrapy
-
-PARTEIEN = [str(i) for i in range(1, 19)]
-PARTEI_NAMEN = [
-    'CSU',
-    'SPD',
-    'Freie Wähler',
-    'Grüne',
-    'FDP',
-    'Die Linke',
-    'Bayern Partei',
-    'ÖDP',
-    'Piraten',
-    'Die Franken',
-    'AfD',
-    'LKR',
-    'mut',
-    'Die Humanisten',
-    'Die Partei',
-    'Gesundheitsforschung',
-    'Tierschutzpartei',
-    'V-Partei'
-]
+from parteien import PARTEIEN
 
 def build_url(regierungsbezirkId, partyId, pageIndex):
-    return "https://www.landtagswahl2018.bayern.de/ergebnis_einzelbewerber_{}_{}_{}.html".format(regierungsbezirkId, partyId, pageIndex)
+    url = "https://www.landtagswahl2018.bayern.de/ergebnis_einzelbewerber_{}_{}_{}.html".format(regierungsbezirkId, partyId, pageIndex)
+    print("Requesting:", url)
+    return url
 
 class Landtagswahlen2018Spider(scrapy.Spider):
     pt_ind = 0
@@ -37,7 +18,7 @@ class Landtagswahlen2018Spider(scrapy.Spider):
 
     def __init__(self, regierungsbezirkId, **kwargs):
         self.start_urls = [
-            build_url(regierungsbezirkId, PARTEIEN[0], 0)
+            build_url(regierungsbezirkId, PARTEIEN[0].id, 0)
         ]
         self.regierungsbezirkId = regierungsbezirkId
         super().__init__(**kwargs)
@@ -52,7 +33,7 @@ class Landtagswahlen2018Spider(scrapy.Spider):
             if len(PARTEIEN) == self.pt_ind:
                 return
 
-            yield scrapy.Request(build_url(self.regierungsbezirkId, PARTEIEN[self.pt_ind], 0), meta={
+            yield scrapy.Request(build_url(self.regierungsbezirkId, PARTEIEN[self.pt_ind].id, 0), meta={
                 'column_names': response.meta.get('column_names', None),
                 'result': [],
                 'page_index': 0
@@ -81,7 +62,7 @@ class Landtagswahlen2018Spider(scrapy.Spider):
         if next_page_index is None:
             next_page_index = 0
         next_page_index = next_page_index + 1
-        next_url = build_url(self.regierungsbezirkId, PARTEIEN[self.pt_ind], next_page_index)
+        next_url = build_url(self.regierungsbezirkId, PARTEIEN[self.pt_ind].id, next_page_index)
 
         # Extract rows from table
         new_result = []
@@ -90,8 +71,8 @@ class Landtagswahlen2018Spider(scrapy.Spider):
             # Single row in dictionary format
             new_row_content = {**{
                 "regierungsbezirk-id": self.regierungsbezirkId,
-                "partei-id": PARTEIEN[self.pt_ind],
-                "partei-name": PARTEI_NAMEN[self.pt_ind]
+                "partei-id": PARTEIEN[self.pt_ind].id,
+                "partei-name": PARTEIEN[self.pt_ind].name
                 }, 
                 **{ new_columns[i]:columns[i].xpath("string(.)").extract()[0] for i in range(0,len(new_columns)) }}
             old_result = response.meta.get('result', None)
