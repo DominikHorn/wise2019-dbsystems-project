@@ -44,9 +44,12 @@ class InnerStimmkreisInfoQ7Component extends React.PureComponent<
       <div>
         {this.props.wahl && this.props.previousWahl ? (
           <>
-            <Row gutter={5}>
+            <Row
+              gutter={[10, 10]}
+              style={{ paddingTop: "10px", paddingLeft: "10px" }}
+            >
               <Col span={7}>
-                1. Stimmkreis:
+                1. Stimmkreis: &nbsp;
                 <StimmkreisSelector
                   displayLoading={allStimmkreiseData.loading}
                   selectedStimmkreis={this.state.selectedStimmkreis1}
@@ -59,7 +62,7 @@ class InnerStimmkreisInfoQ7Component extends React.PureComponent<
                 />
               </Col>
               <Col span={7}>
-                2. Stimmkreis:
+                2. Stimmkreis: &nbsp;
                 <StimmkreisSelector
                   displayLoading={allStimmkreiseData.loading}
                   selectedStimmkreis={this.state.selectedStimmkreis2}
@@ -71,10 +74,9 @@ class InnerStimmkreisInfoQ7Component extends React.PureComponent<
                   size={"small"}
                 />
               </Col>
-            </Row>
-            <Row gutter={5}>
+
               <Col span={7}>
-                3. Stimmkreis:
+                3. Stimmkreis: &nbsp;
                 <StimmkreisSelector
                   displayLoading={allStimmkreiseData.loading}
                   selectedStimmkreis={this.state.selectedStimmkreis3}
@@ -87,7 +89,7 @@ class InnerStimmkreisInfoQ7Component extends React.PureComponent<
                 />
               </Col>
               <Col span={7}>
-                4. Stimmkreis:
+                4. Stimmkreis: &nbsp;
                 <StimmkreisSelector
                   displayLoading={allStimmkreiseData.loading}
                   selectedStimmkreis={this.state.selectedStimmkreis4}
@@ -99,10 +101,9 @@ class InnerStimmkreisInfoQ7Component extends React.PureComponent<
                   size={"small"}
                 />
               </Col>
-            </Row>
-            <Row gutter={5}>
+
               <Col span={7}>
-                5. Stimmkreis:
+                5. Stimmkreis: &nbsp;
                 <StimmkreisSelector
                   displayLoading={allStimmkreiseData.loading}
                   selectedStimmkreis={this.state.selectedStimmkreis5}

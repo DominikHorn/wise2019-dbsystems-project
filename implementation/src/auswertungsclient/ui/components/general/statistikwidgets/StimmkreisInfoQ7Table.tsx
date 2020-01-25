@@ -46,6 +46,8 @@ export class StimmkreisInfoQ7TableComponent extends React.PureComponent<
     dataSource: {
       key: string;
       stimmkreis: string;
+      wahlbeteiligung: number;
+      direktmandat: string;
       partei: string;
       vorher: number;
       nachher: number;
@@ -53,8 +55,10 @@ export class StimmkreisInfoQ7TableComponent extends React.PureComponent<
     }[];
   } => {
     const res = stimmkreisInfos.map(curr => ({
-      key: curr.partei.id.toString(),
+      key: curr.partei.id.toString() + curr.stimmkreis.name,
       stimmkreis: curr.stimmkreis.name,
+      wahlbeteiligung: curr.wahlbeteiligung,
+      direktmandat: curr.direktmandat,
       partei: curr.partei.name,
       vorher: curr.vorher,
       nachher: curr.nachher,
@@ -66,21 +70,6 @@ export class StimmkreisInfoQ7TableComponent extends React.PureComponent<
     };
   };
 
-  dataSource = [
-    {
-      key: "1",
-      name: "Mike",
-      age: 32,
-      address: "10 Downing Street"
-    },
-    {
-      key: "2",
-      name: "John",
-      age: 42,
-      address: "10 Downing Street"
-    }
-  ];
-
   private generateColumnTitles = (props: IProps): columns_type[] => {
     const vglwahl_wahljahr = new Date(props.vglwahl.wahldatum).getFullYear();
     const wahl_wahljahr = new Date(props.wahl.wahldatum).getFullYear();
@@ -89,6 +78,16 @@ export class StimmkreisInfoQ7TableComponent extends React.PureComponent<
         title: "Stimmkreis",
         dataIndex: "stimmkreis",
         key: "stimmkreis"
+      },
+      {
+        title: "Wahlbeteiligung",
+        dataIndex: "wahlbeteiligung",
+        key: "wahlbeteiligung"
+      },
+      {
+        title: "Direktmandat",
+        dataIndex: "direktmandat",
+        key: "direktmandat"
       },
       {
         title: "Partei",
@@ -126,6 +125,8 @@ export class StimmkreisInfoQ7TableComponent extends React.PureComponent<
       <>
         {allStimmkreisInfosData && allStimmkreisInfosData.allStimmkreisInfos ? (
           <Table
+            scroll={{ y: 600, scrollToFirstRowOnChange: true }}
+            pagination={false}
             dataSource={
               this.aggregateTableData(allStimmkreisInfosData.allStimmkreisInfos)
                 .dataSource
