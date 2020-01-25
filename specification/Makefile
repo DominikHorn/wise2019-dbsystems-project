@@ -1,4 +1,5 @@
 make:
+	./export-mdj-to-pdf.sh
 	cd Lastenheft && make
 	cd Pflichtenheft && make
 	make clean
