@@ -4,17 +4,34 @@ scalar Date
 
 type Query {
   getAllWahlen: [Wahl]!
+  getAllStimmkreise(wahlid: Int!): [Stimmkreis]!
   getMandate(wahlid: Int!): [Mandat]!
   getStimmkreisWinner(wahlid: Int!, erststimmen: Boolean!): [StimmkreisWinner]!
   getUeberhangMandate(wahlid: Int!): [UeberhangMandat]!
   getKnappsteKandidaten(wahlid: Int!, amountPerPartei: Int): [KnapperKandidat]!
   getWahlbeteiligung(wahlid: Int!): [Wahlbeteiligung]!
   getDirektmandat(wahlid: Int!, stimmkreisid: Int!): Mandat!
-  getStimmentwicklung(
+  computeEntwicklungDerStimmen(
     wahlid: Int!
-    vglwahlid: Int!
+    vglwahlid: Int
     stimmkreisid: Int!
   ): [Stimmentwicklung]!
+  getStimmentwicklung(
+    wahlid: Int!
+    vglwahlid: Int
+    stimmkreisid: Int!
+  ): [Stimmentwicklung]!
+  getAllStimmkreisInfos(
+    wahlid: Int!
+    stimmkreisid1: Int!
+    stimmkreisid2: Int!
+    stimmkreisid3: Int!
+    stimmkreisid4: Int!
+    stimmkreisid5: Int!
+    vgl_wahl: Int!
+  ): [Q7]!
+  # getAbsoluteAnzahl(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
+  # getProzentualenAnteil(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
   getDirektKandidaten(wahlid: Int!, stimmkreisid: Int!): [Kandidat]!
   getListenKandidaten(wahlid: Int!, regierungsbezirkid: Int!): [ListenKandidat]!
   getAltersverteilung(wahlid: Int!): [Altersverteilung]!
@@ -144,6 +161,17 @@ type Wahlbeteiligung {
 
 type Stimmentwicklung {
   partei: Partei!
+  vorher: Int!
+  nachher: Int!
+}
+
+type Q7 {
+  stimmkreis: Stimmkreis!
+  partei: Partei!
+  direktmandat: String!
+  wahlbeteiligung: Float!
+  prozAnteil: Float
+  absAnteil: Float
   vorher: Int!
   nachher: Int!
 }

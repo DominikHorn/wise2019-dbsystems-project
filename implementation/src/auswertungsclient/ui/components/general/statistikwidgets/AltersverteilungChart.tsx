@@ -54,7 +54,6 @@ const AltersverteilungComponent = (props: IProps) => {
       props.altersverteilungData.altersverteilung) ||
       []
   );
-  console.log(xAxisData);
   const seriesData = xAxisData.map(
     alter =>
       (alter === "Unbekannt"

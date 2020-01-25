@@ -15,7 +15,10 @@ import { eatEvent } from "../../../guiUtil";
 
 export interface IWahlbeteiligungChartProps {
   readonly wahl: Wahl;
-  readonly onStimmkreisSelect?: (selected: Stimmkreis) => void;
+  readonly onStimmkreisSelect?: (
+    selected: Stimmkreis,
+    wahlbeteiligung: number
+  ) => void;
 }
 
 interface IProps
@@ -47,24 +50,22 @@ const WahlbeteiligungChartComponent = (props: IProps) => {
     <>
       {props.wahlbeteiligungData.wahlbeteiligung &&
       props.wahlbeteiligungData.wahlbeteiligung.length > 0 ? (
-        <div
-          onMouseDown={eatEvent}
-          // onWheel={event => {
-          //   event.preventDefault();
-          // }}
-          style={{ width: "100%", height: "100%" }}
-        >
+        <div onMouseDown={eatEvent} style={{ width: "100%", height: "100%" }}>
           <ReactEcharts
             style={{ width: "100%", height: "100%" }}
             onEvents={{
               mapselectchanged: event => {
+                console.log("mapSelectedChanged:", event);
                 if (event && event.batch && event.batch[0]) {
                   const wbtobj = (
                     props.wahlbeteiligungData.wahlbeteiligung || []
                   ).find(wbt => wbt.stimmkreis.name === event.batch[0].name);
                   wbtobj &&
                     props.onStimmkreisSelect &&
-                    props.onStimmkreisSelect(wbtobj.stimmkreis);
+                    props.onStimmkreisSelect(
+                      wbtobj.stimmkreis,
+                      wbtobj.wahlbeteiligung
+                    );
                 }
               }
             }}
@@ -72,7 +73,13 @@ const WahlbeteiligungChartComponent = (props: IProps) => {
               tooltip: {
                 trigger: "item",
                 showDelay: 0,
-                transitionDuration: 0.2
+                transitionDuration: 0.2,
+                formatter: (params: {
+                  data: { name: string; value: number };
+                }) =>
+                  `${
+                    params.data.name
+                  }<br/>Wahlbeteiligung: ${`${params.data.value.toFixed(2)} %`}`
               },
               visualMap: {
                 show: true,

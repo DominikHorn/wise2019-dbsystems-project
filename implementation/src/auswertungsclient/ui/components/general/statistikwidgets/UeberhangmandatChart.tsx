@@ -163,6 +163,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
   };
 
   private updateChartData = (props: IProps) => {
+    debugger;
     if (!this.chart) return;
     if (
       !props.ueberhangmandateData ||
@@ -172,7 +173,7 @@ class UeberhangmandatChartComponent extends React.PureComponent<IProps> {
     const chartData = this.aggregateChartData(
       props.ueberhangmandateData.ueberhangmandate
     );
-
+    console.log(chartData.series);
     sleep(100).then(() => {
       this.chart.clear();
       this.chart.setOption({

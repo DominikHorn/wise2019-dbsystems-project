@@ -9,7 +9,8 @@ import {
   getKnappsteKandidaten,
   computeWahlbeteiligung,
   getDirektmandat,
-  computeEntwicklungDerStimmmen
+  computeEntwicklungDerStimmmen,
+  computeQ7
 } from "../adapters/postgres/electionPSQL";
 import { Resolver } from "../../shared/graphql.types";
 import {
@@ -35,6 +36,7 @@ import {
 } from "../adapters/postgres/kandidatPSQL";
 import { adapters } from "../adapters/adapterUtil";
 import { castVote } from "../adapters/postgres/stimmenPSQL";
+import { getAllStimmkreiseForWahl } from "../adapters/postgres/queries/stimmkreisPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;
@@ -49,6 +51,10 @@ export const resolvers: Resolver = {
   },
   Query: {
     getAllWahlen,
+    getAllStimmkreise: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        getAllStimmkreiseForWahl(args.wahlid)
+      ),
     getMandate: (_, args) =>
       withVerifyIsNotBlocked(args.wahlid, () => getMandate(args.wahlid)),
     getStimmkreisWinner: (_, args) =>
@@ -71,12 +77,24 @@ export const resolvers: Resolver = {
       withVerifyIsNotBlocked(args.wahlid, () =>
         getDirektmandat(args.wahlid, args.stimmkreisid)
       ),
-    getStimmentwicklung: (_, args) =>
+    computeEntwicklungDerStimmen: (_, args) =>
       withVerifyIsNotBlocked(args.wahlid, () =>
         computeEntwicklungDerStimmmen(
           args.wahlid,
           args.vglwahlid,
           args.stimmkreisid
+        )
+      ),
+    getAllStimmkreisInfos: (_, args) =>
+      withVerifyIsNotBlocked(args.wahlid, () =>
+        computeQ7(
+          args.wahlid,
+          args.stimmkreisid1,
+          args.stimmkreisid2,
+          args.stimmkreisid3,
+          args.stimmkreisid4,
+          args.stimmkreisid5,
+          args.vgl_wahl
         )
       ),
     getDirektKandidaten: (_, args) =>

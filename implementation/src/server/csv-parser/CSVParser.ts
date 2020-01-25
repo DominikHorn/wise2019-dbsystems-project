@@ -1,7 +1,5 @@
 import { parse, ParseResult } from "papaparse";
 import { PoolClient, Pool } from "pg";
-import { GraphQLFileUpload } from "../../shared/sharedTypes";
-import { adapters } from "../adapters/adapterUtil";
 import {
   insertDirektkandidat,
   getOrCreateKandidatForParteiIdAndName,
@@ -61,6 +59,10 @@ enum ALTERSDATEN_CSV_KEYS {
   kandidat_name = "Name",
   kandidat_geburtsjahr = "Geb. Jahr",
   kandidat_wohnort = "Wohnort"
+}
+
+interface GraphQLFileUpload {
+  createReadStream: () => ReadStream;
 }
 
 async function parseCrawledCSV(
