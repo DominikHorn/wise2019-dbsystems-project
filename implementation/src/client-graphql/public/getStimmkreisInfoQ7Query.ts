@@ -6,26 +6,22 @@ import { Q7 } from "../../shared/graphql.types";
 const getAllStimmkreisInfoQuery = gql`
   query getAllStimmkreisInfosQuery(
     $wahlid: Int!
-    $stimmkreis1: Int!
-    $stimmkreis2: Int!
-    $stimmkreis3: Int!
-    $stimmkreis4: Int!
-    $stimmkreis5: Int!
-    $vgl_wahlid: Int!
+    $stimmkreisid1: Int!
+    $stimmkreisid2: Int!
+    $stimmkreisid3: Int!
+    $stimmkreisid4: Int!
+    $stimmkreisid5: Int!
+    $vglwahl: Int!
   ) {
     allStimmkreisInfos: getAllStimmkreisInfos(
       wahlid: $wahlid
-      stimmkreis1: $stimmkreis1
-      stimmkreis2: $stimmkreis2
-      stimmkreis3: $stimmkreis3
-      stimmkreis4: $stimmkreis4
-      stimmkreis5: $stimmkreis5
-      vgl_wahlid: $vgl_wahlid
+      stimmkreisid1: $stimmkreisid1
+      stimmkreisid2: $stimmkreisid2
+      stimmkreisid3: $stimmkreisid3
+      stimmkreisid4: $stimmkreisid4
+      stimmkreisid5: $stimmkreisid5
+      vglwahl: $vglwahl
     ) {
-      wahl {
-        id
-        wahldatum
-      }
       stimmkreis {
         id
         name
@@ -39,7 +35,7 @@ const getAllStimmkreisInfoQuery = gql`
       prozAnteil
       absAnteil
       vorher
-      nacher
+      nachher
     }
   }
 `;
@@ -64,12 +60,12 @@ const getAllStimmkreisInfosTypedHoc = createTypedGraphqlHoc<
 
 export const withAllStimmkreisInfosQuery = <TProps = {}>(
   getWahlId: (props: TProps) => number,
-  getVGLWahlId: (props: TProps) => number,
   getStimmkreisId1: (props: TProps) => number,
   getStimmkreisId2: (props: TProps) => number,
   getStimmkreisId3: (props: TProps) => number,
   getStimmkreisId4: (props: TProps) => number,
-  getStimmkreisId5: (props: TProps) => number
+  getStimmkreisId5: (props: TProps) => number,
+  getVGLWahlId: (props: TProps) => number
 ) =>
   getAllStimmkreisInfosTypedHoc<TProps, IGetAllStimmkreisInfosQueryHocProps>({
     options: props => ({
@@ -80,7 +76,7 @@ export const withAllStimmkreisInfosQuery = <TProps = {}>(
         stimmkreisid3: getStimmkreisId3(props),
         stimmkreisid4: getStimmkreisId4(props),
         stimmkreisid5: getStimmkreisId5(props),
-        vglwahlid: getVGLWahlId(props)
+        vglwahl: getVGLWahlId(props)
       }
     }),
     props: ({ data }) => ({

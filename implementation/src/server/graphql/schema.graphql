@@ -28,7 +28,7 @@ type Query {
     stimmkreisid3: Int!
     stimmkreisid4: Int!
     stimmkreisid5: Int!
-    vgl_wahl: Int!
+    vglwahl: Int!
   ): [Q7]!
   # getAbsoluteAnzahl(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
   # getProzentualenAnteil(wahlid: Int!, stimmkreisid: Int!): [StimmAnteil]!
