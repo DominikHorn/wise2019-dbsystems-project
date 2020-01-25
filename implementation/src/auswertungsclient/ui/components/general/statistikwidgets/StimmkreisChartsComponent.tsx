@@ -55,7 +55,7 @@ class StimmkreisChartsComponent extends React.PureComponent<IProps> {
     return (
       <div style={{ height: "100%" }}>
         <Row style={{ height: "50%" }}>
-          <Col span={7} style={{ height: "100%" }}>
+          <Col span={7} style={{ height: "100%", paddingTop: "10px" }}>
             {`Stimmkreis: ${stimmkreis.name}`}
             <br />
             {`Wahlbeteiligung: ${(
