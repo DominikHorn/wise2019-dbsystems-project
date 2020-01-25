@@ -100,7 +100,7 @@ Studierenden des Elite Software Engineering Masterstudiengangs aufbauen.
 Das System soll dabei nicht nur die Ergebnisse für die Landtagswahlen 
 2013 und 2018 analysier- und vergleichbar machen, e.g., die Sitzverteilung 
 im Landtag, statistische Auswertung von Ergebnissen, Berechnung gewonnener
-Mandate, sondern auch als sicheres Backendsystem für die elektronische 
+Mandate, sondern auch als sicheres System für die elektronische 
 Stimmabgabe im Wahllokal dienen. 
 %
 Es müssen die gesetzlichen Regelungen, Normen und Datenschutzaspekte
@@ -145,16 +145,11 @@ Dieser Absatz beschäftigt sich mit der Definition von Benutzerschnittstellen un
   \item Das System soll geeignet sein für die elektronische Stimmabgabe im Wahllokal durch
         wahlberechtigte Personen
   \item Um zu gewährleisten, dass jeweils nur eine Stimme pro wahlberechtigter Person abgegeben
-        werden kann, muss die Stimmabgabe erst freigegeben werden. Dies geschieht entweder nach
-        Authentifizierung durch eine(n) WahlhelferIn oder durch den oder die WählerIn selbst 
-        (Unique one-time-use password, Vorlage von Personalausweis/Reisepass).
-  \item WahlhelferInnen müssen in der Lage sein ein oder mehrere Stimmen auf einmal ins System
-        eintragen zu können, zum Beispiel um analoge Stimmen ins System zu übernehmen. 
+        werden kann, muss die Stimmabgabe erst freigegeben werden. Dies geschieht nach
+        Authentifizierung durch eine(n) WahlhelferIn.
   \item Insbesondere zum Vergleich von (statistischen-)Auswertungen verschiedener Wahlen können
         alte Wahldaten und Ergebnisse von der oder dem WahlleiterIn ins System aus CSV-Dateien 
         importiert werden.
-  \item Der oder die WahlleiterIn muss imstande sein Stimmen im System zu korrigieren, zum Beispiel
-        nach einer Neuauszählung von Stimmen
 \end{enumerate}
 
 \begin{center}
@@ -170,15 +165,11 @@ Dieser Absatz beschäftigt sich mit der Definition von Benutzerschnittstellen un
   \addrow{FR01}{Wahldaten müssen über eine graphische Weboberfläche (statistisch) auswertbar sein. Hierbei ist insbesondere das Bestimmen von
                 Wahlergebnissen, d.h. gewonnenen Mandaten, wichtig. Wahldaten unterschiedlicher Wahlvorgänge können dabei verglichen werden}
   \addrow{FR02}{Einzelstimmen sollen durch Wahlberechtigte im Wahllokal abgegeben werden können (E-Voting). Die notwendige Authentifizierung
-                erfolgt dabei zum Beispiel durch eine(n) WahlhelferIn}
+                erfolgt dabei durch eine(n) WahlhelferIn}
   \addrow{FR03}{Die Einzelstimmabgabe muss vor Benutzung durch eine wahlberechtigte Person je freigegeben werden. 
                 Dies kann zum Beispiel durch eine(n) WahlhelferIn geschehen nach analoger Verifikation von Reisepass oder Personalausweis}
-  \addrow{FR04}{WahlhelferInnen müssen in der Lage sein mehrerer Stimmen auf einmal (batch) in das System einzutragen. Dies ist zum Beispiel
-                dienlich um analoge Stimmabgaben in das System zu übertragen}
   \addrow{FR05}{Wahldaten von Landtagswahlen ab (inklusive) 2013 müssen fehlerfrei aus einer CSV-Datei importierbar und im System abbildbar sein.}
-  \addrow{FR06}{WahlleiterInnen haben die Möglichkeit Stimmen zu korrigieren, zum Beispiel falls die Gültigkeit von Stimmen nachträglich annuliert 
-                werden muss oder es im Rahmen von Neuauszählungen zu Änderungen kommt.}
-  \addrow{FR07}{Pro Stimmkreis werden die Einzelstimmen zu Stimmkreisergebnissen voraggregiert.}
+  \addrow{FR07}{Pro Stimmkreis können die Einzelstimmen zu Stimmkreisergebnissen voraggregiert werden.}
   \addrow{FR08}{Daten zur aktuellen Wahl sind erst nach Abschluss des Wahlvorgangs, i.e., Schließung aller Wahllokale, auswertbar. 
                 Dies dient insbesondere zur Wahrung des Wahlgeheimnisses und verhindert eine Beeinflussung von Wählern während des Wahlvorgangs}
 \end{usecase}
@@ -190,15 +181,19 @@ Dieser Absatz beschäftigt sich mit der Definition von Benutzerschnittstellen un
                 Für letzteres ist beispielsweise das getrennte abspeichern von Erst- und Zweitstimmen fundamental.
                 Juristische Ausnahmefälle, die bei den Wahlen 2013 und 2018 nicht relevant waren und über 
                 Sperrklausel, Überhangsmandate, Ausgleichsmandate hinausgehen, müssen im System nicht verarbeitet/ berechnet werden können.}
-  \addrow{NF02}{Zu Peak-Lastzeiten, i.e., wenn tausende WählerInnen gleichzeitig abstimmen, muss das System reibungslos einsatzfähig bleiben.}
+  \addrow{NF02}{Zu Peak-Lastzeiten, i.e., wenn hunderte WählerInnen gleichzeitig abstimmen, muss das System einsatzfähig bleiben.}
   \addrow{NF03}{Ein wirkungsvoller Schutz vor unbefugten Zugriffen muss ein fester Bestandteil sein um die Integrität der Wahlergebnisse nicht zu gefährden.}
   \addrow{NF04}{Die (statistische-)Auswertung von Wahlergebnissen muss schnell und korrekt sein.}
-  \addrow{NF05}{Die graphische Oberfläche soll mächtig, jedoch intuitiv sein.}
+  \addrow{NF05}{Die graphischen Oberflächen sollen mächtig, jedoch intuitiv sein.}
+  \addrow{NF06}{Die graphische Oberfläche der Wahlabgabe muss möglichst Barrierefrei gestalltet werden, e.g., insbesondere ältere WählerInnen dürfen nicht durch
+                unnötig hohe Komplexität überfordert werden}
 \end{usecase}
 
 \section{Produktdaten}
 Die grundlegenden zu verwaltenden Produktdaten ergeben sich aus der folgenden Liste von
-identifizierten Entitäten:
+identifizierten Entitäten. Dabei ist insbesondere zu beachten, dass es sich bei dem Modell
+aus dem Lastenheft um den ursprünglichen Vorschlag aus dem Ideenfindungsprozess hält. Das heißt,
+das tatsächliche Datenmodell darf abweichen und wird erst im Pflichtenheft genau spezifiziert:
 \begin{itemize}
   \item \textbf{Wahl} - Repräsentation einer einzelnen Wahl an einem festen Datum. 
         Durch letzteres Merkmal ist es möglich mehrere Wahlen in einem Jahr festzuhalten.
@@ -239,14 +234,12 @@ Sie leiten sich hauptsächlich aus den in diesem Dokument spezifizierten Anforde
         insbesondere die Bestimmung der gewonnenen Mandate im bayrischen Landtag. Dabei müssen gesetzliche
         Vorgaben genauestens eingehalten sein sowie Daten sicher, Datenschutzrechtlich korrekt und integer gehalten
         werden.
+  \item Es ist möglich gezielt die unterschiedlichen Analysen von verschiedenen Wahlvorgängen einfach zu vergleichen.
   \item WählerInnen haben durch eine bereitgestellte Oberfläche die Möglichkeit ihre Erst- und Zweitstimme abzugeben.
         Dabei muss gewährleistet sein, dass jede Wahlberechtigte Person nur maximal einmal abstimmen kann, 
         Datenschutzrechtliche sowie gesetzliche Vorgaben wie das Stimmgeheimnis eingehalten werden und das System 
         insbesondere vor unbefugtem Zugriff geschützt ist.
-  \item WahlhelferInnen können schnell Stimmen, e.g. analog abgegebene, in einer minimalen Anzahl von Schritten in das
-        System übernehmen.
   \item Reale Stimmdaten vergangener Wahlen können von berechtigten Nutzern, e.g., WahlleiterInnen, importiert und
-        (statistisch) Ausgewertet werden. Hierbei ist insbesondere auch der vergleich mit den Ergebnissen anderer
-        Wahlvorgänge wichtig.
+        (statistisch) Ausgewertet werden.
 \end{enumerate}
 \end{document}

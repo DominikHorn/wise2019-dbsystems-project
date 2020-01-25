@@ -55,12 +55,9 @@ export const query_q3 = gql`
           name
         }
       }
-      stimmkreis {
-        id
-        name
-      }
+      direktmandat
     }
-    getStimmentwicklung(
+    computeEntwicklungDerStimmen(
       wahlid: $wahlid
       vglwahlid: $vglwahlid
       stimmkreisid: $stimmkreisid

@@ -24,23 +24,16 @@ export class WahlhelferPage extends React.PureComponent<
   }
 
   private renderAuthenticatedWahlhelferUI = () => (
-    <>
-      <Row type={"flex"} gutter={[16, 16]} justify={"end"}>
-        <Col>
-          <Button disabled={true}>Stimmeintragung</Button>
-        </Col>
-      </Row>
-      <Row
-        type={"flex"}
-        gutter={[16, 16]}
-        justify={"start"}
-        style={{ marginTop: "15px", marginBottom: "15px" }}
-      >
-        <Col span={24}>
-          <WahlkabinenTable wahlhelferAuth={this.state.wahlhelferToken} />
-        </Col>
-      </Row>
-    </>
+    <Row
+      type={"flex"}
+      gutter={[16, 16]}
+      justify={"start"}
+      style={{ marginTop: "15px", marginBottom: "15px" }}
+    >
+      <Col span={24}>
+        <WahlkabinenTable wahlhelferAuth={this.state.wahlhelferToken} />
+      </Col>
+    </Row>
   );
 
   private onQrReaderError = (qrCodeError: Error) =>
