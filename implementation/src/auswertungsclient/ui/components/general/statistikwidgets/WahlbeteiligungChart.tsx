@@ -55,7 +55,6 @@ const WahlbeteiligungChartComponent = (props: IProps) => {
             style={{ width: "100%", height: "100%" }}
             onEvents={{
               mapselectchanged: event => {
-                console.log("mapSelectedChanged:", event);
                 if (event && event.batch && event.batch[0]) {
                   const wbtobj = (
                     props.wahlbeteiligungData.wahlbeteiligung || []

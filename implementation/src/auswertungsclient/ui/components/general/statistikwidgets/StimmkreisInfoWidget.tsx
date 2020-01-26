@@ -93,16 +93,12 @@ class StimmkreisInfoWidgetComponent extends React.PureComponent<
                 onStimmkreisSelect={(
                   selected: Stimmkreis,
                   wahlbeteiligung: number
-                ) => (
-                  console.log(selected, wahlbeteiligung),
-                  this.setState(
-                    {
-                      selectedStimmkreis: selected,
-                      wahlbeteiligung: wahlbeteiligung
-                    },
-                    () => console.log("new state:", this.state)
-                  )
-                )}
+                ) =>
+                  this.setState({
+                    selectedStimmkreis: selected,
+                    wahlbeteiligung: wahlbeteiligung
+                  })
+                }
               />
             </Col>
             <Col span={16} style={{ height: "100%" }}>
