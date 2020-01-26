@@ -173,9 +173,9 @@ Das System wird in verschiedenen Gebieten eingesetzt:
   \hline
   Wahllokal & Abgabe von Einzelstimmen durch WählerInnen und batch Stimmeintragung durch WahlhelferInnen \\
 	\hline
-  Bürgerlicher Gebrauch & (statistische-)Analyse von Wahlergebnissen \\
+  Bürgerlicher Gebrauch & (statistische) Analyse von Wahlergebnissen \\
   \hline
-  Staatlicher Gebrauch & (statistische-)Analyse von Wahlergebnissen, Import von alten Wahlergebnissen \\
+  Staatlicher Gebrauch & (statistische) Analyse von Wahlergebnissen, Import von alten Wahlergebnissen \\
 	\hline
 \end{tabular}
 \end{center}
@@ -235,7 +235,7 @@ Der vorherige Abschnitt identifiziert zur Umsetzung des Systems folgende Softwar
 \begin{itemize}
       \item Datenbanksystem zur Persistierung von Anwendungsdaten, d.h., Wahldaten zur bayerischen Landtagswahl
       \item Server Software zur Annahme und Bearbeitung von Client-Anfragen, insbesondere auch zur Ansteuerung des Datenbanksystems
-      \item Client Software, je eine für die Stimmabgabe, für Wahlhelfer, Wahlleiter und zur (statistischen-) Auswertung von Wahlergebnissen 
+      \item Client Software, eine für die Stimmabgabe, Wahlhelfer und Wahlleiter und eine für die statistische Auswertung von Wahlergebnissen 
 \end{itemize}
 Im folgenden werden die Haupttechnologien zur Umsetzung dieser Systemkomponenten tabellarisch aufgelistet. Abbildung \ref{fig:architecture} zeigt
 deren Interaktion und Aufbau graphisch.
@@ -296,9 +296,10 @@ Das Datenmodell ergibt sich aus den Anforderungen und dem Vorschlag des Lastenhe
   \item \textbf{Wahl} - Repräsentation einer einzelnen Wahl an einem festen Datum. 
         Durch letzteres Merkmal ist es möglich mehrere Wahlen in einem Jahr festzuhalten.
   \item \textbf{Stimme} - Jede(r) WählerIn besitzt je eine Erst- und Zweitstimme, welche er oder sie in ihrem
-        Stimmbezirk für KandidatInnen oder eine Partei abgeben können. Mit der Erststimme wählt eine wahlberechtigte Person
+        Stimmbezirk für KandidatInnen oder eine Partei abgeben kann. Mit der Erststimme wählt eine wahlberechtigte Person
         primär den oder die von ihr bevorzugten DirektkandidatIn ihres Stimmkreises. Über die Zweitstimme wählt 
         jede wahlberechtigte Person genau einen Kandidaten einer Liste aus ihrem Regierungsbezirk oder eine Partei, bzw. deren Liste. 
+        Es ist dem oder der WählerIn außerdem freigestellt, ihre oder seine Erst- oder Zweitstimme explizit als ungültig zu markieren. Eine als ungültig abgegebene Stimme wird dann auch als ungültig markiert und keiner Partei und keinem/r KandidatIn zugeordnet. 
         Das prozentuale Gesamtabschneiden einer Partei aus kombinierten Erst- und Zweitstimmen ist für das 
         Wahlergebnis relevant.
   \item \textbf{Regierungsbezirk} - Bayern ist in sieben Regierungsbezirke unterteilt: Oberbayern,
@@ -311,12 +312,12 @@ Das Datenmodell ergibt sich aus den Anforderungen und dem Vorschlag des Lastenhe
   \item \textbf{KandidatIn} - Eine sich zur Wahl stellende Person mit notwendigen persönlichen Angaben. 
         Insbesondere kann ein(e) KandidatIn als DirektkandidatIn für einen Stimmkreis aufgestellt sein.
   \item \textbf{Partei} - KandidatInnen sind Mitglied einer Partei und können sich von dieser für einen 
-        Listenplatz aufstellen lassen
+        Listenplatz aufstellen lassen.
   \item \textbf{Liste} - Jede Partei kann pro Regierungsbezirk eine Liste mit KandidatInnen, welche Mitglieder der 
         Partei sind, aufstellen. Listenplätze ändern sich durch die Anzahl erhaltener Stimmen. Listenmandate
         einer Partei werden dann nach finaler Listenreihenfolge berechnet.
-  \item \textbf{Wahlhelfer} - Wahlhelfer überwachen und authentifizieren Wahlkabinen und Wähler
-  \item \textbf{Wahlkabine} - Wähler geben ihre Stimmen in Wahlkabinen ab
+  \item \textbf{Wahlhelfer} - Wahlhelfer überwachen und authentifizieren Wahlkabinen und Wähler.
+  \item \textbf{Wahlkabine} - Wähler geben ihre Stimmen in Wahlkabinen ab.
 \end{itemize}
 
 \begin{center}
