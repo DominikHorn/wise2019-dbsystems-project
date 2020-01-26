@@ -37,7 +37,7 @@ import {
 } from "../adapters/postgres/kandidatPSQL";
 import { adapters } from "../adapters/adapterUtil";
 import { castVote } from "../adapters/postgres/stimmenPSQL";
-import { getAllStimmkreiseForWahl } from "../adapters/postgres/queries/stimmkreisPSQL";
+import { getAllStimmkreiseForWahl } from "../adapters/postgres/stimmkreisPSQL";
 
 export interface IContext {
   readonly userId: Promise<number>;

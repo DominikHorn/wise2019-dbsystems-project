@@ -19,6 +19,20 @@ export async function getAllStimmkreise(
     : adapters.postgres.query<Stimmkreis>(QUERY);
 }
 
+export const getAllStimmkreiseForWahl = async (
+  wahlid: number
+): Promise<IDatabaseStimmkreis[]> =>
+  adapters.postgres.query<IDatabaseStimmkreis>(
+    `
+    SELECT s.id, s.name 
+    FROM "${DatabaseSchemaGroup}".stimmkreise s 
+      JOIN  "${DatabaseSchemaGroup}".stimmkreis_wahlinfo swi 
+      ON s.id = swi.stimmkreis_id 
+    WHERE swi.wahl_id= $1 order by id
+    `,
+    [wahlid]
+  );
+
 export async function getStimmkreisForId(
   id: number,
   client?: PoolClient
