@@ -86,7 +86,7 @@
     "apollo-link-context": "~1.0.17",
     "apollo-link-error": "^1.1.11",
     "apollo-link-http": "^1.5.15",
-    "apollo-server-express": "^2.9.13",
+    "apollo-server-express": "^2.14.2",
     "apollo-upload-client": "~10.0.0",
     "bcrypt": "^3.0.6",
     "bufferutil": "^4.0.1",
