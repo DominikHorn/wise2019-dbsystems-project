@@ -38,7 +38,7 @@ interface ZweitstimmePageProps {
 
 export interface IProps
   extends ZweitstimmePageProps,
-    QueryToGetListenKandidatenHOCProps {}
+  QueryToGetListenKandidatenHOCProps { }
 
 interface IState {
   readonly searchString?: string;
@@ -163,7 +163,7 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
                       >
                         {`${`${lk.platz}`.padStart(2, "0")}. ${
                           lk.kandidat.name
-                        }`}
+                          }`}
                       </Checkbox>
                     </Col>
                   ))}
@@ -205,16 +205,16 @@ class ZweitstimmePageComponent extends React.PureComponent<IProps, IState> {
         </Tooltip>
         <b>
           {this.props.selectedKandidat === undefined &&
-          this.props.selectedParty === undefined
+            this.props.selectedParty === undefined
             ? "Keine Auswahl getroffen"
             : `Aktuelle Auswahl: ${
-                this.props.selectedKandidat === null &&
-                this.props.selectedParty === null
-                  ? "Zweitstimme ungültig gemacht"
-                  : this.props.selectedKandidat
-                  ? `${this.props.selectedKandidat.name} (${this.props.selectedKandidat.partei.name})`
-                  : `${this.props.selectedParty.name} Liste`
-              }`}
+            this.props.selectedKandidat === null &&
+              this.props.selectedParty === null
+              ? "Zweitstimme ungültig gemacht"
+              : this.props.selectedKandidat
+                ? `${this.props.selectedKandidat.name} (${this.props.selectedKandidat.partei.name})`
+                : `${this.props.selectedParty.name} Liste`
+            }`}
         </b>
       </Col>
       <Col span={12}>

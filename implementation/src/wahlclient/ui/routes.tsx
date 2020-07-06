@@ -8,6 +8,7 @@ import {
 import { WaehlenPage } from "./components/roots/WaehlenPage";
 import { WahlhelferPage } from "./components/roots/WahlhelferPage";
 import { WahlleiterPage } from "./components/roots/WahlleiterPage";
+import { ZweitstimmePage } from "./components/waehlen/ZweitstimmePage";
 
 export interface IRouteProps {
   readonly path: string;
@@ -18,8 +19,8 @@ export interface IRouteProps {
   readonly component?: React.ComponentType<RouteComponentProps<any>>;
   readonly render?: (props: RouteComponentProps<any>) => React.ReactNode;
   readonly children?:
-    | ((props: RouteChildrenProps<any>) => React.ReactNode)
-    | React.ReactNode;
+  | ((props: RouteChildrenProps<any>) => React.ReactNode)
+  | React.ReactNode;
 }
 
 export interface ISubRoute {
