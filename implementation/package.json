@@ -101,7 +101,7 @@
     "graphql": "^14.2.1",
     "graphql-iso-date": "^3.6.1",
     "memoize-one": "^5.0.4",
-    "papaparse": "^5.1.0",
+    "papaparse": "^5.2.0",
     "pg": "^7.9.0",
     "prop-types": "^15.5.7",
     "qr.js": "^0.0.0",
